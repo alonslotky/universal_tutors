@@ -1,0 +1,12 @@
+<h4>The Generic Tabs Manager</h4>
+
+If your project requires tabs, then in almost all cases they should be loaded via AJAX to improve the UI experience. There is a generic tab manager template in iic/fragments/generic/tab_manager.html which can be envoked simply by calling &#123;% create_tabs tabs %&#125;. Make sure you load the common_tags tag library.
+
+<br/><br/>
+
+The <strong>tabs</strong> variable should be defined in the view that will be outputting the tabs and this is made up simply of a list of dictionaries. Each dictionary should include a 'name' and 'view' value. The name can be anything and the view should be the string based name of the view you intend to load. The rest will be handled by the generic tab manager.<br/><br/>To see the tabs variable defined in this sample, please look in apps.iic.views.main_views.home. You can also pass optional GET URL params to the tab manager (so that each individual view responsible for loading a tab's content can get access to additional data via the URL GET params. Again, see apps.iic.views.main_views.home for an example of this.
+
+<br/><br/>
+
+<h4>Handling Forms</h4>
+As with all other aspects mentioned here, what we're trying to achieve is a standard approach to common tasks; forms are no different. If you look in the INSTALLED_APPS setting in configs/common/settings.py you will notice an app called uni_form.<br/><br/>Simply load the <strong>uni_form_tags</strong> tags into the template holding the form and use the 'as_uni_form' filter to render your form - i.e. &#123;&#123; my_form|as_uni_form &#125;&#125;. You must also add the uniForm class to the form it-self. For an example of this form in action, <a href="/accounts/signup/">click here</a>.

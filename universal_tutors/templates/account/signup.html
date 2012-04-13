@@ -1,0 +1,113 @@
+{% load uni_form_tags %}
+{% load account_tags allauth_tags %}
+
+{% block body %}
+	<form id="signup-form2" method="POST" action="" class="nice custom">
+        {% csrf_token %}
+        {% if form.first_name.errors %}<div class="formError">{{ form.first_name.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="id_first_name">First name</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_first_name" name="first_name" value="{{ form.first_name.value }}" class="input-text oversize stretch" /></div>
+		</div>
+        {% if form.last_name.errors %}<div class="formError">{{ form.last_name.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="id_last_name">Last name</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_last_name" name="last_name" value="{{ form.last_name.value }}" class="input-text oversize stretch" /></div>
+		</div>
+        {% if form.email.errors %}<div class="formError">{{ form.email.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="location">Email</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_email" name="email" value="{{ form.email.value }}" class="input-text oversize stretch" /></div>
+		</div>
+		<div class="row">&nbsp;</div>
+        {% if form.password1.errors %}<div class="formError">{{ form.password1.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="id_password1">Password</label>
+            </div>
+			<div class="nine columns"><input type="password" id="id_password1" name="password1" value="" class="input-text oversize stretch" /></div>
+		</div>
+        {% if form.password2.errors %}<div class="formError">{{ form.password2.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="location">Confirm</label>
+            </div>
+			<div class="nine columns"><input type="password" id="id_password2" name="password2" value="" class="input-text oversize stretch" /></div>
+		</div>
+		<div class="row">&nbsp;</div>
+        {% if form.address.errors %}<div class="formError">{{ form.address.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="id_address">Address</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_address" name="address" value="{{ form.address.value }}" class="input-text oversize stretch" /></div>
+		</div>
+        {% if form.location.errors %}<div class="formError">{{ form.location.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="id_location">Location</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_location" name="location" value="{{ form.location.value }}" class="input-text oversize stretch" /></div>
+		</div>
+        {% if form.postcode.errors %}<div class="formError">{{ form.postcode.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="id_postcode">Postcode</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_postcode" name="postcode" value="{{ form.postcode.value }}" class="input-text oversize stretch" /></div>
+		</div>
+        {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="location">Country</label>
+            </div>
+			<div class="nine columns">{{form.country}}</div>
+		</div>
+		<div class="row">&nbsp;</div>
+		<div class="row">
+			<div class="three columns">
+  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign Up"></div>
+			</div>			
+		</div>
+		<div class="row hidden">
+			{{form.date_of_birth}}
+			{{form.type}}			
+		</div>
+		<div class="row">&nbsp;</div>
+		<div class="row center">
+			<p>Or, use your facebook account to connect with Universal Tutors</p>
+			<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
+		</div>
+	</form>
+	<script type="text/javascript">
+		$(window).ready(function(e){
+			appendCustomSelect($('#id_country'));
+		});
+		$('#signup-form2').submit(function(e){
+			e.preventDefault();
+			$('#modal-signup-form-container').fadeOut(function(){
+				$('#modal-signup-form-loading').fadeIn(function(){
+					$('#id_date_of_birth').val(signup_dob);
+					$('#id_type').val(signup_type);
+					$.ajax({
+						type: 'POST',
+						url: '{% url signup %}',
+						data: $('#signup-form2').serialize(),
+						success: function(data) {
+							$('#modal-signup-form-container').html(data);
+							$('#modal-signup-form-loading').fadeOut(function(){
+								$('#modal-signup-form-container').fadeIn();
+							});
+						}
+					});
+				});
+			});			
+		});
+	</script>
+{% endblock %}

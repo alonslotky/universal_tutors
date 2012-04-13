@@ -1,0 +1,45 @@
+{% extends "ui/layouts/iframe_base.html" %}
+{% load uni_form_tags fb_versions %}
+
+{% block body_class %}form{% endblock %}
+{% block html_class %}form{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript" src="js/lib/jquery.filestyle.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#id_photo').filestyle();
+	});
+</script>
+{% endblock %}
+
+
+{% block content %}
+	{% if not success %}
+		<form id="iframe-form" action="" class="iframe-form" method="post" enctype="multipart/form-data">
+			{% with form.helper as helper %}
+				{% uni_form form helper %}
+			{% endwith %}
+		</form>
+		<div id="iframe-loading" class="iframe-loading hidden"></div>
+		<script type="text/javascript">
+			$('#iframe-form').submit(function(){ 
+				$(this).addClass('hidden'); 
+				$('#iframe-loading').removeClass('hidden');
+			});
+			$('#button-id-cancel').click(function(){ window.parent.change_profile_photo_popup.close(); });
+		</script>
+	{% else %}
+		<div id="iframe-loading" class="iframe-loading"></div>
+		{% if success %}
+                <script type="text/javascript">
+                $('#iframe-loading').addClass('hidden');
+                window.parent.$("img#profile-photo").attr("src", "{% version photo 'edit_profile_photo' %}");
+                </script>
+          <h2>Photo successfully changed.</h2>
+          {% endif %}
+          {% if error_message %}
+          <h2>{{ error_message }}</h2>
+          {% endif %}
+	{% endif %}
+{% endblock %}

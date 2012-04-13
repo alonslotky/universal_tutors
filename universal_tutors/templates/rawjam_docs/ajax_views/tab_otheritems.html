@@ -1,0 +1,13 @@
+<h4>Logging &amp; Django-Sentry</h4>
+
+Djang-Sentry is used (and already loaded into this project) for the handling and active management of logging. Essentially Sentry provides a central management area to view all logs recorded and prevents duplicate emails being sent. You can access the admin console via <a href="http://127.0.0.1:8000/sentry/" target="_blank">http://127.0.0.1:8000/sentry/</a>. Additionally, Sentry is tied into the standard python logging mechanism, so when debugging your code you are encouraged to do a logging.info() output rather than using the print statement.
+
+<br/><br/>
+
+<h4>Caching</h4>
+We have not implemented any template or view based caching, this is something you will need to make a judgment call on and integrate as you see fit. However, what we have included in this project is support for caching data returned by the Django ORM. Put simply, each unique database query will be cached automatically. johnny-cache is used for this and if you require any further direction you can view its documentation <a href="http://packages.python.org/johnny-cache/" target="_blank">here</a>.
+
+<br/><br/>
+
+<h4>Creating Test Data</h4>
+django-mockups is used as a helper utility to generate test data for any app you might require test data for. It essentially attempts to create suitable and random test data based on the field type of each model field. This command, for example, will create 20 entries for the two model names provided - sh manage mockups company.faqitem:20 company.newsitem:20. <strong>Please ensure you have provided (either through the use of this plugin or manually) test data each week so that we can review your work as you intend it to be seen.</strong>

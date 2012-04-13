@@ -1,0 +1,173 @@
+{% load account_tags allauth_tags %}
+
+<div class="sign-in">
+	{% include "socialaccount/snippets/login_extra.html" %}
+	<form class="nice" action='{% url login %}?next={{request.path}}'method="post">
+		{% csrf_token %}
+		<div class="row">
+			<div class="two columns">
+  				<h3>Sign In</h3>
+			</div>
+  
+			<div class="four columns">
+  				<input name="email" type="text" class="input-text oversize stretch" placeholder="Username">
+			</div>
+
+			<div class="four columns">
+  				<input name="password" type="password" class="input-text oversize stretch" placeholder="Password">
+  				<a class="forgot" href="#">Forgot password?</a>
+			</div>
+
+			<div class="two columns">
+  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign In"></div>
+			</div>
+		</div>
+		<div class="row center padding">
+			<span>- OR -</span>
+		</div>
+		<div class="row center padding">
+			<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
+		</div>
+	</form>
+</div>
+
+<div id="modal-signup" class="reveal-modal form signup">
+	<a class="close-reveal-modal">&#215;</a>
+	<h2>Sign Up at Universal Tutors</h2>
+	<p>Welcome to Universal Tutors, Phasellus at elit risus, iaculis rhoncus arcu. Duis auctor neque in magna sollicitudin in adipiscing libero dictum.</p>
+	<br/>
+	<div id="modal-signup-form-container">
+		<form id="modal-signup-form" class="nice custom signup">
+			<div class="row margin date_of_birth">
+				<h3>My date of birth</h3>
+				<div id="signup-dob-errors" class="formError hidden">Please, insert a valid date</div>
+				<select id="signup_day" class="signup_dob" name="day">
+					<option value="0">Day</option>
+				</select>
+				<select id="signup_month" class="signup_dob" name="month">
+					<option value="0">Month</option>
+				</select>
+				<select id="signup_year" class="signup_dob" name="year">
+					<option value="0">Year</option>
+				</select>
+				<div style="clear:both;"></div>
+			</div>
+			<div id="model-signup-type-container">
+				<div class="row margin">
+					<h3>Who I am</h3>
+					<div id="signup-user-type-errors" class="formError hidden">Please, choose on of the options bellow</div>
+					<select id="signup_user_type">
+						<option value="0">Select your choice</option>
+						<option value="1">a Tutor</option>
+						<option value="2">a Student</option>
+						<option value="3">a Parent</option>
+					</select>
+				</div>
+				<div class="row">
+					<div class="three columns">
+		  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign Up"></div>
+					</div>	
+				</div>
+			</div>
+			<div id="model-signup-under16-container" class="hidden formError">
+				Under 16? Your parent need to create a account for you... Phasellus at elit risus, iaculis rhoncus arcu. Duis auctor neque in magna sollicitudin in adipiscing libero dictum.
+			</div>
+		</form>
+	</div>
+	<div id="modal-signup-form-loading" class="hidden">loading</div>
+	<script type="text/javascript">
+		var today = new Date();
+		var today_year = today.getFullYear();
+		var signup_dob = null;
+		var signup_type = null;
+		
+		var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+	
+		for(i=1; i<=31; i++)
+			$('#signup_day').append('<option value="'+ i +'">'+ i +'</option>');
+	
+		for(i=0; i<months.length; i++)
+			$('#signup_month').append('<option value="'+ (i+1) +'">'+ months[i] +'</option>');
+
+		for(i=today_year; i>today_year-100; i--)
+			$('#signup_year').append('<option value="'+ i +'">'+ i +'</option>');
+
+
+		var check_over16 = function(year, month, day){
+			var age_date = new Date(year+16, month, day);
+			var today = new Date();
+			
+			if(today >= age_date) {
+				$('#model-signup-type-container').removeClass('hidden');
+				$('#model-signup-under16-container').addClass('hidden');
+				return true;
+			} else {
+				$('#model-signup-type-container').addClass('hidden');
+				$('#model-signup-under16-container').removeClass('hidden');
+				return false;
+			}
+		}
+
+		$('#modal-signup-form').submit(function(e){
+			e.preventDefault();
+			var is_valid = true;
+			
+			var day = parseInt($('#signup_day').val());
+			var month = parseInt($('#signup_month').val());
+			var year = parseInt($('#signup_year').val());
+			var date = new Date(year, month-1, day);
+			var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
+
+			signup_type = parseInt($('#signup_user_type').val());
+			signup_dob = year +'-'+ month +'-'+ day;
+			
+			if(signup_type) {
+				$('#signup-user-type-errors').addClass('hidden');
+			} else {
+				$('#signup-user-type-errors').removeClass('hidden');
+				is_valid = false;
+			}
+			
+			if (str_date == signup_dob) {
+				$('#signup-dob-errors').addClass('hidden');
+				if(!check_over16(year, month-1, day)) {
+					is_valid = false;						
+				}
+			} else {
+				$('#signup-dob-errors').removeClass('hidden');
+				is_valid = false;
+			}			
+			
+			if(is_valid) {
+				$('#modal-signup-form-container').fadeOut(function(){
+					$('#modal-signup-form-loading').fadeIn(function(){
+						$.ajax({
+							type: 'GET',
+							url: '{% url signup %}',
+							success: function(data) {
+								$('#modal-signup-form-container').html(data);
+								$('#modal-signup-form-loading').fadeOut(function(){
+									$('#modal-signup-form-container').fadeIn();
+								});
+							}
+						});
+					});
+				});
+			}
+		});
+		
+		$('.signup_dob').change(function(e){
+			var day = parseInt($('#signup_day').val());
+			var month = parseInt($('#signup_month').val());
+			var year = parseInt($('#signup_year').val());
+			var date = new Date(year, month-1, day);
+			var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
+			var input_date = year +'-'+ month +'-'+ day;
+
+			if(str_date == input_date) {			
+				check_over16(year, month-1, day);
+			}
+		});
+	</script>
+</div>
+

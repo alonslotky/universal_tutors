@@ -1,0 +1,30 @@
+{% load django_static %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="iframe-html {% block html_class %}{% endblock %}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Youcoca.com | {% block title %}{% endblock %}</title>
+    <meta name="description" content="{% block site-meta-description %}{% endblock %}" />
+    <meta name="keywords" content="{% block site-meta-keywords %}{% endblock %}" />
+    <meta name="robots" content="{% if settings.DEBUG %}nofollow{% else %}index, follow{% endif %}" />
+	<title></title>
+	
+	{% slimall %}
+	<link media="all" rel="stylesheet" type="text/css" href="css/all.css" />
+	<link media="all" rel="stylesheet" type="text/css" href="css/development.css" />
+	<link media="all" rel="stylesheet" type="text/css" href="js/lib/popup/popup.css" />
+	<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="css/ie.css" media="screen"/><![endif]-->
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="js/jquery.main.js"></script>
+	<script type="text/javascript" src="js/lib/jquery.class.js"></script>
+	<script type="text/javascript" src="js/lib/popup/popup.js"></script>
+	{% block extra_head %}{% endblock %}
+	{% endslimall %}
+</head>
+
+<body class="iframe-body {% block body_class %}{% endblock %}">
+	{% block content %}
+
+	{% endblock %}
+</body>
+</html>

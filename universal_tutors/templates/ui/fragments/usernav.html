@@ -1,0 +1,31 @@
+{% load account_tags allauth_tags %}
+
+<div class="sign-in">
+	{% include "socialaccount/snippets/login_extra.html" %}
+	<form class="nice">
+		<div class="row">
+			<div class="two columns">
+  				<h3>Sign In</h3>
+			</div>
+  
+			<div class="four columns">
+  				<input type="text" class="input-text oversize stretch" placeholder="Username">
+			</div>
+
+			<div class="four columns">
+  				<input type="password" class="input-text oversize stretch" placeholder="Password">
+  				<a class="forgot" href="#">Forgot password?</a>
+			</div>
+
+			<div class="two columns">
+  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign In"></div>
+			</div>
+		</div>
+		<div class="row center padding">
+			<span>- OR -</span>
+		</div>
+		<div class="row center padding">
+			<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
+		</div>
+	</form>
+</div>

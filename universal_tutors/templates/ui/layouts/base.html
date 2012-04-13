@@ -1,0 +1,77 @@
+{% load django_static %}
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>         <html class="lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>         <html class="lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="modern" lang="en"> <!--<![endif]-->
+<head>
+	<title>{% block title %}{% endblock %} | Universal Tutors</title>
+	<meta charset="utf-8">
+	<meta http-equiv="cleartype" content="on">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{STATIC_URL}}images/icons/apple-touch-icon-114x114-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{STATIC_URL}}images/icons/apple-touch-icon-72x72-precomposed.png">
+	<link rel="apple-touch-icon-precomposed" href="{{STATIC_URL}}images/icons/apple-touch-icon-precomposed.png">
+	 
+	{% slimall %}
+	<link rel="stylesheet" href="css/globals.css">
+	<link rel="stylesheet" href="css/mobile.css">
+	<link rel="stylesheet" href="css/typography.css">
+	<link rel="stylesheet" href="css/grid.css">
+	<link rel="stylesheet" href="css/ui.css">
+	<link rel="stylesheet" href="css/forms.css">
+	<link rel="stylesheet" href="css/orbit.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/app.css">
+	<link rel="stylesheet" href="css/development.css">
+	{% endslimall %}
+	
+	<!--[if lt IE 9]>
+		<link rel="stylesheet" href="stylesheets/ie.css">
+	<![endif]-->
+	  
+	<!--[if (!IEMobile)]>
+		<script src="javascripts/respond.min.js"></script>
+	<![endif]-->
+	
+	{% block thirdparty_js_header %}{% endblock %}
+
+	<!--[if lt IE 9]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	{% slimall %}
+	<script src="js/lib/imgsizer.js"></script>
+  	<script src="js/lib/jquery-1.7.1.min.js"></script>
+	{% block extra_head %}{% endblock %}
+	{% endslimall %}
+</head>
+
+<body class="{% block body_class %}marketing home{% endblock %}">
+	
+	<div class="container">
+		{% if not user.is_authenticated %}{% include "ui/fragments/signin.html" %}{% endif %}
+  		{% include "ui/fragments/header.html" %}
+  
+  		<div class="main">
+  			{% block content %}{% endblock %}
+  			
+			{% include "ui/fragments/signup.html" %}
+	    </div>
+		
+		{% include "ui/fragments/footer.html" %}
+	</div>
+  	
+  	{% slimall %}
+  	<script src="js/lib/jquery.reveal.js"></script>
+  	<script src="js/lib/jquery.orbit-1.4.0.js"></script>
+  	<script src="js/lib/forms.jquery.js"></script>
+  	<script src="js/lib/jquery.customforms.js"></script>
+  	<script src="js/lib/jquery.placeholder.min.js"></script>
+ 	<script src="js/app.js"></script>
+ 	{% endslimall %}
+</body>
+</html>

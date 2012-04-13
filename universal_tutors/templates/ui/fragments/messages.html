@@ -1,0 +1,7 @@
+{% if messages %}
+    <script type="text/javascript">
+    $(document).ready(function() {{% for msg in messages %}
+	    show_site_message('{{msg}}');{% endfor %}
+	});
+    </script>
+{% endif %}

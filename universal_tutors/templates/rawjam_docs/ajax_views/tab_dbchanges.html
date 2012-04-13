@@ -1,0 +1,25 @@
+<h4>Handling Database Changes</h4>
+
+In this project, South should be used to handle all database schema migrations. Below are some of the most common tasks you might need to peform. For access to the full South documentation, please <a href="http://south.aeracode.org/docs/" target="_blank">click here</a>:
+<br/><br/>
+<ul>
+    <li>
+        <b>I've create a brand new app in the apps/ folder (i.e. apps/someapp)</b><br/>
+        run 'sh manage schemamigration someapp --initial';<br/>
+        run 'sh manage migrate someapp';
+        <br/><br/>
+        There is a chance that it will error if you have defined custom fields that are unknown to South. To resolve this, simply follow the instructions here http://south.aeracode.org/wiki/MyFieldsDontWork
+        <br/><br/>
+    </li>
+    <li>
+        <b>I've made changes to model(s) in an already existing app:</b><br/>
+        run 'sh manage schemamigration someapp --auto'<br/>
+        run 'sh manage migrate someapp'
+        <br/><br/>
+    </li>
+    <li>
+        <b>Changes have been made to a model or models, and i need to update my database to reflect these changes:</b><br/>
+        To update your database with the latest migrations run: sh manage migrate someapp
+        <br/><br/>
+    </li>
+</ul>

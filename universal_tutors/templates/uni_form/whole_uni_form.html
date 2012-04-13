@@ -1,0 +1,101 @@
+{% load uni_form_tags i18n %}
+
+{% if form_tag %}<form action="{%if form_action%}{{ form_action|lower }}{%else%}.{%endif%}" class="uniForm{% if form_class %} {% endif %}{{ form_class }}" method="{{ form_method }}"{% if form_id %} id="{{ form_id|slugify }}"{% endif %}{% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>{% endif %}
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+        <div id="errorMsg">
+            <h3>{% if error_message_title %}{{ error_message_title }}{% else %}Errors{% endif %}</h3>
+            <ol>
+                {{ form.non_field_errors|unordered_list }}
+            </ol>
+        </div>
+    {% endif %}
+    {% if form_html %}{{ form_html }}{% else %}
+    <fieldset class="inlineLabels">
+        {% for field in form %}
+            {% include "uni_form/field.html" %}
+        {% endfor %}
+    </fieldset>
+    {% endif %}
+    {% if inputs %}
+        <div class="buttonHolder">
+            {% for input in inputs %}
+                
+                {% if input.name == "cancel" %}
+                    <a class="btn" href="#" id="cancel_btn"><span>{{input.value}}</span></a>
+                {% else %} 
+                    {% if input.input_type == "submit" %}
+                        <input type="submit" id="{% if form_id %}{{ form_id|slugify }}{% endif %}-submit-{{forloop.counter}}" style="display: none;"/>
+                        <a class="btn" onclick="{% if form_id %}$('#{{ form_id|slugify }}').submit();{%else%}$(this).parents('form:first').submit();{% endif %}"><span>{{input.value}}</span></a>
+                    {% else %}
+                        <input type="{{ input.input_type }}"
+                            name="{{ input.name|slugify }}"
+                            value="{{ input.value }}"
+                            {% ifnotequal input.input_type "hidden" %}
+                                id="{{ input.input_type }}-id-{{ input.name|slugify }}"
+                            {% endifnotequal %}
+                            class="btn"
+                        />
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="clearfix"></div>
+    {% endif %}
+{% if form_tag %}</form>{% endif %}
+
+{% if form_id %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ($("#{{ form_id|slugify }}").find("#id_ajax_submission").val() == "1") {
+            $('#{{ form_id|slugify }}').ajaxForm({
+                dataType: 'json',
+                success: processJsonFormResponse 
+            });
+        }
+        
+        $("#cancel_btn").click(function() {
+            cancel_url = $("#{{ form_id|slugify }}").find("#id_cancel_redirect").val();
+            window.location.href = cancel_url;
+        });
+        
+        $("input[type=file]").filestyle({ 
+             image: "/site_media/img/choose-file.gif",
+             imageheight : 23,
+             imagewidth : 82,
+             width : 78
+         });
+        
+        if ($("#{{ form_id|slugify }}").find("#id_ajax_validation").val() == "1") {
+            $("{% for field in form %}#id_{{field.name}}{% if not forloop.last %}, {% endif %}{% endfor %}").blur(function() {
+                var form_action = $("#{{ form_id|slugify }}").attr('action');
+                var url = form_action + "?validate_only=true&field=" + this.name;
+                var field = this.name;
+                $.ajax({
+                    url: url, data: $("#{{ form_id|slugify }}").serialize(),
+                    type: "post", dataType: "json",
+                    success: function (response) {
+                        id = "#div_id_" + field;
+                        $(id).find(".errorField").remove();
+                        if (response.valid) {
+                            // Do nothing
+                        }
+                        else {
+                            if ($.browser.msie && $.browser.version.substr(0,1)<8) {
+                                alert(response.errors);
+                            }
+                            else {
+                                $(id).append("<p class='formHint errorField'><span>"+response.errors+"</span></p>");
+                            }
+                        }
+                    }
+                });
+            });
+        }
+    });
+    
+    function processJsonFormResponse(data) {
+        action_form_json_errors(data);
+    }
+</script>
+{% endif %}

@@ -1,0 +1,16 @@
+{% extends "ui/layouts/base.html" %}
+
+{% block title %}{% block head_title %}{% endblock %}{% endblock %}
+
+{% block content %}
+  	<section>
+		<div class="row clear">
+  			<div class="eight columns">
+  				{% block body %}{% endblock %}
+  			</div>
+
+  			<div class="four columns">
+ 		 	</div>
+		</div>
+	</section>
+{% endblock %}

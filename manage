@@ -1,0 +1,2 @@
+#!/bin/sh
+python ./universal_tutors/configs/${DEPLOYMENT_TARGET:="common"}/manage.py $*

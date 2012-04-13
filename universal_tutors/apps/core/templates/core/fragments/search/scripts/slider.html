@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	/* SCROLLER */
+	var schedule_scrollbar_bar_mousedown = false;
+	var schedule_scrollbar_bar_mousedown_x = null;
+	var schedule_scrollbar_bar_mousedown_left = null;
+
+	$('#schedule-scrollbar-bar').mousedown(function(e){
+		e.preventDefault();
+		schedule_scrollbar_bar_mousedown = true;
+		schedule_scrollbar_bar_mousedown_left = $(this).position().left;
+		schedule_scrollbar_bar_mousedown_x = e.pageX;
+	});
+	$(window).mousemove(function(e){
+		if(schedule_scrollbar_bar_mousedown) {
+			e.preventDefault();
+			var position = schedule_scrollbar_bar_mousedown_left + (e.pageX - schedule_scrollbar_bar_mousedown_x);
+			position = position < 359 ? position : 359;
+			position = position > 0 ? position : 0;
+			$('#schedule-scrollbar-bar').css('left', position +'px');
+			$('.scroll-item-container .scroll-item').css('margin-left', -position +'px');
+		}
+	});
+	$(window).mouseup(function(){
+		schedule_scrollbar_bar_mousedown = false;		
+	});
+</script>

@@ -1,0 +1,49 @@
+<h4>'View' Structure</h4>
+
+We have created a couple of helper view decorators and require a basic file structure for the views you create. If you look in apps.iic.views, you will notice the following files:
+
+<br/><br/>
+
+<ul>
+    <li>
+        <b>utils/view_utils.py</b><br/>
+        In here are a couple of helper methods and decorators, designed to help standardise how views are handled. You shouldnt need to make any changes here.
+        <br/><br/>
+    </li>
+    <li>
+        <b>views/main_views.py</b><br/>
+        These are the views that are directly accessed by the user and will likely have their own urls.py entry. The 'home' page here is an example of a main view.
+        <br/><br/>
+    </li>
+    <li>
+        <b>views/ajax_views.py</b><br/>
+        AJAX views are basically any views that are not directly accessed by a user from the address bar. So, this covers any sidebar modules that are being loaded via ajax or views for each individual tab (more on this later). If you look at the ajax_views.py file in the rawjam_docs apps you will notice that the views also have the <strong>@ar.register</strong> decorator. This is a helper decorator that needs to be applied to any view that you want to be able to load via AJAX. Please refer below for clearer instructions on how to handle these.
+        <br/><br/>
+    </li>
+</ul>
+
+<h4>Loading Fragment Views via AJAX</h4>
+
+Each of these tabs, and some of the sidebar modules to the right are actually views and not simply templatetags that render to an HTML template. This is a useful technique for us to utilize if we want to create simple, contained view logic for certain parts of a page that we know we are going to want to load via AJAX.
+
+<br/><br/>
+
+<b>When to load via AJAX?</b><br/>
+When constructing each page required for this project you will need to decide whether certain portions of that page would benefit from being loaded via AJAX. For some parts of a page, you might either add the markup directly to the main template file, or perhaps create a template tag so that it can be shared across other pages. However, you might find that in some cases you will want to load that content via AJAX to speed up the initial loading time and create a more seamless approach for the user. Obvious examples are tabs (as we are using here)... in this use case we want to have one seperate template (and possibly seperate logic) per tab and we dont want the page to have to refresh each time we change tabs. As such, we will want to create a seperate view entry in ajax_views.py.
+
+<br/><br/>
+
+There are two things to bear in mind when creating an AJAX based view:
+
+<ol>
+    <li>Ensure you have used the <strong>@ar.register</strong> decorator, as this will register the views name so that it can be retrieved later one.</li>
+    <li>When you want to load the view (i.e. based on a user action or simply in the document.load event) then make sure you call the <strong>load_fragment</strong> javascript method (example shown below) passing the name of the view you want to load as a parameter to the generic view loader URL, we have created for you, called "ajax_view". Based on the requirements of this project you might want to tweak the way that the load_fragment function renders the returned view template, but the use of this method (to keep things DRY) should be maintained.</li>
+</ol>
+
+<br/>
+
+If you <a href="#" onclick="load_fragment('sample_sidebar_ajax', '{% url ajax_view 'rawjam_docs__sample_ajax_sidebar' %}'); return false;">click here</a> you should notice a sidebar view loaded to the right. This view is loaded simply by making use of a jscript method defined in assets/js/scripts.js:
+
+<br/><br/>
+
+<code>&lt;a href=&quot;#&quot; onclick=&quot;load_fragment(&#39;sample_sidebar_ajax&#39;, &#39;&#123;% url ajax_view 'sample_ajax_sidebar' %&#125;&#39;);&quot;&gt;&lt;/a&gt;</code>

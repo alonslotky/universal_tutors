@@ -1,0 +1,18 @@
+{% for date, weeks in months %}
+<div class="calendar">
+	<div class="head">
+		<a href="javascript:;" onclick="change_calendar_month('{{prev_month|date:'Y-m'}}');" class="prev">preview</a>
+		<a href="javascript:;" onclick="change_calendar_month('{{next_month|date:'Y-m'}}');" class="next">next</a>
+		<strong>{{date|date:"F Y"}}</strong>
+	</div>
+	<table>
+		{% for week in weeks %}
+		<tr>
+			{% for day in week %}
+			<td {% if day.month == date.month %}{% if day == today %}class="event"{% else %}class="date"{% endif %}{% endif %} onclick="change_calendar_date('{{day|date:'Y-m-d'}}');">{{day.day}}</td>
+			{% endfor %}
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+{% endfor %}

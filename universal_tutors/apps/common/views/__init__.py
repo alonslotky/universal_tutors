@@ -1,0 +1,3 @@
+from main_views import *
+##PROJECTGEN_VIEWIMPORTS_START##
+##PROJECTGEN_VIEWIMPORTS_END##

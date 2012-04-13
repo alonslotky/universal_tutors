@@ -1,0 +1,28 @@
+:focus { outline: 0; border: none; }
+.hidden { display: none; }
+
+.sign-in { height: auto; }
+.sign-in .row.center { text-align: center; }
+.sign-in .row.padding { padding: 10px 0; }
+
+.sign-in .row.center .facebook_connect_link { margin-left: 275px; }
+.facebook_connect_link {
+    background: url("../images/social/facebook_connect.jpg") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 29px;
+    overflow: hidden;
+    text-indent: -9999px;
+    width: 261px;
+}
+#signup-form2 .facebook_connect_link { margin-left: 120px; }
+
+.formError { padding: 0px; margin: 10px 0 0 0; color: #900; }
+.formError ul, .formError li { padding: 0px; margin: 0px; }
+label.margin-top { margin: 5px 0 0 0; }
+
+.reveal-modal.signup h2 { text-align: left; }
+.reveal-modal.signup .row.margin { margin-bottom: 20px; }
+.reveal-modal.signup .row.date_of_birth .custom.dropdown { float: left; margin-right: 10px; }
+.reveal-modal.signup .row.date_of_birth .custom.dropdown ul { height: 150px; overflow: auto; }
+
+h1.left-align, h2.left-align, h3.left-align { text-align: left; }

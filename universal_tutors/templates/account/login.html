@@ -1,0 +1,44 @@
+{% extends "account/base.html" %}
+
+{% load account_tags allauth_tags %}
+
+{% block title %}Sign In{% endblock %}
+
+
+{% block body %}
+	<form class="nice" action='' method="post">
+		{% csrf_token %}
+		<h3>Sign In</h3>
+		<div class="row">
+			<div class="five columns">
+				<div class="row">
+					{% if form.non_field_errors %}<div class="formError">{{ form.non_field_errors }}</div>{% endif %}
+	                {% if form.email.errors %}<div class="formError">{{ form.email.errors }}</div>{% endif %}
+	  				<input name="email" type="text" class="input-text oversize stretch" placeholder="Username">
+				</div>
+				<div class="row">
+	                {% if form.password.errors %}<div class="formError">{{ form.password.errors }}</div>{% endif %}
+	  				<input name="password" type="password" class="input-text oversize stretch" placeholder="Password">
+	  				<a class="forgot" href="{% url account_reset_password %}">Forgot password?</a><br/>
+				</div>
+				<div class="row">&nbsp;</div>
+				<div class="row">
+					<div class="four columns">
+		  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign In"></div>
+					</div>			
+				</div>
+				<div class="row">&nbsp;</div>
+				<div class="row">
+	  				<a class="forgot" href="{% url signup %}">I want to create a new account.</a>
+				</div>
+			</div>			
+			<div class="two columns">
+			</div>
+			<div class="five columns">
+				<p>Or, use your facebook account to connect with Universal Tutors</p>
+				<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
+			</div>
+		</div>
+	</form>
+{% endblock %}
+

@@ -1,0 +1,42 @@
+{% extends "ui/layouts/iframe_base.html" %}
+{% load uni_form_tags %}
+
+{% block body_class %}form{% endblock %}
+{% block html_class %}form{% endblock %}
+
+{% block content %}
+        {% if not success %}
+                <form id="iframe-form" action="" class="iframe-form" method="post">
+                        {% with form.helper as helper %}
+                                {% uni_form form helper %}
+                        {% endwith %}
+                </form>
+                <div id="iframe-loading" class="iframe-loading hidden"></div>
+                <script type="text/javascript">
+                  $(document).ready(function() {
+                    $("textarea").removeClass("textarea").addClass("textarea1");
+                    $("textarea").css({"max-width": "none", "width": "332px"});
+                  });
+                  $('#iframe-form').submit(function(){
+                    $(this).addClass('hidden');
+                    $('#iframe-loading').removeClass('hidden');
+                  });
+                  $('#button-id-cancel').click(function(){ window.parent.contact_popup.close(); });
+                </script>
+        {% else %}
+                <div id="iframe-loading" class="iframe-loading"></div>
+          {% if success %}
+          <h2>Message sent successfully.</h2><h2>Thank you for your feedback.</h2>
+          {% endif %}
+          {% if error_message %}
+          <h2>{{ error_message }}</h2>
+          {% endif %}
+          <div id="popup_buttons" class="popup_buttons">
+            <a id="popup_button_confirm" class="popup_button_confirm" href="javascript:;">Close</a>
+          </div>
+          <script type="text/javascript">
+            $('#iframe-loading').addClass('hidden');
+            $('#popup_button_confirm').click(function(){ window.parent.contact_popup.close(); });
+          </script>
+        {% endif %}
+{% endblock %}

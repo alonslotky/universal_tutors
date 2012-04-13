@@ -1,0 +1,12 @@
+{% extends "socialaccount/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+
+{% block body %}
+<h3>{% trans "Your account inactive" %}</h3>
+
+<p>Thanks for joining! We've sent an email to your inbox. Just click on the link in that email and you'll be able to <a href="{% url account_login %}">sign in</a>.<p>
+<p>(If you haven't received the email in a couple of hours, remember to check your spam folder. If you need another email, just try <a href="{% url account_reset_password %}">password recovery</a>.</p>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "ui/layouts/base.html" %}
+{% load common_tags django_static %}
+
+{% block content %}
+    <div style="float: left; padding-right: 10px; padding-bottom: 10px;">
+        <img src="{% staticfile "img/rawjam_small.png" %}"/>
+    </div>
+	<h1>Welcome to Raw Jam's skeleton project</h1>
+	<p>This is a skeleton project, designed to give you and this project a quick and structured starting point. We have also created most of the models and some skeleton views and templates for you.</p>
+	
+	<p>Before you start developing, please read through all of our docs here. A number of appropaches and coding standards are explained here and will show you what we need you to deliver.</p>
+	
+	<p><b>This is intended to be an organic and constantly evolving skeleton project.</b><br/>If, when working on this project, you find a better way to approach a common problem then please let your project manager know. If suitable we will add it to the skeleton project for you and other developers to benefit from in the future.</p>
+	
+	<p><b>Remember... think DRY and generic.</b><br/>We all like to be able to spend time on new and fun programming problems, rather than waste time writing basic, repetitive code. As such, if you find yourself writing code that you think could be turned into a generic view, template or template tag (i.e. a generic photo slideshow or a DRY way to handle on-screen messages). Then please create it and let your project manager know so we can factor it back into the skeleton project.</p>
+	
+	{% create_tabs tabs %}
+{% endblock %}
+
+{% block sidebar %}
+    {% render_ajax_view 'rawjam_docs__accounts_app' %}
+    
+    <div class="div-wrapper">
+	    <div id="sample_sidebar_ajax"></div>
+	</div>
+{% endblock %}

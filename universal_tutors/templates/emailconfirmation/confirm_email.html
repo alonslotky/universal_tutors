@@ -1,0 +1,16 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% if email_address %}{% trans "Congratulations!" %}{% else %}{% trans "Oops!" %}{% endif %}{% endblock %}
+
+{% block body %}
+
+{% if email_address %}
+	<h2 class="left-align">{% trans "Congratulations!" %}</h2>
+	<p>Thanks for confirming your email address. You can now <a href="{% url login %}">sign in</a>.</p>
+{% else %}
+	<h2 class="left-align">{% trans "Oops!" %}</h2>
+	<p>{% trans "Invalid confirmation key." %}</p>
+{% endif %}
+{% endblock %}

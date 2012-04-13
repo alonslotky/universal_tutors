@@ -1,0 +1,37 @@
+<header>
+	<nav class="row hide-on-phones">
+		<div>
+			<ul>
+  				<li class="logo ir"><a href="/">Universal Tutors</a></li>
+  				<li><a class="link-students" href="students">Student Guide</a></li>
+ 				<li><a class="link-tutors" href="tutors">Tutor Guide</a></li>
+			</ul>
+		</div>
+		<div class="user-links">
+			<!--<a href="#" data-reveal-id="modal-signin">Log In</a><a href="#" class="search">Search</a>-->
+			{% if user.is_authenticated %}
+			<a href="javascript:;" class="sign-up-buttons">Welcome</a>
+			<a href="{% url logout %}" class="sign-up-buttons">Logout</a>
+			{% else %}
+			<a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();">Sign Up</a>			
+			<a href="#" class="sign-up-button">Sign In</a>			
+			{% endif %}
+			<a href="#" class="search">Search</a>
+			<form class="nice custom compact-search hide-on-phones">
+  				<select>
+    				<option>Tutors</option>
+    				<option>Subjects</option>
+    				<option>Level</option>
+  				</select>
+  				<input type="text" class="input-text" placeholder="Search">
+  				<input type="submit" class="search-icon" value="Search">
+			</form>
+			<a class="advanced" href="#">Advanced Search</a>
+		</div>
+	</nav>
+  
+    		<nav class="row show-on-phones">
+		<div class="logo"><a class="left ir" href="/">Universal Tutors</a></div>
+		<a class="right" href="#navi">Navigation</a>
+	</nav>
+</header>

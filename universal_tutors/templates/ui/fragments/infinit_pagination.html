@@ -1,0 +1,29 @@
+{% if forloop.last %}
+	{% if page.number == 1 %}
+		{% if page.number < paginator.num_pages %}
+            <div class="more"><a id="paginator_more_results_button" href="javascript:;">Show More</a></div>
+			<script type="text/javascript">
+				var paginator_more_results_button_number = 1;
+				$('#paginator_more_results_button').click(function(){
+					$('#paginator_more_results_button').html('Loading...');
+					$.ajax({
+						url: paginator_more_results_button_url + '?page='+ ++paginator_more_results_button_number + (extra !== undefined ? extra : ''),
+						success: function(data){
+							$(data).insertBefore('div.more');
+						}
+					});
+				});
+			</script>
+		{% endif %}
+	{% else %}
+		{% if page.number < paginator.num_pages %}
+			<script type="text/javascript">
+				$('#paginator_more_results_button').html('Show More');
+			</script>
+		{% else %}
+			<script type="text/javascript">
+				$('#paginator_more_results_button').parent("div.more").remove();
+			</script>
+		{% endif %}
+	{% endif %}
+{% endif %}

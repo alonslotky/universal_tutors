@@ -1,0 +1,5 @@
+{% load fb_versions %}
+
+<li id="space-photo-{{photo.id}}">
+	<a id="space-photo-{{photo.id}}-link" href="javascript:;" onclick="space_activate_photo_{{space.id}}('{% version photo.photo.path 'edit_office_photo' %}');"><img src="{% version photo.photo.path 'edit_office_photo_thumb' %}" width="91" height="76" alt="{{space.name}} - photo no {{photo.id}}" /></a>
+</li>

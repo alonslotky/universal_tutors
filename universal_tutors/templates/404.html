@@ -1,0 +1,23 @@
+{% extends "ui/layouts/base.html" %}
+
+{% block title%}Page not found{% endblock %}
+{% block page_title %}Page not found{% endblock %}
+
+{% block first_paragraph %}We're sorry but the page you requested could not be found, it could be that it no longer exists.{% endblock %}
+
+{% block content %}
+    <p>Please feel free to navigate around the site to find what you were looking for, or can we invite you to visit the following pages:</p>
+	
+	<ul>
+	<li><a href="/about/about-iic-partners/">Click here</a> for further details about IIC Partners;</li>
+	<li><a href="/global-offices/">Click here</a> for further details about our members; or</li>
+	<li><a href="/executive-lounge/">Click here</a> for articles and opinion pieces authored by IIC Partners' members.</li>
+	</ul>
+
+	<p>If you require further assistance please do not hesitate to <a href="/contact/">contact us</a>.</p>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "profile/sidebar/login_register.html" %}
+  	{% include "blog/sidebar/recent_posts.html" %}
+{% endblock %}

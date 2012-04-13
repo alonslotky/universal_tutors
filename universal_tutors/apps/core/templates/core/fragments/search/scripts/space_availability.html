@@ -1,0 +1,47 @@
+<script type="text/javascript">
+	spaces[{{forloop.counter0}}] = {
+		'id': {{space.id}},
+		'type': {{space.relation}},
+		'hype': {{space.points}},
+		'hour_price': {{space.hour_price}},
+		'day_price': {{space.day_price}},
+		'price_symbol': '£',
+		'rating': {{space.avg_score}},
+		'distance': {{space.distance}},
+		'latitude': {{space.latitude}},
+		'longitude': {{space.longitude}},
+		'name': '{{space.name}}',
+		'url': '{% url space_detail space.id %}?date={{date|date:"Y-m-d"}}',
+		'availability': {% if space.relation == space.USER_RELATION_TYPES.OWNER %}{{availability.1}}{% else %}[]{% endif %},
+		'marker': null
+	};
+	
+	var index = 0;
+	var availability = spaces[{{forloop.counter0}}].availability;
+	var size = availability.length;
+	while (index < size) {
+		if (availability[index][1] - availability[index][2] > 0) {
+			var begin = availability[index][0];
+			var end = null;
+			while (index < size && availability[index][1]-availability[index][2] > 0 ) {
+				end = availability[index][0];
+				index++;
+			}
+			
+			var HOUR_SIZE = 45; /* width of a hour in CSS */
+			var OFFSET = 22; /* width of the bar offset */
+			var begin_point = begin[0] * HOUR_SIZE + begin[1] * HOUR_SIZE / 60;
+			var end_point = (end[0]>0 || end[1]>0 ? end[0] : 24) * HOUR_SIZE + end[1] * HOUR_SIZE / 60;
+			var width = end_point - begin_point - OFFSET;
+			
+			$('#space-availability-{{space.id}}').append(
+				'<div id="space-availability-period-{{space.id}}-'+ begin_point +'" style="top:27px;left:'+ begin_point +'px;width:'+ width +'px;" class="slider-box" title="Available from '+begin[0]+':'+begin[1]+' to '+end[0]+':'+end[1]+'">'+
+				'<strong class="slider-title">Available from '+begin[0]+':'+begin[1]+' to '+end[0]+':'+end[1]+'</strong>'+
+				'</div>'
+			);
+			
+		} else {
+			index++;
+		}
+	}
+</script>

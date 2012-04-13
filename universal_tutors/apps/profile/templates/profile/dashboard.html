@@ -1,0 +1,206 @@
+{% extends "ui/layouts/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block body_class %}left-side{% endblock %}
+
+{% block content %}
+	<div id="content">
+		{% include "profile/_dashboard_menu.html" %}
+		<div class="article-holder">
+			<div class="article">
+				<h2>List your Universal Tutors.</h2>
+				<p>Promote your temporarily unused Universal Tutors, host business nomads and lower your fix costs.</p>
+				<a id="add-new-space-link" class="link2" href="javascript:;"><span>LIST OFFICE</span></a>
+				<script type="text/javascript">
+					var new_space_popup;
+					$('#add-new-space-link').click(function(){
+						new_space_popup = new windowPopup({
+							'title': 'List a new office',
+							'url': '{% url space_edit_details %}',
+							'width': 490,
+							'height': 420
+						});
+					});
+				</script>
+			</div>
+			<div class="article">
+				<h2><span class="mark">Where are you working?</span> Make a recommendation.</h2>
+				<p>Unveil and recommend publicly available Universal Tutors (i.e. hotel lobbies, restaurants, airports, universities) and share your preferred working spot along the way.</p>
+				<a id="recommend-new-space-link" class="link2" href="javascript:;"><span>Recommend</span></a>
+				<script type="text/javascript">
+					var recommend_space_popup;
+					$('#recommend-new-space-link').click(function(){
+						recommend_space_popup = new windowPopup({
+							'title': 'Recommend a new space',
+							'url': '{% url space_edit_recommendation_details %}',
+							'width': 490,
+							'height': 580
+						});
+					});
+				</script>
+			</div>
+		</div>
+		<div class="heading2">
+			<h2>Offices available near</h2>
+			<address>{{profile.location}}</address>
+		</div>
+		<div class="twocolumns">
+			<div class="column-left">
+				{% include "space/fragments/dashboard/near_spaces.html" %}
+			</div>
+            {% if has_best_places %}
+			<div class="aside3">
+				<strong class="title4">The best 5 places near you</strong>
+				{% include "space/fragments/dashboard/best_spaces.html" %}
+			</div>
+            {% endif %}
+		</div>
+	</div>
+	<div id="sidebar">
+		<div class="widget2">
+			<ul class="tabset2">
+				<li class="active"><a href="#">Latest Bookings <em></em></a></li>
+				<li><a href="#">My Bookings <em></em></a></li>
+			</ul>
+			<ul class="place-list">
+				<li class="item">
+					<div class="date-box">
+						<span class="day">21</span>
+						<span class="month">april</span>
+					</div>
+					<h3>Cafe - "Pefetto" Raeburn St.</h3>
+					<p>11:00 until 14:00</p>
+					<div class="rating-box">
+						<span>Rating:</span>
+						<ul class="star-rating2">
+							<li><a class="one-star" title="Rate this 1 star out of 5" href="#">1</a></li>
+							<li><a class="two-stars" title="Rate this 2 stars out of 5" href="#">2</a></li>
+							<li><a class="three-stars" title="Rate this 3 stars out of 5" href="#">3</a></li>
+							<li class="active"><a class="four-stars" title="Rate this 4 stars out of 5" href="#">4</a></li>
+							<li><a class="five-stars" title="Rate this 5 stars out of 5" href="#">5</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="item">
+					<div class="date-box">
+						<span class="day">23</span>
+						<span class="month">april</span>
+					</div>
+					<h3>Cafe - "Pefetto" Raeburn St.</h3>
+					<p>11:00 until 14:00</p>
+					<div class="rating-box">
+						<span>Rating:</span>
+						<ul class="star-rating2">
+							<li><a class="one-star" title="Rate this 1 star out of 5" href="#">1</a></li>
+							<li><a class="two-stars" title="Rate this 2 stars out of 5" href="#">2</a></li>
+							<li><a class="three-stars" title="Rate this 3 stars out of 5" href="#">3</a></li>
+							<li class="active"><a class="four-stars" title="Rate this 4 stars out of 5" href="#">4</a></li>
+							<li><a class="five-stars" title="Rate this 5 stars out of 5" href="#">5</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="widget2">
+			<ul class="tabset2">
+				<li class="active"><a href="#">Booking History<em></em></a></li>
+				<li><a href="#">My History<em></em></a></li>
+			</ul>
+			<ul class="place-list">
+				<li class="item">
+					<div class="date-box date-box2">
+						<span class="day">11</span>
+						<span class="month">april</span>
+					</div>
+					<h3>Cafe - "Pefetto" Raeburn St.</h3>
+					<p>11:00 until 14:00</p>
+					<div class="rating-box">
+						<span>Rating:</span>
+						<ul class="star-rating2">
+							<li><a class="one-star" title="Rate this 1 star out of 5" href="#">1</a></li>
+							<li><a class="two-stars" title="Rate this 2 stars out of 5" href="#">2</a></li>
+							<li><a class="three-stars" title="Rate this 3 stars out of 5" href="#">3</a></li>
+							<li class="active"><a class="four-stars" title="Rate this 4 stars out of 5" href="#">4</a></li>
+							<li><a class="five-stars" title="Rate this 5 stars out of 5" href="#">5</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="item">
+					<div class="date-box date-box2">
+						<span class="day">11</span>
+						<span class="month">april</span>
+					</div>
+					<h3>Cafe - "Pefetto" Raeburn St.</h3>
+					<p>11:00 until 14:00</p>
+					<div class="rating-box">
+						<span>Rating:</span>
+						<ul class="star-rating2">
+							<li><a class="one-star" title="Rate this 1 star out of 5" href="#">1</a></li>
+							<li><a class="two-stars" title="Rate this 2 stars out of 5" href="#">2</a></li>
+							<li><a class="three-stars" title="Rate this 3 stars out of 5" href="#">3</a></li>
+							<li class="active"><a class="four-stars" title="Rate this 4 stars out of 5" href="#">4</a></li>
+							<li><a class="five-stars" title="Rate this 5 stars out of 5" href="#">5</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="item">
+					<div class="date-box date-box2">
+						<span class="day">11</span>
+						<span class="month">april</span>
+					</div>
+					<h3>Cafe - "Pefetto" Raeburn St.</h3>
+					<p>11:00 until 14:00</p>
+					<div class="rating-box">
+						<span>Rating:</span>
+						<ul class="star-rating2">
+							<li><a class="one-star" title="Rate this 1 star out of 5" href="#">1</a></li>
+							<li><a class="two-stars" title="Rate this 2 stars out of 5" href="#">2</a></li>
+							<li><a class="three-stars" title="Rate this 3 stars out of 5" href="#">3</a></li>
+							<li class="active"><a class="four-stars" title="Rate this 4 stars out of 5" href="#">4</a></li>
+							<li><a class="five-stars" title="Rate this 5 stars out of 5" href="#">5</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="item">
+					<div class="date-box date-box2">
+						<span class="day">11</span>
+						<span class="month">april</span>
+					</div>
+					<h3>Cafe - "Pefetto" Raeburn St.</h3>
+					<p>11:00 until 14:00</p>
+					<div class="rating-box">
+						<span>Rating:</span>
+						<ul class="star-rating2">
+							<li><a class="one-star" title="Rate this 1 star out of 5" href="#">1</a></li>
+							<li><a class="two-stars" title="Rate this 2 stars out of 5" href="#">2</a></li>
+							<li><a class="three-stars" title="Rate this 3 stars out of 5" href="#">3</a></li>
+							<li class="active"><a class="four-stars" title="Rate this 4 stars out of 5" href="#">4</a></li>
+							<li><a class="five-stars" title="Rate this 5 stars out of 5" href="#">5</a></li>
+						</ul>
+					</div>
+				</li>
+				<li class="item">
+					<div class="date-box date-box2">
+						<span class="day">11</span>
+						<span class="month">april</span>
+					</div>
+					<h3>Cafe - "Pefetto" Raeburn St.</h3>
+					<p>11:00 until 14:00</p>
+					<div class="rating-box">
+						<span>Rating:</span>
+						<ul class="star-rating2">
+							<li><a class="one-star" title="Rate this 1 star out of 5" href="#">1</a></li>
+							<li><a class="two-stars" title="Rate this 2 stars out of 5" href="#">2</a></li>
+							<li><a class="three-stars" title="Rate this 3 stars out of 5" href="#">3</a></li>
+							<li class="active"><a class="four-stars" title="Rate this 4 stars out of 5" href="#">4</a></li>
+							<li><a class="five-stars" title="Rate this 5 stars out of 5" href="#">5</a></li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+			<div class="wrap">
+				<a href="#">View More &raquo;</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
