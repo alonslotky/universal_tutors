@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.utils import simplejson
 from django import template
 from django.contrib.auth.decorators import user_passes_test
+from django.conf import settings
 
 from apps.profile.models import UserProfile
 
@@ -129,6 +130,6 @@ def over16_required(under16_url = None):
     """
     
     return user_passes_test(
-        lambda u: u.is_authenticated() and u.profile.type != UserProfile.TYPES.NONE and u.profile.type != UserProfile.TYPES.UNDER_16,
+        lambda u: u.is_authenticated() and u.profile.type != UserProfile.TYPES.NONE and u.profile.type != UserProfile.TYPES.UNDER16,
         login_url = under16_url or settings.UNDER16_URL
     )

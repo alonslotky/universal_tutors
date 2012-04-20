@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'apps.common',
     'apps.core',
     'apps.profile',
+    'apps.classes',
     
     # CMS
 #    'cms',
@@ -219,6 +220,7 @@ FACEBOOK_ENABLED = True
 TWITTER_ENABLED = True
 OPENID_ENABLED = True
 SOCIALACCOUNT_ENABLED = True
+DEFAULT_PROFILE_IMAGE = 'images/defaults/profile.png'
 
 # DJANGO HAYSTACK SETTINGS
 HAYSTACK_SITECONF = 'configs.common.search_sites'
@@ -302,26 +304,7 @@ FILEBROWSER_VERSIONS = {
     'medium': {'verbose_name': 'Medium (370px)', 'width': 370, 'height': '', 'opts': ''},
     'large': {'verbose_name': 'Large (530px)', 'width': 530, 'height': '', 'opts': ''},
 
-    'edit_contact': {'verbose_name': 'Edit space contact', 'width': 47, 'height': 45, 'opts': 'crop upscale'},
-    'edit_office_photo': {'verbose_name': 'Edit space photo', 'width': 310, 'height': 161, 'opts': 'crop upscale'},
-    'edit_office_photo_thumb': {'verbose_name': 'Edit space photo thumbnail', 'width': 91, 'height': 76, 'opts': 'crop upscale'},
-    'edit_space_amenity': {'verbose_name': 'Edit space amenity', 'width': 37, 'height': 33, 'opts': 'crop upscale'},
-
-    'space_detail_feedback': {'verbose_name': 'Space detail feedback', 'width': 47, 'height': 45, 'opts': 'crop upscale'},
-
-    'edit_profile_photo': {'verbose_name': 'Edit profile photo', 'width': 310, 'height': 161, 'opts': 'crop upscale'},
-
-    'blog_list_image': {'verbose_name': 'A image from a blog', 'width': 253, 'height': 149, 'opts': 'crop upscale'},
-    'blog_comment_photo': {'verbose_name': 'A photo from comment user', 'width': 47, 'height': 45, 'opts': 'crop upscale'},
-
-    'public_profile_photo': {'verbose_name': 'Public profile photo', 'width': 80, 'height': 78, 'opts': 'crop upscale'},
-    'public_profile_space_photo': {'verbose_name': 'Public profile space photo', 'width': 91, 'height': 76, 'opts': 'crop upscale'},
-    'edit_profile_photo': {'verbose_name': 'Edit profile photo', 'width': 310, 'height': 161, 'opts': 'crop upscale'},
-
-    'dashboard_space_photo': {'verbose_name': 'Dashboard space photo', 'width': 237, 'height': 137, 'opts': 'crop upscale'},
-    'dashboard_space_photo_thumbnail': {'verbose_name': 'Dashboard space photo thumbnail', 'width': 54, 'height': 55, 'opts': 'crop upscale'},
-    
-    'home_best_spaces_main_photo': {'verbose_name': 'Homepage best spaces main photo', 'width': 479, 'height': 200, 'opts': 'crop upscale'},
+    'class_list_profile_image': {'width': 61, 'height': 61, 'opts': 'crop upscale'},
 }
 FILEBROWSER_ADMIN_VERSIONS = [
     'thumb', 'small','medium','large',
@@ -349,6 +332,9 @@ TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, 'grappelli/tinymce/jscripts/tiny_mce/
 #    'skin'              : "grappelli",
 #    'browsers'          : "gecko, safari"
 #}
+
+# SCRIBBLAR_API_KEY
+SCRIBBLAR_API_KEY = "4E05E226-B564-8140-D1E65546167F353C"
 
 # Allow for local (per-user) override
 try:

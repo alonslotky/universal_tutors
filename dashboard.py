@@ -42,6 +42,25 @@ class CustomIndexDashboard(Dashboard):
 #            ]
 #        ))
 
+        # append an app list module for "Applications"
+        self.children.append(modules.Group(
+            _('Universal Tutors'),
+            collapsible=True,
+            column=1,
+            children = [
+                modules.ModelList(
+                    _('Classes'),
+                    css_classes=('collapse',),
+                    models=('apps.classes.models.Class', ),
+                ),
+#                modules.ModelList(
+#                    _('Blog'),
+#                    css_classes=('collapse',),
+#                    models=('apps.blog.models.Post', 'apps.blog.models.Subscription', ),
+#                ),
+            ]
+        ))
+
         self.children.append(modules.AppList(
             _('Social Signups and Authentication'),
             collapsible=True,

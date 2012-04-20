@@ -1,7 +1,0 @@
-<ul id="nav">
-	<li {% if home %}class="active"{% endif %}><a class="home" href="{% url home %}">home</a></li>
-	{% if user.is_authenticated %}<li {% if dashboard %}class="active"{% endif %}><a class="dashboard" href="{% url dashboard %}">Dashboard</a></li>{% endif %}
-	<li {% if pricing %}class="active"{% endif %}><a class="price" href="/pricing/">Pricing</a></li>
-	{#<li {% if store %}class="active"{% endif %}><a class="cart" href="#">Store</a></li>#}
-	<li {% if blog %}class="active"{% endif %}><a class="blog" href="{% url blog %}">Blog</a></li>
-</ul>

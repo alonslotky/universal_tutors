@@ -17,6 +17,9 @@ from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
 
+from apps.classes.models import ClassSubject
+
+from scribblar import users
 
 class UserProfile(BaseModel):
     """
@@ -51,7 +54,7 @@ class UserProfile(BaseModel):
     
     about = models.CharField(verbose_name=_('About'), max_length=500, null=True, blank=True)
     title = models.CharField(verbose_name=_('Title'), max_length=100, null=True, blank=True)
-    profile_image = models.ImageField(verbose_name=_('Profile image'), upload_to=get_upload_to, null=True, blank=True)
+    profile_image = models.ImageField(verbose_name=_('Profile image'), upload_to=get_upload_to, default=settings.DEFAULT_PROFILE_IMAGE)
     address = models.CharField(verbose_name=_('Address'), max_length=150, null=True, blank=True)
     location = models.CharField(verbose_name=_('Location'), max_length=50, null=True, blank=True)
     postcode = models.CharField(verbose_name=_('Postcode'), max_length=10, null=True, blank=True)
@@ -59,12 +62,16 @@ class UserProfile(BaseModel):
     phone = models.CharField(verbose_name=_('Phone number'), max_length=20, null=True, blank=True)
     newsletters = models.BooleanField(verbose_name=_('Newsletters'))
     date_of_birth = models.DateField(verbose_name=_('Date of birth'), null=True, blank=True)
+    scribblar_id = models.CharField(verbose_name=_('Scribblar ID'), max_length=100, null=True, blank=True)
 
     type = models.PositiveSmallIntegerField(choices=TYPES.get_choices(), default=TYPES.NONE)
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
 
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)    
+
+    # AS TUTOR
+    subjects = models.ForeignKey(ClassSubject, related_name='tutors', null=True, blank=True)
 
     @property
     def is_over16(self):
@@ -75,7 +82,7 @@ class UserProfile(BaseModel):
         # there are no problem because 29 Feb less 16 years it's 29 Feb too
         date = datetime.date(today.year - 16, today.month, today.day)
 
-        return date_of_birth <= date
+        return self.date_of_birth <= date
 
     @property
     def parent(self):
@@ -86,7 +93,7 @@ class UserProfile(BaseModel):
         # there are no problem because 29 Feb less 16 years it's 29 Feb too
         date = datetime.date(today.year - 16, today.month, today.day)
 
-        if date_of_birth <= date:
+        if self.date_of_birth <= date:
             return self
         
         try:
@@ -113,8 +120,19 @@ class UserProfile(BaseModel):
     
     def save(self, *args, **kwargs):
         if self.type != self.TYPES.NONE and not self.is_over16:
-            self.type = self.TYPES.UNDER_16
+            self.type = self.TYPES.UNDER16
         super(self.__class__, self).save(*args, **kwargs)
+
+        if self.type != self.TYPES.NONE and self.type != self.TYPES.PARENT:
+            user = self.user
+            users.edit(
+                userid = self.get_scribblar_id(),
+                firstname = user.first_name,
+                lastname = user.last_name,
+                email = user.email,
+                roleid = 50 if self.type == self.TYPES.TUTOR else 10,
+            )
+                                
         self.__update_location()
 
     def get_profile_image_path(self):
@@ -275,13 +293,27 @@ class UserProfile(BaseModel):
     def get_first_photo(self):
         return self.photos.all()[0].photo.path if self.photos.all() else os.path.join(settings.MEDIA_ROOT, self.DEFAULT_PHOTO)
 
+    def get_scribblar_id(self):
+        if not self.scribblar_id:
+            user = self.user
+            scribblar_user = users.add(
+                username = user.username,
+                firstname = user.first_name,
+                lastname = user.last_name,
+                email = user.email,
+                roleid = 50 if self.type == self.TYPES.TUTOR else 10,
+            )
+            self.scribblar_id = scribblar_user['userid']
+            super(self.__class__, self).save()
+        
+        return self.scribblar_id
 
 class Child(models.Model):
     ## THIS MODEL WHERE CREATED BECAUSE ForeignKey WASN'T WORKING WITH AutoOneToOneField
     parent = models.ForeignKey(User, related_name="childs")
     child  = models.ForeignKey(User, related_name="parent_set")
     active = models.BooleanField(default=False)
-    key    = models.CharField(max_length=30)
+    key    = models.CharField(max_length=30, null=True, blank=True, default=None)
 
     def save(self, *args, **kwargs):
         if not self.key:
@@ -308,7 +340,7 @@ class NewsletterSubscription(BaseModel):
         t = loader.get_template('profile/emails/verify_email.html')
         html = t.render(context)
 
-        msg = EmailMessage('[Youcoca.com] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
+        msg = EmailMessage('[Universal Tutors] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
         msg.content_subtype = "html"
         msg.send()
 

@@ -1,0 +1,69 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Dashboard{% endblock %}
+{% block body_class %}{% endblock %}
+
+{% block content %}
+
+<section class="blue feature-box"><div class="inner">
+        <h1>Messages <span>Conversations with students.</span></h1>
+      </div></section>
+      
+      <div class="hide-on-phones">
+      {% include 'profile/tutor/fragments/_timer.html' %}
+      </div>
+      
+      <article>
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="http://placehold.it/100x100" alt="Tutor Photo">
+          </div>
+          
+          <div class="three columns title">
+            <h3 class="title"><a href="tutor-student-profile">John Doe</a></h3>
+          </div>
+          
+          <div class="four columns description">
+            <p><a href="#" data-reveal-id="modal-message">"Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Fusce gravida." ...</a></p>
+          </div>
+          
+          <div class="two columns timestamp">
+            <p>Received on <br><strong>4:15pm - 5:00pm EST <br>March 8</strong></p>
+          </div>
+          
+          <div class="two columns action">
+            <a href="#" class="send-message" data-reveal-id="modal-message">View Messages</a>
+          </div>
+        </div>
+      </article>
+      
+      <article>
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="http://placehold.it/100x100" alt="Tutor Photo">
+            <div class="unread">2<span> Unread Messages</span></div>
+          </div>
+          
+          <div class="three columns title">
+            <h3 class="title"><a href="tutor-student-profile">John Doe</a></h3>
+          </div>
+          
+          <div class="four columns description">
+            <p><a href="#" data-reveal-id="modal-message">"Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula." ...</a></p>
+          </div>
+          
+          <div class="two columns timestamp">
+            <p>Received on <br><strong>4:15pm - 5:00pm EST <br>March 8</strong></p>
+          </div>
+          
+          <div class="two columns action">
+            <a href="#" class="send-message" data-reveal-id="modal-message">View Messages</a>
+          </div>
+        </div>
+      </article>
+		
+	{% include 'profile/tutor/fragments/_modal_messages.html' %}
+
+{% endblock %}

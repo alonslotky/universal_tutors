@@ -16,7 +16,7 @@ django-static
 slimmer
 johnny-cache
 django-model-utils
-BeautifulSoup
+BeautifulSoup==3.2.1
 markdown
 FeedParser
 -e git+git://github.com/pydanny/django-uni-form.git#egg=django-uni-form

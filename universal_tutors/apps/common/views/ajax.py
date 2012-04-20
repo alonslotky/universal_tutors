@@ -36,7 +36,7 @@ def contact(request):
             t = loader.get_template('common/emails/new_message.html')
             html = t.render(context)
 
-            subject = '[Youcoca.com] New Message from %s' % name
+            subject = '[Universal Tutors] New Message from %s' % name
 
             msg = EmailMessage(subject, html,
                                settings.DEFAULT_FROM_EMAIL, to=list(settings.ADMINS))

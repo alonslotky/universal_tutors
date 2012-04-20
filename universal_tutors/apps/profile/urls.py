@@ -16,10 +16,11 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)profile/(?P<username>[\w\-\_]+)/$', 'profile', {}, name = "profile"),
 )
 
-# Profile management
+# Tutors
 urlpatterns += patterns('apps.profile.views.main',
 #    url(r'^signup/complete/$', 'register_complete', {}, name = "register_complete"),
-    url(r'^(?i)dashboard/$', 'dashboard', {}, name = "dashboard"),
+    url(r'^(?i)tutor/classes/$', 'tutor_classes', {}, name = "tutor_classes"),
+    url(r'^(?i)tutor/messages/$', 'tutor_messages', {}, name = "tutor_messages"),
 )
 
 urlpatterns += patterns('apps.profile.views.main',
@@ -32,3 +33,9 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)add_newsletter_subscription/$', 'add_newsletter_subscription', name = "add_newsletter_subscription"),
     url(r'^(?i)change_photo/$', 'change_photo', name = "change_photo"),
 )
+
+
+
+
+
+

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
 from django.contrib import messages
+from django.conf import settings
 
 from allauth.facebook.models import FacebookAccount
 from allauth.twitter.models import TwitterAccount
@@ -13,11 +14,12 @@ from allauth.openid.models import OpenIDAccount
 from allauth.socialaccount.forms import DisconnectForm
 
 from apps.common.utils.view_utils import main_render
+from apps.common.utils.decorators import over16_required
 from apps.profile.models import UserProfile, NewsletterSubscription
 from apps.profile.forms import ProfileForm, EditProfileForm
 
 
-@main_render(template='profile/my_profile.html')
+@main_render()
 def profile(request, username=None):
     """
     detailed profile from a user
@@ -33,9 +35,17 @@ def profile(request, username=None):
 
     profile = person.profile
 
+    if profile.type == profile.TYPES.TUTOR:
+        template = 'profile/tutor/profile.html'
+    elif profile.type == profile.TYPES.STUDENT:
+        template = ''
+    else:
+        raise http.Http404()
+
     return {
         'dashboard': person == user,
-        'profile':profile,
+        'profile': profile,
+        'TEMPLATE': template,
     }
 
 
@@ -133,3 +143,37 @@ def newsletter_verify_email_address(request, key):
     subscription.verify_email()
 
     return {'existing': existing}
+
+
+
+### TUTORS #####################################################
+@login_required
+@over16_required()
+@main_render(template='profile/tutor/classes.html')
+def tutor_classes(request):
+    """
+    view my recent activity
+    """
+    user = request.user
+    profile = user.profile
+
+    return {
+        'dashboard': True,
+        'profile':profile,
+    }
+
+
+@login_required
+@over16_required()
+@main_render(template='profile/tutor/messages.html')
+def tutor_messages(request):
+    """
+    view my recent activity
+    """
+    user = request.user
+    profile = user.profile
+
+    return {
+        'dashboard': True,
+        'profile':profile,
+    }
