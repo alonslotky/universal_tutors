@@ -12,6 +12,7 @@ urlpatterns = patterns('apps.profile.views.login',
 
 # Front-end profile
 urlpatterns += patterns('apps.profile.views.main',
+    url(r"^(?i)dashboard/$", 'dashboard', name="dashboard"),
     url(r'^(?i)profile/$', 'profile', {}, name = "profile"),
     url(r'^(?i)profile/(?P<username>[\w\-\_]+)/$', 'profile', {}, name = "profile"),
 )

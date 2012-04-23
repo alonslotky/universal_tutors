@@ -5,12 +5,10 @@
       	<div>
 	    	<ul>
 	      		{% if authenticated %}
-					{% if profile.type == profile.TYPES.TUTOR %}
+					{% if profile.type == profile.TYPES.TUTOR or profile.type == profile.TYPES.STUDENT %}
 				          <li class="logo ir"><a href="/">Universal Tutors</a></li>
 				          <li><a class="link-classes" href="{% url tutor_classes %}">Classes</a></li>
 				          <li><a class="link-messages" href="{% url tutor_messages %}">Messages</a></li>
-					{% else %}
-						{{profile.get_type_display}}
 					{% endif %}
 				{% else %}
 		  				<li class="logo ir"><a href="/">Universal Tutors</a></li>
@@ -22,7 +20,7 @@
 
 		<div class="user-links">
 			{% if authenticated %}
-        		<a href="{% url profile %}" class="link-profile">Profile</a><a href="index">Sign Out</a>
+        		<a href="{% url profile %}" class="link-profile">Profile</a><a href="{% url logout %}">Sign Out</a>
 			{% else %}
 				<a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();">Sign Up</a>			
 				<a href="#" class="sign-up-button">Sign In</a>

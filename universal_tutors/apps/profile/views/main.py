@@ -127,10 +127,12 @@ def dashboard(request):
     user = request.user
     profile = user.profile
 
-    return {
-        'dashboard': True,
-        'profile':profile,
-    }
+    return http.HttpResponseRedirect('home')
+
+#    return {
+#        'dashboard': True,
+#        'profile':profile,
+#    }
 
 @main_render(template='profile/newsletter_email_verify.html')
 def newsletter_verify_email_address(request, key):
