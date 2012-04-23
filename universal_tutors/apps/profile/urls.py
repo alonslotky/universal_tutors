@@ -25,8 +25,8 @@ urlpatterns += patterns('apps.profile.views.main',
 
 # Students
 urlpatterns += patterns('apps.profile.views.main',
-    url(r'^(?i)student/classes/$', 'student', {}, name = "student_classes"),
-    url(r'^(?i)student/messages/$', 'student', {}, name = "student_messages"),
+    url(r'^(?i)student/classes/$', 'student_classes', {}, name = "student_classes"),
+    url(r'^(?i)student/messages/$', 'student_messages', {}, name = "student_messages"),
 )
 
 urlpatterns += patterns('apps.profile.views.main',
