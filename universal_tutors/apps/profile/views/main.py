@@ -160,7 +160,6 @@ def tutor_classes(request):
     profile = user.profile
 
     return {
-        'dashboard': True,
         'profile':profile,
     }
 
@@ -176,6 +175,36 @@ def tutor_messages(request):
     profile = user.profile
 
     return {
-        'dashboard': True,
+        'profile':profile,
+    }
+
+
+### STUDENTS #####################################################
+@login_required
+@over16_required()
+@main_render(template='profile/student/classes.html')
+def student_classes(request):
+    """
+    view my recent activity
+    """
+    user = request.user
+    profile = user.profile
+
+    return {
+        'profile':profile,
+    }
+
+
+@login_required
+@over16_required()
+@main_render(template='profile/student/messages.html')
+def student_messages(request):
+    """
+    view my recent activity
+    """
+    user = request.user
+    profile = user.profile
+
+    return {
         'profile':profile,
     }

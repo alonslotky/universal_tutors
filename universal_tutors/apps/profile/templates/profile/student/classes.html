@@ -1,0 +1,134 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Classes{% endblock %}
+{% block body_class %}{% endblock %}
+
+{% block content %}
+
+<section class="blue feature-box"><div class="inner">
+      <h1>Classes <span>Upcoming and previously given classes.</span></h1>
+</div></section>
+      
+      {% include 'profile/tutor/fragments/_timer.html' %}
+      
+      {% for class in user.classes_as_student.all %}
+      {% with class.student as student %}
+      {% with student.profile as student_profile %}
+      <article class="{% if class.is_active %}{% endif %}">
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="{% version student_profile.profile_image.path 'class_list_profile_image' %}" alt="{{student.get_full_name}}">
+          </div>
+          
+          <div class="three columns">
+            <a href="{% url class_detail class.id %}"><h3>{{class.name}}</h3></a>
+            <p class="subheader">with <a href="tutor-student-profile">{{student.get_full_name}}</a></p>
+          </div>
+          
+          <div class="four columns">
+            <p>{{class.description}}</p>
+          </div>
+          
+          <div class="two columns timestamp">
+            <p>Scheduled for <br><strong>{{class.start|time:"H:i"}} - {{class.end|time:"H:i"}}<br>{{class.date|date:"M d, Y"}}</strong></p>
+          </div>
+          
+          <div class="two columns action">
+            <a href="#" class="send-message" data-reveal-id="modal-message">View Messages</a>
+            <a href="#" class="cancel-class" data-reveal-id="modal-cancel-class">Cancel Class</a>
+          </div>
+        </div>
+      </article>
+      {% endwith %}
+      {% endwith %}
+      {% endfor %}
+      
+      <article>
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="http://placehold.it/100x100" alt="Tutor Photo">
+          </div>
+          
+          <div class="three columns">
+            <h3>Class Name Here</h3>
+            <p class="subheader">with <a href="tutor-student-profile">John Doe</a></p>
+          </div>
+          
+          <div class="four columns">
+            <p>Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Fusce gravida nibh ut magna varius at scelerisque eros consectetur. Fusce sed.</p>
+          </div>
+          
+          <div class="two columns timestamp">
+            <p>Scheduled for <br><strong>4:15pm - 5:00pm EST <br>March 8</strong></p>
+          </div>
+          
+          <div class="two columns action">
+            <a href="#" class="send-message" data-reveal-id="modal-message">View Messages</a>
+            <a href="#" class="cancel-class" data-reveal-id="modal-cancel-class">Cancel Class</a>
+          </div>
+        </div>
+      </article>
+      
+      <article class="faded">
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="http://placehold.it/100x100" alt="Tutor Photo">
+          </div>
+          
+          <div class="three columns">
+            <h3>Class Name Here</h3>
+            <p class="subheader">with <a href="tutor-student-profile">John Doe</a></p>
+          </div>
+          
+          <div class="four columns">
+            <p>Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Fusce gravida nibh ut magna varius at scelerisque eros consectetur. Fusce sed.</p>
+          </div>
+          
+          <div class="two columns timestamp">
+            <p>Scheduled for <br><strong>4:15pm - 5:00pm EST <br>March 8</strong></p>
+          </div>
+          
+          <div class="two columns action">
+            <a class="no-feedback">Awaiting Review</a>
+            <a href="#" class="rate-tutor" data-reveal-id="modal-review">Rate Student</a>
+            <a href="#" class="class-material">Class Material</a>
+          </div>
+        </div>
+      </article>
+      
+      <article class="faded">
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="http://placehold.it/100x100" alt="Tutor Photo">
+          </div>
+          
+          <div class="three columns">
+            <h3>Class Name Here</h3>
+            <p class="subheader">with <a href="tutor-student-profile">John Doe</a></p>
+          </div>
+          
+          <div class="four columns">
+            <p>Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Fusce gravida nibh ut magna varius at scelerisque eros consectetur. Fusce sed.</p>
+          </div>
+          
+          <div class="two columns timestamp">
+            <p>Scheduled for <br><strong>4:15pm - 5:00pm EST <br>March 8</strong></p>
+          </div>
+          
+          <div class="two columns action">
+            <a href="#" class="view-rating" data-reveal-id="modal-view-review-received">View Your Rating</a>
+            <a href="#" class="view-feedback" data-reveal-id="modal-review">View Student Rating</a>
+            <a href="#" class="class-material">Class Material</a>
+          </div>
+        </div>
+      </article>
+
+	{% include 'profile/tutor/fragments/_modal_messages.html' %}
+	{% include 'profile/tutor/fragments/_modal_cancel_class.html' %}
+	{% include 'profile/tutor/fragments/_modal_rate_student.html' %}
+	{% include 'profile/tutor/fragments/_modal_review_view.html' %}
+	{% include 'profile/tutor/fragments/_modal_review_view_received.html' %}
+
+{% endblock %}

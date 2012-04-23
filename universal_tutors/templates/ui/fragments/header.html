@@ -4,14 +4,17 @@
 	<nav class="row hide-on-phones">
       	<div>
 	    	<ul>
+	          	<li class="logo ir"><a href="/">Universal Tutors</a></li>
 	      		{% if authenticated %}
-					{% if profile.type == profile.TYPES.TUTOR or profile.type == profile.TYPES.STUDENT %}
-				          <li class="logo ir"><a href="/">Universal Tutors</a></li>
+					{% if profile.type == profile.TYPES.TUTOR %}
 				          <li><a class="link-classes" href="{% url tutor_classes %}">Classes</a></li>
 				          <li><a class="link-messages" href="{% url tutor_messages %}">Messages</a></li>
 					{% endif %}
+					{% if profile.type == profile.TYPES.STUDENT %}
+				          <li><a class="link-classes" href="{% url student_classes %}">Classes</a></li>
+				          <li><a class="link-messages" href="{% url student_messages %}">Messages</a></li>
+					{% endif %}
 				{% else %}
-		  				<li class="logo ir"><a href="/">Universal Tutors</a></li>
 		  				<li><a class="link-students" href="students">Student Guide</a></li>
 		 				<li><a class="link-tutors" href="tutors">Tutor Guide</a></li>
 				{% endif %}

@@ -19,9 +19,14 @@ urlpatterns += patterns('apps.profile.views.main',
 
 # Tutors
 urlpatterns += patterns('apps.profile.views.main',
-#    url(r'^signup/complete/$', 'register_complete', {}, name = "register_complete"),
     url(r'^(?i)tutor/classes/$', 'tutor_classes', {}, name = "tutor_classes"),
     url(r'^(?i)tutor/messages/$', 'tutor_messages', {}, name = "tutor_messages"),
+)
+
+# Students
+urlpatterns += patterns('apps.profile.views.main',
+    url(r'^(?i)student/classes/$', 'student', {}, name = "student_classes"),
+    url(r'^(?i)student/messages/$', 'student', {}, name = "student_messages"),
 )
 
 urlpatterns += patterns('apps.profile.views.main',
