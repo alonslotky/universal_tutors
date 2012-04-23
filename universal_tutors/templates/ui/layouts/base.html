@@ -16,18 +16,18 @@
 	<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{STATIC_URL}}images/icons/apple-touch-icon-72x72-precomposed.png">
 	<link rel="apple-touch-icon-precomposed" href="{{STATIC_URL}}images/icons/apple-touch-icon-precomposed.png">
 	 
-	{% slimall %}
-	<link rel="stylesheet" href="css/globals.css">
-	<link rel="stylesheet" href="css/mobile.css">
-	<link rel="stylesheet" href="css/typography.css">
-	<link rel="stylesheet" href="css/grid.css">
-	<link rel="stylesheet" href="css/ui.css">
-	<link rel="stylesheet" href="css/forms.css">
-	<link rel="stylesheet" href="css/orbit.css">
-	<link rel="stylesheet" href="css/reveal.css">
-	<link rel="stylesheet" href="css/app.css">
-	<link rel="stylesheet" href="css/development.css">
-	{% endslimall %}
+	{# slimall #}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/globals.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/mobile.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/typography.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/grid.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/ui.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/forms.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/orbit.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/reveal.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/app.css">
+	<link rel="stylesheet" href="{{STATIC_URL}}css/development.css">
+	{# endslimall #}
 	
 	<!--[if lt IE 9]>
 		<link rel="stylesheet" href="stylesheets/ie.css">
@@ -43,11 +43,11 @@
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
-	{% slimall %}
-	<script src="js/lib/imgsizer.js"></script>
-  	<script src="js/lib/jquery-1.7.1.min.js"></script>
+	{# slimall #}
+	<script src="{{STATIC_URL}}js/lib/imgsizer.js"></script>
+  	<script src="{{STATIC_URL}}js/lib/jquery-1.7.1.min.js"></script>
 	{% block extra_head %}{% endblock %}
-	{% endslimall %}
+	{# endslimall #}
 </head>
 
 <body class="{% block body_class %}marketing home{% endblock %}">
@@ -67,13 +67,13 @@
 	{% endblock %}
 	</div>
   	
-  	{% slimall %}
-  	<script src="js/lib/jquery.reveal.js"></script>
-  	<script src="js/lib/jquery.orbit-1.4.0.js"></script>
-  	<script src="js/lib/forms.jquery.js"></script>
-  	<script src="js/lib/jquery.customforms.js"></script>
-  	<script src="js/lib/jquery.placeholder.min.js"></script>
- 	<script src="js/app.js"></script>
- 	{% endslimall %}
+  	{# slimall #}
+  	<script src="{{STATIC_URL}}js/lib/jquery.reveal.js"></script>
+  	<script src="{{STATIC_URL}}js/lib/jquery.orbit-1.4.0.js"></script>
+  	<script src="{{STATIC_URL}}js/lib/forms.jquery.js"></script>
+  	<script src="{{STATIC_URL}}js/lib/jquery.customforms.js"></script>
+  	<script src="{{STATIC_URL}}js/lib/jquery.placeholder.min.js"></script>
+ 	<script src="{{STATIC_URL}}js/app.js"></script>
+ 	{# endslimall #}
 </body>
 </html>
