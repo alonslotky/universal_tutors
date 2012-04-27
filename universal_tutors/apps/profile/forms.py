@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.forms.models import inlineformset_factory
 
 from uni_form.helpers import FormHelper, Submit, Reset, Button
 from uni_form.helpers import Layout, Fieldset, Row, HTML, Div
@@ -13,15 +14,15 @@ from allauth.account.forms import LoginForm
 from allauth.account.utils import user_display, perform_login, send_email_confirmation
 from allauth.utils import email_address_exists
 
+from apps.classes.models import ClassSubject
 from apps.common.utils.fields import COUNTRIES
-from apps.profile.models import UserProfile
+from apps.profile.models import *
 
 
 
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
-    email = forms.EmailField()
 
     class Meta:
         model = UserProfile
@@ -30,19 +31,37 @@ class ProfileForm(forms.ModelForm):
         widgets = {
             'photo': forms.FileInput(),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['country'].required = True
         
 
-    helper = FormHelper()
-        
-    helper.form_tag = False
-    layout = Layout(
-        Fieldset('',
-            'first_name',
-            'last_name',
-        ),
-    )
+class SubjectField(forms.CharField):
+    def to_python(self, value):
+        try:
+            return ClassSubject.objects.get(subject__iexact=value)
+        except ClassSubject.DoesNotExist:
+            return ClassSubject.objects.create(subject=value)
 
-    helper.add_layout(layout)
+
+class TutorSubjectForm(forms.ModelForm):
+    subject = SubjectField()
+    class Meta:
+        models = TutorSubject
+        fields = ('subject', 'credits')
+
+class TutorProfileForm(ProfileForm):
+    class Meta(ProfileForm.Meta):
+        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image')
+
+        widgets = {
+            'photo': forms.FileInput(),
+            'country': forms.Select(attrs = {'class': 'stretch'}),
+        }
+TutorSubjectFormSet = inlineformset_factory(User, TutorSubject, form=TutorSubjectForm)
+TutorQualificationFormSet = inlineformset_factory(User, TutorQualification)
+    
 
 
 class SigninForm(LoginForm):
@@ -115,7 +134,7 @@ class SignupForm(forms.ModelForm):
     address = forms.CharField(label=_('Address'), max_length=150, initial='')
     location = forms.CharField(label=_('Location'), max_length=50, initial='')
     postcode = forms.CharField(label=_('Postcode'), max_length=10, initial='')
-    country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES)
+    country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
     type = forms.IntegerField(label=_('Type'), initial='')
 
@@ -171,7 +190,6 @@ class SignupForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email', )
-
 
 class NewsletterSubscribeForm(forms.Form):
     email = forms.EmailField(required=True)

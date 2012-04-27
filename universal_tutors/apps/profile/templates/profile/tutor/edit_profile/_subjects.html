@@ -1,0 +1,78 @@
+{% with user.subjects.all as subjects %}
+{% with subjects.count as no_subjects %}
+  <li id="subjectsTab">
+    <h2 class="clear">Subjects</h2>
+    
+    <table class="stretch">
+      <tr>
+        <th>
+          <div class="row">
+            <div class="eight columns phone-two">
+              Subject Title
+            </div>
+            <div class="four columns phone-two">
+              Credits per hour
+            </div>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <td>
+		  
+		  <input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
+		  <input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
+		  <input id="id_subjects-MAX_NUM_FORMS" type="hidden" name="subjects-MAX_NUM_FORMS">
+          
+          {% for item in user.subjects.all %}
+	          <div class="row">
+	            <div class="eight columns phone-two">
+	              <input id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" type="text" class="input-text" value="{{item.subject}}" placeholder="Subject">
+	            </div>
+	            <div class="four columns phone-two">
+	              <input id="id_subject-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text" value="{{item.credits}}" placeholder="Credits">
+	            </div>
+				<input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
+				<input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
+	          </div>
+	          <hr>
+          {% endfor %}
+          <div class="row">
+            <div class="eight columns phone-two">
+              <input id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" type="text" class="input-text" placeholder="Subject">
+            </div>
+            <div class="four columns phone-two">
+              <input id="id_subjects-{{no_subjects}}-credits" name="subjects-{{no_subjects}}-credits" type="text" class="input-text" placeholder="Credits">
+            </div>
+			<input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
+			<input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
+          </div>
+          <hr>
+		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
+        </td>
+      </tr>
+    </table>
+  </li>
+
+  <script type="text/javascript">
+  	var id_subject = {{no_subjects}} + 1;
+  
+  	$('#add-subject-link').click(function(){
+  		$(
+	  		'<div class="row">'+
+	  		'	<div class="eight columns phone-two">'+
+	  		'		<input id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" type="text" class="input-text" placeholder="Subject">'+
+	  		'	</div>'+
+	  		'	<div class="four columns phone-two">'+
+	  		'		<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text" placeholder="Credits">'+
+	  		'	</div>'+
+			'	<input id="id_subjects-'+ id_subject +'-id" type="hidden" name="subjects-'+ id_subject +'-id">'+
+			'	<input id="id_subjects-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="subjects-'+ id_subject +'-user">'+
+	  		'</div>'+
+	  		'<hr>'
+  		).insertBefore(this);
+  		$('#id_subjects-TOTAL_FORMS').val(parseInt($('#id_subjects-TOTAL_FORMS').val())+1);
+  		id_subject++;
+  	});	
+  </script>
+{% endwith %}
+{% endwith %}

@@ -16,8 +16,9 @@ from allauth.socialaccount.forms import DisconnectForm
 from apps.common.utils.view_utils import main_render
 from apps.common.utils.decorators import over16_required
 from apps.profile.models import UserProfile, NewsletterSubscription
-from apps.profile.forms import ProfileForm, EditProfileForm
+from apps.profile.forms import *
 
+import pytz
 
 @main_render()
 def profile(request, username=None):
@@ -43,63 +44,62 @@ def profile(request, username=None):
         raise http.Http404()
 
     return {
-        'dashboard': person == user,
+        'owner': person == user,
+        'person': person,
         'profile': profile,
         'TEMPLATE': template,
     }
 
 
 @login_required
-@main_render(template='profile/edit_profile.html')
-def edit_profile(request):
+@main_render(template='profile/tutor/edit_profile/base.html')
+def edit_tutor_profile(request):
     """
     edit my personal profile
     """
     user = request.user
     profile = user.profile
 
-    social_form = None
-    form = None
+    if profile.type != profile.TYPES.TUTOR:
+        raise http.Http404()
 
+    data = {
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+    }
+    
+    form = TutorProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
+    subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
+    qualifications_formset = TutorQualificationFormSet(request.POST or None, request.FILES or None, instance=user)
     if request.POST:
-        if request.POST.get('social-form', ''):
-            social_form = DisconnectForm(request.POST, user=request.user)
-            if social_form.is_valid():
-                messages.add_message(request, messages.INFO,
-                                     'The social account has been disconnected')
-                social_form.save()
-                social_form = None
-
+        success = True
+        
+        if form.is_valid():
+            form.save()
+            profile.update_tutor_information(form)
         else:
-            form = EditProfileForm(request.POST)
-            if form.is_valid():
-                success = profile.update_information(form)
-                if success:
-                    return http.HttpResponseRedirect(reverse('my_profile'))
+            success = False
 
-    if not form:
-        data = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'title': profile.title if profile.title else '',
-            'about': profile.about if profile.about else '',
-            'email': user.email if user.email else '',
-            'country': profile.country,
-            'location': profile.location if profile.location else '',
-            'address': profile.address if profile.address else '',
-            'postcode': profile.postcode if profile.postcode else '',
-        }
+        if subject_formset.is_valid():
+            subject_formset.save()
+        else:
+            success = False
 
-        form = EditProfileForm(initial=data)
+        if qualifications_formset.is_valid():
+            qualifications_formset.save()
+        else:
+            success = False
 
-    if not social_form:
-        social_form = DisconnectForm(user=request.user)
+        if success:
+            return http.HttpResponseRedirect(reverse('profile'))
 
     return {
         'dashboard': True,
         'profile':profile,
         'form': form,
-        'social_form': social_form,
+        'subject_formset': subject_formset,
+        #'qualifications_formset': qualifications_formset,
+        'timezones': pytz.all_timezones,
     }
 
 

@@ -305,6 +305,7 @@ FILEBROWSER_VERSIONS = {
     'large': {'verbose_name': 'Large (530px)', 'width': 530, 'height': '', 'opts': ''},
 
     'class_list_profile_image': {'width': 61, 'height': 61, 'opts': 'crop upscale'},
+    'profile_image': {'width': 175, 'height': 175, 'opts': 'crop upscale'},
 }
 FILEBROWSER_ADMIN_VERSIONS = [
     'thumb', 'small','medium','large',

@@ -1,0 +1,205 @@
+{% load common_tags tutor_tags %}
+
+<div class="scroll-item-container">
+	<ul class="shedule4 scroll-item">
+		{% for hour in 0|range_to:24 %}
+		<li><span class="time">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}:00</span></li>
+		{% endfor %}
+	</ul>
+</div>
+
+{% for day, weekday, periods in profile.get_default_week %}
+	<div id="schedule-week-{{weekday}}-container" class="schedule-weekday {% if periods %}shedule-row{% else %}rest-day-box{% endif %}">
+		<span class="number">{{day|slice_list:3}}</span>
+		<div id="schedule-week-{{weekday}}" class="scroll-item-container {% if not periods %}hidden{% endif %}">
+			<div id="schedule-week-{{weekday}}-periods-container" class="shedule5 scroll-item">
+				{% for period in periods %}
+					{% include "profile/tutor/edit_profile/availability/_week_period.html" %}
+				{% endfor %}
+			</div>
+		</div>
+		<div id="schedule-week-{{weekday}}-dayoff" class="scroll-item-container {% if periods %}hidden{% endif %}">
+			<span class="txt2">Day off</span>
+		</div>
+	</div>
+{% endfor %}
+
+<script type="text/javascript">
+	/* TIME SLIDER */
+	var BORDER_SIZE = 20;
+	var schedule_slider_bar_mousedown_begin = false;
+	var schedule_slider_bar_mousedown_end = false;
+	var schedule_slider_bar_mousedown_min = false;
+	var schedule_slider_bar_mousedown_max = false;
+	var schedule_slider_bar_mousedown_x = null;
+	var schedule_slider_bar_mousedown_left = null;
+	var schedule_slider_bar_mousedown_width = null;
+	var schedule_slider_bar_mousedown_id = null;
+
+	var schedule_slider_row_mousedown = false;
+	var schedule_slider_row_mousedown_x = null;
+	var schedule_slider_row_mousedown_left = null;
+	var schedule_slider_row_mousedown_id = null;
+
+	
+	$('#schedule-default-week-container .drop-link').mousedown(function(e){ e.preventDefault(); });
+	
+	$('#schedule-default-week-container .shedule5').mousedown(function(e){
+		e.preventDefault();
+		schedule_slider_row_mousedown = true;
+		schedule_slider_row_mousedown_id = $(this).attr('id');
+		schedule_slider_row_mousedown_x = e.pageX;
+		schedule_slider_row_mousedown_left = e.pageX - $(this).offset().left;
+		schedule_slider_bar_mousedown_weekday = schedule_slider_row_mousedown_id.split('-')[2];		
+	});
+	
+	$(window).mousemove(function(e){
+		if(schedule_slider_bar_mousedown_begin) {
+			e.preventDefault();
+			var position = schedule_slider_bar_mousedown_left + (e.pageX - schedule_slider_bar_mousedown_x);
+			var width = schedule_slider_bar_mousedown_width - (e.pageX - schedule_slider_bar_mousedown_x);
+			var outer_width = schedule_slider_bar_mousedown_outerwidth - (e.pageX - schedule_slider_bar_mousedown_x);
+
+			position = parseInt(position / 10) * 10;
+			width = schedule_slider_bar_mousedown_width - (position - schedule_slider_bar_mousedown_left);
+			outer_width = schedule_slider_bar_mousedown_outerwidth - (position - schedule_slider_bar_mousedown_left);
+
+			if (width > 20) {
+				var el = $('#'+schedule_slider_bar_mousedown_id);
+				var parent = el.parent();
+				while (!parent.hasClass('shedule5')) 
+					parent = parent.parent(); 
+				
+				if (schedule_slider_bar_check_overlay(parent.attr('id'), schedule_slider_bar_mousedown_id, position, position+outer_width)) {
+					//position = position < 321 ? position : 321;
+					position = position > 0 ? position : 0;
+					$('#'+schedule_slider_bar_mousedown_id).css({'left': position +'px', 'width': width});
+				}
+			}
+		}
+		
+		if(schedule_slider_bar_mousedown_end) {
+			e.preventDefault();
+			var position = schedule_slider_bar_mousedown_left;
+			var width = schedule_slider_bar_mousedown_width + (e.pageX - schedule_slider_bar_mousedown_x);
+			var outer_width = schedule_slider_bar_mousedown_outerwidth + (e.pageX - schedule_slider_bar_mousedown_x);
+			
+			position = parseInt(position / 10) * 10;
+			width = width - (outer_width - parseInt(outer_width / 10) * 10);
+			outer_width = parseInt(outer_width / 10) * 10;
+			
+			if (width > 20) {
+				var el = $('#'+schedule_slider_bar_mousedown_id);
+				var parent = el.parent();
+				while (!parent.hasClass('shedule5')) 
+					parent = parent.parent(); 
+				
+				if (schedule_slider_bar_check_overlay(parent.attr('id'), schedule_slider_bar_mousedown_id, position, position+outer_width)) {
+					//position = position < 321 ? position : 321;
+					position = position > 0 ? position : 0;
+					el.css({'left': position +'px', 'width': width});
+				};
+				
+			}
+		}
+		
+		if(schedule_slider_row_mousedown && !(schedule_slider_bar_mousedown_begin || schedule_slider_bar_mousedown_end)) {
+			var width = e.pageX - schedule_slider_row_mousedown_x;
+			if(width > 20) {
+				schedule_slider_row_mousedown = false;
+		   		if(schedule_slider_bar_check_overlay(schedule_slider_row_mousedown_id, '', schedule_slider_row_mousedown_left, schedule_slider_row_mousedown_left+20)){
+					$('#'+ schedule_slider_row_mousedown_id).append(
+						'<div id="schedule-week-period_0" class="slider-box" style="left:'+ schedule_slider_row_mousedown_left +'px;width:'+ width +'px;">'+
+						'	<div class="drop"><a href="javascript:;" class="drop-link">open</a></div>'+
+						'</div>'
+					);
+					
+					schedule_slider_bar_mousedown_id = 'schedule-week-period_0';
+					schedule_slider_bar_mousedown_end = true;		
+					schedule_slider_bar_mousedown_x = e.pageX;
+					schedule_slider_bar_mousedown_left = schedule_slider_row_mousedown_left;
+					schedule_slider_bar_mousedown_width = width;
+					schedule_slider_bar_mousedown_outerwidth = width+22;
+				}
+			} 
+		}
+	});
+	
+	$(window).mouseup(function(e){
+		if(schedule_slider_bar_mousedown_x != e.pageX && (schedule_slider_bar_mousedown_begin || schedule_slider_bar_mousedown_end)) {
+			var id = parseInt(schedule_slider_bar_mousedown_id.split('_')[1]);
+			var el = $('#'+schedule_slider_bar_mousedown_id);
+			var left = el.position().left;
+			var right = left + el.outerWidth();
+			
+			var begin_hour = parseInt(left / 40);
+			var begin_minute = parseInt((left % 40) / 10 * 15);
+			var end_hour = parseInt(right / 40);
+			var end_minute = parseInt((right % 40) / 10 * 15);
+			
+			var begin = begin_hour +'-'+ begin_minute;
+			var end = end_hour +'-'+ end_minute;
+			
+			if(id) {
+				$.get('{% url user_edit_week_period %}'+ id +'/'+ begin +'/'+ end +'/'+ schedule_slider_bar_mousedown_weekday +'/');
+			} else {
+				$.ajax({
+					url: '{% url user_edit_week_period %}'+ id +'/'+ begin +'/'+ end +'/'+ schedule_slider_bar_mousedown_weekday +'/',
+					type: 'GET',
+					error: function() { el.remove(); },
+					success: function(data) {
+						$(data).insertBefore(el);
+						el.remove();
+					}
+				});
+			}
+		}
+		
+		schedule_slider_bar_mousedown_begin = false;
+		schedule_slider_bar_mousedown_end = false;
+		schedule_slider_bar_mousedown_weekday = null;
+
+		schedule_slider_row_mousedown = false;
+		schedule_slider_row_mousedown_x = null;
+		schedule_slider_row_mousedown_left = null;
+		schedule_slider_row_mousedown_id = null;
+
+	});
+
+	var schedule_slider_bar_check_overlay = function(parent_id, id, el_begin, el_end) {
+		var return_value = true;
+		
+		$('#'+parent_id+' .slider-box').each(function(){
+			if($(this).attr('id')!=id) {
+				this_begin = $(this).position().left
+				this_end = this_begin + $(this).outerWidth();
+				
+				if( (el_begin < this_begin && this_begin < el_end) || (el_begin < this_end && this_end < el_end) 
+				     || (this_begin < el_begin && el_begin < this_end) || (this_begin < el_end && el_end < this_end) ) {
+					return_value = false;
+				}
+			}
+		});
+		
+		return return_value;
+	}
+
+
+	/* DAYS OFF */
+	$('.schedule-weekday').mouseenter(function(){
+		var weekday = $(this).attr('id').split('-')[2];
+		$(this).removeClass('rest-day-box');
+		$(this).addClass('shedule-row');
+		$('#schedule-week-'+ weekday +'-dayoff').addClass('hidden');
+		$('#schedule-week-'+ weekday).removeClass('hidden');
+	});
+	$('.schedule-weekday').mouseleave(function(){
+		var weekday = $(this).attr('id').split('-')[2];
+		if(!$('#schedule-week-'+ weekday +' .slider-box').length){
+			$(this).addClass('rest-day-box');
+			$(this).removeClass('shedule-row');
+			$('#schedule-week-'+ weekday +'-dayoff').removeClass('hidden');
+			$('#schedule-week-'+ weekday).addClass('hidden');
+		}
+	});
+</script>

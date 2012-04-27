@@ -15,12 +15,25 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r"^(?i)dashboard/$", 'dashboard', name="dashboard"),
     url(r'^(?i)profile/$', 'profile', {}, name = "profile"),
     url(r'^(?i)profile/(?P<username>[\w\-\_]+)/$', 'profile', {}, name = "profile"),
+    url(r'^(?i)edit_tutor_profile/$', 'edit_tutor_profile', {}, name = "edit_tutor_profile"),
 )
 
 # Tutors
 urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutor/classes/$', 'tutor_classes', {}, name = "tutor_classes"),
     url(r'^(?i)tutor/messages/$', 'tutor_messages', {}, name = "tutor_messages"),
+)
+
+urlpatterns += patterns('apps.profile.views.ajax',
+    url(r'^(?i)edit_week_period/$', 'edit_week_period', {}, name = "user_edit_week_period"),
+    url(r'^(?i)edit_week_period/(?P<period_id>\d+)/(?P<begin>[\d\-]+)/(?P<end>[\d\-]+)/(?P<weekday>\d)/$', 'edit_week_period', {}, name = "user_edit_week_period"),
+    url(r'^(?i)delete_week_period/(?P<period_id>\d+)/$', 'delete_week_period', {}, name = "user_delete_week_period"),
+    url(r'^(?i)view_week_period/$', 'view_week_period', {}, name = "user_edit_view_week_period"),
+
+    url(r'^(?i)view_week_period/(?P<date>[\d\-]+)/$', 'view_week_period', {}, name = "user_edit_view_week_period"),
+    url(r'^(?i)edit_this_week_period/(?P<date>[\d\-]+)/$', 'edit_this_week_period', {}, name = "user_edit_this_week_period"),
+    url(r'^(?i)edit_this_week_period/(?P<date>[\d\-]+)/(?P<type>\d+)/(?P<period_id>\d+)/(?P<begin>[\d\-]+)/(?P<end>[\d\-]+)/(?P<weekday>\d)/$', 'edit_this_week_period', {}, name = "user_edit_this_week_period"),
+    url(r'^(?i)delete_this_week_period/(?P<period_id>\d+)/$', 'delete_this_week_period', {}, name = "user_delete_this_week_period"),
 )
 
 # Students

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -9,15 +10,17 @@ from django.contrib.sites.models import Site
 from django.template import loader, Context
 from django.core.urlresolvers import reverse
 
-import re, unicodedata, random, string, datetime, os
+import re, unicodedata, random, string, datetime, os, pytz
 
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
+from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time
 
-from apps.classes.models import ClassSubject
+from apps.classes.models import Class, ClassSubject
+from apps.classes.settings import *
 
 from scribblar import users
 
@@ -33,6 +36,11 @@ class UserProfile(BaseModel):
         (2, 'STUDENT', 'Student'),
         (3, 'PARENT', 'Parent'),
         (4, 'UNDER16', 'Under-16 Student'),
+    ))
+
+    GENDER_TYPES = get_namedtuple_choices('USER_TYPE', (
+        (0, 'MALE', 'Male'),
+        (1, 'FEMALE', 'Female'),
     ))
 
     REFERRAL_TYPES = get_namedtuple_choices('USER_REFERRAL_TYPES', (
@@ -63,15 +71,19 @@ class UserProfile(BaseModel):
     newsletters = models.BooleanField(verbose_name=_('Newsletters'))
     date_of_birth = models.DateField(verbose_name=_('Date of birth'), null=True, blank=True)
     scribblar_id = models.CharField(verbose_name=_('Scribblar ID'), max_length=100, null=True, blank=True)
+    gender = models.PositiveSmallIntegerField(verbose_name=_('Gender'), choices=GENDER_TYPES.get_choices(), default=GENDER_TYPES.MALE)
+    timezone = models.CharField(verbose_name=_('Phone Timezone'), max_length=50, default=pytz.tz)
+    
+    video = models.CharField(verbose_name=_('Video'), max_length=200, null=True, blank=True)
 
     type = models.PositiveSmallIntegerField(choices=TYPES.get_choices(), default=TYPES.NONE)
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
 
-    referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)    
+    referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
 
-    # AS TUTOR
-    subjects = models.ForeignKey(ClassSubject, related_name='tutors', null=True, blank=True)
+    # tutor
+    avg_rate = models.FloatField(default=0)
 
     @property
     def is_over16(self):
@@ -146,20 +158,12 @@ class UserProfile(BaseModel):
         user = self.user
         user.first_name = data.get('first_name')
         user.last_name = data.get('last_name')
-        user.email = data.get('email')
-        self.title = data.get('title')
-        self.about = data.get('about')
-        self.country = data.get('country')
-        self.location = data.get('location')
-        self.address = data.get('address')
-        self.postcode = data.get('postcode')
+        user.save()
 
-        try:
-            user.save()
-            self.save()
-            return True
-        except Exception, e:
-            return False
+    def update_tutor_information(self, form):
+        self.update_information(form)
+        data = form.cleaned_data
+        user = self.user        
 
     def check_day(self, date=None):
         available, list = self.get_day(date)
@@ -285,7 +289,7 @@ class UserProfile(BaseModel):
         WEEKDAYS = WeekAvailability.WEEKDAYS.get_choices()
         week = [(WEEKDAYS[weekday][1], weekday, []) for weekday in range(7)]
 
-        for a in self.week_availability.all():
+        for a in self.user.week_availability.all():
             week[a.weekday][2].append(a)
     
         return week
@@ -308,8 +312,124 @@ class UserProfile(BaseModel):
         
         return self.scribblar_id
 
+
+### TUTOR ###########
+class TutorSubject(models.Model):
+    user = models.ForeignKey(User, related_name='subjects')
+    subject = models.ForeignKey(ClassSubject, related_name='tutors')
+    credits = models.FloatField()
+    
+    def save(self, *args, **kwargs):
+        super(self.__class__, self).save(*args, **kwargs)
+    
+    def __unicode__(self):
+        return '%s' % self.subject
+
+
+class TutorQualification(models.Model):
+    def get_upload_to(instance, filename):
+        name, ext = os.path.splitext(filename)
+        name = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
+        new_filename = '%s%s' % (name, ext.lower())
+        return os.path.join('uploads/profiles/qualifications/documents', new_filename)
+
+    user = models.ForeignKey(User, related_name='qualifications')
+    qualification = models.CharField(max_length=200)
+    document = models.FileField(null=True, blank=True, upload_to=get_upload_to)
+        
+    def __unicode__(self):
+        return self.qualification
+
+class TutorReview(BaseModel):
+    user = models.ForeignKey(User, related_name='reviews')
+    rate = models.PositiveSmallIntegerField(default = 0)
+    text = models.TextField()
+    
+    def save(self, *args, **kwargs):
+        user = self.user
+        super(self.__class__, self).save(*args, **kwargs)
+        profile = user.profile
+        profile.avg_rate = user.reviews.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        profile.save()
+    
+    def delete(self):
+        user = self.user
+        super(self.__class__, self).delete()
+        profile = user.profile
+        profile.avg_rate = user.reviews.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        profile.save()
+
+    def __unicode__(self):
+        return self.qualification
+
+class TutorFavorite(BaseModel):
+    class Meta:
+        unique_together = ('user', 'tutor')
+        
+    user = models.ForeignKey(User, related_name='favorite_tutors')
+    tutor = models.ForeignKey(User, related_name='students_has_favorite')
+    
+    def __unicode__(self):
+        return '%s favorite %s' % (self.user, self.tutor)
+
+
+class WeekAvailability(models.Model):
+    """
+    A default user week availability
+    """
+    
+    WEEKDAYS = get_namedtuple_choices('WEEKDAYS', (
+        (0, 'MONDAY', 'Monday'),
+        (1, 'TUESDAY', 'Tuesday'),
+        (2, 'WEDNESDAY', 'Wednesday'),
+        (3, 'THURSDAY', 'Thursday'),
+        (4, 'FRIDAY', 'Friday'),
+        (5, 'SATURDAY', 'Saturday'),
+        (6, 'SUNDAY', 'Sunday'),
+    ))
+
+    user = models.ForeignKey(User, related_name='week_availability')
+    weekday = models.PositiveSmallIntegerField(choices=WEEKDAYS.get_choices())
+    begin = models.TimeField()
+    end = models.TimeField()
+
+    def save(self, *args, **kwargs):
+        if (self.begin > self.end and self.end.hour!=0) \
+            or self.user.week_availability \
+                .exclude(Q(id=self.id) | Q(end=self.begin) | Q(begin=self.end)) \
+                .filter(Q(weekday=self.weekday), Q(begin__range=(self.begin, self.end)) | Q(end__range=(self.begin, self.end))):
+            return
+        super(self.__class__, self).save(*args, **kwargs)
+    
+    def __unicode__(self):
+        return u'%s (%s from %s to %s)' % (self.user, self.get_weekday_display(), self.begin, self.end)
+
+
+class DayAvailability(models.Model):
+    """
+    A custom day availability
+    """
+    
+    user = models.ForeignKey(User, related_name='day_availability')
+    date = models.DateField()
+    begin = models.TimeField()
+    end = models.TimeField()
+
+    def save(self, *args, **kwargs):
+        if (self.begin > self.end and self.end.hour!=0) \
+            or self.user.day_availability \
+                .exclude(Q(id=self.id) | Q(end=self.begin) | Q(begin=self.end)) \
+                .filter(Q(date=self.date), Q(begin__range=(self.begin, self.end)) | Q(end__range=(self.begin, self.end))):
+            return
+        super(self.__class__, self).save(*args, **kwargs)
+    
+    def __unicode__(self):
+        return u'%s (%s from %s to %s)' % (self.user, self.date, self.begin, self.end)
+
+
+
+#### STUDENT ######################################
 class Child(models.Model):
-    ## THIS MODEL WHERE CREATED BECAUSE ForeignKey WASN'T WORKING WITH AutoOneToOneField
     parent = models.ForeignKey(User, related_name="childs")
     child  = models.ForeignKey(User, related_name="parent_set")
     active = models.BooleanField(default=False)
@@ -323,6 +443,17 @@ class Child(models.Model):
     def __unicode__(self):
         return '%s' % self.child
 
+
+#### COMMON ########################################
+class Message(BaseModel):
+    user = models.ForeignKey(User, related_name='received_messages')
+    to = models.ForeignKey(User, related_name='sent_messages')
+    message = models.CharField(max_length=500)
+    related_class = models.ForeignKey(Class, null=True, blank=True, related_name='messages')
+    
+    def __unicode__(self):
+        return self.message
+    
 
 class NewsletterSubscription(BaseModel):
     email = models.EmailField(max_length=255, unique=True)

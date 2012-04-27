@@ -1,0 +1,79 @@
+{% with user.qualifications.all as qualifications %}
+{% with qualifications.count as no_qualifications %}
+  <li id="qualificationsTab">
+    <h2 class="clear">Qualifications</h2>
+    
+    <table class="stretch">
+      <tr>
+        <th>
+          <div class="row">
+            <div class="six columns">
+              Qualifications
+            </div>
+            <div class="six columns hide-on-phones">
+              Supporting Document <i>(Optional)</i>
+            </div>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <td>
+		  <input id="id_qualifications-TOTAL_FORMS" type="hidden" value="{{qualifications.count|add:1}}" name="qualifications-TOTAL_FORMS">
+		  <input id="id_qualifications-INITIAL_FORMS" type="hidden" value="{{qualifications.count}}" name="qualifications-INITIAL_FORMS">
+		  <input id="id_qualifications-MAX_NUM_FORMS" type="hidden" name="qualifications-MAX_NUM_FORMS">
+          
+          {% for item in user.qualifications.all %}
+	          <div class="row">
+	            <div class="eight columns phone-two">
+	              <input id="id_qualifications-{{forloop.counter0}}-qualification" name="qualifications-{{forloop.counter0}}-qualification" type="text" class="input-text" value="{{item.qualification}}" placeholder="qualification">
+	            </div>
+	            <div class="four columns phone-two">
+	              {% if item.document %}<a href="{{item.document.url}}">(view current)</a>{% endif %}<input id="id_qualification-{{forloop.counter0}}-document" name="qualifications-{{forloop.counter0}}-document" type="file" class="input-text" value="{{item.document}}" placeholder="document">
+	            </div>
+				<input id="id_qualifications-{{forloop.counter0}}-id" type="hidden" name="qualifications-{{forloop.counter0}}-id" value="{{item.id}}">
+				<input id="id_qualifications-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="qualifications-{{forloop.counter0}}-user">
+	          </div>
+	          <hr>
+          {% endfor %}
+          <div class="row">
+            <div class="eight columns phone-two">
+              <input id="id_qualifications-{{no_qualifications}}-qualification" name="qualifications-{{no_qualifications}}-qualification" type="text" class="input-text" placeholder="qualification">
+            </div>
+            <div class="four columns phone-two">
+              <input id="id_qualifications-{{no_qualifications}}-document" name="qualifications-{{no_qualifications}}-document" type="file" class="input-text" placeholder="document">
+            </div>
+			<input id="id_qualifications-{{no_qualifications}}-id" type="hidden" name="qualifications-{{no_qualifications}}-id">
+			<input id="id_qualifications-{{no_qualifications}}-user" type="hidden" value="{{user.id}}" name="qualifications-{{no_qualifications}}-user">
+          </div>
+          <hr>
+		  <a id="add-qualification-link" href="javascript:;">+ add qualification</a>
+        </td>
+      </tr>
+    
+    </table>
+    
+  </li>
+ 
+  <script type="text/javascript">
+  	var id_qualification = {{no_qualifications}} + 1;
+  
+  	$('#add-qualification-link').click(function(){
+  		$(
+	  		'<div class="row">'+
+	  		'	<div class="eight columns phone-two">'+
+	  		'		<input id="id_qualifications-'+ id_qualification +'-qualification" name="qualifications-'+ id_qualification +'-qualification" type="text" class="input-text" placeholder="qualification">'+
+	  		'	</div>'+
+	  		'	<div class="four columns phone-two">'+
+	  		'		<input id="id_qualifications-'+ id_qualification +'-document" name="qualifications-'+ id_qualification +'-document" type="file" class="input-text" placeholder="document">'+
+	  		'	</div>'+
+			'	<input id="id_qualifications-'+ id_qualification +'-id" type="hidden" name="qualifications-'+ id_qualification +'-id">'+
+			'	<input id="id_qualifications-'+ id_qualification +'-user" type="hidden" value="{{user.id}}" name="qualifications-'+ id_qualification +'-user">'+
+	  		'</div>'+
+	  		'<hr>'
+  		).insertBefore(this);
+  		$('#id_qualifications-TOTAL_FORMS').val(parseInt($('#id_qualifications-TOTAL_FORMS')).val()+1);
+  		id_qualification++;
+  	});	
+  </script>
+{% endwith %}
+{% endwith %}

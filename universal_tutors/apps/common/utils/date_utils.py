@@ -1,5 +1,8 @@
 import datetime
 
+def first_day_of_week(date):
+    return date - datetime.timedelta(days=date.weekday())
+
 def next_month(date):
     year = date.year
     month = date.month
@@ -79,3 +82,19 @@ def add_minutes_to_time(time, minutes):
     new_hour = (time.hour + (time.minute + minutes) / 60) % 24
     
     return datetime.time(new_hour, new_minutes)
+
+
+def minutes_difference(time1, time2):
+    today = datetime.date.today()
+    time1 = datetime.datetime.combine(today, time1)
+    time2 = datetime.datetime.combine(today, time2)
+    if time1 < time2:
+        time1 + datetime.timedelta(days=1)
+    return (time1 - time2).seconds / 60.0
+
+def minutes_to_time(minutes, format='%sh %sm'):
+    minutes = int(minutes)
+    hour = int(minutes) / 60
+    minutes = minutes % 60
+    
+    return format % (hour, minutes)
