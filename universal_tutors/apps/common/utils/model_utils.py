@@ -4,7 +4,6 @@ from django.db.models.signals import post_save
 from django.db.models.base import ModelBase
 from django.utils.safestring import mark_safe
 from django.template.defaultfilters import yesno, linebreaksbr, urlize
-from django.utils.translation import get_date_formats
 from django.utils.text import capfirst
 from django.utils import dateformat
 from django.template.defaultfilters import slugify
@@ -171,19 +170,6 @@ class ModelInfo(object):
         if field.choices:
             return dict(field.choices).get(f_value, None)
 
-        if isinstance(field, models.BooleanField):
-            return yesno(f_value)
-
-        date_format, datetime_format, time_format = get_date_formats()
-
-        if isinstance(field, models.DateTimeField):
-            return capfirst(dateformat.format(f_value, datetime_format))
-
-        if isinstance(field, models.TimeField):
-            return capfirst(dateformat.time_format(f_value, time_format))
-
-        if isinstance(field, models.DateField):
-            return capfirst(dateformat.format(f_value, date_format))
 
         if isinstance(field, models.TextField):
             if self._meta.auto_urlize: f_value = urlize(f_value)

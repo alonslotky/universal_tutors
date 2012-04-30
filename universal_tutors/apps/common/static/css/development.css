@@ -1,5 +1,6 @@
 :focus { outline: 0; border: none; }
 .hidden { display: none; }
+.auto-width { width: auto !important; max-width: none !important; }
 
 .sign-in { height: auto; }
 .sign-in .row.center { text-align: center; }
@@ -31,3 +32,6 @@ h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 .main.scribblar-container object { height: 90%; }
 
 .tutor-qualifications-list li { margin: 0; }
+
+.message .messages .inside { overflow: auto; }
+.message .messages .inside.loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; }

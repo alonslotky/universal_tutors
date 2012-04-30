@@ -54,6 +54,7 @@
 <body class="{% block body_class %}marketing home{% endblock %}">
 	
 	<div class="container">
+	{% with user.profile as user_profile %}
 	{% block full_content %}
 		{% if not user.is_authenticated %}{% include "ui/fragments/signin.html" %}{% endif %}
   		{% include "ui/fragments/header.html" %}
@@ -66,6 +67,7 @@
 		
 		{% include "ui/fragments/footer.html" %}
 	{% endblock %}
+	{% endwith %}
 	</div>
   	
   	{# slimall #}

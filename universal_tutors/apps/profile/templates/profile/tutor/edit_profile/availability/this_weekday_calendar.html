@@ -23,7 +23,7 @@
 
 {% for date, day, weekday, periods in this_week %}
 	<div id="schedule-this-week-{{weekday}}-container" class="schedule-this-weekday {% if periods %}shedule-row{% else %}rest-day-box{% endif %}">
-		<span class="number with-date">
+		<span class="week-number with-date">
 			<span class="weekday">{{day|slice_list:3}}</span></br>
 			<span class="day">{{date|date:"d"}}</span></br>
 			<span class="date">{{date|date:"M y"}}</span>

@@ -199,7 +199,7 @@ class UserProfile(BaseModel):
         
 
     def check_period(self, date=None, begin=None, end=None):
-        available, list = self.get_day(date, begin, end)
+        available, list = self.get_period(date, begin, end)
         return all([slot[1]-slot[2] > 0 for slot in list])
 
     def get_period(self, date=None, begin=None, end=None):
@@ -233,12 +233,12 @@ class UserProfile(BaseModel):
                 all_slots_available = False
                 
         # select booking from date
-        booking = self.classes_as_tutor.filter(Q(status=Booking.BOOKING_STATUS.BOOKED), Q(date=date) | Q(date=begin_of_week, type=Booking.BOOKING_TYPES.WEEK))
+        booking = user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED, date=date)
 
         size = 0
         availability_by_time = []
         append = availability_by_time.append
-        time = datetime.datetime.combine(date, begin)
+        time = datetime.time(begin.hour, begin.minute)
         
         # create empty available array
         while (end==midnight and time!=midnight) or (end!=midnight and time<end) or not size:
@@ -260,13 +260,13 @@ class UserProfile(BaseModel):
             if end_index < 0:       end_index = 0
             if end_index > size:    end_index = size
             
-            for index in xrange(start_index, end_index+1):
-                availability_by_time[index][1] = 1 if not period.dayoff else 0
+            for index in xrange(start_index, end_index):
+                availability_by_time[index][1] = 0 if hasattr(period, 'day_off') and period.dayoff else 1
                 
 
         # inject booking on array
         for item in booking:
-            start_index = (item.begin.hour - begin.hour) * PERIOD_STEPS + (item.begin.minute / MINIMUM_PERIOD)
+            start_index = (item.start.hour - begin.hour) * PERIOD_STEPS + (item.start.minute / MINIMUM_PERIOD)
             if item.end.hour != 0:
                 end_index = (item.end.hour - begin.hour) * PERIOD_STEPS + (item.end.minute / MINIMUM_PERIOD)
             else:
@@ -278,7 +278,7 @@ class UserProfile(BaseModel):
             if end_index < 0:       end_index = 0
             if end_index > size:    end_index = size
 
-            for index in xrange(start_index, end_index+1):
+            for index in xrange(start_index, end_index):
                 availability_by_time[index][2] = 1
                 if availability_by_time[index][1] <= availability_by_time[index][2]:
                     all_slots_available = False
@@ -311,6 +311,24 @@ class UserProfile(BaseModel):
             super(self.__class__, self).save()
         
         return self.scribblar_id
+
+
+    def get_classes_as_tutor(self):
+        from apps.classes.models import Class
+        return self.user.classes_as_tutor.filter(Q(status=Class.STATUS_TYPES.BOOKED) | Q(status=Class.STATUS_TYPES.DONE) )
+
+    def get_classes_as_student(self):
+        from apps.classes.models import Class
+        return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED)
+
+    def get_next_class(self):
+        from apps.classes.models import Class
+        user = self.user
+        try:
+            return Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED), Q(tutor=user) | Q(student=user))[0]
+        except IndexError:
+            return 0
+
 
 
 ### TUTOR ###########
@@ -414,6 +432,7 @@ class DayAvailability(models.Model):
     date = models.DateField()
     begin = models.TimeField()
     end = models.TimeField()
+    day_off = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if (self.begin > self.end and self.end.hour!=0) \
@@ -446,6 +465,9 @@ class Child(models.Model):
 
 #### COMMON ########################################
 class Message(BaseModel):
+    class Meta:
+        ordering = ('created',)
+    
     user = models.ForeignKey(User, related_name='received_messages')
     to = models.ForeignKey(User, related_name='sent_messages')
     message = models.CharField(max_length=500)

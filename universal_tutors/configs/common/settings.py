@@ -29,7 +29,9 @@ DATABASES = {
 TIME_ZONE = 'Europe/London'
 LANGUAGE_CODE = 'en-GB'
 SITE_ID = 1
-USE_I18N = False
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True
 
 # Media
 STATIC_ROOT = os.path.join(SITE_ROOT, 'apps/common/static')
@@ -73,8 +75,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'johnny.middleware.LocalStoreClearMiddleware',
-    'johnny.middleware.QueryCacheMiddleware',
+#    'johnny.middleware.LocalStoreClearMiddleware',
+#    'johnny.middleware.QueryCacheMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     #'cms.middleware.page.CurrentPageMiddleware',
@@ -120,11 +122,11 @@ INSTALLED_APPS = (
     'django_extensions',
     'uni_form',
     'django_static',
-    'johnny',
+#    'johnny',
     'tagging',
     'smart_selects',
     'pagination',
-    'haystack',
+#    'haystack',
     
     # Registration, Signin and Account Management
     'emailconfirmation',

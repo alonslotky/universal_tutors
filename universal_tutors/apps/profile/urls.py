@@ -34,6 +34,17 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)edit_this_week_period/(?P<date>[\d\-]+)/$', 'edit_this_week_period', {}, name = "user_edit_this_week_period"),
     url(r'^(?i)edit_this_week_period/(?P<date>[\d\-]+)/(?P<type>\d+)/(?P<period_id>\d+)/(?P<begin>[\d\-]+)/(?P<end>[\d\-]+)/(?P<weekday>\d)/$', 'edit_this_week_period', {}, name = "user_edit_this_week_period"),
     url(r'^(?i)delete_this_week_period/(?P<period_id>\d+)/$', 'delete_this_week_period', {}, name = "user_delete_this_week_period"),
+
+    url(r'^(?i)view_modal_messages/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<to>\d+)/(?P<class_id>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+
+    url(r'^(?i)send_modal_message/$', 'send_modal_message', {}, name = "send_modal_message"),
+    url(r'^(?i)send_modal_message/(?P<to>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
+    url(r'^(?i)send_modal_message/(?P<to>\d+)/(?P<class_id>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
+
+    url(r'^(?i)tutor_cancel_class/$', 'tutor_cancel_class', {}, name = "tutor_cancel_class"),
+    url(r'^(?i)student_cancel_class/$', 'student_cancel_class', {}, name = "student_cancel_class"),
 )
 
 # Students
@@ -50,7 +61,6 @@ urlpatterns += patterns('apps.profile.views.main',
 # Ajax views
 urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)add_newsletter_subscription/$', 'add_newsletter_subscription', name = "add_newsletter_subscription"),
-    url(r'^(?i)change_photo/$', 'change_photo', name = "change_photo"),
 )
 
 

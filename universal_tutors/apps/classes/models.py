@@ -9,7 +9,7 @@ from django.contrib.sites.models import Site
 from django.template import loader, Context
 from django.core.urlresolvers import reverse
 
-import re, unicodedata, random, string, datetime, os
+import re, unicodedata, random, string, datetime, os, pytz
 from scribblar import rooms
 
 from filebrowser.fields import FileBrowseField
@@ -41,6 +41,16 @@ class Class(BaseModel):
     """
     class Meta:
         verbose_name_plural = 'Classes'
+        ordering = ('status', 'date', 'start')
+
+    STATUS_TYPES = get_namedtuple_choices('STATUS_TYPES', (
+        (0, 'PRE_BOOKED', 'Pre-booked'),
+        (1, 'BOOKED', 'BOOKED'),
+        (2, 'DONE', 'Done'),
+        (2, 'CANCELED_BY_STUDENT', 'Canceled by the student'),
+        (3, 'CANCELED_BY_TUTOR', 'Canceled by the tutor'),
+        (4, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),
+    ))
     
     tutor = models.ForeignKey(User, related_name='classes_as_tutor')
     student = models.ForeignKey(User, related_name='classes_as_student')
@@ -53,11 +63,14 @@ class Class(BaseModel):
     universal_fee = models.FloatField()
     scribblar_id = models.CharField(max_length = 100, null=True, blank=True)
     
-    name = models.CharField(max_length = 100)
+    status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
     
     def save(self, *args, **kwargs):
-        if self.user.profile.check_period(self.date, self.begin, self.end):
-            self.total_fee = minutes_difference(self.end, self.begin) / 60.0
+        tutor = self.tutor
+        tutor_profile = tutor.profile
+        tutor_subject = tutor.subjects.filter(subject=self.subject)
+        if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
+            self.total_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
             self.earning_fee = self.total_fee * (1 - UNIVERSAL_FEE)
             self.cotton_fee = self.total_fee * UNIVERSAL_FEE
 
@@ -66,7 +79,7 @@ class Class(BaseModel):
         
             if is_new:
                 scribblar_room = rooms.add(
-                    roomname = self.name,
+                    roomname = '%s' % self.subject,
                     roomowner = self.tutor.profile.get_scribblar_id(),
                     promoteguests = '0',
                     allowguests = '0',
@@ -91,17 +104,39 @@ class Class(BaseModel):
                 self.scribblar_id = scribblar_room['roomid']
                 super(self.__class__, self).save()
             else:
-                rooms.edit(roomid=self.scribblar_id, roomname=self.name)
+                rooms.edit(roomid=self.scribblar_id, roomname='%s' % self.subject)
     
     def delete(self):
         rooms.delete(roomid=self.scribblar_id)
-    
-    def lock(self):
-        rooms.edit(roomid=self.scribblar_id, locked='1')
-    
+        
     def __unicode__(self):
-        return self.name
+        return '%s' % self.subject
 
+    def get_start(self):
+        from django.utils.timezone import utc        
+        self.start.replace(tzinfo=utc)
+        return self.start
+
+    def get_end(self):
+        return self.end.tzname()
+    
+    def cancel_by_tutor(self):
+        if self.status == self.STATUS_TYPES.BOOKED:
+            self.status = self.STATUS_TYPES.CANCELED_BY_TUTOR
+            super(self.__class__, self).save()
+            rooms.delete(roomid=self.scribblar_id)
+    
+    def cancel_by_student(self):
+        if self.status == self.STATUS_TYPES.BOOKED:
+            self.status = self.STATUS_TYPES.CANCELED_BY_STUDENT
+            super(self.__class__, self).save()
+            rooms.delete(roomid=self.scribblar_id)
+
+    def done(self):
+        if self.status == self.STATUS_TYPES.BOOKED:
+            self.status = self.STATUS_TYPES.DONE
+            super(self.__class__, self).save()
+            rooms.edit(roomid=self.scribblar_id, locked='1')
 
 class ClassUserHistory(models.Model):
     """

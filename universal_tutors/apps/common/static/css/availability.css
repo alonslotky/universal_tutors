@@ -418,8 +418,8 @@
 	width:717px;
 	position:relative;
 }
-.number2,
-.number{
+.week-number2,
+.week-number{
 	position:absolute;
 	top:-3px;
 	left:-15px;
@@ -431,7 +431,7 @@
 	text-align:center;
 	width:64px;
 }
-.number2{
+.week-number2{
 	background-position:0 -415px;
 	color:#9e9d9d;
 }
@@ -731,7 +731,7 @@
 	margin-bottom:11px;
 }
 .shedule-row-style02{margin-bottom:0;}
-.shedule-row .number{
+.shedule-row .week-number{
 	left:-64px;
 	top: 0px;
 	font-size:21px;
@@ -825,7 +825,7 @@
 	height:71px;
 	text-align:center;
 }
-.rest-day-box .number{
+.rest-day-box .week-number{
 	left: -64px;
 	top: 0px;
 	font-size: 21px;
@@ -922,10 +922,10 @@
 .edit-space-calendar .rest-day-box { height: 71px; margin-bottom: 11px; }
 .edit-space-calendar .slider-box { top: 27px; overflow: hidden; }
 .edit-space-calendar .slider-title { width: 200px; margin-right: -200px; }
-.number.with-date { padding: 10px 0 0 0; height: 77px; font-size: 12px; line-height: 14px; }
-.number.with-date .weekday { font-size: 14px; line-height: 18px; }
-.number.with-date .day { font-size: 20px; line-height: 24px; }
-.rest-day-box .number.with-date { height: 61px; }
+.week-number.with-date { padding: 10px 0 0 0; height: 77px; font-size: 12px; line-height: 14px; }
+.week-number.with-date .weekday { font-size: 14px; line-height: 18px; }
+.week-number.with-date .day { font-size: 20px; line-height: 24px; }
+.rest-day-box .week-number.with-date { height: 61px; }
 
 .search-space-calendar .schedule-scrollbar-container { width: 719px; float: right; }
 .search-space-calendar .schedule-scrollbar-bar { width: 478px; left: 241px; }

@@ -1,0 +1,114 @@
+<div id="modal-message" class="reveal-modal message">
+  <h4>To: <strong id="modal-messages-user">John Doe</strong></h4>
+  
+  <div class="messages">
+    <div class="top"></div>
+    <div id="modal-messages-loading" class="inside loading">
+    	
+    </div>
+    <div id="modal-messages-container" class="inside">
+
+    </div>
+  </div>
+  
+  <form id="modal-message-form" class="nice" method="post">
+  	{% csrf_token %}
+    <div class="row">
+      <div class="nine columns">
+        <input id="modal-message-text" name="modal-message-text" type="text" class="input-text" placeholder="Write a Message ...">
+      </div>
+      
+      <div class="three columns">
+        <input type="submit" class="small button" value="Send">
+      </div>
+    </div>
+  </form>
+
+  <a class="close-reveal-modal" onclick="clearTimeout(modal_message_timeout);">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	var modal_message_to;
+	var modal_message_class;
+	var modal_message_timeout;
+
+	var view_modal_messages = function(to, class_, force_stay) {
+		clearTimeout(modal_message_timeout);
+		modal_message_to = to;
+		modal_message_class = class_;
+		
+		console.log(to, class_);
+		
+		var url = '{% url view_modal_messages %}'+ to +'/';
+		url += class_ ? class_+'/' : '';
+		
+		if(!force_stay) {
+			$('#modal-messages-container').hide();
+			$('#modal-messages-loading').show();
+		}
+		
+		$.ajax({
+			type: 'get',
+			url: url,
+			complete: function() {
+				$('#modal-messages-loading').fadeOut(function(){
+						$('#modal-messages-container').fadeIn();
+				});	
+			},
+			error: function() {
+				$('#modal-messages-container').html("It is not possible show the messages right now. Please try again later.")
+			},
+			success: function(response) {
+				load_modal_messages(response);
+				modal_message_timeout = setTimeout(function(){ view_modal_messages(modal_message_to, modal_message_class, true); }, 2000);
+			}
+		});
+	};
+	
+	$('#modal-message-form').submit(function(e){
+		e.preventDefault();
+		if (modal_message_to && modal_message_class && $('#modal-message-text').val()) {
+			var url = '{% url send_modal_message %}'+ modal_message_to +'/';
+			url += modal_message_class ? modal_message_class+'/' : '';
+	
+			$.ajax({
+				type: 'post',
+				data: $('#modal-message-form').serialize(),
+				url: url,
+				complete: function() {
+					$('#modal-messages-loading').fadeOut(function(){
+							$('#modal-messages-container').fadeIn();
+					});	
+				},
+				error: function() {
+					$('#modal-messages-container').html("It is not possible show the messages right now. Please try again later.")
+				},
+				success: function(response) {
+					$('#modal-message-text').val('');
+					load_modal_messages(response);
+				}
+			});
+		}
+	});
+	
+	var load_modal_messages = function(response) {
+		var result = eval(response);
+		
+		$('#modal-messages-user').html(result.to);
+		$('#modal-messages-container').html('');
+
+		var messages = result.messages;				
+		for(i=0; i<messages.length; i++){
+			var message = messages[i];
+			$('#modal-messages-container').append(
+				'<div class="post '+ (message.user_id==modal_message_to?'them':'you') +'">'+
+				'	<h6>'+ message.user +'</h6>'+
+				'	<p>'+ message.text +'</p>'+
+				'</div>'
+			);
+		}
+		
+		$('#modal-messages-container').scrollTop($(this).height());
+	};
+	
+</script>

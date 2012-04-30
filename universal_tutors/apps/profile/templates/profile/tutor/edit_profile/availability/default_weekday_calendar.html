@@ -10,7 +10,7 @@
 
 {% for day, weekday, periods in profile.get_default_week %}
 	<div id="schedule-week-{{weekday}}-container" class="schedule-weekday {% if periods %}shedule-row{% else %}rest-day-box{% endif %}">
-		<span class="number">{{day|slice_list:3}}</span>
+		<span class="week-number">{{day|slice_list:3}}</span>
 		<div id="schedule-week-{{weekday}}" class="scroll-item-container {% if not periods %}hidden{% endif %}">
 			<div id="schedule-week-{{weekday}}-periods-container" class="shedule5 scroll-item">
 				{% for period in periods %}
@@ -110,7 +110,7 @@
 		   		if(schedule_slider_bar_check_overlay(schedule_slider_row_mousedown_id, '', schedule_slider_row_mousedown_left, schedule_slider_row_mousedown_left+20)){
 					$('#'+ schedule_slider_row_mousedown_id).append(
 						'<div id="schedule-week-period_0" class="slider-box" style="left:'+ schedule_slider_row_mousedown_left +'px;width:'+ width +'px;">'+
-						'	<div class="drop"><a href="javascript:;" class="drop-link">open</a></div>'+
+						'	<div class="drop"><a href="javascript:;" class="drop-link">+</a></div>'+
 						'</div>'
 					);
 					

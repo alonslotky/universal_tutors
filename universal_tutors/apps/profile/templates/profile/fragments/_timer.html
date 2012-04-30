@@ -1,0 +1,101 @@
+{% with user_profile.get_next_class as next_class %}
+{% if next_class %}
+<section class="timer">
+  <div id="timer-container" class="wrapper">
+    <div class="one">
+      <p>Your next class starts in</p>
+    </div>
+    
+    <div class="two auto-width">
+      <span id="days_d" class="number hidden"></span>
+      <span id="days_u" class="number hidden"></span>
+      <span>days&nbsp;</span>
+      <span id="hours_d" class="number hidden"></span>
+      <span id="hours_u" class="number"></span>
+      <span>h&nbsp;</span>
+      <span id="minutes_d" class="number"></span>
+      <span id="minutes_u" class="number"></span>
+      <span>m&nbsp;</span>
+      <span id="seconds_d" class="number timer-seconds hidden"></span>
+      <span id="seconds_u" class="number timer-seconds hidden"></span>
+      <span class="timer-seconds hidden">s</span>
+    </div>
+    
+    <div class="three">
+      <a id="enter-next-class-button" href="tutor-classroom" class="button hide-on-phones hidden"><span class="rocket icon">Enter Classroom</span></a>
+      <p class="show-on-phones">Get to a desktop computer with Flash enabled to enter classroom.</p>
+    </div>
+  </div>
+</section>
+<script type="text/javascript">
+	var timer_class = new Date(Date.UTC({{next_class.date.year}},{{next_class.date.month|add:-1}},{{next_class.date.day}},{{next_class.start.hour}},{{next_class.start.minute}}));
+	
+	setInterval(function(){
+		var timer_now = new Date();
+		var diff = timer_class - timer_now;
+		
+		var total_seconds = diff / 1000;
+		
+		var seconds = parseInt(total_seconds % 60);
+		var minutes = parseInt((total_seconds / 60) % 60);
+		var hours = parseInt((total_seconds/3600) % 24);
+		var days = parseInt((total_seconds/3600/24));
+		
+		var days_d = parseInt((days / 10) % 10);
+		var days_u = parseInt(days % 10);
+
+		var hours_d = parseInt((hours / 10) % 10);
+		var hours_u = parseInt(hours % 10);
+
+		var minutes_d = parseInt(minutes / 10);
+		var minutes_u = parseInt(minutes % 10);
+
+		var seconds_d = parseInt(seconds / 10);
+		var seconds_u = parseInt(seconds % 10);
+		
+
+		if(days_d) {
+			$('#days_d').html(days_d);
+			$('#days_d').removeClass('hidden');
+		} else {
+			$('#days_d').addClass('hidden');
+		}
+
+		if(days_u) {
+			$('#days_u').html(days_u);
+			$('#days_u').removeClass('hidden');
+		} else {
+			$('#days_u').addClass('hidden');
+		}
+		
+		if(hours_d) {
+			$('#hours_d').html(hours_d);
+			$('#hours_d').removeClass('hidden');
+		} else {
+			$('#hours_d').addClass('hidden');
+		}
+
+		$('#hours_u').html(hours_u);
+		$('#minutes_d').html(minutes_d);
+		$('#minutes_u').html(minutes_u);
+		$('#seconds_d').html(seconds_d);
+		$('#seconds_u').html(seconds_u);
+		
+		if(total_seconds <= 600) {
+			$('#enter-next-class-button').removeClass('hidden');
+			$('.timer-seconds').removeClass('hidden');
+		} else {
+			$('#enter-next-class-button').addClass('hidden');
+			$('.timer-seconds').addClass('hidden');		
+		}
+		
+		var timer_size = 0;
+		$('#timer-container').children().each(function() {
+		    timer_size += $(this).outerWidth( true );
+		});
+		
+		$('#timer-container').width(timer_size);
+	}, 500);
+</script>
+{% endif %}
+{% endwith %}

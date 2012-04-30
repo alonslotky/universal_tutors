@@ -77,6 +77,7 @@ def edit_tutor_profile(request):
         if form.is_valid():
             form.save()
             profile.update_tutor_information(form)
+            request.session['django_timezone'] = pytz.timezone(profile.timezone)
         else:
             success = False
 
@@ -98,8 +99,8 @@ def edit_tutor_profile(request):
         'profile':profile,
         'form': form,
         'subject_formset': subject_formset,
-        #'qualifications_formset': qualifications_formset,
-        'timezones': pytz.all_timezones,
+        'qualifications_formset': qualifications_formset,
+        'timezones': pytz.common_timezones,
     }
 
 

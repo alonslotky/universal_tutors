@@ -1,8 +1,13 @@
+import simplejson as json
+
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django import http
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, render_to_response
+
 
 from apps.profile.models import NewsletterSubscription
 from apps.profile.forms import *
@@ -41,36 +46,89 @@ def add_newsletter_subscription(request):
 
 
 @login_required
-@main_render('profile/iframes/change_photo.html')
-def change_photo(request):
+def view_modal_messages(request, to, class_id=0):
+    user = request.user
+    to = get_object_or_404(User, id=to)
+    class_id = int(class_id)
+    
+    if class_id:
+        try:
+            class_ = Class.objects.get(id=class_id)
+        except Class.DoesNotExist:
+            raise http.Http404()
+    
+        messages = Message.objects.select_related().filter(Q(related_class=class_), Q(user=user, to=to) | Q(user=to, to=user))
+    else:
+        messages = Message.objects.select_related().filter(Q(user=user, to=to) | Q(user=to, to=user))
 
-    form = ProfilePhotoForm(request.POST or None, request.FILES or None)
-
-    success = False
-    error_message = ''
-
-    photo = ''
-
-    if request.method == 'POST' and form.is_valid():
-        user = request.user
-        profile = user.profile
-
-        f, filename = handle_uploaded_file(request.FILES['photo'], 'uploads/profiles/profile_images')
-
-        profile.profile_image = 'uploads/profiles/profile_images/' + filename
-        profile.save()
-
-        success = True
-
-        photo = profile.get_profile_image_path()
-
-    return {
-        'success': success,
-        'form': form,
-        'photo': photo,
-    }
+    data = json.dumps({
+        'to': to.get_full_name(), 
+        'messages': [{
+            'to_id': message.to.id,
+            'to': message.to.get_full_name(),
+            'user_id': message.user.id,
+            'user': message.user.get_full_name(),
+            'text': message.message,
+        } for message in messages]
+    })
+    
+    return http.HttpResponse(data, mimetype='application/json')
 
 
+@login_required
+def send_modal_message(request, to, class_id=0):
+    user = request.user
+    to = get_object_or_404(User, id=to)
+    class_id = int(class_id)
+    
+    if request.method != 'POST':
+        return http.HttpResponseForbidden()
+    
+    text = request.POST.get('modal-message-text')
+    
+    if class_id:
+        try:
+            class_ = Class.objects.get(id=class_id)
+        except Class.DoesNotExist:
+            raise http.Http404()
+    
+        Message.objects.create(user=user, to=to, related_class=class_, message=text)
+    else:
+        Message.objects.create(user=user, to=to, message=text)
+    
+    return http.HttpResponseRedirect(reverse('view_modal_messages', args=[to.id, class_id]))
+
+
+@login_required
+def tutor_cancel_class(request):
+    user = request.user
+    class_id = request.POST.get('class_id')
+    
+    try:
+        class_ = Class.objects.get(id=class_id, tutor=user)
+    except Class.DoesNotExist:
+        raise http.Http404()
+        
+    if request.method != 'POST':
+        class_.canceled_by_tutor()
+        
+    return http.HttpResponse('done.')
+
+
+@login_required
+def student_cancel_class(request):
+    user = request.user
+    class_id = request.POST.get('class_id')
+    
+    try:
+        class_ = Class.objects.get(id=class_id, student=user)
+    except Class.DoesNotExist:
+        raise http.Http404()
+        
+    if request.method != 'POST':
+        class_.canceled_by_student()
+        
+    return http.HttpResponse('done.')
 
 
 #### AVAILABILITY ###########################################################
