@@ -37,8 +37,6 @@
 		modal_message_to = to;
 		modal_message_class = class_;
 		
-		console.log(to, class_);
-		
 		var url = '{% url view_modal_messages %}'+ to +'/';
 		url += class_ ? class_+'/' : '';
 		
