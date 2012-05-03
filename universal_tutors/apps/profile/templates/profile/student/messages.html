@@ -16,7 +16,7 @@
       {% include 'profile/fragments/_timer.html' %}
       </div>
       
-      {% for person in usermesssages %}      
+      {% for person in usermessages %}      
       {% with person.profile as user_profile %}
       {% with person|get_messages:user as messages %}
       {% with messages.messages.0 as last_message %}
