@@ -65,7 +65,7 @@
 	
 	$('#modal-message-form').submit(function(e){
 		e.preventDefault();
-		if (modal_message_to && modal_message_class && $('#modal-message-text').val()) {
+		if (modal_message_to && $('#modal-message-text').val()) {
 			var url = '{% url send_modal_message %}'+ modal_message_to +'/';
 			url += modal_message_class ? modal_message_class+'/' : '';
 	
