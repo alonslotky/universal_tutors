@@ -64,3 +64,45 @@ def universal_fee(value):
 @register.filter
 def earning_fee(value):
     return value * (1-UNIVERSAL_FEE)
+
+@register.filter
+def reviews_style(lst):
+    new_list = []    
+
+    for index in range(0, len(lst), 2):
+        value1 = lst[index]
+        try:
+            value2 = lst[index+1]
+        except IndexError:
+            value2 = None
+        new_list.append((value1, value2))
+
+    return new_list
+
+@register.simple_tag
+def get_stars(rate):
+    rate = int(round(rate))
+    result = ''
+    for i in range(5):
+        star_class = 'on' if i < rate else 'off'
+        result = '%s<span class="star %s"></span>' % (result, star_class)
+     
+    return result
+
+
+@register.filter
+def is_favorite(person, user):
+    return user in person.profile.favorite.all()
+
+@register.filter
+def get_messages(person, user):
+    messages = person.sent_messages.filter(to = user).order_by('-created')
+    
+    return {
+        'messages': messages,
+        'unread': messages.filter(read = False).count(),
+     }
+    
+@register.filter
+def get_week(profile, date):
+    return profile.get_week(date)

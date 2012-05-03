@@ -3,345 +3,48 @@
 {% load fb_versions common_tags %}
 
 {% block title %}Classes{% endblock %}
-{% block body_class %}app tutor classes{% endblock %}
+{% block body_class %}app tutor{% endblock %}
 
 {% block content %}
 
       <section class="blue feature-box"><div class="inner">
-        <h1>Profile <span>View and modify your profile details.</span></h1>
+        <h1>Student Profile <span>Details on a specific student</span></h1>
       </div></section>
       
       <div class="hide-on-phones">
-      <?php include("includes/timer-tutor.inc") ?>
+      {% include 'profile/fragments/_timer.html' %}
       </div>
       
-      <dl class="nice contained tabs hide-on-phones">
-        <dd><a href="#details" class="active">Details</a></dd>
-        <dd><a href="#subjects">Subjects</a></dd>
-        <dd><a href="#qualifications">Qualifications</a></dd>
-        <dd><a href="#availability">Availability</a></dd>
-        <dd><a href="#account">Account</a></dd>
-        <dd><a href="#credits">Credits</a></dd>
-      </dl>
-      
-      <dl class="nice contained vertical tabs show-on-phones">
-        <dd><a href="#details" class="active">Details</a></dd>
-        <dd><a href="#subjects">Subjects</a></dd>
-        <dd><a href="#qualifications">Qualifications</a></dd>
-        <dd><a href="#availability">Availability</a></dd>
-        <dd><a href="#account">Account</a></dd>
-        <dd><a href="#credits">Credits</a></dd>
-      </dl>
-      
-      <form class="nice">
-        <ul class="nice tabs-content contained">
-          <li class="active" id="detailsTab">
-            <h2 class="clear">Profile Details</h2>
-            
-            <div class="row">
-              <div class="four columns photo">
-                <img src="http://placehold.it/175x175" alt="Profile Picture">
-                <div><input class="upload clear" type="file" name="datafile" size="40"></div>
-              </div>
-              <div class="eight column">
-                  <div class="row">
-                    <div class="six columns name">
-                      <label class="hidden">First Name</label>
-                      <input type="text" class="input-text clear" placeholder="First Name">
-                    </div>
-                    <div class="six columns name">
-                      <label class="hidden">Last Name</label>
-                      <input type="text" class="input-text clear" placeholder="Last Name">
-                    </div>
-                  </div>
-                  
-                  <label>Description <span>(max 300 characters)</span></label>
-                  <textarea class="space"></textarea>
-                  
-                  <div class="row space">
-                    <div class="three columns phone-one">
-                      <label>Video</label>
-                    </div>
-                    <div class="nine columns phone-three">
-                      <input type="file" class="upload" name="datafile" size="40">
-                    </div>
-                  </div>
-                  
-                  <div class="row space">
-                    <div class="three columns phone-one">
-                      <label>D.O.B.</label>
-                    </div>
-                    <div class="nine columns phone-three">
-                      <div class="row">
-                        <div class="four columns phone-one">
-                          <select class="stretch">
-                            <option>mm</option>
-                          </select>
-                        </div>
-                        <div class="four columns phone-one">
-                          <select class="stretch">
-                            <option>dd</option>
-                          </select>
-                        </div>
-                        <div class="four columns phone-two">
-                          <select class="stretch">
-                            <option>yyyy</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>  
-                  </div>
-                  
-                  <div class="row space">
-                    <div class="three columns phone-one">
-                      <label>Gender</label>
-                    </div>
-                    <div class="nine columns phone-three">
-                      <select class="stretch">
-                        <option>Male</option>
-                      </select>
-                    </div>  
-                  </div>
-                  
-                  <div class="row">
-                    <div class="three columns phone-one">
-                      <label>Location</label>
-                    </div>
-                    <div class="nine columns phone-three">
-                      <select class="stretch">
-                        <option>GMT+0 United Kingdom</option>
-                      </select>
-                    </div>  
-                  </div>
-              </div>
+      <div class="row">
+        <div class="two columns">
+          <div class="profile-picture">
+	        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{person.get_full_name}}">
+          </div>
+        </div>
+        
+        <div class="ten columns">
+          <h2>{{person.get_full_name}}</h2>
+          <h4>{{profile.date_of_birth|age}}, {{profile.get_gender_display}}</h4>
+          <div class="row">&nbsp;</div>
+          <div class="row">
+            <div class="nine columns">
+              <label>Interested In</br></label>
+              	{% for interest in profile.interests.all %}
+	              <div class="row">
+	                <div class="four columns tags">
+	                  <a class="tag">{{interest.subject}}</a>
+	                </div>
+	              </div>
+               	{% endfor %}
             </div>
-            
-          </li>
-          
-          <li id="subjectsTab">
-            <h2 class="clear">Subjects</h2>
-            
-            <table class="stretch">
-              <tr>
-                <th>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      Subject Title
-                    </div>
-                    <div class="four columns phone-two">
-                      Credits per hour
-                    </div>
-                  </div>
-                </th>
-              </tr>
-              <tr>
-                <td>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      <input type="text" class="input-text" placeholder="Subject">
-                    </div>
-                    <div class="four columns phone-two">
-                      <input type="text" class="input-text" placeholder="Credits">
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      <input type="text" class="input-text" placeholder="Subject">
-                    </div>
-                    <div class="four columns phone-two">
-                      <input type="text" class="input-text" placeholder="Credits">
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      <input type="text" class="input-text" placeholder="Subject">
-                    </div>
-                    <div class="four columns phone-two">
-                      <input type="text" class="input-text" placeholder="Credits">
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      <input type="text" class="input-text" placeholder="Subject">
-                    </div>
-                    <div class="four columns phone-two">
-                      <input type="text" class="input-text" placeholder="Credits">
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      <input type="text" class="input-text" placeholder="Subject">
-                    </div>
-                    <div class="four columns phone-two">
-                      <input type="text" class="input-text" placeholder="Credits">
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      <input type="text" class="input-text" placeholder="Subject">
-                    </div>
-                    <div class="four columns phone-two">
-                      <input type="text" class="input-text" placeholder="Credits">
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="eight columns phone-two">
-                      <input type="text" class="input-text" placeholder="Subject">
-                    </div>
-                    <div class="four columns phone-two">
-                      <input type="text" class="input-text" placeholder="Credits">
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            
-            </table>
-            
-          </li>
-          
-          <li id="qualificationsTab">
-            <h2 class="clear">Qualifications</h2>
-            
-            <table class="stretch">
-              <tr>
-                <th>
-                  <div class="row">
-                    <div class="six columns">
-                      Qualifications
-                    </div>
-                    <div class="six columns hide-on-phones">
-                      Supporting Document <i>(Optional)</i>
-                    </div>
-                  </div>
-                </th>
-              </tr>
-              <tr>
-                <td>
-                  <div class="row">
-                    <div class="six columns">
-                      <input type="text" class="input-text" placeholder="Title">
-                    </div>
-                    <div class="six columns">
-                      <input type="file" class="upload hide-on-phones" name="datafile" size="40">
-                      <p class="show-on-phones">Upload supporting document from a desktop computer</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="six columns">
-                      <input type="text" class="input-text" placeholder="Title">
-                    </div>
-                    <div class="six columns">
-                      <input type="file" class="upload hide-on-phones" name="datafile" size="40">
-                      <p class="show-on-phones">Upload supporting document from a desktop computer</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="six columns">
-                      <input type="text" class="input-text" placeholder="Title">
-                    </div>
-                    <div class="six columns">
-                      <input type="file" class="upload hide-on-phones" name="datafile" size="40">
-                      <p class="show-on-phones">Upload supporting document from a desktop computer</p>
-                    </div>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <div class="six columns">
-                      <input type="text" class="input-text" placeholder="Title">
-                    </div>
-                    <div class="six columns">
-                      <input type="file" class="upload hide-on-phones" name="datafile" size="40">
-                      <p class="show-on-phones">Upload supporting document from a desktop computer</p>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            
-            </table>
-            
-          </li>
-          
-          <li id="availabilityTab">
-            <h2 class="clear">Availability</h2>
-          </li>
-          
-          <li id="accountTab">
-            <h2 class="clear">Account Details</h2>
-            
-            <div class="row">
-              <div class="four columns">
-                <label>Current Password</label>
-              </div>
-              <div class="eight columns">
-                <input type="password" class="input-text stretch">
-              </div>
+            <div class="three columns action">
+            {% if owner %}
+          	  <a href="{% url edit_student_profile %}" class="book-class">Edit profile</a>            
+            {% else %}
+              <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});">Send a Message</a>
+			{% endif %}
             </div>
-            
-            <div class="row">
-              <div class="four columns">
-                <label>New Password</label>
-              </div>
-              <div class="eight columns">
-                <input type="password" class="input-text stretch">
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="four columns">
-                <label>Retype New Password</label>
-              </div>
-              <div class="eight columns">
-                <input type="password" class="input-text stretch">
-              </div>
-            </div>
-            
-            <hr>
-            
-            <div class="row">
-              <div class="four columns">
-                <label>Secret Question</label>
-              </div>
-              <div class="eight columns">
-                <input type="text" class="input-text stretch">
-              </div>
-            </div>
-            
-            <div class="row">
-              <div class="four columns">
-                <label>Answer to Secret Question</label>
-              </div>
-              <div class="eight columns">
-                <input type="text" class="input-text stretch">
-              </div>
-            </div>
-            
-          </li>
-          
-          <li id="creditsTab">
-            <h2 class="clear">Credits Overview</h2>
-            <div class="row space">
-              <div class="four columns">
-                <label>Credits</label>
-              </div>
-              <div class="eight columns">
-                <p>17 earned so far</p>
-              </div>
-            </div>
-            
-            <a class="button" href="tutor-credits"><span class="icon credits">Withdraw Credits</span></a>
-            <a class="button" href="tutor-history"><span class="icon history">View History</span></a>
-          </li>
-        </ul>
-        <div class="button"><input type="submit" class="icon thumb-up" value="Save Profile"></div>
-      </form>
-
-
+          </div>
+        </div>
+      </div>
 {% endblock %}

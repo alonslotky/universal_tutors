@@ -12,6 +12,7 @@
 					{% endif %}
 					{% if profile.type == profile.TYPES.STUDENT %}
 				          <li><a class="link-classes" href="{% url student_classes %}">Classes</a></li>
+				          <li><a class="link-tutors" href="{% url tutors %}">Tutors</a></li>
 				          <li><a class="link-messages" href="{% url student_messages %}">Messages</a></li>
 					{% endif %}
 				{% else %}

@@ -1,6 +1,57 @@
 <div id="modal-cancel-class" class="reveal-modal notice">
   <h3>Are you sure?</h3>
-  <p>If you cancel this class, you may get a negative review.</p>
-  <a class="button"><span class="icon thumb-up">I understand, cancel the class</span></a>
+  <p>If you cancel this class, you won't receive any refund.</p>
+  <a id="button-cancel-class-step1" class="button" onclick="cancel_class_step_1();"><span class="icon thumb-up">I understand, cancel the class</span></a>
+
+	<div id="student-cancel-class-form-container">
+	  <form id="student-cancel-class-form" class="nice">
+	  	{% csrf_token %}
+	  	<input id="student_class_to_cancel" name="class_id" type="hidden" value="0" />
+	    <div class="row">
+	        <input id="student_class_to_cancel_text" name="reason" type="text" class="input-text" placeholder="Write a reason ...">
+	    </div>
+		<a id="button-cancel-class-step2" class="button" onclick="cancel_class_step_2();"><span class="icon thumb-up">Send</span></a>
+	  </form>		
+	</div>
+  
   <a class="close-reveal-modal">&#215;</a>
 </div>
+
+<script type="text/javascript">
+	var student_class_to_cancel;
+	
+	$(window).ready(function(){
+		$('#student-cancel-class-form').submit(function(e){
+			e.preventDefault();
+			cancel_class_step_2();
+		});
+	});
+	
+	var cancel_class_step_2 = function(){
+		if(student_class_to_cancel && $('#student_class_to_cancel_text').val()) {
+			$('#student_class_to_cancel').val(student_class_to_cancel);
+			$.ajax({
+				type: 'post',
+				url: '{% url student_cancel_class %}',
+				data: $('#student-cancel-class-form').serialize(),
+				success: function() {
+					window.location.reload();
+				}
+			});
+		}
+	}
+	
+	var cancel_class_step_1 = function() {
+		$('#button-cancel-class-step1').fadeOut(function(){
+			$('#student_class_to_cancel_text').val('');
+			$('#student-cancel-class-form-container').fadeIn();
+		});
+	}
+	
+	var cancel_class_step_0 = function(id) {
+		student_class_to_cancel = id;
+		$('#button-cancel-class-step1').show();
+		$('#student-cancel-class-form-container').hide();
+	}
+</script>
+

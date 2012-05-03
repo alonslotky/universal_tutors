@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, render_to_response
 
 from apps.profile.models import NewsletterSubscription
 from apps.profile.forms import *
+from apps.classes.models import ClassSubject
 from apps.common.utils.view_utils import main_render, handle_uploaded_file
 
 try:
@@ -61,6 +62,8 @@ def view_modal_messages(request, to, class_id=0):
     else:
         messages = Message.objects.select_related().filter(Q(user=user, to=to) | Q(user=to, to=user))
 
+    messages.filter(to=user).update(read=True)
+
     data = json.dumps({
         'to': to.get_full_name(), 
         'messages': [{
@@ -102,15 +105,19 @@ def send_modal_message(request, to, class_id=0):
 @login_required
 def tutor_cancel_class(request):
     user = request.user
+    
+    if request.method != 'POST':
+        raise http.Http404()
+        
     class_id = request.POST.get('class_id')
+    reason = request.POST.get('reason')
     
     try:
         class_ = Class.objects.get(id=class_id, tutor=user)
     except Class.DoesNotExist:
         raise http.Http404()
         
-    if request.method != 'POST':
-        class_.canceled_by_tutor()
+    class_.canceled_by_tutor(reason)
         
     return http.HttpResponse('done.')
 
@@ -118,17 +125,142 @@ def tutor_cancel_class(request):
 @login_required
 def student_cancel_class(request):
     user = request.user
+
+    if request.method != 'POST':
+        raise http.Http404()
+        
     class_id = request.POST.get('class_id')
+    reason = request.POST.get('reason')
     
     try:
         class_ = Class.objects.get(id=class_id, student=user)
     except Class.DoesNotExist:
         raise http.Http404()
         
-    if request.method != 'POST':
-        class_.canceled_by_student()
+    class_.canceled_by_student(reason)
         
     return http.HttpResponse('done.')
+
+
+@login_required
+def tutor_rate_student(request):
+    user = request.user
+
+    if request.method != 'POST':
+        raise http.Http404()
+        
+    class_id = request.POST.get('class_id')
+    user_id = request.POST.get('user_id')
+    text = request.POST.get('text')
+    
+    try:
+        class_ = Class.objects.get(id=class_id, tutor=user)
+    except Class.DoesNotExist:
+        raise http.Http404()
+
+    try:
+        student = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        raise http.Http404()
+    
+    
+    if student != class_.student:
+        raise http.Http404()
+    
+    try:
+        review = student.reviews_as_student.get(related_class = class_)
+        review.text = text
+        review.save()
+    except StudentReview.DoesNotExist:
+        student.reviews_as_student.create(related_class = class_, text = text)
+        
+    return http.HttpResponse('done.')
+
+
+@login_required
+def student_rate_tutor(request):
+    user = request.user
+
+    if request.method != 'POST':
+        raise http.Http404()
+        
+    class_id = request.POST.get('class_id')
+    user_id = request.POST.get('user_id')
+    rate = int(request.POST.get('rate'))
+    text = request.POST.get('text')
+    
+    try:
+        class_ = Class.objects.get(id=class_id, student=user)
+    except Class.DoesNotExist:
+        raise http.Http404()
+
+    try:
+        tutor = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        raise http.Http404()
+    
+    
+    if tutor != class_.tutor:
+        raise http.Http404()
+    
+    try:
+        review = tutor.reviews_as_tutor.get(related_class = class_)
+        review.text = text
+        review.rate = rate
+        review.save()
+    except TutorReview.DoesNotExist:
+        tutor.reviews_as_tutor.create(related_class = class_, text = text, rate = rate)
+        
+    return http.HttpResponse('done.')
+
+
+@login_required
+def favorite(request, person_id):
+    user = request.user
+
+    try:
+        person = User.objects.select_related().get(id=person_id)
+    except User.DoesNotExist:
+        raise http.Http404()
+    
+    profile = person.profile
+    
+    if user in profile.favorite.all():
+        profile.favorite.remove(user)
+        return http.HttpResponse('Add Favorite')
+    else:
+        profile.favorite.add(user)
+        return http.HttpResponse('Remove Favorite')
+
+
+@login_required
+def add_interest(request):
+    user = request.user
+
+    interest = request.GET.get('interest', None)
+    if not interest:
+        raise http.Http404()
+    
+    try:
+        subject = ClassSubject.objects.get(subject__iexact=interest)
+    except ClassSubject.DoesNotExist:
+        subject = ClassSubject.objects.create(subject=interest)
+    
+    user.profile.interests.add(subject)
+    return http.HttpResponse('%s' % subject.id)
+
+
+@login_required
+def remove_interest(request, subject_id):
+    user = request.user
+
+    try:
+        subject = ClassSubject.objects.get(id=subject_id)
+        user.profile.interests.remove(subject)
+    except ClassSubject.DoesNotExist:
+        pass
+    
+    return http.HttpResponse('done')
 
 
 #### AVAILABILITY ###########################################################
@@ -299,5 +431,3 @@ def delete_this_week_period(request, period_id):
         'periods': periods,
         'date': date,
     }
-
-

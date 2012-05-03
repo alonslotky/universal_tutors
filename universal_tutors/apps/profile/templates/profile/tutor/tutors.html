@@ -1,0 +1,74 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags %}
+
+{% block title %}Tutors{% endblock %}
+{% block body_class %}app student tutors{% endblock %}
+
+{% block content %}
+      <section class="blue feature-box"><div class="inner">
+        <h1>Tutors <span>Favorite and Used Tutors.</span></h1>
+      </div></section>
+      
+      <div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+      </div>
+      
+      {% for group in tutor_groups %}
+	      {% if not forloop.first %}<hr class="big">{% endif %}
+	
+	      <div class="row">
+	        <div class="twelve columns">
+	          <h2>{{group.title}}</h2>
+	        </div>
+	      </div>
+	      
+	      {% for tutor in group.tutors %}
+	      {% with tutor.profile as tutor_profile %}
+	      <article>
+	        <div class="row">
+	          <div class="one columns hide-on-phones">
+	            <img src="{% version tutor_profile.profile_image.path 'list_tutors' %}" alt="{{tutor.get_full_name}}">
+	          </div>
+	          
+	          <div class="three columns">
+	            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
+	            <p><span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span></p>
+	          </div>
+	          
+	          <div class="four columns">
+	            <p>{{tutor_profile.about|truncatechars:300}}</br><a href="{% url profile tutor.username %}">Read More</a></p>
+	          </div>
+	          
+	          <div class="two columns tags">
+	          	{% for subject in tutor.subjects.all %}
+	            <a href="student-search" class="tag">{{subject}}</a>
+	            {% endfor %}
+	          </div>
+	          
+	          <div class="two columns action">
+	            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
+	            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>
+	            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}">{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+	            <a href="{% url report tutor.username %}" class="report">Report</a>
+	          </div>
+	        </div>
+	      </article>
+	      {% endwith %}
+	      {% endfor %}
+	  {% empty %}
+	      
+      {% endfor %}
+      
+  	{% include 'profile/fragments/_modal_messages.html' %}
+	
+	<script type="text/javascript">
+		$('.favorite').click(function(){
+			var tutor_id = $(this).attr('id-tutor');
+			$.get('{% url favorite %}'+ tutor_id +'/', function(response){
+				$('.tutor-favorite-'+ tutor_id).html(response);
+			});
+		});
+	</script>
+{% endblock %}
+

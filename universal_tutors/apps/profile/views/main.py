@@ -39,7 +39,7 @@ def profile(request, username=None):
     if profile.type == profile.TYPES.TUTOR:
         template = 'profile/tutor/profile.html'
     elif profile.type == profile.TYPES.STUDENT:
-        template = ''
+        template = 'profile/student/profile.html'
     else:
         raise http.Http404()
 
@@ -68,7 +68,7 @@ def edit_tutor_profile(request):
         'last_name': user.last_name,
     }
     
-    form = TutorProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
+    form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
     subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
     qualifications_formset = TutorQualificationFormSet(request.POST or None, request.FILES or None, instance=user)
     if request.POST:
@@ -95,7 +95,6 @@ def edit_tutor_profile(request):
             return http.HttpResponseRedirect(reverse('profile'))
 
     return {
-        'dashboard': True,
         'profile':profile,
         'form': form,
         'subject_formset': subject_formset,
@@ -173,14 +172,48 @@ def tutor_messages(request):
     view my recent activity
     """
     user = request.user
-    profile = user.profile
+
+    usermessages = User.objects.select_related().filter(sent_messages__to = user).distinct()
 
     return {
-        'profile':profile,
+        'usermessages':usermessages,
     }
 
 
 ### STUDENTS #####################################################
+@login_required
+@main_render(template='profile/student/edit_profile/base.html')
+def edit_student_profile(request):
+    """
+    edit my personal profile
+    """
+    user = request.user
+    profile = user.profile
+
+    if profile.type != profile.TYPES.STUDENT:
+        raise http.Http404()
+
+    data = {
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+    }
+    
+    form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
+    if request.POST:
+        if form.is_valid():
+            form.save()
+            profile.update_tutor_information(form)
+            request.session['django_timezone'] = pytz.timezone(profile.timezone)
+
+            return http.HttpResponseRedirect(reverse('profile'))
+
+    return {
+        'profile':profile,
+        'form': form,
+        'timezones': pytz.common_timezones,
+    }
+
+
 @login_required
 @over16_required()
 @main_render(template='profile/student/classes.html')
@@ -204,8 +237,87 @@ def student_messages(request):
     view my recent activity
     """
     user = request.user
-    profile = user.profile
+
+    usermessages = User.objects.select_related().filter(sent_messages__to = user).distinct()
 
     return {
-        'profile':profile,
+        'usermessages':usermessages,
     }
+    
+@login_required
+@over16_required()
+@main_render('profile/tutor/tutors.html')
+def tutors(request):
+    """
+    tutors list
+    """
+    user = request.user
+    
+    tutor_groups = []
+
+    favorite_and_used = User.objects.select_related().filter(profile__favorite=user, classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE)
+    favorite = User.objects.select_related().filter(profile__favorite=user)
+    used = User.objects.select_related().filter(classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE)
+
+    if favorite_and_used:
+        tutor_groups.append({
+        'title': 'Favorite & Used Tutors',
+        'tutors': favorite_and_used,        
+        })
+
+    if favorite:
+        tutor_groups.append({
+        'title': 'Favorite Tutors',
+        'tutors': favorite,        
+        })
+
+    if used:
+        tutor_groups.append({
+        'title': 'Used Tutors',
+        'tutors': used,        
+        })
+
+    return {
+        'tutor_groups': tutor_groups
+    }
+
+
+@login_required
+@over16_required()
+@main_render(template='profile/tutor/report.html')
+def report(request, username):
+    """
+    view my recent activity
+    """
+    user = request.user
+    
+    tutor = get_object_or_404(User, username = username)
+    
+    success = False
+    if request.method == 'POST':
+        description = request.POST.get('violation-description')
+        user.sent_report.create(violator=tutor, description=description)
+        success = True
+
+    return {
+        'tutor': tutor,
+        'success': success,
+    }
+
+
+@login_required
+@over16_required()
+@main_render(template='profile/tutor/book_class/base.html')
+def book_class(request, username):
+    """
+    view my recent activity
+    """
+    user = request.user
+    tutor = get_object_or_404(User, username = username)
+    
+    return {
+        'person': tutor,
+        'profile': tutor.profile,
+        'date': datetime.date.today(),
+    }
+    

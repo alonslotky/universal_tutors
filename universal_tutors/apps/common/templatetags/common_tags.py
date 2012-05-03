@@ -7,6 +7,8 @@ from django.template.defaultfilters import stringfilter
 from django.conf import settings
 from django.utils.encoding import force_unicode
 
+import datetime
+
 from HTMLParser import HTMLParser, HTMLParseError
     
 register = template.Library()
@@ -343,3 +345,16 @@ def button(name, value, id):
     'value': value,
     'id': id,
     }
+
+@register.filter
+def age(date):
+    today = datetime.date.today()
+    years = today.year - date.year
+    if date.month > today.month:
+        years -= 1
+    elif date.month == today.month:
+        if date.day > today.day:
+            years -= 1
+            
+    return years
+    

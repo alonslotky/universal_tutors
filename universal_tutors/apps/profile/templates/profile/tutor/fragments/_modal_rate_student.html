@@ -1,11 +1,41 @@
 <div id="modal-review" class="reveal-modal message review">
-  <h4>Rating for: <strong>John Doe</strong></h4>
+  <h4>Rating for: <strong id="modal-review-student-name">John Doe</strong></h4>
     
-  <form class="nice">
-    <textarea>Rate this student ...</textarea>
-    
+  <form id="tutor-rate-student-form"  class="nice">
+  	{% csrf_token %}
+  	<input id="tutor-rate-student-id" name="user_id" type="hidden" value="0" />
+  	<input id="tutor-rate-student-class" name="class_id" type="hidden" value="0" />
+    <textarea id="tutor-rate-student-text"  name="text">Rate this student ...</textarea>
     <input type="submit" class="small button" value="Send">
   </form>
 
   <a class="close-reveal-modal">&#215;</a>
 </div>
+
+
+<script type="text/javascript">
+	var student_rated_user_id;
+	var student_rated_class_id;
+	var student_rated_text;
+	
+	$(window).ready(function(){
+		$('#tutor-rate-student-form').submit(function(e){
+			e.preventDefault();
+			$.ajax({
+				type: 'post',
+				url: '{% url tutor_rate_student %}',
+				data: $('#tutor-rate-student-form').serialize(),
+				success: function() {
+					window.location.reload();
+				}
+			});
+		});
+	});
+	
+	var tutor_rate_student = function(user_id, user_name, class_id, text) {
+		$('#modal-review-student-name').text(user_name);
+		$('#tutor-rate-student-id').val(user_id);
+		$('#tutor-rate-student-class').val(class_id);
+		$('#tutor-rate-student-text').val(text ? text : 'Rate this student ...');
+	}
+</script>

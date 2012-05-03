@@ -7,11 +7,14 @@
       <tr>
         <th>
           <div class="row">
-            <div class="six columns">
+            <div class="eight columns phone-two">
               Qualifications
             </div>
-            <div class="six columns hide-on-phones">
-              Supporting Document <i>(Optional)</i>
+            <div class="three columns phone-one">
+              Supporting Document
+            </div>
+            <div class="one columns phone-one">
+              Delete
             </div>
           </div>
         </th>
@@ -27,8 +30,11 @@
 	            <div class="eight columns phone-two">
 	              <input id="id_qualifications-{{forloop.counter0}}-qualification" name="qualifications-{{forloop.counter0}}-qualification" type="text" class="input-text" value="{{item.qualification}}" placeholder="qualification">
 	            </div>
-	            <div class="four columns phone-two">
-	              {% if item.document %}<a href="{{item.document.url}}">(view current)</a>{% endif %}<input id="id_qualification-{{forloop.counter0}}-document" name="qualifications-{{forloop.counter0}}-document" type="file" class="input-text" value="{{item.document}}" placeholder="document">
+	            <div class="three columns phone-one">
+	              <input id="id_qualification-{{forloop.counter0}}-document" name="qualifications-{{forloop.counter0}}-document" type="file" class="input-text" value="{{item.document}}" placeholder="document">{% if item.document %}<a href="{{item.document.url}}">(view current)</a>{% endif %}
+	            </div>
+	            <div class="one columns phone-one">
+					<input id="id_qualification-{{forloop.counter0}}-DELETE" type="checkbox" name="qualifications-{{forloop.counter0}}-DELETE">
 	            </div>
 				<input id="id_qualifications-{{forloop.counter0}}-id" type="hidden" name="qualifications-{{forloop.counter0}}-id" value="{{item.id}}">
 				<input id="id_qualifications-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="qualifications-{{forloop.counter0}}-user">
@@ -39,8 +45,11 @@
             <div class="eight columns phone-two">
               <input id="id_qualifications-{{no_qualifications}}-qualification" name="qualifications-{{no_qualifications}}-qualification" type="text" class="input-text" placeholder="qualification">
             </div>
-            <div class="four columns phone-two">
+            <div class="three columns phone-one">
               <input id="id_qualifications-{{no_qualifications}}-document" name="qualifications-{{no_qualifications}}-document" type="file" class="input-text" placeholder="document">
+            </div>
+            <div class="one columns phone-one">
+				<input id="id_qualification-{{no_qualifications}}-DELETE" type="checkbox" name="qualifications-{{no_qualifications}}-DELETE">
             </div>
 			<input id="id_qualifications-{{no_qualifications}}-id" type="hidden" name="qualifications-{{no_qualifications}}-id">
 			<input id="id_qualifications-{{no_qualifications}}-user" type="hidden" value="{{user.id}}" name="qualifications-{{no_qualifications}}-user">
@@ -63,8 +72,11 @@
 	  		'	<div class="eight columns phone-two">'+
 	  		'		<input id="id_qualifications-'+ id_qualification +'-qualification" name="qualifications-'+ id_qualification +'-qualification" type="text" class="input-text" placeholder="qualification">'+
 	  		'	</div>'+
-	  		'	<div class="four columns phone-two">'+
+	  		'	<div class="three columns phone-one">'+
 	  		'		<input id="id_qualifications-'+ id_qualification +'-document" name="qualifications-'+ id_qualification +'-document" type="file" class="input-text" placeholder="document">'+
+	  		'	</div>'+
+	  		'	<div class="one columns phone-one">'+
+	  		'		<input id="id_qualifications-'+ id_qualification +'-DELETE" name="qualifications-'+ id_qualification +'-DELETE" type="checkbox">'+
 	  		'	</div>'+
 			'	<input id="id_qualifications-'+ id_qualification +'-id" type="hidden" name="qualifications-'+ id_qualification +'-id">'+
 			'	<input id="id_qualifications-'+ id_qualification +'-user" type="hidden" value="{{user.id}}" name="qualifications-'+ id_qualification +'-user">'+

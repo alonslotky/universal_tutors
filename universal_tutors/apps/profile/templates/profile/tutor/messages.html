@@ -1,69 +1,58 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags tz tutor_tags %}
 
-{% block title %}Dashboard{% endblock %}
-{% block body_class %}{% endblock %}
+{% block title %}Messages{% endblock %}
+{% block body_class %}tutor messages app{% endblock %}
 
 {% block content %}
 
-<section class="blue feature-box"><div class="inner">
-        <h1>Messages <span>Conversations with students.</span></h1>
+{% timezone user.profile.timezone %}
+	<section class="blue feature-box"><div class="inner">
+        <h1>Messages <span>Conversations with students</span></h1>
       </div></section>
       
       <div class="hide-on-phones">
-      {% include 'profile/tutor/fragments/_timer.html' %}
+      {% include 'profile/fragments/_timer.html' %}
       </div>
       
-      <article>
-        <div class="row">
-          <div class="one columns hide-on-phones">
-            <img src="http://placehold.it/100x100" alt="Tutor Photo">
-          </div>
-          
-          <div class="three columns title">
-            <h3 class="title"><a href="tutor-student-profile">John Doe</a></h3>
-          </div>
-          
-          <div class="four columns description">
-            <p><a href="#" data-reveal-id="modal-message">"Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Fusce gravida." ...</a></p>
-          </div>
-          
-          <div class="two columns timestamp">
-            <p>Received on <br><strong>4:15pm - 5:00pm EST <br>March 8</strong></p>
-          </div>
-          
-          <div class="two columns action">
-            <a href="#" class="send-message" data-reveal-id="modal-message">View Messages</a>
-          </div>
-        </div>
-      </article>
       
+      {% for person in usermessages %}      
+      {% with person.profile as user_profile %}
+      {% with person|get_messages:user as messages %}
+      {% with messages.messages.0 as last_message %}
       <article>
         <div class="row">
           <div class="one columns hide-on-phones">
-            <img src="http://placehold.it/100x100" alt="Tutor Photo">
-            <div class="unread">2<span> Unread Messages</span></div>
+            <img src="{% version user_profile.profile_image.path 'class_list_profile_image' %}" alt="{{person.get_full_name}}">
+            {% if messages.unread %}<div class="unread">{{messages.unread}}<span> Unread Message{{messages.unread|pluralize}}</span></div>{% endif %}
           </div>
           
           <div class="three columns title">
-            <h3 class="title"><a href="tutor-student-profile">John Doe</a></h3>
+            <h3 class="title"><a href="{% url profile person.username %}">{{person.get_full_name}}</a></h3>
           </div>
           
           <div class="four columns description">
-            <p><a href="#" data-reveal-id="modal-message">"Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula." ...</a></p>
+            <p><a href="javascritp:;" data-reveal-id="modal-message" onclick="">{{last_message|truncatechars:200}}</a></p>
           </div>
           
           <div class="two columns timestamp">
-            <p>Received on <br><strong>4:15pm - 5:00pm EST <br>March 8</strong></p>
+            <p>Received on <br><strong>{{last_message.created|date:"H:i"}} <br>{{last_message.created|date:"d M Y"}}</strong></p>
           </div>
           
           <div class="two columns action">
-            <a href="#" class="send-message" data-reveal-id="modal-message">View Messages</a>
+            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});">View Messages</a>
           </div>
         </div>
       </article>
+	  {% endwith %}
+	  {% endwith %}
+	  {% endwith %}
+	  
+	  {% empty %}
+      <article><div class="row" style="text-align: center;">You didn't received any message yet.</div></article>	  
+	  {% endfor %}
 		
-	{% include 'profile/tutor/fragments/_modal_messages.html' %}
-
+	{% include 'profile/fragments/_modal_messages.html' %}
+{% endtimezone %}
 {% endblock %}

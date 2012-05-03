@@ -4,6 +4,14 @@
 {% block body %}
 	<form id="signup-form2" method="POST" action="" class="nice custom">
         {% csrf_token %}
+        {% if form.username.errors %}<div class="formError">{{ form.username.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="id_location">Username</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_username" name="username" value="{{ form.username.value }}" class="input-text oversize stretch" /></div>
+		</div>
+		<div class="row">&nbsp;</div>
         {% if form.first_name.errors %}<div class="formError">{{ form.first_name.errors }}</div>{% endif %}
 		<div class="row">
             <div class="three columns">            	
@@ -41,27 +49,6 @@
 			<div class="nine columns"><input type="password" id="id_password2" name="password2" value="" class="input-text oversize stretch" /></div>
 		</div>
 		<div class="row">&nbsp;</div>
-        {% if form.address.errors %}<div class="formError">{{ form.address.errors }}</div>{% endif %}
-		<div class="row">
-            <div class="three columns">            	
-				<label class="margin-top" for="id_address">Address</label>
-            </div>
-			<div class="nine columns"><input type="text" id="id_address" name="address" value="{{ form.address.value }}" class="input-text oversize stretch" /></div>
-		</div>
-        {% if form.location.errors %}<div class="formError">{{ form.location.errors }}</div>{% endif %}
-		<div class="row">
-            <div class="three columns">            	
-				<label class="margin-top" for="id_location">Location</label>
-            </div>
-			<div class="nine columns"><input type="text" id="id_location" name="location" value="{{ form.location.value }}" class="input-text oversize stretch" /></div>
-		</div>
-        {% if form.postcode.errors %}<div class="formError">{{ form.postcode.errors }}</div>{% endif %}
-		<div class="row">
-            <div class="three columns">            	
-				<label class="margin-top" for="id_postcode">Postcode</label>
-            </div>
-			<div class="nine columns"><input type="text" id="id_postcode" name="postcode" value="{{ form.postcode.value }}" class="input-text oversize stretch" /></div>
-		</div>
         {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
 		<div class="row">
             <div class="three columns">            	

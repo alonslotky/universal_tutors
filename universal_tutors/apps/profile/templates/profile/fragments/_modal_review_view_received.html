@@ -1,0 +1,35 @@
+<div id="modal-view-review-received-{{rating.id}}" class="reveal-modal message review">
+  <h4>Review Received from: <strong id="modal-view-review-name">{{rating_sender}}</strong></h4>
+
+  <div class="row">
+    <div class="twelve columns">
+    
+      <p>{{rating.text}}</p>
+      
+      {% if rating.rate %}
+      <div id="modal-view-review-rating-{{rating.id}}" class="rating">
+        <span id="modal-view-review-rating-{{rating.id}}-0" class="star off"></span>
+        <span id="modal-view-review-rating-{{rating.id}}-1" class="star off"></span>
+        <span id="modal-view-review-rating-{{rating.id}}-2" class="star off"></span>
+        <span id="modal-view-review-rating-{{rating.id}}-3" class="star off"></span>
+        <span id="modal-view-review-rating-{{rating.id}}-4" class="star off"></span>
+      </div>
+      {% endif %}
+      
+    </div></div>
+
+
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+{% if rating.rate %}
+	for(i=0; i<{{rating.rate}}; i++) {
+		$('#modal-view-review-rating-{{rating.id}}-'+ i).removeClass('off');		
+		$('#modal-view-review-rating-{{rating.id}}-'+ i).addClass('on');				
+	}		
+{% endif %}
+$(window).ready(function(){
+	$('#modal-view-review-received-{{rating.id}}').insertBefore('#modal-windows');
+});
+</script>

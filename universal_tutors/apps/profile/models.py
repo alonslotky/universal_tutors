@@ -9,8 +9,10 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.models import Site
 from django.template import loader, Context
 from django.core.urlresolvers import reverse
+from django.core.mail import EmailMessage, get_connection
+from django.template.loader import render_to_string
 
-import re, unicodedata, random, string, datetime, os, pytz
+import re, unicodedata, random, string, datetime, os, pytz, threading
 
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
@@ -51,6 +53,13 @@ class UserProfile(BaseModel):
         (20, 'OTHER', 'Other'),
     ))
 
+    NOTIFICATIONS_TYPES = get_namedtuple_choices('USER_NOTIFICATIONS_TYPES', (
+        (0, 'BOOKED', 'A new class has been booked'),
+        (1, 'CANCELED_BY_TUTOR', 'Class canceled by tutor'),
+        (2, 'CANCELED_BY_STUDENT', 'Class canceled by student'),
+        (3, 'INCOME', 'Credits income'),
+    ))
+
     
     def get_upload_to(instance, filename):
         name, ext = os.path.splitext(filename)
@@ -73,6 +82,8 @@ class UserProfile(BaseModel):
     scribblar_id = models.CharField(verbose_name=_('Scribblar ID'), max_length=100, null=True, blank=True)
     gender = models.PositiveSmallIntegerField(verbose_name=_('Gender'), choices=GENDER_TYPES.get_choices(), default=GENDER_TYPES.MALE)
     timezone = models.CharField(verbose_name=_('Phone Timezone'), max_length=50, default=pytz.tz)
+    favorite = models.ManyToManyField(User, verbose_name=_('Favorite'), related_name='favorites', null=True, blank=True)
+    interests = models.ManyToManyField(ClassSubject, related_name='students')
     
     video = models.CharField(verbose_name=_('Video'), max_length=200, null=True, blank=True)
 
@@ -183,19 +194,22 @@ class UserProfile(BaseModel):
         """
         Get availability from a week
         """
+        today = datetime.date.today()
         date = date if date else datetime.date.today()
         date = date - datetime.timedelta(days=date.weekday())
         
         get_day = self.get_day
-        week_availability = [get_day(date + datetime.timedelta(days=dt)) for dt in xrange(0,7)]
         
-        all_week_available = True
-        for element in week_availability:
-            if not element[0]:
-                all_week_available = False
-                break
-        
-        return (all_week_available, week_availability)    
+        week_availability = []
+        for dt in xrange(0,7):
+            day = date + datetime.timedelta(days=dt)
+            
+            if day < today:
+                week_availability.append((day, (False, [])))
+            else:
+                week_availability.append((day, get_day(day)))
+                        
+        return week_availability
         
 
     def check_period(self, date=None, begin=None, end=None):
@@ -315,11 +329,11 @@ class UserProfile(BaseModel):
 
     def get_classes_as_tutor(self):
         from apps.classes.models import Class
-        return self.user.classes_as_tutor.filter(Q(status=Class.STATUS_TYPES.BOOKED) | Q(status=Class.STATUS_TYPES.DONE) )
+        return self.user.classes_as_tutor.exclude(status=Class.STATUS_TYPES.PRE_BOOKED)
 
     def get_classes_as_student(self):
         from apps.classes.models import Class
-        return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED)
+        return self.user.classes_as_student.exclude(status=Class.STATUS_TYPES.PRE_BOOKED)
 
     def get_next_class(self):
         from apps.classes.models import Class
@@ -329,6 +343,54 @@ class UserProfile(BaseModel):
         except IndexError:
             return 0
 
+    def send_notification(self, type, context):
+        subject = None
+        html = None
+        user = self.user
+
+        context['user'] = user
+        context['PROJECT_SITE_DOMAIN'] = settings.PROJECT_SITE_DOMAIN
+
+        if type == self.NOTIFICATIONS_TYPES.BOOKED:
+            subject = 'A new class has been booked'
+            html = render_to_string('emails/booked.html', context)
+        if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_TUTOR:
+            subject = 'Class canceled by tutor'
+            html = render_to_string('emails/canceled_by_tutor.html', context)
+        if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_STUDENT:
+            subject = 'Class canceled by student'
+            html = render_to_string('emails/canceled_by_student.html', context)
+        if type == self.NOTIFICATIONS_TYPES.INCOME:
+            subject = 'Income credits received'
+            html = render_to_string('emails/income.html', context)
+        
+        if subject and html:            
+            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+            to = ['%s <%s>' % (user.get_full_name(), user.email)]
+                    
+            email_message = EmailMessage(subject, html, sender, to)
+            email_message.content_subtype = 'html'
+            
+            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
+            t.setDaemon(True)
+            t.start()
+
+
+class UserCreditMovement(BaseModel):
+    MOVEMENTS_TYPES = get_namedtuple_choices('USER_MOVEMENTS_TYPES', (
+        (0, 'PAYMENT', 'Payment for a class'),
+        (1, 'INCOME', 'Class income'),
+        (2, 'CANCELED_BY_TUTOR', 'Class canceled by tutor (Refund)'),
+        (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Income)'),
+        (4, 'BAD_CLASS', 'Bad class (Refund)'),
+    ))
+
+    user = models.ForeignKey(User, related_name='movements')
+    type = models.PositiveSmallIntegerField(choices = MOVEMENTS_TYPES.get_choices())
+    credits = models.FloatField()
+
+    def __unicode__(self):
+        return '%s: %s' % (self.get_type_display(), self.credits)
 
 
 ### TUTOR ###########
@@ -359,26 +421,27 @@ class TutorQualification(models.Model):
         return self.qualification
 
 class TutorReview(BaseModel):
-    user = models.ForeignKey(User, related_name='reviews')
+    user = models.ForeignKey(User, related_name='reviews_as_tutor')
     rate = models.PositiveSmallIntegerField(default = 0)
+    related_class = models.ForeignKey(Class, related_name='tutor_reviews')
     text = models.TextField()
     
     def save(self, *args, **kwargs):
         user = self.user
         super(self.__class__, self).save(*args, **kwargs)
         profile = user.profile
-        profile.avg_rate = user.reviews.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
         profile.save()
     
     def delete(self):
         user = self.user
         super(self.__class__, self).delete()
         profile = user.profile
-        profile.avg_rate = user.reviews.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
         profile.save()
 
     def __unicode__(self):
-        return self.qualification
+        return '%s (%s)' % (self.text, self.rate)
 
 class TutorFavorite(BaseModel):
     class Meta:
@@ -463,19 +526,42 @@ class Child(models.Model):
         return '%s' % self.child
 
 
+class StudentReview(BaseModel):
+    user = models.ForeignKey(User, related_name='reviews_as_student')
+    related_class = models.ForeignKey(Class, related_name='student_reviews')
+    text = models.TextField()
+
+    def __unicode__(self):
+        return self.text
+
+
+
 #### COMMON ########################################
 class Message(BaseModel):
     class Meta:
         ordering = ('created',)
     
-    user = models.ForeignKey(User, related_name='received_messages')
-    to = models.ForeignKey(User, related_name='sent_messages')
+    user = models.ForeignKey(User, related_name='sent_messages')
+    to = models.ForeignKey(User, related_name='received_messages')
     message = models.CharField(max_length=500)
     related_class = models.ForeignKey(Class, null=True, blank=True, related_name='messages')
+    read = models.BooleanField(default=False)
     
     def __unicode__(self):
         return self.message
+
+
+class Report(BaseModel):
+    class Meta:
+        ordering = ('created',)
     
+    violator = models.ForeignKey(User, related_name='received_report')
+    user = models.ForeignKey(User, related_name='sent_report')
+    description = models.TextField()
+    
+    def __unicode__(self):
+        return '%s reported %s' (self.user, self.violator)
+
 
 class NewsletterSubscription(BaseModel):
     email = models.EmailField(max_length=255, unique=True)

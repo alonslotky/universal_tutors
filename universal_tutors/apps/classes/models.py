@@ -8,6 +8,8 @@ from django.core.mail import EmailMessage
 from django.contrib.sites.models import Site
 from django.template import loader, Context
 from django.core.urlresolvers import reverse
+from django.core.exceptions import ObjectDoesNotExist
+
 
 import re, unicodedata, random, string, datetime, os, pytz
 from scribblar import rooms
@@ -47,9 +49,9 @@ class Class(BaseModel):
         (0, 'PRE_BOOKED', 'Pre-booked'),
         (1, 'BOOKED', 'BOOKED'),
         (2, 'DONE', 'Done'),
-        (2, 'CANCELED_BY_STUDENT', 'Canceled by the student'),
-        (3, 'CANCELED_BY_TUTOR', 'Canceled by the tutor'),
-        (4, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),
+        (3, 'CANCELED_BY_STUDENT', 'Canceled by the student'),
+        (4, 'CANCELED_BY_TUTOR', 'Canceled by the tutor'),
+        (5, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),
     ))
     
     tutor = models.ForeignKey(User, related_name='classes_as_tutor')
@@ -62,6 +64,7 @@ class Class(BaseModel):
     earning_fee = models.FloatField()
     universal_fee = models.FloatField()
     scribblar_id = models.CharField(max_length = 100, null=True, blank=True)
+    cancelation_reason = models.CharField(max_length = 500, null=True, blank=True)
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
     
@@ -69,42 +72,49 @@ class Class(BaseModel):
         tutor = self.tutor
         tutor_profile = tutor.profile
         tutor_subject = tutor.subjects.filter(subject=self.subject)
-        if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
-            self.total_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
-            self.earning_fee = self.total_fee * (1 - UNIVERSAL_FEE)
-            self.cotton_fee = self.total_fee * UNIVERSAL_FEE
-
-            is_new = not self.id
-            super(self.__class__, self).save(*args, **kwargs)
+        is_new = not self.id
         
-            if is_new:
-                scribblar_room = rooms.add(
-                    roomname = '%s' % self.subject,
-                    roomowner = self.tutor.profile.get_scribblar_id(),
-                    promoteguests = '0',
-                    allowguests = '0',
-                    clearassets = '0',
-                    enablehistory = '1',
-                    whitelabel = '1',
-                    roomaudio = '1',
-                    roomvideo = '1',
-                    roomchat = '1',
-                    roomwolfram = '1',
-                    hideheader = '1',
-                    hideflickr = '1',
-                    hidestamp = '0',
-                    autostartcam = '1',
-                    autostartaudio = '1',
-                    allowrecord = '1',
-                    map = '0',
-                    locked = '0',
-                    allowlock = '0',
-                )
-                
-                self.scribblar_id = scribblar_room['roomid']
-                super(self.__class__, self).save()
-            else:
-                rooms.edit(roomid=self.scribblar_id, roomname='%s' % self.subject)
+        if is_new:
+            if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
+                self.credit_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
+                self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
+                self.universal_fee = self.credit_fee * UNIVERSAL_FEE
+    
+                super(self.__class__, self).save(*args, **kwargs)
+        else:
+            super(self.__class__, self).save(*args, **kwargs)                
+            if self.scribblar_id:
+                try:
+                    rooms.edit(roomid=self.scribblar_id, roomname='%s' % self.subject)
+                except:
+                    self.create_scribblar_class()
+    
+    def create_scribblar_class(self):
+        scribblar_room = rooms.add(
+            roomname = '%s' % self.subject,
+            roomowner = self.tutor.profile.get_scribblar_id(),
+            promoteguests = '0',
+            allowguests = '0',
+            clearassets = '0',
+            enablehistory = '1',
+            whitelabel = '1',
+            roomaudio = '1',
+            roomvideo = '1',
+            roomchat = '1',
+            roomwolfram = '1',
+            hideheader = '1',
+            hideflickr = '1',
+            hidestamp = '0',
+            autostartcam = '1',
+            autostartaudio = '1',
+            allowrecord = '1',
+            map = '0',
+            locked = '0',
+            allowlock = '0',
+        )
+            
+        self.scribblar_id = scribblar_room['roomid']
+        super(self.__class__, self).save()
     
     def delete(self):
         rooms.delete(roomid=self.scribblar_id)
@@ -120,23 +130,94 @@ class Class(BaseModel):
     def get_end(self):
         return self.end.tzname()
     
-    def cancel_by_tutor(self):
+    def canceled_by_tutor(self, reason):
         if self.status == self.STATUS_TYPES.BOOKED:
             self.status = self.STATUS_TYPES.CANCELED_BY_TUTOR
+            self.cancelation_reason = reason
             super(self.__class__, self).save()
             rooms.delete(roomid=self.scribblar_id)
+
+            from apps.profile.models import UserCreditMovement
+            student = self.student
+            student_profile = student.profile
+            student_profile.credit += self.credit_fee
+            student_profile.save()
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_TUTOR, credits=self.credit_fee)
+            student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CANCELED_BY_TUTOR, {
+                'class': self,
+                'student': student,
+                'tutor': self.tutor,
+            })
     
-    def cancel_by_student(self):
+    def canceled_by_student(self, reason):
         if self.status == self.STATUS_TYPES.BOOKED:
             self.status = self.STATUS_TYPES.CANCELED_BY_STUDENT
+            self.cancelation_reason = reason
             super(self.__class__, self).save()
             rooms.delete(roomid=self.scribblar_id)
+            
+            from apps.profile.models import UserCreditMovement
+            tutor = self.tutor
+            tutor_profile = tutor.profile
+            tutor_profile.income += self.earning_fee
+            tutor_profile.save()
+            tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_STUDENT, credits=self.credit_fee)
+            tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CANCELED_BY_STUDENT, {
+                'class': self,
+                'student': self.student,
+                'tutor': tutor,
+            })
 
     def done(self):
         if self.status == self.STATUS_TYPES.BOOKED:
             self.status = self.STATUS_TYPES.DONE
             super(self.__class__, self).save()
             rooms.edit(roomid=self.scribblar_id, locked='1')
+
+            from apps.profile.models import UserCreditMovement
+            tutor = self.tutor
+            tutor_profile = tutor.profile
+            tutor_profile.income += self.earning_fee
+            tutor_profile.save()
+            tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee)
+            tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.INCOME, {
+                'class': self,
+                'student': self.student,
+                'tutor': tutor,
+            })
+
+    def book(self):
+        tutor = self.tutor
+        tutor_profile = self.tutor
+        student = self.student
+        student_profile = student.profile
+        if self.status == self.STATUS_TYPES.PRE_BOOKED and student_profile.credit >= self.credit_fee:
+            self.status = self.STATUS_TYPES.BOOKED
+            super(self.__class__, self).save()
+            self.create_scribblar_class()
+            
+            from apps.profile.models import UserCreditMovement
+            student_profile.credit -= self.credit_fee
+            student_profile.save()
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.PAYMENT, credits=self.credit_fee)
+            tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.BOOKED, {
+                'class': self,
+                'student': student,
+                'tutor': tutor,
+            })
+    
+    def tutor_rating(self):
+        try:
+            return self.tutor.reviews_as_tutor.get(related_class = self)
+        except ObjectDoesNotExist:
+            return None
+
+    def student_rating(self):
+        try:
+            return self.student.reviews_as_student.get(related_class = self)
+        except ObjectDoesNotExist:
+            return None
+
 
 class ClassUserHistory(models.Model):
     """

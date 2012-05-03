@@ -23,8 +23,10 @@
           
           <div class="three columns">
             <a href="{% url class_detail class.id %}"><h3>{{class.subject}}</h3></a>
-            <p class="subheader">with <a href="tutor-student-profile">{{student.get_full_name}}</a></p>
-          </div>
+            <p class="subheader">with <a href="{% url profile student.username %}">{{student.get_full_name}}</a>
+           	{% if class.status != class.STATUS_TYPES.BOOKED %}<br/>({{class.get_status_display}}){% endif %}
+            </p>
+         </div>
           
           <div class="four columns">
             <p>{{class.description}}</p>
@@ -36,23 +38,49 @@
           
           <div class="two columns action">
             <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{student.id}}, {{class.id}});">View Messages</a>
-            <a href="#" class="cancel-class" data-reveal-id="modal-cancel-class">Cancel Class</a>
-            <a class="no-feedback">Awaiting Review</a>
-            <a href="#" class="rate-tutor" data-reveal-id="modal-review">Rate Student</a>
-            <a href="#" class="class-material">Class Material</a>
-            <a href="#" class="view-rating" data-reveal-id="modal-view-review-received">View Your Rating</a>
-            <a href="#" class="view-feedback" data-reveal-id="modal-review">View Student Rating</a>
-            <a href="#" class="class-material">Class Material</a>
+          	{% if class.status == class.STATUS_TYPES.BOOKED %}
+            <a href="javascript:;" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});">Cancel Class</a>
+			{% else %}
+				{% with class.tutor_rating as rating %}
+					{% if rating %}
+		            <a href="javascript:;" class="view-rating" data-reveal-id="modal-view-review-received-{{rating.id}}">View Your Rating</a>
+					{% with student.get_full_name as rating_sender %}
+						{% include 'profile/fragments/_modal_review_view_received.html' %}
+					{% endwith %}
+					{% else %}
+		            <a class="no-feedback">Awaiting Review</a>
+		            {% endif %}
+				{% endwith %}
+				
+	            {% if class.status == class.STATUS_TYPES.DONE %}
+					{% with class.student_rating as student_rating %}
+						{% if student_rating %}
+			            <a href="javascript:;" class="view-feedback" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}", {{class.id}},"{{student_rating.text}}");'>View Student Rating</a>
+						{% else %}
+			            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}",{{class.id}});'>Rate Student</a>
+			            {% endif %}
+					{% endwith %}
+		            <a href="#" class="class-material">Class Material</a>
+	 			{% endif %}
+ 			{% endif %}
            </div>
         </div>
       </article>
       {% endwith %}
       {% endwith %}
+      {% empty %}
+      <article class="{% if class.is_active %}{% endif %}">
+        <div class="row" style="text-align: center;">
+			You don't have any upcoming or previously given classes.
+        </div>      
+      </article>      
       {% endfor %}
 	{% include 'profile/fragments/_modal_messages.html' %}
 	{% include 'profile/tutor/fragments/_modal_cancel_class.html' %}
 	{% include 'profile/tutor/fragments/_modal_rate_student.html' %}
 	{% include 'profile/tutor/fragments/_modal_review_view.html' %}
-	{% include 'profile/tutor/fragments/_modal_review_view_received.html' %}
+	{% include 'profile/fragments/_modal_review_view_received.html' %}
+	<div id="modal-windows" class="hidden"></div>
+
 {% endtimezone %}
 {% endblock %}

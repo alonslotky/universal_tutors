@@ -1,0 +1,75 @@
+<div id="modal-review" class="reveal-modal message review">
+  <h4>Rating for: <strong id="modal-review-tutor-name" class="rate-tutor-name">John Doe</strong></h4>
+    
+  <form id="student-rate-tutor-form"  class="nice">
+  	{% csrf_token %}
+  	<input id="student-rate-tutor-id" name="user_id" type="hidden" value="0" />
+  	<input id="student-rate-tutor-class" name="class_id" type="hidden" value="0" />
+  	<input id="student-rate-tutor-rate" name="rate" type="hidden" value="0" />
+  	
+  	<div class="row">
+      <div class="eight columns">
+    	<textarea id="student-rate-tutor-text"  name="text">Rate this tutor ...</textarea>
+	  </div>
+	  
+      <div class="four columns">
+        
+        <div id="student-rate-tutor-star" class="rating">
+          <a href="javascript:;" onclick="rate_tutor(1);"><span id="student-rate-tutor-star-0" class="star off"></span></a>
+          <a href="javascript:;" onclick="rate_tutor(2);"><span id="student-rate-tutor-star-1" class="star off"></span></a>
+          <a href="javascript:;" onclick="rate_tutor(3);"><span id="student-rate-tutor-star-2" class="star off"></span></a>
+          <a href="javascript:;" onclick="rate_tutor(4);"><span id="student-rate-tutor-star-3" class="star off"></span></a>
+          <a href="javascript:;" onclick="rate_tutor(5);"><span id="student-rate-tutor-star-4" class="star off"></span></a>
+          <p>Rate <span class="rate-tutor-name">John</span>'s Performance</p>
+        </div>
+	    <input type="submit" class="small button" value="Send">
+        
+      </div>
+	</div>
+
+  </form>
+
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+
+
+<script type="text/javascript">
+	var tutor_rated_user_id;
+	var tutor_rated_class_id;
+	var tutor_rated_text;
+	
+	$(window).ready(function(){
+		$('#student-rate-tutor-form').submit(function(e){
+			e.preventDefault();
+			$.ajax({
+				type: 'post',
+				url: '{% url student_rate_tutor %}',
+				data: $('#student-rate-tutor-form').serialize(),
+				success: function() {
+					window.location.reload();
+				}
+			});
+		});
+	});
+	
+	var student_rate_tutor = function(user_id, user_name, class_id, text, rate) {
+		$('.rate-tutor-name').html(user_name);
+		$('#student-rate-tutor-id').val(user_id);
+		$('#student-rate-tutor-class').val(class_id);
+		$('#student-rate-tutor-text').val(text ? text : 'Rate this guy ...');
+		$('#student-rate-tutor-rate').val(rate ? rate : 0);
+		
+		rate_tutor(rate);
+	}
+	
+	var rate_tutor = function(rate) {
+		$('#student-rate-tutor-rate').val(rate);
+		$('#student-rate-tutor-star .star').removeClass('on');		
+		$('#student-rate-tutor-star .star').addClass('off');		
+		for(i=0; i<rate; i++) {
+			$('#student-rate-tutor-star-'+ i).removeClass('off');		
+			$('#student-rate-tutor-star-'+ i).addClass('on');				
+		}		
+	}
+	
+</script>

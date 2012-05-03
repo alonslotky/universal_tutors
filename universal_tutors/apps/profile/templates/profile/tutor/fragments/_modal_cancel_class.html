@@ -3,32 +3,55 @@
   <p>If you cancel this class, you may get a negative review.</p>
   <a id="button-cancel-class-step1" class="button" onclick="cancel_class_step_1();"><span class="icon thumb-up">I understand, cancel the class</span></a>
 
-  <form id="tutor-cancel-class-form" class="nice hidden">
-  	{% csrf_token %}
-  	<input id="tutor_class_to_cancel" name="class_id" type="hidden" value="0" />
-	<a id="button-cancel-class-step2" class="button" ><span class="icon thumb-up">Cancel the class</span></a>
-  </form>
+	<div id="tutor-cancel-class-form-container">
+	  <form id="tutor-cancel-class-form" class="nice">
+	  	{% csrf_token %}
+	  	<input id="tutor_class_to_cancel" name="class_id" type="hidden" value="0" />
+	    <div class="row">
+	        <input id="tutor_class_to_cancel_text" name="reason" type="text" class="input-text" placeholder="Write a reason ...">
+	    </div>
+		<a id="button-cancel-class-step2" class="button" onclick="cancel_class_step_2();"><span class="icon thumb-up">Send</span></a>
+	  </form>		
+	</div>
   
   <a class="close-reveal-modal">&#215;</a>
 </div>
+
 <script type="text/javascript">
-	var tutor_cancel_class;
 	var tutor_class_to_cancel;
 	
-	var cancel_class_step_2 = function(){
-		$.ajax({
-			type: 'post',
-			url: '{% url tutor_cancel_class %}',
-			data: $('#tutor-cancel-class-form').serialize(),
-			success: function() {
-				window.location.reload();
-			}
+	$(window).ready(function(){
+		$('#tutor-cancel-class-form').submit(function(e){
+			e.preventDefault();
+			cancel_class_step_2();
 		});
+	});
+	
+	var cancel_class_step_2 = function(){
+		if(tutor_class_to_cancel && $('#tutor_class_to_cancel_text').val()) {
+			$('#tutor_class_to_cancel').val(tutor_class_to_cancel);
+			$.ajax({
+				type: 'post',
+				url: '{% url tutor_cancel_class %}',
+				data: $('#tutor-cancel-class-form').serialize(),
+				success: function() {
+					window.location.reload();
+				}
+			});
+		}
 	}
 	
 	var cancel_class_step_1 = function() {
 		$('#button-cancel-class-step1').fadeOut(function(){
-			$('#tutor-cancel-class-form').fadeIn();
+			$('#student_class_to_cancel_text').val('');
+			$('#tutor-cancel-class-form-container').fadeIn();
 		});
 	}
+	
+	var cancel_class_step_0 = function(id) {
+		tutor_class_to_cancel = id;
+		$('#button-cancel-class-step1').show();
+		$('#tutor-cancel-class-form-container').hide();
+	}
 </script>
+

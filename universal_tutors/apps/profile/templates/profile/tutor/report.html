@@ -1,0 +1,64 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags %}
+
+{% block title %}Tutors{% endblock %}
+{% block body_class %}app student tutors{% endblock %}
+
+{% block content %}
+      <section class="blue feature-box"><div class="inner">
+        <h1>Report <span>Report a Tutor with inappropriate behavior.</span></h1>
+      </div></section>
+      
+      <div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+      </div>
+    
+      {% if not success %}
+      <div class="row">
+	      <div class="ten columns">
+	         <h2>Offending Tutor's: {{tutor.get_full_name}}</h2>
+		  </div>
+	  </div>
+
+      <div class="row">
+        <div class="six columns">
+        
+          <form id="violation-form" method="post" enctype="multipart/form-data" class="nice custom">
+          	{% csrf_token %}
+          	<div id="violation-error" class="formError hidden">This field is required</div>
+            <div class="row">
+              <div class="six columns">
+                <label>Description of Violation</label>
+              </div>
+              <div class="six columns">
+                <textarea id="id_violation-description" name="violation-description"></textarea>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="six columns">
+              </div>
+              <div class="six columns">
+                <div class="button"><input type="submit" class="icon thumb-up" value="Submit"></div>
+              </div>
+          </form>
+        </div>      
+      </div>
+      
+    </form>
+  </div>
+  {% else %}
+  <div class="row">Your report has been sent. Thank you for being helping to improve Universal Tutors.</div> 
+  {% endif %}
+  
+  <script type="text/javascript">
+  	$('#violation-form').submit(function(e){
+  		if(!$('#id_violation-description').val()) {
+  			e.preventDefault();
+  			$('#violation-error').removeClass('hidden');
+  		}
+  	});
+  </script>
+{% endblock %}
+

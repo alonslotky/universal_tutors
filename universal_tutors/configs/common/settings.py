@@ -31,7 +31,7 @@ LANGUAGE_CODE = 'en-GB'
 SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
+USE_TZ = False
 
 # Media
 STATIC_ROOT = os.path.join(SITE_ROOT, 'apps/common/static')
@@ -308,6 +308,7 @@ FILEBROWSER_VERSIONS = {
 
     'class_list_profile_image': {'width': 61, 'height': 61, 'opts': 'crop upscale'},
     'profile_image': {'width': 175, 'height': 175, 'opts': 'crop upscale'},
+    'list_tutors': {'width': 67, 'height': 67 , 'opts': 'crop upscale'},
 }
 FILEBROWSER_ADMIN_VERSIONS = [
     'thumb', 'small','medium','large',

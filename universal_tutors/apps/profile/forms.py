@@ -17,24 +17,6 @@ from allauth.utils import email_address_exists
 from apps.classes.models import ClassSubject
 from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
-
-
-
-class ProfileForm(forms.ModelForm):
-    first_name = forms.CharField()
-    last_name = forms.CharField()
-
-    class Meta:
-        model = UserProfile
-        fields = ()
-
-        widgets = {
-            'photo': forms.FileInput(),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        super(ProfileForm, self).__init__(*args, **kwargs)
-        self.fields['country'].required = True
         
 
 class SubjectField(forms.CharField):
@@ -51,14 +33,23 @@ class TutorSubjectForm(forms.ModelForm):
         models = TutorSubject
         fields = ('subject', 'credits')
 
-class TutorProfileForm(ProfileForm):
-    class Meta(ProfileForm.Meta):
-        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image')
 
+class ProfileForm(forms.ModelForm):
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+
+    class Meta:
+        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image')
+        model = UserProfile
         widgets = {
             'photo': forms.FileInput(),
             'country': forms.Select(attrs = {'class': 'stretch'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        self.fields['country'].required = True
+
 TutorSubjectFormSet = inlineformset_factory(User, TutorSubject, form=TutorSubjectForm)
 TutorQualificationFormSet = inlineformset_factory(User, TutorQualification)
     
@@ -125,23 +116,28 @@ class SigninForm(LoginForm):
 
 
 class SignupForm(forms.ModelForm):
+    username = forms.CharField(label=_('Username'), min_length=5, max_length=25, initial='')
     first_name = forms.CharField(label=_('First name'), max_length = 25, initial='')
     last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='')
     email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
     password1 = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
 
-    address = forms.CharField(label=_('Address'), max_length=150, initial='')
-    location = forms.CharField(label=_('Location'), max_length=50, initial='')
-    postcode = forms.CharField(label=_('Postcode'), max_length=10, initial='')
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
     type = forms.IntegerField(label=_('Type'), initial='')
 
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).count() > 0:
+            raise forms.ValidationError(_(u"This username is already used."))
+
+        return email
+    
     def clean_email(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).count() > 0:
-            raise forms.ValidationError(_(u"This email already registered."))
+            raise forms.ValidationError(_(u"This email is already registered."))
 
         return email
 
@@ -155,16 +151,7 @@ class SignupForm(forms.ModelForm):
 
     def save(self, commit=True, request=None):
         user = super(SignupForm, self).save(commit=False)
-        if not user.username:
-            user_id = User.objects.latest('id').id
-            while True:
-                user_id += 1
-                user.username = 'user%05d' % user_id
-                try:
-                    User.objects.get(username__iexact=user.username)
-                except User.DoesNotExist:
-                    break
-        
+
         password = self.cleaned_data['password1']
         if password:
             user.set_password(password)
@@ -175,9 +162,6 @@ class SignupForm(forms.ModelForm):
         user.save()
 
         profile = user.profile        
-        profile.address = self.cleaned_data['address']
-        profile.location = self.cleaned_data['location']
-        profile.postcode = self.cleaned_data['postcode']
         profile.country = self.cleaned_data['country']
         profile.date_of_birth = self.cleaned_data['date_of_birth']
         profile.type = self.cleaned_data['type']
@@ -189,7 +173,7 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', )
+        fields = ('username', 'first_name', 'last_name', 'email', )
 
 class NewsletterSubscribeForm(forms.Form):
     email = forms.EmailField(required=True)

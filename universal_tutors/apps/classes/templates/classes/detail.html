@@ -40,7 +40,11 @@
 	
 	  <header>
 	    <div class="logo alt ir left"><a>Universal Tutors</a></div>
+	    {% if user == class.student %}
 	    <a class="right button" href="/" data-reveal-id="modal-review"><span class="icon rocketdown">Exit Classroom</span></a>
+	  	{% else %}
+	    <a class="right button" href="{% url tutor_classes %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
+	  	{% endif %}
 	  </header>
 	  
 	  <div class="main scribblar-container">
@@ -51,7 +55,4 @@
 	<div class="container show-on-phones end">
 	  <p>Please get to a Flash-enabled desktop computer to access the classroom.</p>
 	</div>
-
-	{% include 'profile/tutor/fragments/_modal_messages.html' %}
-
 {% endblock %}
