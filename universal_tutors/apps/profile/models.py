@@ -102,6 +102,8 @@ class UserProfile(BaseModel):
     no_reviews = models.PositiveIntegerField(default=0)
     min_credits = models.PositiveIntegerField(default=0)
     max_credits = models.PositiveIntegerField(default=0)
+    
+    classes_given = models.PositiveIntegerField(default=0)
 
     @property
     def is_over16(self):
