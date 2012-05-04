@@ -12,7 +12,8 @@ from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage, get_connection
 from django.template.loader import render_to_string
 
-import re, unicodedata, random, string, datetime, os, pytz, threading
+
+import re, unicodedata, random, string, datetime, os, pytz, threading, urlparse
 
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
@@ -163,6 +164,18 @@ class UserProfile(BaseModel):
             )
                                 
         self.__update_location()
+
+    def get_video_id(self):
+        video_id = None
+        if self.video:
+            try:
+                parsed = urlparse.urlparse(self.video)
+                video_id = urlparse.parse_qs(parsed.query)['v'][0]
+            except IndexError:
+                if self.video.find('http://youtu.be/') > 0:
+                    video_id = self.video.replace('http://youtu.be/', '')
+        return video_id 
+
 
     def get_profile_image_path(self):
         return self.profile_image.path if self.profile_image else os.path.join(settings.MEDIA_ROOT, self.DEFAULT_PHOTO)

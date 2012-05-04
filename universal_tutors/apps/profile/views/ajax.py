@@ -532,7 +532,32 @@ def add_child(request):
         'form': form,
         'child_creator': True,
     }
+
+
+@login_required
+@main_render(template='profile/tutor/book_class/_weekday_calendar.html')
+def book_class(request, username, date):
+    """
+    view my recent activity
+    """
+    user = request.user
+    tutor = get_object_or_404(User, username = username)
     
+    try:
+        date_str = date.split('-')
+        date = datetime.date(int(date_str[0]), int(date_str[1]), int(date_str[2]))
+        date = date - datetime.timedelta(days=date.weekday())
+    except IndexError:
+        raise http.Http404()
+
+    
+    return {
+        'person': tutor,
+        'profile': tutor.profile,
+        'date': date,
+    }
+
+
 
 @login_required
 def add_credits(request, username=None):
