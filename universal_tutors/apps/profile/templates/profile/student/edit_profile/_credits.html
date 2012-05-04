@@ -15,7 +15,7 @@
   
   <script type="text/javascript">
   	$('#add-credits').click(function(){
-  		if(confirm('This is a dummy action that will add 30 credits to user during testes. You want to continue')) {
+  		if(confirm('This will simulate a transaction to add 30 credits to your account. Click "OK" to continue.')) {
   			$.get('{% url add_credits %}', function(){
   				window.location.reload();
   			});
