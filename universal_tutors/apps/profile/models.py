@@ -31,6 +31,8 @@ class UserProfile(BaseModel):
     Profile and configurations for a user
     """
     DEFAULT_PHOTO = 'images/default/profile.png'
+    
+    
 
     TYPES = get_namedtuple_choices('USER_TYPE', (
         (0, 'NONE', 'NOT DEFINED'),
@@ -59,7 +61,6 @@ class UserProfile(BaseModel):
         (2, 'CANCELED_BY_STUDENT', 'Class canceled by student'),
         (3, 'INCOME', 'Credits income'),
     ))
-
     
     def get_upload_to(instance, filename):
         name, ext = os.path.splitext(filename)
@@ -92,6 +93,10 @@ class UserProfile(BaseModel):
     income = models.FloatField(default=0)
 
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
+    
+    crb = models.BooleanField(default=False)
+    crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
+    apply_crb = models.BooleanField(default=False) 
 
     # tutor
     avg_rate = models.FloatField(default=0)
