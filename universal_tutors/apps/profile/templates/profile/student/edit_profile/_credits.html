@@ -9,6 +9,16 @@
       </div>
     </div>
     
-    <a class="button" href="javascript:;"><span class="icon credits">Top Up Credits</span></a>
+    <a id="add-credits" class="button" href="javascript:;"><span class="icon credits">Top Up Credits</span></a>
     <a class="button" href="{% url history %}"><span class="icon history">View History</span></a>
   </li>
+  
+  <script type="text/javascript">
+  	$('#add-credits').click(function(){
+  		if(confirm('This is a dummy action that will add 30 credits to user during testes. You want to continue')) {
+  			$.get('{% url add_credits %}', function(){
+  				window.location.reload();
+  			});
+  		}
+  	});
+  </script>
