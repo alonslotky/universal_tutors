@@ -2,7 +2,9 @@
 
 <div class="sign-in">
 	{% include "socialaccount/snippets/login_extra.html" %}
-	<form class="nice" action='{% url login %}?next={{request.path}}'method="post">{% csrf_token %}
+	<form class="nice" action='{% url login %}'method="post">
+		{% csrf_token %}
+		
 		<div class="row">
 			<div class="two columns">
   				<h3>Sign In</h3>
