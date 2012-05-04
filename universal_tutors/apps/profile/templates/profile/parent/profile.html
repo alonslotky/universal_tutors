@@ -1,0 +1,52 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Classes{% endblock %}
+{% block body_class %}app tutor{% endblock %}
+
+{% block content %}
+
+      <section class="blue feature-box"><div class="inner">
+        <h1>Parent Profile <span>Details on a specific parent</span></h1>
+      </div></section>
+      
+      <div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+      </div>
+      
+      <div class="row">
+        <div class="two columns">
+          <div class="profile-picture">
+	        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{person.get_full_name}}">
+          </div>
+        </div>
+        
+        <div class="ten columns">
+          <h2>{{person.get_full_name}}</h2>
+          <h4>{{profile.date_of_birth|age}}, {{profile.get_gender_display}}</h4>
+          <div class="row">&nbsp;</div>
+          <div class="row">
+            <div class="nine columns">
+              <label>Interested In</br></label>
+              	{% for interest in profile.interests.all %}
+	              <div class="row">
+	                <div class="four columns tags">
+	                  <a class="tag">{{interest.subject}}</a>
+	                </div>
+	              </div>
+               	{% endfor %}
+            </div>
+            <div class="three columns action">
+            {% if owner %}
+          	  <a href="{% url edit_student_profile %}" class="book-class">Edit profile</a>            
+            {% else %}
+              <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});">Send a Message</a>
+			{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+  	{% include 'profile/fragments/_modal_messages.html' %}
+
+{% endblock %}

@@ -40,6 +40,8 @@ def profile(request, username=None):
         template = 'profile/tutor/profile.html'
     elif profile.type == profile.TYPES.STUDENT:
         template = 'profile/student/profile.html'
+    elif profile.type == profile.TYPES.PARENT:
+        template = 'profile/parent/profile.html'
     else:
         raise http.Http404()
 
@@ -321,3 +323,56 @@ def book_class(request, username):
         'date': datetime.date.today(),
     }
     
+    
+### PARENT #####################################################
+
+@login_required
+@main_render(template='profile/parent/edit_profile/base.html')
+def edit_parent_profile(request):
+    """
+    edit my personal profile
+    """
+    user = request.user
+    profile = user.profile
+
+    if profile.type != profile.TYPES.TUTOR:
+        raise http.Http404()
+
+    data = {
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+    }
+    
+    form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
+    # subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
+    # qualifications_formset = TutorQualificationFormSet(request.POST or None, request.FILES or None, instance=user)
+    if request.POST:
+        success = True
+        
+        if form.is_valid():
+            form.save()
+            profile.update_tutor_information(form)
+            request.session['django_timezone'] = pytz.timezone(profile.timezone)
+        else:
+            success = False
+
+#        if subject_formset.is_valid():
+#            subject_formset.save()
+#        else:
+#            success = False
+#
+#        if qualifications_formset.is_valid():
+#            qualifications_formset.save()
+#        else:
+#            success = False
+
+        if success:
+            return http.HttpResponseRedirect(reverse('profile'))
+
+    return {
+        'profile':profile,
+        'form': form,
+        #'subject_formset': subject_formset,
+        #'qualifications_formset': qualifications_formset,
+        'timezones': pytz.common_timezones,
+    }

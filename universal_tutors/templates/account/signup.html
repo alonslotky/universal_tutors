@@ -100,13 +100,14 @@
 		});
 		$('#signup-form2').submit(function(e){
 			e.preventDefault();
+			var type = $("#id_type").val();
 			$('#modal-signup-form-container').fadeOut(function(){
 				$('#modal-signup-form-loading').fadeIn(function(){
 					$('#id_date_of_birth').val(signup_dob);
 					$('#id_type').val(signup_type);
 					$.ajax({
 						type: 'POST',
-						url: '{% url signup %}{% if form.crb %}?user_type=1{% endif %}',
+						url: '{% url signup %}?user_type=' + type,
 						data: $('#signup-form2').serialize(),
 						success: function(data) {
 							$('#modal-signup-form-container').html(data);

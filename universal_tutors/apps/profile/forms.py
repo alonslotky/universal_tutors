@@ -125,7 +125,7 @@ class SignupForm(forms.ModelForm):
 
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
-    type = forms.IntegerField(label=_('Type'), initial='')
+    type = forms.IntegerField(label=_('Type'),)
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -175,14 +175,27 @@ class SignupForm(forms.ModelForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', )
         
+
+class StudentSignupForm(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super(StudentSignupForm, self).__init__(*args, **kwargs)
+        self.fields['type'].initial = '2'
+        
+class ParentSignupForm(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super(ParentSignupForm, self).__init__(*args, **kwargs)
+        self.fields['type'].initial = '3'
         
 class TutorSignupForm(SignupForm):
     crb = forms.BooleanField(label='I have a CRB', required=False)
     crb_file = forms.FileField(required=False, max_length=100, help_text='Send us a copy of the document confirming you have a CRB certification.')
     apply_crb = forms.BooleanField(label='Apply for a CRB', required=False)
     
+    def __init__(self, *args, **kwargs):
+        super(TutorSignupForm, self).__init__(*args, **kwargs)
+        self.fields['type'].initial = '1'
+    
     def clean(self):
-        print self.cleaned_data
         crb = self.cleaned_data.get('crb', None)
         crb_file = self.cleaned_data.get('crb_file', None)
         apply_crb = self.cleaned_data.get('apply_crb', None)
@@ -197,28 +210,6 @@ class TutorSignupForm(SignupForm):
             self._errors["crb_file"] = self.error_class(["Please provide your CRB certificate"])
             del self.cleaned_data["crb_file"]
         return self.cleaned_data
-    
-    def save(self, commit=True, request=None):
-        user = super(TutorSignupForm, self).save(commit=False)
-
-        password = self.cleaned_data['password1']
-        if password:
-            user.set_password(password)
-        else:
-            user.set_unusable_password()
-        
-        user.is_active = True
-        user.save()
-
-        profile = user.profile        
-        profile.country = self.cleaned_data['country']
-        profile.date_of_birth = self.cleaned_data['date_of_birth']
-        profile.type = self.cleaned_data['type']
-        profile.save()
-        
-        send_email_confirmation(user, request=request)
-        
-        return user
     
     class Meta:
         model = User

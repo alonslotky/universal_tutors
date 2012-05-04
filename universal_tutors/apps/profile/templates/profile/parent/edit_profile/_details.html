@@ -1,0 +1,107 @@
+{% load fb_versions tz %}
+  
+  <li class="active" id="detailsTab">
+    <h2 class="clear">Profile Details</h2>
+    
+    <div class="row">
+      <div class="four columns photo">
+        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{user.get_full_name}}">
+        <div>{{form.profile_image}}</div>
+      </div>
+      <div class="eight column">
+         {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
+         {% if form.last_name.errors %}<div class="formError">Last name is required</div>{% endif %}
+          <div class="row">
+            <div class="six columns name">
+              <label class="hidden">First Name</label>
+              <input id="id_first_name" name="first_name" type="text" class="input-text clear" {% if form.first_name.value %}value{% else %}placeholder{% endif %}="{{form.first_name.value}}">
+            </div>
+            <div class="six columns name">
+              <label class="hidden">Last Name</label>
+              <input id="id_last_name" name="last_name" type="text" class="input-text clear" {% if form.last_name.value %}value{% else %}placeholder{% endif %}="{{form.last_name.value}}">
+            </div>
+          </div>
+          
+         {% if form.date_of_birth.errors %}<div class="formError">{{ form.date_of_birth.errors }}</div>{% endif %}
+          <div class="row user date_of_birth">
+            <div class="three columns phone-one">
+              <label>D.O.B.</label>
+            </div>
+            <div class="nine columns phone-three">
+              <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
+              <div class="row">
+                  <select id="id_dob_day" class="stretch">
+                  </select>
+                  <select id="id_dob_month" class="stretch nice">
+                  </select>
+                  <select id="id_dob_year" class="stretch">
+                  </select>
+              </div>
+            </div>  
+          </div>
+          
+         {% if form.gender.errors %}<div class="formError">{{ form.gender.errors }}</div>{% endif %}
+          <div class="row user">
+            <div class="three columns phone-one">
+              <label>Gender</label>
+            </div>
+            <div class="nine columns phone-three">
+              <select id="id_gender" name="gender" class="stretch">
+              	{% for value, name in profile.GENDER_TYPES.get_choices %}
+	                <option value="{{value}}" {% if profile.gender == value %}selected="selected"{% endif %}>{{name}}</option>
+              	{% endfor %}
+              </select>
+            </div>  
+          </div>
+          
+          {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
+          <div class="row user">
+            <div class="three columns phone-one">
+              <label>Country</label>
+            </div>
+            <div class="nine columns phone-three">
+              {{form.country}}
+            </div>  
+          </div>
+
+          {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>Timezone</label>
+            </div>
+            <div class="nine columns phone-three">
+              <select id="id_timezone" name="timezone" class="stretch">
+              	{% for tz in timezones %}
+	                <option value="{{tz}}" {% if profile.timezone == tz %}selected="selected"{% endif %}>{{tz}}</option>
+              	{% endfor %}
+              </select>
+            </div>  
+          </div>
+      </div>
+    </div>
+    
+  </li>
+
+<script type="text/javascript">
+	var today = new Date();
+	var today_year = today.getFullYear();
+	
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+	for(i=1; i<=31; i++)
+		$('#id_dob_day').append('<option value="'+ i +'">'+ i +'</option>');
+
+	for(i=0; i<months.length; i++)
+		$('#id_dob_month').append('<option value="'+ (i+1) +'">'+ months[i] +'</option>');
+
+	for(i=today_year; i>today_year-100; i--)
+		$('#id_dob_year').append('<option value="'+ i +'">'+ i +'</option>');
+		
+	$('#id_dob_day').val({{profile.date_of_birth.day}});
+	$('#id_dob_month').val({{profile.date_of_birth.month}});
+	$('#id_dob_year').val({{profile.date_of_birth.year}});
+	
+	$('#profile-form').submit(function(){
+		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
+	});
+</script>
