@@ -37,5 +37,3 @@ h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 .message .messages .inside { overflow: auto; }
 .message .messages .inside.loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; }
 .tabs-content li#availabilityTab { min-width: 1040px; }
-
-ul.errorlist li { color: red; }
