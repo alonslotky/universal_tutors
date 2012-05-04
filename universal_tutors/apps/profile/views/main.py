@@ -69,7 +69,6 @@ def edit_tutor_profile(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
     }
-    
     form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
     subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
     qualifications_formset = TutorQualificationFormSet(request.POST or None, request.FILES or None, instance=user)

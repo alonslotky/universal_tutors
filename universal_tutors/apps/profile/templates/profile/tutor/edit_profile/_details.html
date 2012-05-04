@@ -7,6 +7,7 @@
       <div class="four columns photo">
         <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{user.get_full_name}}">
         <div>{{form.profile_image}}</div>
+        {% if form.profile_image.errors %}<div class="formError">{{ form.profile_image.errors }}</div>{% endif %}
       </div>
       <div class="eight column">
          {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
@@ -91,6 +92,27 @@
               </select>
             </div>  
           </div>
+          
+          {% if form.crb.errors %}<div class="formError">{{ form.crb.errors }}</div>{% endif %}
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>I have a CRB</label>
+            </div>
+            <div class="nine columns phone-three">
+              {{ form.crb }}
+            </div>  
+          </div>
+          
+          {% if form.crb_file.errors %}<div class="formError">{{ form.crb_file.errors }}</div>{% endif %}
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>CRB Certificate</label>
+            </div>
+            <div class="nine columns phone-three">
+              {{ form.crb_file }}
+            </div>  
+          </div>
+          
       </div>
     </div>
     
