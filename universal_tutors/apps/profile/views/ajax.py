@@ -483,7 +483,6 @@ def book_class(request):
     
     class_.save()    
     if not class_.id:
-        print class_.id
         return http.HttpResponse("This class can't be created right now. Please try again later.")    
     class_.book()
     
@@ -491,7 +490,6 @@ def book_class(request):
 
 @csrf_exempt
 def send_parent_request(request):
-    print request
     if request.POST:
         try:
             email = request.POST.get('email')
