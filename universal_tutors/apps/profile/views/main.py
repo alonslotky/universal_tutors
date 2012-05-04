@@ -322,6 +322,7 @@ def book_class(request, username):
     }
 
 
+@login_required
 @main_render(template='profile/history.html')
 def history(request):
     """
@@ -329,6 +330,8 @@ def history(request):
     """
     user = request.user
 
-    return { }
+    return {
+        'profile': user.profile
+    }
 
     
