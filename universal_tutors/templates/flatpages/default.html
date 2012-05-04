@@ -6,12 +6,17 @@
 {% block body_class %}{% endblock %}
 
 {% block content %}
-<div class="content">
-    <div class="content-holder">
-      <div class="heading2">
-        <h2>{{ flatpage.title }}</h2>
-      </div>
-      {{ flatpage.content|safe }}
-  </div>
-</div>
+	<section class="blue feature-box">
+		<div class="inner">
+	    	<h1>{{ flatpage.title }}</h1>	
+	  	</div>
+	</section>
+	
+	<div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+     </div>	
+     
+	<div class="row">
+    	 {{ flatpage.content|safe }}	
+ 	</div>
 {% endblock %}

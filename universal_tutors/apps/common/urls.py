@@ -18,8 +18,9 @@ urlpatterns = patterns('apps.common.utils.view_utils',
 
 # Shared Pluggable URLS
 urlpatterns += patterns('apps.common.views',
+	url(r'^contact-us/$', 'contact_us', name='contact_us'),
 )
 
 urlpatterns += patterns('apps.common.views.ajax',
-    url(r'^contact/$', 'contact', name='contact'),
+    # url(r'^contact/$', 'contact', name='contact'),
 )

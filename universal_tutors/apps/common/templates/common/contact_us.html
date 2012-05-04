@@ -1,0 +1,46 @@
+{% extends "ui/layouts/base.html" %}
+{% load common_tags uni_form_tags %}
+
+{% block title %}{{flatpage.title}}{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+	    	<h1>{{ flatpage.title }}</h1>	
+	  	</div>
+	</section>
+	
+	<div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+     </div>	
+     
+	<div class="row">
+		{% if sent and success %}
+			<p><span>Message sent successfully. We will contact you as soon as we can with feedback to your message.</span></p>
+			<p><span><a href="/">Go</a> back to homepage</span></p>
+		{% else %}
+			{% if sent and not success %}
+				<p><span>An error occurred while sending the message. Please try again in a few moments.</span></p>
+				<p><span><a href="/">Go</a> back to homepage</span></p>
+			{% endif %}
+		{% endif %}
+		
+		{% if not sent %}
+		
+		{{ flatpage.content|safe }}
+ 			<form class="nice custom" action="/contact-us/" method="post">{% csrf_token %}
+ 				
+					{{ form.as_p }}
+				
+				<input type="submit" value="Submit" />
+			</form>
+		{% endif %}
+ 	</div>
+ 	<script>
+ 		$(document).ready(function(){
+ 			$("form input[type=text]").addClass("input-text", "clear");
+ 		});
+ 	</script>
+{% endblock %}
