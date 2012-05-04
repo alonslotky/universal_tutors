@@ -26,7 +26,7 @@
 				url: '{% url tutor_rate_student %}',
 				data: $('#tutor-rate-student-form').serialize(),
 				success: function() {
-					window.location.reload();
+					window.location.href = '{% url tutor_classes %}';
 				}
 			});
 		});

@@ -52,7 +52,16 @@ class Class(BaseModel):
         (3, 'CANCELED_BY_STUDENT', 'Canceled by the student'),
         (4, 'CANCELED_BY_TUTOR', 'Canceled by the tutor'),
         (5, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),
+        (6, 'STOPPED_BY_STUDENT', 'Stopped by the student'),
     ))
+    
+    RESPONSE_TYPES = get_namedtuple_choices('STATUS_TYPES', (
+        (0, 'CONTINUE', 'Continue'),
+        (1, 'ASK_TO_CONTINUE', 'Ask to continue'),
+        (2, 'CLOSE_ALERT', 'Close alert'),
+        (3, 'CLOSE', 'Close'),
+    ))
+    
     
     tutor = models.ForeignKey(User, related_name='classes_as_tutor')
     student = models.ForeignKey(User, related_name='classes_as_student')
@@ -170,7 +179,20 @@ class Class(BaseModel):
                 'student': student,
                 'tutor': self.tutor,
             })
-    
+
+    def stop_class(self):
+        if self.status == self.STATUS_TYPES.BOOKED:
+            self.status = self.STATUS_TYPES.STOPPED_BY_STUDENT
+            super(self.__class__, self).save()
+            rooms.delete(roomid=self.scribblar_id)
+
+            from apps.profile.models import UserCreditMovement
+            student = self.student
+            student_profile = student.profile
+            student_profile.credit += self.credit_fee
+            student_profile.save()
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.STOPPED_BY_STUDENT, credits=self.credit_fee)
+
     def canceled_by_student(self, reason):
         if self.status == self.STATUS_TYPES.BOOKED:
             self.status = self.STATUS_TYPES.CANCELED_BY_STUDENT
@@ -244,8 +266,7 @@ class Class(BaseModel):
         return assets.list(roomid=self.scribblar_id)
     
     def download(self, id):
-        print id
-        return assets.details(assetid=id)['path']
+        return assets.details(assetid=id)
 
 
 class ClassUserHistory(models.Model):

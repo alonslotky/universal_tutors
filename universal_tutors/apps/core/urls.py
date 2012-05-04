@@ -12,7 +12,7 @@ import views
 # Main
 urlpatterns = patterns('apps.core.views.main',
     url(r'^$', 'home', name='home'),
-    #url(r'^(?i)search/$', 'search', name='search'),
+    url(r'^(?i)search/$', 'search', name='search'),
 )
 
 # Ajax

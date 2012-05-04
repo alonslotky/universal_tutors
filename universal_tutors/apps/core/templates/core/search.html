@@ -1,171 +1,164 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load common_tags space_tags %}
+{% load fb_versions common_tags tutor_tags %}
 
-{% block title %}Home{% endblock %}
-{% block body_class %}home-page{% endblock %}
-
-{% block thirdparty_js_header %}
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-{% endblock %}
-
-{% block extra_head %}
-<script type="text/javascript" src="js/lib/universal_tutors/core/search.js"></script>
-<script type="text/javascript">
-var MEDIA_URL = '{{MEDIA_URL}}';
-var ordering = '{{ordering}}';
-var type = '{{type}}';
-var map;
-
-$(window).ready(function(){
-	/* FORM SUBMIT */
-	$('#find-space-form').submit(function(e){
-		e.preventDefault();
-		var location = $('#location').val();
-		var date =  $('#calendar-date-year').val() +'-'+ $('#calendar-date-month').val() +'-'+ $('#calendar-date-day').val();
-		var radius = $('#radius').val();
-		if(location && location!='Enter location here...') {
-			window.location.href='{% url search %}?date='+date+'&location='+location+'&ordering='+ordering+'&type='+type+'&radius='+radius;
-		}
-	}); 
-
-	/* MAP INITIALIZATION */
-	map = new google.maps.Map(document.getElementById('search-map'), {
-		center: new google.maps.LatLng({{center.0}},{{center.1}}),
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		mapTypeControl: false
-	});
-	var circle = new google.maps.Circle({
-            center: map.getCenter(),
-            radius: {{radius}} * 1000
-    });
-    map.fitBounds(circle.getBounds());
-    
-    ordering_search();
-});
-
-</script>
-{% endblock %}
+{% block title %}Search{% endblock %}
+{% block body_class %}app student{% endblock %}
 
 {% block content %}
-	<div class="map-box search-map-box">
-		<form id="find-space-form" action="" class="map-bar">
-			<fieldset>
-				<label for="location">Location</label>
-				<span class="text-input location"><input type="text" value="{{location}}" id="location" /></span>
-				<label for="radius">Radius</label>
-				<select id="radius" class="select2">
-					{% for value in RADIUS_LIST %}
-					<option value="{{value}}" {% if value == radius %}selected="selected"{% endif %}>+{{value}} {{DISTANCE_TYPE}}</option>
-					{% endfor %}
-				</select>
-				<label for="date">Date</label>
-				<div class="custom-row">
-					<input id="calendar-date-day" type="text" value="{{date|date:'d'}}" class="default change-num" title="min=1;max=31" />
-					<a href="javascript:;" class="up">up</a>
-					<a href="javascript:;" class="down">down</a>
-				</div>
-				<div class="custom-row">
-					<input id="calendar-date-month" type="text" value="{{date|date:'m'}}" class="default change-num" title="min=1;max=12" />
-					<a href="javascript:;" class="up">up</a>
-					<a href="javascript:;" class="down">down</a>
-				</div>
-				<div class="custom-row year-row">
-					<input id="calendar-date-year" type="text" value="{{date|date:'Y'}}" class="default change-num" title="min={% now "Y" %};max=2100;" />
-					<a href="javascript:;" class="up">up</a>
-					<a href="javascript:;" class="down">down</a>
-				</div>
-				<a href="javascript:;" class="datepicker" onclick="$('#search-calendar-box').toggle();">17</a>
-				<input type="submit" class="submit" title="Find" value="Find" />
-			</fieldset>
-		</form>
-		<div id="search-map" class="map"></div>
-		<div id="filter-box" class="filter-box search-filter-box">
-			<div class="holder">
-				<div class="head2">
-					<h2>Filter</h2>
-					<a href="javascript:;" class="map-link" onclick="hide_map();">Hide Map</a>
-				</div>
-				<ul class="add-nav2">
-					<li id="filter-ordering-hype" {% if ordering == 'hype' %}class="active"{% endif %}><a href="javascript:;" onclick="search_change_ordering('hype');">Hype</a></li>
-					<li id="filter-ordering-price" {% if ordering == 'price' %}class="active"{% endif %}><a href="javascript:;" onclick="search_change_ordering('price');">Price</a></li>
-					<li id="filter-ordering-rating" {% if ordering == 'rating' %}class="active"{% endif %}><a href="javascript:;" onclick="search_change_ordering('rating');">Raiting</a></li>
-				</ul>
-				<ul class="add-nav2">
-					<li id="filter-type-all" {% if type == 'all' %}class="active"{% endif %} onclick="search_change_type('all');"><a href="javascript:;">All</a></li>
-					<li id="filter-type-premium" {% if type == 'premium' %}class="active"{% endif %} onclick="search_change_type('premium');"><a href="javascript:;">Premium</a></li>
-					<li id="filter-type-public" {% if type == 'public' %}class="active"{% endif %} onclick="search_change_type('public');"><a href="javascript:;">Public</a></li>
-				</ul>
-				<a href="javascript:;" class="link2" onclick="show_map();"><span>Show Map</span></a>
-			</div>
-		</div>
-	</div>
-	<div class="place-list2 search-space-calendar">
-	{% for space in spaces %}
-		{% with space|get_day:date as availability %}
-		{% if forloop.first %}
-			<div class="scroll-item-container border-top">
-				<ul class="shedule2 scroll-item">
-					{% for hour in 0|range_to:24 %}
-					<li><span class="time">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}:00</span></li>
-					{% endfor %}
-				</ul>
-			</div>
-			<div id="space-list-container">
-				<div id="space-empty-list" class="place-row rest-day-box">
-					<span class="txt2">There are no results</span>
-				</div>				
-		{% endif %}
-		
-		<div id="space-container-{{space.id}}" class="place-row hidden space-place-row-container">
-			<span id="space-position-{{space.id}}" class="number{% if space.relation != space.USER_RELATION_TYPES.OWNER %}2{% endif %}">{{forloop.counter}}</span>
-			<div class="place-box">
-				<h3><a href="{% url space_detail space.id %}?date={{date|date:"Y-m-d"}}">{{space.name}}</a></h3>
-				<dl class="tarif-list">
-					{% if space.relation == space.USER_RELATION_TYPES.OWNER %}
-					<dt>Hourly:</dt>
-					<dd>£ {{space.hour_price}}</dd>
-					<dt>Daily:</dt>
-					<dd>£ {{space.day_price}}</dd>
-					{% else %}
-					<dt>Price:</dt>
-					<dd>{{space.get_recommendation_cost_type_display}}</dd>
-					{% endif %}
-				</dl>
-				<div class="rating-box">
-					<span>Rating:</span>
-					<ul class="star-rating4">
-						<li {% if space.stars == 1 %}class="active"{% endif %}><a href="javascript:;" title="Rate this 1 star out of 5" class="one-star">1</a></li>
-						<li {% if space.stars == 2 %}class="active"{% endif %}><a href="javascript:;" title="Rate this 2 stars out of 5" class="two-stars">2</a></li>
-						<li {% if space.stars == 3 %}class="active"{% endif %}><a href="javascript:;" title="Rate this 3 stars out of 5" class="three-stars">3</a></li>
-						<li {% if space.stars == 4 %}class="active"{% endif %}><a href="javascript:;" title="Rate this 4 stars out of 5" class="four-stars">4</a></li>
-						<li {% if space.stars == 5 %}class="active"{% endif %}><a href="javascript:;" title="Rate this 5 stars out of 5" class="five-stars">5</a></li>
-					</ul>
-					<span>&nbsp;({{space.distance|floatformat}} {{DISTANCE_TYPE}})</span>
-				</div>
-			</div>
-			<div class="scroll-item-container">
-				<div id="space-availability-{{space.id}}" class="shedule3 scroll-item">
-				</div>
-			</div>
-		</div>
-		{% include "core/fragments/search/scripts/space_availability.html" %}
-		{% if forloop.last %}
-			</div>
-			<div id="schedule-scrollbar-container" class="schedule-scrollbar-container">
-				<div id="schedule-scrollbar-bar" class="schedule-scrollbar-bar"></div>
-			</div>
-			{% include "core/fragments/search/scripts/slider.html" %}
-		{% endif %}
-		{% endwith %}
-	{% empty %}
-		<div class="place-row">
-			There are no results to list.
-		</div>
-	{% endfor %}
-	</div>
-	<div id="search-calendar-box" class="calendar-box float-calendar search-page hidden">
-		<div id="calendar-box-container">{% include "core/fragments/home/_calendar.html" %}</div>
-		<span class="arrow">arrow</span>
-	</div>
+{% with class.tutor as tutor %}
+{% with class.student as student %}
+
+      <section class="blue feature-box"><div class="inner">
+        <h1>Search <span>Find the perfect tutor for your next class.</span></h1>
+      </div></section>
+      
+      <div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+      </div>
+      
+      <section class="row clear">
+        <div class="twelve columns">
+          <div class="row">
+            <form class="nice custom">
+              <div class="four columns">
+              
+                <div class="row space">
+                  <div class="three columns">
+                    <label>Subject</label>
+                  </div>
+                  <div class="nine columns">
+                    <select class="stretch">
+                      <option>Option</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row space">
+                  <div class="three columns">
+                    <label>Price</label>
+                  </div>
+                  <div class="nine columns">
+                    <select class="stretch">
+                      <option>Option</option>
+                    </select>
+                  </div>
+                </div>
+                
+              </div>
+              
+              <div class="four columns">
+                
+                <div class="row space">
+                  <div class="three columns">
+                    <label>System</label>
+                  </div>
+                  <div class="nine columns">
+                    <select class="stretch">
+                      <option>Option</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="three columns">
+                    <label>Level</label>
+                  </div>
+                  <div class="nine columns">
+                    <select class="stretch">
+                      <option>Option</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+              
+              <div class="four columns">
+              
+                <div class="row space">
+                  <div class="three columns">
+                    <label>Day / Time</label>
+                  </div>
+                  <div class="nine columns">
+                    <div class="row">
+                      <div class="six columns">
+                        <select class="stretch">
+                          <option>Option</option>
+                        </select>
+                      </div>
+                      <div class="six columns">
+                        <select class="stretch">
+                          <option>Option</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="button"><input type="submit" class="icon search" value="Search"></div>
+              </div>
+              
+            </form>
+          </div>
+        </div>
+      </section>
+      
+      <hr class="big">
+      
+      <div class="row">
+        <div class="twelve columns">
+          
+          <div class="right filter">
+            <form>
+              <select>
+                <option>Sort by Price</option>
+                <option>Sort by Rating</option>
+                <option>Sort by Classes Given</option>
+              </select>
+            </form>
+          </div>
+        
+          {% if query %}<h2>Tutors named 'John Doe'</h2>{% endif %}
+        </div>
+      </div>
+
+      {% for tutor in tutors %}
+      {% with tutor.profile as tutor_profile %}
+      <article>
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="{% version tutor_profile.profile_image.path 'list_tutors' %}" alt="{{tutor.get_full_name}}">
+          </div>
+          
+          <div class="three columns">
+            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
+            <p><span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span></p>
+          </div>
+          
+          <div class="four columns">
+            <p>{{tutor_profile.about|truncatechars:300}}</br><a href="{% url profile tutor.username %}">Read More</a></p>
+          </div>
+          
+		  <div class="two columns rating">
+			{% get_stars tutor_profile.avg_rate %}
+            <div class="reviews">
+              <span class="hidden">Rating: {{tutor_profile.avg_rate}}.</span>
+              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} Review{{tutor_profile.no_reviews|pluralize}}</a>
+            </div>
+          </div>
+          
+          <div class="two columns action">
+            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
+            <!-- a href="#" class="watch-video" data-reveal-id="modal-video">Watch Video</a-->
+            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>
+            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}">{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+            <a href="{% url report tutor.username %}" class="report">Report</a>
+          </div>
+        </div>
+      </article>
+      {% endwith %}
+      {% endfor %}
+
+{% endwith %}
+{% endwith %}
 {% endblock %}

@@ -5,10 +5,10 @@
         <label>Credits</label>
       </div>
       <div class="eight columns">
-        <p>17 earned so far</p>
+        <p>You have {{profile.credit}} credit{{profile.credit|pluralize}}</p>
       </div>
     </div>
     
-    <a class="button" href="tutor-credits"><span class="icon credits">Withdraw Credits</span></a>
-    <a class="button" href="tutor-history"><span class="icon history">View History</span></a>
+    <a class="button" href="javascript:;"><span class="icon credits">Top Up Credits</span></a>
+    <a class="button" href="{% url history %}"><span class="icon history">View History</span></a>
   </li>

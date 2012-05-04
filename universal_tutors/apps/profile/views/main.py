@@ -376,3 +376,16 @@ def edit_parent_profile(request):
         #'qualifications_formset': qualifications_formset,
         'timezones': pytz.common_timezones,
     }
+
+
+@login_required
+@main_render(template='profile/history.html')
+def history(request):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+
+    return {
+        'profile': user.profile
+    }

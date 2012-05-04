@@ -46,7 +46,7 @@
 				url: '{% url student_rate_tutor %}',
 				data: $('#student-rate-tutor-form').serialize(),
 				success: function() {
-					window.location.reload();
+					window.location.href = '{% url student_classes %}';
 				}
 			});
 		});

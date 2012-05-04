@@ -19,6 +19,7 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutor/profile/edit/$', 'edit_tutor_profile', {}, name = "edit_tutor_profile"),
     url(r'^(?i)student/profile/edit/$', 'edit_student_profile', {}, name = "edit_student_profile"),
     url(r'^(?i)parent/profile/edit/$', 'edit_parent_profile', {}, name = "edit_parent_profile"),
+    url(r'^(?i)history/$', 'history', {}, name = "history"),
 )
 
 # Tutors

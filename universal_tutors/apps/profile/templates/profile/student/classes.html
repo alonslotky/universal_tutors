@@ -46,7 +46,7 @@
 					{% if tutor_rating %}
 		            <a href="javascript:;" class="view-rating" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}}, "{{tutor_rating.text}}", {{tutor_rating.rate}});'>View Tutor Rating</a>
 					{% else %}
-		            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick="student_rate_tutor({{tutor.id}}, '{{tutor.get_full_name}}', {{class.id}});">Rate Tutor</a>
+		            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}});'>Rate Tutor</a>
 		            {% endif %}
 				{% endwith %}
 				
@@ -58,7 +58,7 @@
 								{% include 'profile/fragments/_modal_review_view_received.html' %}
 							{% endwith %}
 						{% else %}
-			            <a class="no-feedback" data-reveal-id="modal-review">Waiting for feedback</a>
+			            <a class="no-feedback">Waiting for feedback</a>
 			            {% endif %}
 					{% endwith %}
 		            <a href="#" class="class-material">Class Material</a>
