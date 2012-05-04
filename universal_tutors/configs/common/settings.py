@@ -340,8 +340,13 @@ TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, 'grappelli/tinymce/jscripts/tiny_mce/
 # SCRIBBLAR_API_KEY
 SCRIBBLAR_API_KEY = "4E05E226-B564-8140-D1E65546167F353C"
 
+#CONTACT
+CONTACT_EMAIL = ['nick@universaltutors.com']
+
 # Allow for local (per-user) override
 try:
     from local_settings import *
 except ImportError:
     pass
+
+

@@ -2,8 +2,7 @@
 
 <div class="sign-in">
 	{% include "socialaccount/snippets/login_extra.html" %}
-	<form class="nice" action='{% url login %}?next={{request.path}}'method="post">
-		{% csrf_token %}
+	<form class="nice" action='{% url login %}?next={{request.path}}'method="post">{% csrf_token %}
 		<div class="row">
 			<div class="two columns">
   				<h3>Sign In</h3>
@@ -37,7 +36,7 @@
 	<p>Welcome to Universal Tutors, Phasellus at elit risus, iaculis rhoncus arcu. Duis auctor neque in magna sollicitudin in adipiscing libero dictum.</p>
 	<br/>
 	<div id="modal-signup-form-container">
-		<form id="modal-signup-form" class="nice custom signup">
+		<form id="modal-signup-form" class="nice custom signup">{% csrf_token %}
 			<div class="row margin date_of_birth">
 				<h3>My date of birth</h3>
 				<div id="signup-dob-errors" class="formError hidden">Please, insert a valid date</div>
@@ -69,10 +68,14 @@
 					</div>	
 				</div>
 			</div>
-			<div id="model-signup-under16-container" class="hidden formError">
-				Under 16? Your parent need to create a account for you... Phasellus at elit risus, iaculis rhoncus arcu. Duis auctor neque in magna sollicitudin in adipiscing libero dictum.
-			</div>
 		</form>
+		<div id="model-signup-under16-container" class="hidden formError">
+				Under 16? Your parent need to create a account for you. <br />
+				Send an email to your parent with a request to sign you up: <br />
+				<div id="parent-request-errors" class="formError hidden">Invalid Email</div>
+				<input class="input-text" type="text" name="parent-email" id="parent-email" />
+				<input type="button" id="send-parent-request" value="Send" /><div id="parent-request-info" class="hidden"></div><img class="hidden" src="{{ STATIC_URL }}images/icons/messages-ajaxloader.gif" id="loading"><br />
+							</div>
 	</div>
 	<div id="modal-signup-form-loading" class="hidden">loading</div>
 	<script type="text/javascript">
@@ -80,6 +83,7 @@
 		var today_year = today.getFullYear();
 		var signup_dob = null;
 		var signup_type = null;
+		var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 		
 		var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
 	
@@ -143,6 +147,7 @@
 					$('#modal-signup-form-loading').fadeIn(function(){
 						$.ajax({
 							type: 'GET',
+							data: {'user_type': parseInt($('#signup_user_type').val())},
 							url: '{% url signup %}',
 							success: function(data) {
 								$('#modal-signup-form-container').html(data);
@@ -168,6 +173,34 @@
 				check_over16(year, month-1, day);
 			}
 		});
+		
+		$("#send-parent-request").click(function(e){
+			e.preventDefault();
+			$("#loading").removeClass("hidden");
+			$('#parent-request-errors').addClass('hidden');
+			$("#parent-request-info").addClass('hidden').empty();
+			var email = $("#parent-email").val();
+			if(reg.test(email) == false) {
+				$('#parent-request-errors').removeClass('hidden');
+		   	} else {
+		   		$.ajax({
+					type: 'POST',
+					data: {'email': email},
+					url: '{% url send_parent_request %}',
+					success: function(data) {
+						$("#parent-request-info").removeClass('hidden');
+						$("#parent-request-info").html(data);
+						$("#parent-email").val("");
+						$("#loading").addClass("hidden");
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						$("#parent-request-info").html(jqXHR.response);
+						$("#loading").addClass("hidden");
+					}
+				});
+		   	}
+		});
+		
 	</script>
 </div>
 

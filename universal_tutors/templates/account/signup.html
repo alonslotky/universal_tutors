@@ -48,6 +48,28 @@
             </div>
 			<div class="nine columns"><input type="password" id="id_password2" name="password2" value="" class="input-text oversize stretch" /></div>
 		</div>
+		
+		{% if form.crb %}
+		<div class="row">&nbsp;</div>
+        {% if form.crb.errors %}<div class="formError">{{ form.crb.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="location">I have a CRB</label>
+            </div>
+			<div class="nine columns">{{form.crb}}</div>
+		</div>
+		<div class="row">&nbsp;</div>
+        
+
+        {% if form.apply_crb.errors %}<div class="formError">{{ form.apply_crb.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="location">Apply for CRB</label>
+            </div>
+			<div class="nine columns">{{form.apply_crb}}</div>
+		</div>
+		{% endif %}
+		
 		<div class="row">&nbsp;</div>
         {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
 		<div class="row">
@@ -84,7 +106,7 @@
 					$('#id_type').val(signup_type);
 					$.ajax({
 						type: 'POST',
-						url: '{% url signup %}',
+						url: '{% url signup %}?user_type={{ user_type }}',
 						data: $('#signup-form2').serialize(),
 						success: function(data) {
 							$('#modal-signup-form-container').html(data);

@@ -11,7 +11,7 @@ from django.core.paginator import Paginator, EmptyPage
 
 from allauth.account.views import signup as allauth_signup, login
 
-from apps.profile.forms import SigninForm, SignupForm
+from apps.profile.forms import SigninForm, SignupForm, TutorSignupForm
 
 
 def logout_view(request):
@@ -20,7 +20,7 @@ def logout_view(request):
 
 def signin(request, *args, **kwargs):
 
-    next = request.REQUEST.get('next', reverse('dashboard'))
+    next = request.REQUEST.get('next', reverse('profile'))
     
     if request.user.is_authenticated():
         return http.HttpResponseRedirect(next)
@@ -34,11 +34,28 @@ def signin(request, *args, **kwargs):
 
 
 def signup(request, *args, **kwargs):
-    next = request.REQUEST.get('next', reverse('dashboard'))
-
+    # next = request.REQUEST.get('next', reverse('profile'))
+    user_type = int(request.GET.get('user_type', 0))
+    
+    if user_type == 1:
+        form = TutorSignupForm
+        next = reverse('edit_tutor_profile')
+    elif user_type == 2:
+        form = SignupForm
+        next = reverse('edit_student_profile')
+    elif user_type == 3:
+        form = SignupForm
+        next = reverse('edit_parent_profile')
+    else:
+        form = SignupForm
+        next = reverse('home')
+        
+    print next  + '?user_type=' + user_type
+    
     kwargs.update({
-        'form_class': SignupForm,
-        'success_url': request.REQUEST.get(next, reverse('dashboard')),
+        'form_class': form,
+        # 'success_url': request.REQUEST.get('next', reverse('profile')),
+        'success_url': next + '?user_type=' + user_type,
     })
     
     return allauth_signup(request, *args, **kwargs)

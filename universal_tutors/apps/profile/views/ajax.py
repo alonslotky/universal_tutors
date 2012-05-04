@@ -7,7 +7,10 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render_to_response
-
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMessage
+from django.template import Context, loader
+from django.conf import settings
 
 from apps.profile.models import NewsletterSubscription
 from apps.profile.forms import *
@@ -485,3 +488,28 @@ def book_class(request):
     class_.book()
     
     return http.HttpResponse("Done.")
+
+@csrf_exempt
+def send_parent_request(request):
+    print request
+    if request.POST:
+        try:
+            email = request.POST.get('email')
+            template = loader.get_template('emails/parent_request.html')
+            context = Context({
+                'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+            })
+            html = template.render(context)
+    
+            msg = EmailMessage(
+                               'New Contact Message', 
+                               html, 
+                               settings.DEFAULT_FROM_EMAIL, 
+                               [email])
+            msg.content_subtype = 'html'
+            msg.send()
+            return http.HttpResponse("Email sent successfully");
+        except:
+            return http.HttpResponseServerError("An error occurred while sending the email.");
+    else:
+        return http.HttpResponseBadRequest()
