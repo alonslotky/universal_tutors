@@ -100,6 +100,7 @@ class UserProfile(BaseModel):
 
     # tutor
     avg_rate = models.FloatField(default=0)
+    no_reviews = models.PositiveIntegerField(default=0)
 
     @property
     def is_over16(self):
@@ -440,7 +441,7 @@ class TutorReview(BaseModel):
         user = self.user
         super(self.__class__, self).save(*args, **kwargs)
         profile = user.profile
-        reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('id'))
+        reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('rate'))
         profile.avg_rate = reviews['avg_rate']
         profile.no_rate = reviews['no_reviews']
         profile.save()
@@ -449,7 +450,7 @@ class TutorReview(BaseModel):
         user = self.user
         super(self.__class__, self).delete()
         profile = user.profile
-        reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('id'))
+        reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('rate'))
         profile.avg_rate = reviews['avg_rate']
         profile.no_rate = reviews['no_reviews']
         profile.save()

@@ -320,4 +320,15 @@ def book_class(request, username):
         'profile': tutor.profile,
         'date': datetime.date.today(),
     }
+
+
+@main_render(template='profile/history.html')
+def history(request):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+
+    return { }
+
     

@@ -17,6 +17,7 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)profile/(?P<username>[\w\-\_]+)/$', 'profile', {}, name = "profile"),
     url(r'^(?i)tutor/profile/edit/$', 'edit_tutor_profile', {}, name = "edit_tutor_profile"),
     url(r'^(?i)student/profile/edit/$', 'edit_student_profile', {}, name = "edit_student_profile"),
+    url(r'^(?i)profile/history/$', 'history', {}, name = "history"),
 )
 
 # Tutors

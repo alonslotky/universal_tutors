@@ -21,8 +21,12 @@ def home(request):
 @main_render(template='core/search.html')
 def search(request):
 
-    tutors = User.objects.select_related().filter(type = UserProfile.TYPES.TUTOR)
+    query = ''
+    query_type = ''
+    tutors = User.objects.select_related().filter(profile__type = UserProfile.TYPES.TUTOR)
     
     return { 
         'tutors': tutors,
+        'query': query,
+        'query_type': query_type,
     }
