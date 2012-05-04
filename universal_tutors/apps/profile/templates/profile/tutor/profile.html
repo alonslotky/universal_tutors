@@ -22,7 +22,7 @@
     <div class="two columns">
       <div class="profile-picture">
         <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{person.get_full_name}}">
-        <a href="#" class="watch-video ir" data-reveal-id="modal-video">Watch Video</a>
+        <a href="javascript:;" class="watch-video ir" data-reveal-id="modal-video">Watch Video</a>
       </div>
     </div>
     
@@ -153,6 +153,7 @@
   </div>
  
   {% include 'profile/fragments/_modal_messages.html' %}
+  {% include 'profile/fragments/_modal_video.html' %}
    
   <div id="view-upload" class="reveal-modal">
     <a class="close-reveal-modal">&#215;</a>

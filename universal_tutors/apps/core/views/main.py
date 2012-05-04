@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
-from apps.profile.models import UserProfile
+from apps.profile.models import UserProfile, WeekAvailability
 from universal_tutors.apps.classes.models import ClassSubject
 
 import datetime
@@ -24,7 +24,8 @@ def _get_simple_results(data):
     what = data.get('what')
     sort = data.get('sort', None)
     price = data.get('price', None)
-    day = data.get('price', None)
+    day = data.get('day', None)
+    time = data.get('time', None)
     
     tutors = None
     if q:
@@ -61,6 +62,18 @@ def _get_simple_results(data):
                 tutors = tutors.filter(profile__max_credits__gte=25, profile__max_credits__lt=30)
             elif price == 7:
                 tutors = tutors.filter(profile__max_credits__gte=30)
+                
+            
+        if time:
+            weekdays = WeekAvailability.objects.filter(user__in=tutors)
+            if day:
+                weekdays = weekdays.filter(weekday=int(day))
+            t = datetime.time(int(time), 0)
+            weekdays = weekdays.filter(begin=t)
+            tutors = tutors.filter(id__in=[i.user.id for i in weekdays])
+        elif day:
+            tutors = tutors.filter(week_availability__weekday=int(day))
+            
     return tutors
         
 
