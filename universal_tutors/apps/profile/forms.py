@@ -165,6 +165,7 @@ class SignupForm(forms.ModelForm):
         profile.country = self.cleaned_data['country']
         profile.date_of_birth = self.cleaned_data['date_of_birth']
         profile.type = self.cleaned_data['type']
+        profile.crb = self.cleaned_data.get('crb', False)
         profile.save()
         
         send_email_confirmation(user, request=request)
@@ -185,10 +186,10 @@ class ParentSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(ParentSignupForm, self).__init__(*args, **kwargs)
         self.fields['type'].initial = '3'
-        
+
+
 class TutorSignupForm(SignupForm):
     crb = forms.BooleanField(label='I have a CRB', required=False)
-    # crb_file = forms.FileField(required=False, max_length=100, help_text='Send us a copy of the document confirming you have a CRB certification.')
     
     def __init__(self, *args, **kwargs):
         super(TutorSignupForm, self).__init__(*args, **kwargs)
@@ -196,7 +197,7 @@ class TutorSignupForm(SignupForm):
     
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'crb', )
+        fields = ('username', 'first_name', 'last_name', 'email', )
 
 class NewsletterSubscribeForm(forms.Form):
     email = forms.EmailField(required=True)
