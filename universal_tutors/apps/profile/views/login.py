@@ -49,13 +49,11 @@ def signup(request, *args, **kwargs):
     else:
         form = SignupForm
         next = reverse('home')
-        
-    print next  + '?user_type=' + user_type
     
     kwargs.update({
         'form_class': form,
         # 'success_url': request.REQUEST.get('next', reverse('profile')),
-        'success_url': next + '?user_type=' + user_type,
+        'success_url': next,
     })
     
     return allauth_signup(request, *args, **kwargs)
