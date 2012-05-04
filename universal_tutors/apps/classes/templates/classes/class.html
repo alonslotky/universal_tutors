@@ -31,6 +31,72 @@
 	};
 
 	swfobject.embedSWF("http://media.muchosmedia.com/scribblar/v2/main.swf", "alternate", "100%", "100%", "10.2.0", "http://media.muchosmedia.com/swfobject/expressInstall.swf", flashvars, params, attributes);
+
+	var ask_to_continue = false;
+	var alert_to_close = false;
+	
+	var checkStatus = function() {
+		setTimeout(function(){
+			$.ajax({
+				type: 'get',
+				url: '{% url check_status class.id %}',
+				complete: function() {
+					checkStatus();
+				},
+				success: function(response) {
+					if (response == '{{class.RESPONSE_TYPES.CLOSE}}') {
+						$('#alternate-container').remove();
+						$('#exit-class-button').click();
+					}
+					
+					{% if user == class.student %}
+					else if (response == '{{class.RESPONSE_TYPES.ASK_TO_CONTINUE}}') {
+						if(!ask_to_continue) {
+							ask_to_continue = true;						
+							$('#ask-continue-button').click();
+							setTimeout(function(){
+								$('#close-ask-to-continue').click();
+							}, 15000);
+						}
+					}
+					{% endif %}
+
+					else if (response == '{{class.RESPONSE_TYPES.CLOSE_ALERT}}') {
+						if(!alert_to_close) {
+							alert_to_close = true;
+						}
+					} else {
+						
+					}			
+				}
+			});				
+		}, 30000);
+	};
+
+	checkStatus();
+	
+	var checkPopups = function() {
+		setTimeout(function(){
+			var all_closed = true;
+			$('.reveal-modal').each(function(){
+				if( $(this).css("display") != "none" && $(this).css("visibility") != "hidden" ) {
+					all_closed = false;
+				}
+			});
+			
+			if(all_closed) {
+				$('#alternate-container').removeClass('hidden')
+			} else {
+				$('#alternate-container').addClass('hidden');
+			}
+			checkPopups();
+		}, 500);
+	};
+
+	checkStatus();
+	checkPopups();
+	
+	
 </script>
 {% endblock %}
 
@@ -41,13 +107,14 @@
 	  <header>
 	    <div class="logo alt ir left"><a>Universal Tutors</a></div>
 	    {% if user == class.student %}
-	    <a class="right button" href="/" data-reveal-id="modal-review"><span class="icon rocketdown">Exit Classroom</span></a>
+	    <a id="ask-continue-button" class="right button hidden" data-reveal-id="modal-ask-continue"><span class="icon rocketdown">Exit Classroom</span></a>
+	    <a id="exit-class-button" class="right button" data-reveal-id="modal-review" onclick='student_rate_tutor({{class.tutor.id}}, "{{class.tutor.get_full_name}}", {{class.id}});'><span class="icon rocketdown">Exit Classroom</span></a>	  	
 	  	{% else %}
-	    <a class="right button" href="{% url tutor_classes %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
+	    <a id="exit-class-button" class="right button" data-reveal-id="modal-review" onclick='student_rate_tutor({{class.student.id}}, "{{class.student.get_full_name}}", {{class.id}});'><span class="icon rocketdown">Exit Classroom</span></a>	  	
 	  	{% endif %}
 	  </header>
 	  
-	  <div class="main scribblar-container">
+	  <div id="alternate-container" class="main scribblar-container">
 	  	<div id="alternate"></div>
 	  </div>
 	</div>
@@ -55,4 +122,13 @@
 	<div class="container show-on-phones end">
 	  <p>Please get to a Flash-enabled desktop computer to access the classroom.</p>
 	</div>
+	
+	{% include "classes/fragments/_modal_ask_to_continue.html" %}
+	
+	{% if user == class.student %}
+		{% include 'profile/student/fragments/_modal_rate_tutor.html' %}
+	{% else %}
+		{% include 'profile/tutor/fragments/_modal_rate_student.html' %}
+	{% endif %}
+	
 {% endblock %}

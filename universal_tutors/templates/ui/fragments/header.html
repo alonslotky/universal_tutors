@@ -30,7 +30,7 @@
 				<a href="#" class="sign-up-button">Sign In</a>
 			{% endif %}
 			<a href="#" class="search">Search</a>
-			<form class="nice custom compact-search hide-on-phones">
+			<form action="{% url search %}" method="get" class="nice custom compact-search hide-on-phones">
   				<select>
     				<option>Tutors</option>
     				<option>Subjects</option>

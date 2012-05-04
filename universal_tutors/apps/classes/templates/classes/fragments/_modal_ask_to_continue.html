@@ -1,0 +1,40 @@
+{% if class.student == user %}
+<div id="modal-ask-continue" class="reveal-modal message review">
+  <h4>{{class}} <strong id="modal-review-tutor-name" class="rate-tutor-name">with {{class.tutor.get_full_name}}</strong></h4>
+    
+  <div id="ask-to-continue-step_1">
+	  <p>Universal Tutors want to know if you everything is right with your class.</p>
+	  <p>If you aren't happy with this class please <a id="pre-button-stop-class" href="javascript:;">click here</a> to stop.</p>
+
+	  <a id="button-continue-class" class="button" href="javascript:;"><span class="icon thumb-up">Continue</span></a>
+  </div>
+  
+  <div id="ask-to-continue-step_2">
+	  <p>Are you sure you want to stop this class?</p>
+	  <a id="button-stop-class" class="button" href="javascript:;"><span class="icon thumb-up">Stop this class</span></a>
+  </div>
+  
+
+  <a id="close-ask-to-continue" class="close-reveal-modal">&#215;</a>
+</div>
+<script type="text/javascript">
+	$('#ask-to-continue-step_2').hide();
+	$('#button-continue-class').click(function(){
+		$('#close-ask-to-continue').click();
+	});
+	$('#button-stop-class').click(function(){
+		$.get('{% url stop_class class.id %}', function(response){
+			if(response == '{{class.RESPONSE_TYPES.CLOSE}}') {
+				$('#alternate-container').remove();
+				$('#exit-class-button').click();
+			}
+		});
+		$('#close-ask-to-continue').click();
+	});
+	$('#pre-button-stop-class').click(function(){
+		$('#ask-to-continue-step_1').fadeOut(function(){
+			$('#ask-to-continue-step_2').fadeIn();
+		});
+	});
+</script>
+{% endif %}

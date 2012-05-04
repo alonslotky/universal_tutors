@@ -387,7 +387,7 @@ class UserCreditMovement(BaseModel):
         (1, 'INCOME', 'Class income'),
         (2, 'CANCELED_BY_TUTOR', 'Class canceled by tutor (Refund)'),
         (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Income)'),
-        (4, 'BAD_CLASS', 'Bad class (Refund)'),
+        (4, 'STOPPED_BY_STUDENT', 'Stopped by student (Refund)'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')
@@ -435,14 +435,18 @@ class TutorReview(BaseModel):
         user = self.user
         super(self.__class__, self).save(*args, **kwargs)
         profile = user.profile
-        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('id'))
+        profile.avg_rate = reviews['avg_rate']
+        profile.no_rate = reviews['no_reviews']
         profile.save()
     
     def delete(self):
         user = self.user
         super(self.__class__, self).delete()
         profile = user.profile
-        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('id'))
+        profile.avg_rate = reviews['avg_rate']
+        profile.no_rate = reviews['no_reviews']
         profile.save()
 
     def __unicode__(self):

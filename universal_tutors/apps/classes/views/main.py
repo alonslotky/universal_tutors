@@ -35,7 +35,7 @@ def detail(request, class_id):
     except Class.DoesNotExist:
         raise http.Http404()
 
-    if class_.tutor != user and class_.student != user and class_.student.parent != user:
+    if class_.tutor != user and class_.student != user:
         raise http.Http404()
 
     now = datetime.datetime.now()
@@ -85,9 +85,9 @@ def download(request, class_id):
     if class_.tutor != user and class_.student != user and class_.student.parent != user:
         raise http.Http404()
 
-    #try:
-    return http.HttpResponseRedirect(class_.download(request.GET.get('id')))
-    #except:
-    #    raise http.Http404()
+    try:
+        return http.HttpResponseRedirect(class_.download(request.GET.get('id')))
+    except:
+        raise http.Http404()
 
 
