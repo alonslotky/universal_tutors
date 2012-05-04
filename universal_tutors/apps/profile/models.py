@@ -174,6 +174,9 @@ class UserProfile(BaseModel):
             except IndexError:
                 if self.video.find('http://youtu.be/') > 0:
                     video_id = self.video.replace('http://youtu.be/', '')
+            except KeyError:
+                if self.video.find('http://youtu.be/') > 0:
+                    video_id = self.video.replace('http://youtu.be/', '')
         return video_id 
 
 
