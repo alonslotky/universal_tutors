@@ -24,15 +24,13 @@
 
 		<div class="user-links">
 			{% if authenticated %}
-				{% if profile.type == profile.TYPES.TUTOR %}
-        			<a href="{% url profile %}" class="link-profile">Profile</a><a href="{% url logout %}">Sign Out</a>
-    			{% endif %}
+        		<a href="{% url profile %}" class="link-profile">Profile</a><a href="{% url logout %}">Sign Out</a>
 			{% else %}
 				<a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();">Sign Up</a>			
 				<a href="javascript:;" class="sign-up-button">Sign In</a>
 			{% endif %}
-			<a href="{% url search %}" class="search">Search</a>
-			<form action="{% url search %}" method="get" class="nice custom compact-search hide-on-phones">
+			<a href="#" class="search">Search</a>
+			<form class="nice custom compact-search hide-on-phones">
   				<select>
     				<option>Tutors</option>
     				<option>Subjects</option>
