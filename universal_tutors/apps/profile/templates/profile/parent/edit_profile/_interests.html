@@ -1,0 +1,44 @@
+{% with user.subjects.all as subjects %}
+{% with subjects.count as no_subjects %}
+<li id="interestsTab">
+  <h2 class="clear">Interests</h2>
+  <label>Type an Interest and press "Enter" to add</label>
+  <div class="row">
+    <div class="six columns">
+      <input id="add-interest" type="text" class="input-text" name="add-interest" placeholder="Subject">
+    </div>
+    <div class="six columns">
+      <div id="interests-list" class="tags clear">
+      	{% for interest in profile.interests.all %}
+        <a id="interest-{{interest.id}}" class="tag" href="javascript:;" onclick="remove_interest({{interest.id}});">{{interest.subject}} (click to remove)</a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</li>
+
+<script type="text/javascript">
+	$('#add-interest').keypress(function(e){
+		var interest = $(this).val();
+		if(e.keyCode == 13 && interest) {
+			e.preventDefault();
+			$.get('{% url add_interest %}?interest='+ interest, function(response) {
+				$('#add-interest').val('');
+				if (!$('#interest-'+ response).length) {
+					$('#interests-list').append(
+						'<a id="interest-'+ response +'" class="tag" href="javascript:;" onclick="remove_interest('+ response +');">'+ interest +' (click to remove)</a>'
+					);
+				}
+			});
+		}
+	});
+	
+	var remove_interest = function(id) {
+		$('#interest-'+id).fadeOut(function(){
+			$.get('{% url remove_interest %}'+ id +'/');
+			$(this).remove();
+		});	
+	}
+</script>
+{% endwith %}
+{% endwith %}

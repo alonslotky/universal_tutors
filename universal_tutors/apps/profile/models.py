@@ -96,7 +96,6 @@ class UserProfile(BaseModel):
     
     crb = models.BooleanField(default=False)
     crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
-    apply_crb = models.BooleanField(default=False) 
 
     # tutor
     avg_rate = models.FloatField(default=0)
