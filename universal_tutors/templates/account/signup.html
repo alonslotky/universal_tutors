@@ -106,7 +106,7 @@
 					$('#id_type').val(signup_type);
 					$.ajax({
 						type: 'POST',
-						url: '{% url signup %}?user_type={{ user_type }}',
+						url: '{% url signup %}{% if form.crb %}?user_type=1{% endif %}',
 						data: $('#signup-form2').serialize(),
 						success: function(data) {
 							$('#modal-signup-form-container').html(data);
