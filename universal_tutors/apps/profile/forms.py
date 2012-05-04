@@ -39,7 +39,7 @@ class ProfileForm(forms.ModelForm):
     last_name = forms.CharField()
 
     class Meta:
-        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image')
+        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', )
         model = UserProfile
         widgets = {
             'photo': forms.FileInput(),
@@ -188,31 +188,15 @@ class ParentSignupForm(SignupForm):
         
 class TutorSignupForm(SignupForm):
     crb = forms.BooleanField(label='I have a CRB', required=False)
-    crb_file = forms.FileField(required=False, max_length=100, help_text='Send us a copy of the document confirming you have a CRB certification.')
+    # crb_file = forms.FileField(required=False, max_length=100, help_text='Send us a copy of the document confirming you have a CRB certification.')
     
     def __init__(self, *args, **kwargs):
         super(TutorSignupForm, self).__init__(*args, **kwargs)
         self.fields['type'].initial = '1'
     
-#    def clean(self):
-#        crb = self.cleaned_data.get('crb', None)
-#        crb_file = self.cleaned_data.get('crb_file', None)
-#        apply_crb = self.cleaned_data.get('apply_crb', None)
-#        
-#        if crb == True and apply_crb == True:
-#            msg = "Please choose only one of these options"
-#            self._errors["crb"] = self.error_class([msg])
-#            self._errors["apply_crb"] = self.error_class([msg])
-#            del self.cleaned_data["crb"]
-#            del self.cleaned_data["apply_crb"]
-#        elif crb == True and not crb_file:
-#            self._errors["crb_file"] = self.error_class(["Please provide your CRB certificate"])
-#            del self.cleaned_data["crb_file"]
-#        return self.cleaned_data
-    
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'crb', 'crb_file', )
+        fields = ('username', 'first_name', 'last_name', 'email', 'crb', )
 
 class NewsletterSubscribeForm(forms.Form):
     email = forms.EmailField(required=True)
