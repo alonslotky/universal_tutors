@@ -38,7 +38,7 @@ def profile(request, username=None):
 
     if profile.type == profile.TYPES.TUTOR:
         template = 'profile/tutor/profile.html'
-    elif profile.type == profile.TYPES.STUDENT:
+    elif profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
         template = 'profile/student/profile.html'
     elif profile.type == profile.TYPES.PARENT:
         template = 'profile/parent/profile.html'
@@ -191,7 +191,7 @@ def edit_student_profile(request):
     user = request.user
     profile = user.profile
 
-    if profile.type != profile.TYPES.STUDENT:
+    if profile.type != profile.TYPES.STUDENT and profile.type != profile.TYPES.UNDER16:
         raise http.Http404()
 
     data = {
@@ -334,7 +334,7 @@ def edit_parent_profile(request):
     user = request.user
     profile = user.profile
 
-    if profile.type != profile.TYPES.TUTOR:
+    if profile.type != profile.TYPES.PARENT:
         raise http.Http404()
 
     data = {
@@ -343,8 +343,6 @@ def edit_parent_profile(request):
     }
     
     form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
-    # subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
-    # qualifications_formset = TutorQualificationFormSet(request.POST or None, request.FILES or None, instance=user)
     if request.POST:
         success = True
         
@@ -354,16 +352,6 @@ def edit_parent_profile(request):
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
         else:
             success = False
-
-#        if subject_formset.is_valid():
-#            subject_formset.save()
-#        else:
-#            success = False
-#
-#        if qualifications_formset.is_valid():
-#            qualifications_formset.save()
-#        else:
-#            success = False
 
         if success:
             return http.HttpResponseRedirect(reverse('profile'))
@@ -379,10 +367,18 @@ def edit_parent_profile(request):
 
 @login_required
 @main_render(template='profile/history.html')
-def history(request):
+def history(request, username=None):
     """
     detailed profile from a user
     """
-    user = request.user
 
-    return { }
+    if username:
+        user = request.user
+        person = get_object_or_404(User, username=username)
+        profile = person.profile
+        if user != person and profile.parent != user:
+            raise http.Http404()
+    else:
+        person = request.user
+
+    return { 'person': person }

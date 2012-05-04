@@ -116,18 +116,15 @@ class UserProfile(BaseModel):
 
     @property
     def parent(self):
-        if not self.date_of_birth:
-            return None
-
         today = datetime.date.today()        
         # there are no problem because 29 Feb less 16 years it's 29 Feb too
         date = datetime.date(today.year - 16, today.month, today.day)
 
-        if self.date_of_birth <= date:
+        if self.date_of_birth and self.date_of_birth <= date:
             return self
         
         try:
-            return self.parent_set.filter(active=True).latest('id')
+            return self.user.parent_set.filter(active=True).latest('id').parent
         except Child.DoesNotExist:
             return None
 
@@ -388,9 +385,10 @@ class UserProfile(BaseModel):
             t.start()
     
     def topup_account(self, credits):
-        self.credit += credits
-        super(self.__class__, self).save()
-        self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
+        if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
+            self.credit += credits
+            super(self.__class__, self).save()
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
 
 
 class UserCreditMovement(BaseModel):
@@ -542,7 +540,7 @@ class DayAvailability(models.Model):
 
 #### STUDENT ######################################
 class Child(models.Model):
-    parent = models.ForeignKey(User, related_name="childs")
+    parent = models.ForeignKey(User, related_name="children")
     child  = models.ForeignKey(User, related_name="parent_set")
     active = models.BooleanField(default=False)
     key    = models.CharField(max_length=30, null=True, blank=True, default=None)
