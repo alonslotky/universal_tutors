@@ -2,7 +2,7 @@
 
 <div class="sign-in">
 	{% include "socialaccount/snippets/login_extra.html" %}
-	<form class="nice" action='{% url login %}'method="post">
+	<form class="nice" action="{% url login %}" method="post">
 		{% csrf_token %}
 		
 		<div class="row">
@@ -16,7 +16,7 @@
 
 			<div class="four columns">
   				<input name="password" type="password" class="input-text oversize stretch" placeholder="Password">
-  				<a class="forgot" href="#">Forgot password?</a>
+  				<!-- a class="forgot" href="#">Forgot password?</a -->
 			</div>
 
 			<div class="two columns">
@@ -38,7 +38,8 @@
 	<p>Welcome to Universal Tutors, Phasellus at elit risus, iaculis rhoncus arcu. Duis auctor neque in magna sollicitudin in adipiscing libero dictum.</p>
 	<br/>
 	<div id="modal-signup-form-container">
-		<form id="modal-signup-form" class="nice custom signup">{% csrf_token %}
+		<form id="modal-signup-form" class="nice custom signup">
+			{% csrf_token %}
 			<div class="row margin date_of_birth">
 				<h3>My date of birth</h3>
 				<div id="signup-dob-errors" class="formError hidden">Please, insert a valid date</div>
