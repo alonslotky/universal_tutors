@@ -73,12 +73,12 @@
 			</div>
 		</form>
 		<div id="model-signup-under16-container" class="hidden formError">
-				Under 16? Your parent need to create a account for you. <br />
-				Send an email to your parent with a request to sign you up: <br />
-				<div id="parent-request-errors" class="formError hidden">Invalid Email</div>
-				<input class="input-text" type="text" name="parent-email" id="parent-email" />
-				<input type="button" id="send-parent-request" value="Send" /><div id="parent-request-info" class="hidden"></div><img class="hidden" src="{{ STATIC_URL }}images/icons/messages-ajaxloader.gif" id="loading"><br />
-							</div>
+			Under 16? Your parent need to create a account for you. <br />
+			Send an email to your parent with a request to sign you up: <br />
+			<div id="parent-request-errors" class="formError hidden">Invalid Email</div>
+			<input class="input-text" type="text" name="parent-email" id="parent-email" />
+			<input type="button" id="send-parent-request" value="Send" /><div id="parent-request-info" class="hidden"></div><img class="hidden" src="{{ STATIC_URL }}images/icons/messages-ajaxloader.gif" id="loading"><br />
+		</div>
 	</div>
 	<div id="modal-signup-form-loading" class="hidden">loading</div>
 	<script type="text/javascript">
@@ -195,6 +195,7 @@
 						$("#parent-request-info").html(data);
 						$("#parent-email").val("");
 						$("#loading").addClass("hidden");
+						setTimeout(function(){$('#modal-signup-form-container').trigger('reveal:close');}, 2000);
 					},
 					error: function(jqXHR, textStatus, errorThrown){
 						$("#parent-request-info").html(jqXHR.response);
