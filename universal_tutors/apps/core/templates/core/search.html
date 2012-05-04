@@ -4,7 +4,6 @@
 
 {% block title %}Search{% endblock %}
 {% block body_class %}app student{% endblock %}
-
 {% block content %}
 {% with class.tutor as tutor %}
 {% with class.student as student %}
@@ -109,11 +108,12 @@
         <div class="twelve columns">
           
           <div class="right filter">
-            <form>
-              <select>
-                <option>Sort by Price</option>
-                <option>Sort by Rating</option>
-                <option>Sort by Classes Given</option>
+            <form id="search-filter">
+              <select id="search-filter">
+              	<option value="">-----</option>
+                <option value="price">Sort by Price</option>
+                <option value="rating">Sort by Rating</option>
+                <option value="classes">Sort by Classes Given</option>
               </select>
             </form>
           </div>
@@ -161,4 +161,20 @@
 
 {% endwith %}
 {% endwith %}
+
+<script>
+	$(document).ready(function(){
+		var sort = $.query.get('sort');
+		if (sort != "") {
+			$("#search-filter option[value='" + sort +"']").attr("selected", true);
+		}
+		$("#search-filter").change(function(e){
+			var value = e.target.value;
+			if (value !== undefined || value !== ""){
+				var url = window.location.host;
+				window.location = $.query.set('sort', value);
+			}
+		});
+	});
+</script>
 {% endblock %}
