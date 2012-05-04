@@ -7,6 +7,8 @@
 .sign-in .row.center { text-align: center; }
 .sign-in .row.padding { padding: 10px 0; }
 
+.signup-loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; height: 150px; }
+
 .sign-in .row.center .facebook_connect_link { margin-left: 275px; }
 .facebook_connect_link {
     background: url("../images/social/facebook_connect.jpg") no-repeat scroll 0 0 transparent;

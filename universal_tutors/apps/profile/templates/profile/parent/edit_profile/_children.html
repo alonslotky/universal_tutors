@@ -1,0 +1,62 @@
+{% with user.subjects.all as subjects %}
+{% with subjects.count as no_subjects %}
+  <li id="childrenTab">
+    <h2 class="clear">Children</h2>
+    
+    <table class="stretch">
+      <tr>
+        <th>
+          <div class="row">
+            <div class="eight columns phone-one">
+              Name
+            </div>
+            <div class="three columns phone-one">
+              Credits
+            </div>
+            <div class="one columns phone-two">
+              Actions
+            </div>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <td>	            
+          {% for item in user.children.all %}
+          {% with item.child as child %}
+          {% with child.profile as child_profile %}
+	          <div class="row">
+	            <div class="eight columns phone-one">
+	            	<a href="{% url profile child.username %}">{{child.get_full_name}}</a>
+	            </div>
+	            <div class="three columns phone-one">
+	            	{{child_profile.credit}} credit{{child_profile.credit|pluralize}}
+	            </div>
+	            <div class="one columns phone-two">
+				    <a class="button" href="javascript:;" onclick="add_credits('{{child.username}}');"><span class="icon credits">Top Up Credits</span></a>
+				    <a class="button" href="{% url history child.username %}"><span class="icon history">View History</span></a>
+	            </div>
+	          </div>
+	          <hr>
+	      {% endwith %}
+	      {% endwith %}
+          {% endfor %}
+          <hr>
+		  <a id="add-subject-link" href="javascript:;" data-reveal-id="modal-create-child" onclick="add_child_form();">+ add child</a>
+        </td>
+      </tr>
+    </table>
+  </li>
+
+  <script type="text/javascript">
+  	var add_credits = function(id){
+  		if(confirm('This will simulate a transaction to add 30 credits to your account. Click "OK" to continue.')) {
+  			$.get('{% url add_credits %}'+ id +'/', function(){
+  				window.location.reload();
+  			});
+  		}
+  	};
+  </script>
+  
+
+{% endwith %}
+{% endwith %}

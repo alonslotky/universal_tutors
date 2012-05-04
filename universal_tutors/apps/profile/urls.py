@@ -19,7 +19,9 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutor/profile/edit/$', 'edit_tutor_profile', {}, name = "edit_tutor_profile"),
     url(r'^(?i)student/profile/edit/$', 'edit_student_profile', {}, name = "edit_student_profile"),
     url(r'^(?i)parent/profile/edit/$', 'edit_parent_profile', {}, name = "edit_parent_profile"),
+
     url(r'^(?i)history/$', 'history', {}, name = "history"),
+    url(r'^(?i)history/(?P<username>[\w\-\_]+)/$', 'history', {}, name = "history"),
 )
 
 # Tutors
@@ -65,7 +67,10 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)student/remove_interest/$', 'remove_interest', {}, name = "remove_interest"),
     url(r'^(?i)student/remove_interest/(?P<subject_id>\d+)/$', 'remove_interest', {}, name = "remove_interest"),
     url(r'^(?i)student/send-parent-request/$', 'send_parent_request', {}, name = "send_parent_request"),
+
     url(r'^(?i)student/add_credits/$', 'add_credits', {}, name = "add_credits"),
+    url(r'^(?i)student/add_credits/(?P<username>[\w\-\_]+)/$', 'add_credits', {}, name = "add_credits"),
+
 )
 
 
@@ -84,6 +89,8 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)send_modal_message/$', 'send_modal_message', {}, name = "send_modal_message"),
     url(r'^(?i)send_modal_message/(?P<to>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
     url(r'^(?i)send_modal_message/(?P<to>\d+)/(?P<class_id>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
+
+    url(r'^(?i)parent/add_child/$', 'add_child', {}, name = "add_child"),
 )
 
 

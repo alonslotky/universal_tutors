@@ -62,13 +62,14 @@
 			</div>
 		</div>
 		<div class="row">&nbsp;</div>
-        {% endif %}
-
 		<div class="row">
             <div class="twelve columns">            	
 				Apply for a CRB check <a target="_blank" href="https://disclosure.capitarvs.co.uk/mgcare">here</a>
             </div>
 		</div>
+        {% endif %}
+
+		
 		
 		<div class="row">&nbsp;</div>
         {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
@@ -81,9 +82,11 @@
 		<div class="row">&nbsp;</div>
 		<div class="row">
 			<div class="three columns">
-  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign Up"></div>
+  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="{% if not child_creator %}Sign Up{% else %}Create{% endif %}"></div>
 			</div>			
 		</div>
+		
+		{% if not child_creator %}
 		<div class="row hidden">
 			{{form.date_of_birth}}
 			{{form.type}}			
@@ -93,6 +96,8 @@
 			<p>Or, use your facebook account to connect with Universal Tutors</p>
 			<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
 		</div>
+		{% endif %}
+		
 	</form>
 	<script type="text/javascript">
 		$(window).ready(function(e){
@@ -103,17 +108,23 @@
 			var type = $("#id_type").val();
 			$('#modal-signup-form-container').fadeOut(function(){
 				$('#modal-signup-form-loading').fadeIn(function(){
+					{% if not child_creator %}
 					$('#id_date_of_birth').val(signup_dob);
 					$('#id_type').val(signup_type);
+					{% endif %}
 					$.ajax({
 						type: 'POST',
-						url: '{% url signup %}?user_type=' + type,
+						url: {% if not child_creator %}'{% url signup %}?user_type=' + type{% else %}'{% url add_child %}'{% endif %},
 						data: $('#signup-form2').serialize(),
 						success: function(data) {
-							$('#modal-signup-form-container').html(data);
-							$('#modal-signup-form-loading').fadeOut(function(){
-								$('#modal-signup-form-container').fadeIn();
-							});
+							if(data != 'child_created') {
+								$('#modal-signup-form-container').html(data);
+								$('#modal-signup-form-loading').fadeOut(function(){
+									$('#modal-signup-form-container').fadeIn();
+								});
+							} else {
+								window.location.reload();
+							}
 						}
 					});
 				});

@@ -76,11 +76,14 @@
 			Under 16? Your parent need to create a account for you. <br />
 			Send an email to your parent with a request to sign you up: <br />
 			<div id="parent-request-errors" class="formError hidden">Invalid Email</div>
-			<input class="input-text" type="text" name="parent-email" id="parent-email" />
-			<input type="button" id="send-parent-request" value="Send" /><div id="parent-request-info" class="hidden"></div><img class="hidden" src="{{ STATIC_URL }}images/icons/messages-ajaxloader.gif" id="loading"><br />
+			<div id="parent-request-info" class="hidden"></div>
+			<form class="nice">
+				<input class="input-text" type="text" name="parent-email" id="parent-email" />
+				<div class="button"><input type="button" id="send-parent-request" class="icon rocket" value="Send" /></div>
+			</form>
 		</div>
 	</div>
-	<div id="modal-signup-form-loading" class="hidden">loading</div>
+	<div id="modal-signup-form-loading" class="signup-loading"></div>
 	<script type="text/javascript">
 		var today = new Date();
 		var today_year = today.getFullYear();
@@ -89,6 +92,8 @@
 		var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 		
 		var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+		$('#modal-signup-form-loading').hide();
 	
 		for(i=1; i<=31; i++)
 			$('#signup_day').append('<option value="'+ i +'">'+ i +'</option>');
@@ -179,30 +184,37 @@
 		
 		$("#send-parent-request").click(function(e){
 			e.preventDefault();
-			$("#loading").removeClass("hidden");
-			$('#parent-request-errors').addClass('hidden');
-			$("#parent-request-info").addClass('hidden').empty();
-			var email = $("#parent-email").val();
-			if(reg.test(email) == false) {
-				$('#parent-request-errors').removeClass('hidden');
-		   	} else {
-		   		$.ajax({
-					type: 'POST',
-					data: {'email': email},
-					url: '{% url send_parent_request %}',
-					success: function(data) {
-						$("#parent-request-info").removeClass('hidden');
-						$("#parent-request-info").html(data);
-						$("#parent-email").val("");
-						$("#loading").addClass("hidden");
-						setTimeout(function(){$('#modal-signup-form-container').trigger('reveal:close');}, 2000);
-					},
-					error: function(jqXHR, textStatus, errorThrown){
-						$("#parent-request-info").html(jqXHR.response);
-						$("#loading").addClass("hidden");
-					}
+
+			$('#modal-signup-form-container').fadeOut(function(){
+				$('#modal-signup-form-loading').fadeIn(function(){
+					$('#parent-request-errors').addClass('hidden');
+					$("#parent-request-info").addClass('hidden').empty();
+					var email = $("#parent-email").val();
+					if(reg.test(email) == false) {
+						$('#parent-request-errors').removeClass('hidden');
+				   	} else {
+				   		$.ajax({
+							type: 'POST',
+							data: {'email': email},
+							url: '{% url send_parent_request %}',
+							success: function(data) {
+								$("#model-signup-under16-container").html(data);
+								setTimeout(function(){$('#modal-signup-form-container').trigger('reveal:close');}, 2000);
+							},
+							error: function(jqXHR, textStatus, errorThrown){
+								$("#parent-request-info").removeClass('hidden');
+								$("#parent-request-info").html(jqXHR.response);
+							},
+							complete: function() {
+								$('#modal-signup-form-loading').fadeOut(function(){
+									$('#modal-signup-form-container').fadeIn();
+								});								
+							}
+						});
+				   	}
 				});
-		   	}
+			});
+			
 		});
 		
 	</script>

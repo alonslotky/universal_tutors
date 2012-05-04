@@ -116,6 +116,10 @@ class SigninForm(LoginForm):
 
 
 class SignupForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', )
+        
     username = forms.CharField(label=_('Username'), min_length=5, max_length=25, initial='')
     first_name = forms.CharField(label=_('First name'), max_length = 25, initial='')
     last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='')
@@ -163,18 +167,26 @@ class SignupForm(forms.ModelForm):
 
         profile = user.profile        
         profile.country = self.cleaned_data['country']
-        profile.date_of_birth = self.cleaned_data['date_of_birth']
-        profile.type = self.cleaned_data['type']
+        if self.parent:
+            user.parent_set.create(parent=self.parent, active=True)
+            profile.type = profile.TYPES.UNDER16
+        else:
+            profile.date_of_birth = self.cleaned_data['date_of_birth']
+            profile.type = self.cleaned_data['type']
         profile.crb = self.cleaned_data.get('crb', False)
         profile.save()
+        
         
         send_email_confirmation(user, request=request)
         
         return user
 
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email', )
+    def __init__(self, *args, **kwargs):
+        self.parent = kwargs.pop('parent', None)
+        super(SignupForm, self).__init__(*args, **kwargs)
+        if self.parent:
+            self.fields['date_of_birth'].required = False
+            self.fields['type'].required = False
         
 
 class StudentSignupForm(SignupForm):

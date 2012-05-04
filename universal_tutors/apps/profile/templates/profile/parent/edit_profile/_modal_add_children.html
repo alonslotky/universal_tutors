@@ -1,0 +1,29 @@
+<div id="modal-create-child" class="reveal-modal form signup">
+	<a class="close-reveal-modal">&#215;</a>
+	<h2>Add a child</h2>
+	<p>Please fill the follow form to add your child.</p>
+	<br/>
+	<div id="modal-signup-form-container">
+	</div>
+	<div id="modal-signup-form-loading" class="signup-loading"></div>
+	<script type="text/javascript">
+		$('#modal-signup-form-loading').hide();
+		var add_child_form = function() {
+			$('#modal-signup-form-container').fadeOut(function(){
+				$('#modal-signup-form-loading').fadeIn(function(){
+					$.ajax({
+						type: 'GET',
+						url: '{% url add_child %}',
+						success: function(data) {
+							$('#modal-signup-form-container').html(data);
+							$('#modal-signup-form-loading').fadeOut(function(){
+								$('#modal-signup-form-container').fadeIn();
+							});
+						}
+					});
+				});
+			});
+		};
+	</script>
+</div>
+

@@ -30,7 +30,7 @@
               <th>Type</th>
               <th>Credits</th>
             </tr>
-            {% for movement in user.movements.all %}
+            {% for movement in person.movements.all %}
             <tr>
               <td>{{movement.created}}</td>
               <td>{{movement.get_type_display}}</td>

@@ -441,7 +441,7 @@ def book_class(request):
     user = request.user
     profile = user.profile
     
-    if request.method != 'POST' or profile.type != profile.TYPES.STUDENT:
+    if request.method != 'POST' or (profile.type != profile.TYPES.STUDENT and profile.type != profile.TYPES.UNDER16):
         raise http.Http404()
     
     tutor_id = request.POST.get('tutor', 0)
@@ -513,8 +513,42 @@ def send_parent_request(request):
         return http.HttpResponseBadRequest()
 
 
-def add_credits(request):
-    profile = request.user.profile
+@login_required
+@main_render('account/signup.html')
+def add_child(request):
+    user = request.user
+    profile = user.profile
+    
+    if profile.type != profile.TYPES.PARENT:
+        raise http.Http404()
+
+    form = SignupForm(request.POST or None, parent=user)
+    if request.method == "POST":
+        if form.is_valid():
+            user = form.save(request=request)
+            return http.HttpResponse('child_created')
+    
+    return {
+        'form': form,
+        'child_creator': True,
+    }
+    
+
+@login_required
+def add_credits(request, username=None):
+    ###
+    ### DUMMY, TO DELETE AFTER
+    ###
+    if username:
+        user = request.user
+        person = get_object_or_404(User, username=username)
+        profile = person.profile
+        if user != person and profile.parent != user:
+            raise http.Http404()
+    else:
+        person = request.user
+        profile = person.profile
+
     profile.topup_account(30)
     
     return http.HttpResponse('done')

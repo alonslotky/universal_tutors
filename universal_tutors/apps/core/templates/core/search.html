@@ -4,7 +4,6 @@
 
 {% block title %}Search{% endblock %}
 {% block body_class %}app student{% endblock %}
-
 {% block content %}
 {% with class.tutor as tutor %}
 {% with class.student as student %}
@@ -16,38 +15,48 @@
       <div class="hide-on-phones">
       {% include 'profile/fragments/_timer.html' %}
       </div>
-      
       <section class="row clear">
+      <form method="get" action="{% url search %}" class="nice custom">
         <div class="twelve columns">
           <div class="row">
-            <form class="nice custom">
               <div class="four columns">
               
                 <div class="row space">
                   <div class="three columns">
-                    <label>Subject</label>
+                    <select name="what">
+	    				<option value="tutors">Tutors</option>
+	    				<option value="subjects">Subjects</option>
+	    				<!-- <option value="level">Level</option> -->
+	  				</select>
                   </div>
                   <div class="nine columns">
-                    <select class="stretch">
-                      <option>Option</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="row space">
-                  <div class="three columns">
-                    <label>Price</label>
-                  </div>
-                  <div class="nine columns">
-                    <select class="stretch">
-                      <option>Option</option>
-                    </select>
+	  				<input name="text" type="text" class="input-text" placeholder="Search" />
+	  				<input type="submit" class="search-icon" value="Search" />
                   </div>
                 </div>
                 
               </div>
-              
               <div class="four columns">
+	           <div class="row space">
+	              <div class="three columns">
+	                <label>Price</label>
+	              </div>
+	              <div class="nine columns">
+	                <select id="price" name="price" class="stretch">
+                		<option value="">-----</option>
+	                  	<option value="1"> < 5 </option>
+	                  	<option value="2"> 5 - 10 </option>
+	                  	<option value="3"> 10 - 15 </option>
+	                  	<option value="4"> 15 - 20 </option>
+	                  	<option value="5"> 20 - 25 </option>
+	                  	<option value="6"> 25 - 30 </option>
+	                  	<option value="7"> > 30 </option>
+	                </select>
+	              </div>
+	            </div>
+            </div>
+              
+             <!--  <div class="four columns">
                 
                 <div class="row space">
                   <div class="three columns">
@@ -71,7 +80,7 @@
                   </div>
                 </div>
 
-              </div>
+              </div> -->
               
               <div class="four columns">
               
@@ -82,26 +91,60 @@
                   <div class="nine columns">
                     <div class="row">
                       <div class="six columns">
-                        <select class="stretch">
-                          <option>Option</option>
+                        <select id="day" name="day" class="stretch">
+                        	<option value="">-----</option>
+                          	<option value="0">Monday</option>
+    						<option value="1">Tuesday</option>
+        					<option value="2">Wednesday</option>
+					        <option value="3">Thursday</option>
+					        <option value="4">Friday</option>
+					        <option value="5">Saturday</option>
+					        <option value="6">Sunday</option>
                         </select>
                       </div>
                       <div class="six columns">
-                        <select class="stretch">
-                          <option>Option</option>
+                        <select id="time" name="time" class="stretch">
+                          	<option value="">-----</option>
+                          	<option value="0">0</option>
+    						<option value="1">1</option>
+        					<option value="2">2</option>
+					        <option value="3">3</option>
+					        <option value="4">4</option>
+					        <option value="5">5</option>
+					        <option value="6">6</option>
+					        <option value="7">7</option>
+                          	<option value="8">8</option>
+    						<option value="9">9</option>
+        					<option value="10">10</option>
+					        <option value="11">11</option>
+					        <option value="12">12</option>
+					        <option value="13">13</option>
+					        <option value="14">14</option>
+					        <option value="15">15</option>
+                          	<option value="16">16</option>
+    						<option value="17">17</option>
+        					<option value="18">18</option>
+					        <option value="19">19</option>
+					        <option value="20">20</option>
+					        <option value="21">21</option>
+					        <option value="22">22</option>
+				         	<option value="23">23</option>
+				         	<option value="24">24</option>
                         </select>
                       </div>
                     </div>
                   </div>
                 </div>
-                
+                <input name="search" type="hidden" value="complex" />
                 <div class="button"><input type="submit" class="icon search" value="Search"></div>
               </div>
               
-            </form>
+            
           </div>
         </div>
+        </form>
       </section>
+      
       
       <hr class="big">
       
@@ -109,11 +152,12 @@
         <div class="twelve columns">
           
           <div class="right filter">
-            <form>
-              <select>
-                <option>Sort by Price</option>
-                <option>Sort by Rating</option>
-                <option>Sort by Classes Given</option>
+            <form id="search-filter">
+              <select id="search-filter">
+              	<option value="">-----</option>
+                <option value="price">Sort by Price</option>
+                <option value="rating">Sort by Rating</option>
+                <option value="classes">Sort by Classes Given</option>
               </select>
             </form>
           </div>
@@ -161,4 +205,43 @@
 
 {% endwith %}
 {% endwith %}
+
+<script>
+	$(document).ready(function(){
+		var sort = $.query.get('sort');
+		if (sort != "") {
+			$("select#search-filter option[value='" + sort +"']").attr("selected", true);
+		}
+		
+		var price = $.query.get('price');
+		if (price != "") {
+			$("select#price option[value='" + price +"']").attr("selected", true);
+		}
+		
+		var text = $.query.get('text');
+		if (text != "") {
+			$(".main input[name=text]").val(text).html(text);
+		}
+		
+		var day = $.query.get('day');
+		console.log(day!="");
+		if (day > -1) {
+			console.log($("select#day option[value=" + day +"]"));
+			$("select#day option[value=" + day +"]").attr("selected", true);
+		}
+		
+		var time = $.query.get('time');
+		if (day > -1) {
+			$("select#time option[value=" + time +"]").attr("selected", true);
+		}
+				
+		$("#search-filter").change(function(e){
+			var value = e.target.value;
+			if (value !== undefined || value !== ""){
+				var url = window.location.host;
+				window.location = $.query.set('sort', value);
+			}
+		});
+	});
+</script>
 {% endblock %}
