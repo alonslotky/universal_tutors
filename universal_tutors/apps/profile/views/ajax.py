@@ -515,8 +515,6 @@ def send_parent_request(request):
 
 def add_credits(request):
     profile = request.user.profile
-    
-    profile.credit += 30
-    profile.save()
+    profile.topup_account(30)
     
     return http.HttpResponse('done')

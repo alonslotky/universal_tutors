@@ -384,15 +384,24 @@ class UserProfile(BaseModel):
             t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
             t.setDaemon(True)
             t.start()
+    
+    def topup_account(self, credits):
+        self.credit += credits
+        super(self.__class__, self).save()
+        self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
 
 
 class UserCreditMovement(BaseModel):
+    class Meta:
+        ordering = ('-created',)
+    
     MOVEMENTS_TYPES = get_namedtuple_choices('USER_MOVEMENTS_TYPES', (
         (0, 'PAYMENT', 'Payment for a class'),
         (1, 'INCOME', 'Class income'),
         (2, 'CANCELED_BY_TUTOR', 'Class canceled by tutor (Refund)'),
         (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Income)'),
         (4, 'STOPPED_BY_STUDENT', 'Stopped by student (Refund)'),
+        (5, 'TOPUP', 'Top-up account'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')

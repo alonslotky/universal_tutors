@@ -386,6 +386,4 @@ def history(request):
     """
     user = request.user
 
-    return {
-        'profile': user.profile
-    }
+    return { }

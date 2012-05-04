@@ -30,11 +30,11 @@
               <th>Type</th>
               <th>Credits</th>
             </tr>
-            {% for movement in profile.movements.all %}
+            {% for movement in user.movements.all %}
             <tr>
               <td>{{movement.created}}</td>
               <td>{{movement.get_type_display}}</td>
-              <td>{{movement.credits}}</td>
+              <td>{{movement.credits}} credit{{movement.credits|pluralize}}</td>
             </tr>
             {% endfor %}
           </table>
