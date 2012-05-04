@@ -100,6 +100,8 @@ class UserProfile(BaseModel):
     # tutor
     avg_rate = models.FloatField(default=0)
     no_reviews = models.PositiveIntegerField(default=0)
+    min_credits = models.PositiveIntegerField(default=0)
+    max_credits = models.PositiveIntegerField(default=0)
 
     @property
     def is_over16(self):
@@ -384,15 +386,24 @@ class UserProfile(BaseModel):
             t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
             t.setDaemon(True)
             t.start()
+    
+    def topup_account(self, credits):
+        self.credit += credits
+        super(self.__class__, self).save()
+        self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
 
 
 class UserCreditMovement(BaseModel):
+    class Meta:
+        ordering = ('-created',)
+    
     MOVEMENTS_TYPES = get_namedtuple_choices('USER_MOVEMENTS_TYPES', (
         (0, 'PAYMENT', 'Payment for a class'),
         (1, 'INCOME', 'Class income'),
         (2, 'CANCELED_BY_TUTOR', 'Class canceled by tutor (Refund)'),
         (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Income)'),
         (4, 'STOPPED_BY_STUDENT', 'Stopped by student (Refund)'),
+        (5, 'TOPUP', 'Top-up account'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')
@@ -411,6 +422,12 @@ class TutorSubject(models.Model):
     
     def save(self, *args, **kwargs):
         super(self.__class__, self).save(*args, **kwargs)
+        user = self.user
+        profile = user.profile 
+        results = user.subjects.aggregate(min_credits = models.Min('credits'), max_credits = models.Max('credits'))   
+        profile.min_credits = results['min_credits']
+        profile.max_credits = results['max_credits']
+        profile.save()
     
     def __unicode__(self):
         return '%s' % self.subject
@@ -440,9 +457,8 @@ class TutorReview(BaseModel):
         user = self.user
         super(self.__class__, self).save(*args, **kwargs)
         profile = user.profile
-        reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('rate'))
-        profile.avg_rate = reviews['avg_rate']
-        profile.no_rate = reviews['no_reviews']
+        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))
+        profile.no_rate = user.reviews_as_tutor.count()
         profile.save()
     
     def delete(self):

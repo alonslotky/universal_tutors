@@ -65,6 +65,7 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)student/remove_interest/$', 'remove_interest', {}, name = "remove_interest"),
     url(r'^(?i)student/remove_interest/(?P<subject_id>\d+)/$', 'remove_interest', {}, name = "remove_interest"),
     url(r'^(?i)student/send-parent-request/$', 'send_parent_request', {}, name = "send_parent_request"),
+    url(r'^(?i)student/add_credits/$', 'add_credits', {}, name = "add_credits"),
 )
 
 

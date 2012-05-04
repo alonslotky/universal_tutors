@@ -511,3 +511,10 @@ def send_parent_request(request):
             return http.HttpResponseServerError("An error occurred while sending the email.");
     else:
         return http.HttpResponseBadRequest()
+
+
+def add_credits(request):
+    profile = request.user.profile
+    profile.topup_account(30)
+    
+    return http.HttpResponse('done')
