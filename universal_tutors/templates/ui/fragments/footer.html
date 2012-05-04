@@ -1,13 +1,18 @@
+{% with user.is_authenticated as is_authenticated %}
 <footer>
   	<div class="row hide-on-phones">
 	    <div class="twelve columns">
 	      <ul class="centered">
 	        <li><a href="/student-guide/">Student Guide</a></li>
 	        <li><a href="/tutor-guide/">Tutor Guide</a></li>
-	        <li><a href="#">Search</a></li>
+	        <li><a href="{% url search %}">Search</a></li>
+	        {% if not is_authenticated %}
 	        <li><a href="#" data-reveal-id="modal-signin">Log In</a></li>
-	        <li class="logo"><a class="ir" href="#">Home</a></li>
+	        {% endif %}
+	        <li class="logo"><a class="ir" href="{% url home %}">Home</a></li>
+	        {% if not is_authenticated %}
 	        <li><a data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();" href="javascript:;">Sign Up</a></li>
+	        {% endif %}
 	        <li><a href="/terms/">Terms</a>
 	        <li><a href="/privacy/">Privacy</a>
 	        <li><a href="/faq/">FAQs</a>
@@ -20,12 +25,14 @@
         <div class="twelve columns">
           <a name="navi"></a>
           <ul>
-            <li><a href="/">Home</a></li>
+            <li><a href="{% url home %}">Home</a></li>
             <li><a href="/student-guide/">Student Guide</a></li>
             <li><a href="/tutor-guide/">Tutor Guide</a></li>
+	        {% if not is_authenticated %}
             <li><a href="#" data-reveal-id="modal-signin">Log In</a></li>
             <li><a data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();" href="javascript:;">Sign Up</a></li>
-            <li><a href="#">Search</a></li>
+	        {% endif %}
+            <li><a href="{% url search %}">Search</a></li>
             <li><a href="/terms/">Terms</a>
             <li><a href="/privacy/">Privacy</a>
             <li><a href="/faq/">FAQs</a>
@@ -37,3 +44,4 @@
   	<p class="quote">"Genius without education is like silver in the mine" Benjamin Franklin  <!--a class="tweet" href="#">Tweet this</a--></p>
   	<p class="socials">Follow us<a href="http://twitter.com/#!/UniversalTutors" class="twitter ir">Twitter</a> <a href="http://www.facebook.com/UniversalTutors" class="facebook ir">Facebook</a></p>
 </footer>
+{% endwith %}
