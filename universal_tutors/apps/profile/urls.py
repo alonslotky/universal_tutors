@@ -45,6 +45,8 @@ urlpatterns += patterns('apps.profile.views.ajax',
     
     url(r'^(?i)tutor/favorite/$', 'favorite', {}, name = "favorite"),
     url(r'^(?i)tutor/favorite/(?P<person_id>\d+)/$', 'favorite', {}, name = "favorite"),
+
+    url(r'^(?i)confirm-book-class/$', 'book_class', {}, name = "confirm_book_class"),
 )
 
 # Students

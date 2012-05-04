@@ -1,0 +1,58 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Classroom {{class.name}}{% endblock %}
+{% block body_class %}app classroom{% endblock %}
+
+{% block thirdparty_js_header %}
+<script type="text/javascript" src="http://media.muchosmedia.com/scribblar/scripts/includes.js"></script>
+<link href="http://media.muchosmedia.com/brainwave/style.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript">
+	var targetID = "scribblar";
+	
+	var flashvars = {
+		userid: "{{user.profile.scribblar_id}}",
+		roomid: "{{class.scribblar_id}}",
+		preferredLocales: "en_US",
+		username: "{{user.get_full_name}}"
+	};
+
+	var params = {
+		allowscriptaccess: "always"
+	};
+	
+	var attributes = {
+		id: "scribblar",
+		name: "scribblar"
+	};
+
+	swfobject.embedSWF("http://media.muchosmedia.com/scribblar/v2/main.swf", "alternate", "100%", "100%", "10.2.0", "http://media.muchosmedia.com/swfobject/expressInstall.swf", flashvars, params, attributes);
+</script>
+{% endblock %}
+
+{% block full_content %}
+
+	<div class="container hide-on-phones">
+	
+	  <header>
+	    <div class="logo alt ir left"><a>Universal Tutors</a></div>
+	    {% if user == class.student %}
+	    <a class="right button" href="/" data-reveal-id="modal-review"><span class="icon rocketdown">Exit Classroom</span></a>
+	  	{% else %}
+	    <a class="right button" href="{% url tutor_classes %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
+	  	{% endif %}
+	  </header>
+	  
+	  <div class="main scribblar-container">
+	  	<div id="alternate"></div>
+	  </div>
+	</div>
+	
+	<div class="container show-on-phones end">
+	  <p>Please get to a Flash-enabled desktop computer to access the classroom.</p>
+	</div>
+{% endblock %}

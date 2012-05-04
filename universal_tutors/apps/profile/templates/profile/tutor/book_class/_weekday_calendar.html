@@ -40,7 +40,7 @@
 							{% endfor %}
 						</select>
 
-						<div id="schedule-week-{{day.weekday}}-error" class="schedule-week-error formError hidden">Nada feito</div>
+						<div id="schedule-week-{{day.weekday}}-error" class="schedule-week-error formError hidden"></div>
 
 						<div class="book-total"><strong>Total: </strong><span id="schedule-week-{{day.weekday}}-total">0</span> credit(s)</div>
 						
@@ -71,15 +71,22 @@
 							
 							if(begin && end && subject && minutes) {
 								if(minutes>=30 && minutes<=120 && (minutes % 30)==0) {
+									$('#schedule-week-{{day.weekday}}-confirm-booking input').val('Loading...');
 									$.ajax({
 										type: 'post',
 										data: $(this).serialize(),
+										url: '{% url confirm_book_class %}',
+										complete: function() {
+											$('#schedule-week-{{day.weekday}}-confirm-booking input').val('Confirm booking');
+											$('#schedule-week-{{day.weekday}}-error').removeClass('hidden');
+											$('#schedule-week-{{day.weekday}}-book').show();
+											$('#schedule-week-{{day.weekday}}-confirm-booking').hide();
+										},								
 										success: function(response){
-											if(response=='done.') {
+											if(response=='Done.') {
 												window.location.href = '{% url student_classes %}';
 											} else {
 												$('#schedule-week-{{day.weekday}}-error').html(response);
-												$('#schedule-week-{{day.weekday}}-error').removeClass('hidden');
 											}
 										}
 									});

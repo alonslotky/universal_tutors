@@ -7,12 +7,12 @@
     </div>
     
     <div class="two auto-width">
-      <span id="days_d" class="number hidden"></span>
-      <span id="days_u" class="number hidden"></span>
-      <span>days&nbsp;</span>
-      <span id="hours_d" class="number hidden"></span>
-      <span id="hours_u" class="number"></span>
-      <span>h&nbsp;</span>
+      <span id="days_d" class="days-numbers number hidden"></span>
+      <span id="days_u" class="days-numbers number hidden"></span>
+      <span class="days-numbers">days&nbsp;</span>
+      <span id="hours_d" class="hours-numbers number hidden"></span>
+      <span id="hours_u" class="hours-numbers number"></span>
+      <span class="hours-numbers">h&nbsp;</span>
       <span id="minutes_d" class="number"></span>
       <span id="minutes_u" class="number"></span>
       <span>m&nbsp;</span>
@@ -28,7 +28,7 @@
   </div>
 </section>
 <script type="text/javascript">
-	var timer_class = new Date(Date.UTC({{next_class.date.year}},{{next_class.date.month|add:-1}},{{next_class.date.day}},{{next_class.start.hour}},{{next_class.start.minute}}));
+	var timer_class = new Date({{next_class.date.year}},{{next_class.date.month|add:-1}},{{next_class.date.day}},{{next_class.start.hour}},{{next_class.start.minute}});
 	
 	setInterval(function(){
 		var timer_now = new Date();
@@ -54,25 +54,30 @@
 		var seconds_u = parseInt(seconds % 10);
 		
 
-		if(days_d) {
-			$('#days_d').html(days_d);
-			$('#days_d').removeClass('hidden');
-		} else {
-			$('#days_d').addClass('hidden');
-		}
-
-		if(days_u) {
+		if(days) {
+			$('.days-numbers').removeClass('hidden');
+			if(days_d) {
+				$('#days_d').html(days_d);
+				$('#days_d').removeClass('hidden');
+			} else {
+				$('#days_d').addClass('hidden');
+			}
+	
 			$('#days_u').html(days_u);
-			$('#days_u').removeClass('hidden');
 		} else {
-			$('#days_u').addClass('hidden');
+			$('.days-numbers').addClass('hidden');
 		}
 		
-		if(hours_d) {
-			$('#hours_d').html(hours_d);
-			$('#hours_d').removeClass('hidden');
+		if(days || hours) {
+			$('.hour-numbers').removeClass('hidden');
+			if(hours_d) {
+				$('#hours_d').html(hours_d);
+				$('#hours_d').removeClass('hidden');
+			} else {
+				$('#hours_d').addClass('hidden');
+			}
 		} else {
-			$('#hours_d').addClass('hidden');
+			$('.hour-numbers').addClass('hidden');
 		}
 
 		$('#hours_u').html(hours_u);
@@ -81,12 +86,12 @@
 		$('#seconds_d').html(seconds_d);
 		$('#seconds_u').html(seconds_u);
 		
-		if(total_seconds <= 600) {
+		if(total_seconds <= 300) {
 			$('#enter-next-class-button').removeClass('hidden');
 			$('.timer-seconds').removeClass('hidden');
 		} else {
 			$('#enter-next-class-button').addClass('hidden');
-			$('.timer-seconds').addClass('hidden');		
+			$('.timer-seconds').addClass('hidden');
 		}
 		
 		var timer_size = 0;

@@ -7,6 +7,7 @@ from django.contrib import admin
 urlpatterns = patterns('apps.classes.views.main',
     url(r'^(?i)detail/$', 'detail', {}, name = "class_detail"),
     url(r'^(?i)detail/(?P<class_id>\d+)/$', 'detail', {}, name = "class_detail"),
+    url(r'^(?i)download/(?P<class_id>\d+)/$', 'download', {}, name = "class_download"),
 )
 
 

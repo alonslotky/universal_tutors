@@ -431,3 +431,57 @@ def delete_this_week_period(request, period_id):
         'periods': periods,
         'date': date,
     }
+
+
+@login_required
+def book_class(request):
+    user = request.user
+    profile = user.profile
+    
+    if request.method != 'POST' or profile.type != profile.TYPES.STUDENT:
+        raise http.Http404()
+    
+    tutor_id = request.POST.get('tutor', 0)
+    subject_id = request.POST.get('subject', 0)
+    date = request.POST.get('date', '')
+    begin = request.POST.get('begin', '')
+    end = request.POST.get('end', '')
+
+    tutor = get_object_or_404(User, id=tutor_id)
+    subject = get_object_or_404(ClassSubject, id=subject_id)
+
+    try:
+        date_str = date.split('-')
+        date = datetime.date(int(date_str[0]), int(date_str[1]), int(date_str[2]))
+        begin_array = begin.split('-')
+        begin_time = datetime.time(int(begin_array[0]), int(begin_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
+        end_array = end.split('-')
+        end_time = datetime.time(int(end_array[0]), int(end_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
+    except IndexError:
+        raise http.Http404()
+
+    
+    minutes = (datetime.datetime.combine(date, end_time) - datetime.datetime.combine(date, begin_time)).seconds / 60
+    if minutes < 30 or minutes > 120 or (minutes % 30 != 0):
+        return http.HttpResponse("Please select a class between 30min, 60min, 90min or 120min.")
+    
+    class_ = Class(
+        tutor = tutor,
+        student = user,
+        subject = subject,
+        date = date,
+        start = begin_time,
+        end = end_time,
+    )
+
+    credit_fee = class_.get_updated_credit_fee(commit=False)
+    if credit_fee > profile.credit:
+        return http.HttpResponse("You don't have credits enough.")
+    
+    class_.save()    
+    if not class_.id:
+        print class_.id
+        return http.HttpResponse("This class can't be created right now. Please try again later.")    
+    class_.book()
+    
+    return http.HttpResponse("Done.")

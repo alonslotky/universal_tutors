@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 import re, unicodedata, random, string, datetime, os, pytz
-from scribblar import rooms
+from scribblar import rooms, assets
 
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
@@ -68,6 +68,22 @@ class Class(BaseModel):
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
     
+    def get_updated_credit_fee(self, commit=True):
+        tutor = self.tutor
+        tutor_profile = tutor.profile
+        tutor_subject = tutor.subjects.filter(subject=self.subject)
+        is_new = not self.id
+        
+        if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
+            self.credit_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
+            self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
+            self.universal_fee = self.credit_fee * UNIVERSAL_FEE
+            if commit:
+                super(self.__class__, self).save(*args, **kwargs)
+
+        return self.credit_fee
+    
+    
     def save(self, *args, **kwargs):
         tutor = self.tutor
         tutor_profile = tutor.profile
@@ -115,9 +131,15 @@ class Class(BaseModel):
             
         self.scribblar_id = scribblar_room['roomid']
         super(self.__class__, self).save()
-    
+    from scribblar import assets
+
     def delete(self):
-        rooms.delete(roomid=self.scribblar_id)
+        if self.scribblar_id:
+            try:
+                rooms.delete(roomid=self.scribblar_id)
+            except:
+                pass
+        super(self.__class__, self).delete()
         
     def __unicode__(self):
         return '%s' % self.subject
@@ -188,7 +210,7 @@ class Class(BaseModel):
 
     def book(self):
         tutor = self.tutor
-        tutor_profile = self.tutor
+        tutor_profile = tutor.profile
         student = self.student
         student_profile = student.profile
         if self.status == self.STATUS_TYPES.PRE_BOOKED and student_profile.credit >= self.credit_fee:
@@ -217,6 +239,13 @@ class Class(BaseModel):
             return self.student.reviews_as_student.get(related_class = self)
         except ObjectDoesNotExist:
             return None
+    
+    def get_material(self):
+        return assets.list(roomid=self.scribblar_id)
+    
+    def download(self, id):
+        print id
+        return assets.details(assetid=id)['path']
 
 
 class ClassUserHistory(models.Model):

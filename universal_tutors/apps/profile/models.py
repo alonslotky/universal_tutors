@@ -338,8 +338,13 @@ class UserProfile(BaseModel):
     def get_next_class(self):
         from apps.classes.models import Class
         user = self.user
+        
+        now = datetime.datetime.now()
+        today = now.date()
+        time = now.time()
+        
         try:
-            return Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED), Q(tutor=user) | Q(student=user))[0]
+            return Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED), Q(tutor=user) | Q(student=user)).filter(Q(date__gt=today) | Q(date=today, end__gte=time))[0]
         except IndexError:
             return 0
 
