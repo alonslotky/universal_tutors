@@ -42,7 +42,9 @@
 	          
 	          <div class="two columns tags">
 	          	{% for subject in tutor.subjects.all %}
-	            <a href="student-search" class="tag">{{subject}}</a>
+	          	{% if forloop.counter0 < 3 %}
+	            <a href="{% url search %}?type=subject?query={{subject}}" class="tag">{{subject}}</a>
+	            {% endif %}
 	            {% endfor %}
 	          </div>
 	          

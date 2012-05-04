@@ -19,6 +19,7 @@
       <span id="seconds_d" class="number timer-seconds hidden"></span>
       <span id="seconds_u" class="number timer-seconds hidden"></span>
       <span class="timer-seconds hidden">s</span>
+      <span class="timer-ago hidden">&nbsp;&nbsp;&nbsp;ago</span>
     </div>
     
     <div class="three">
@@ -56,8 +57,10 @@
 		
 		if(positive > 0) {
 			$('#timer-text').html("Your next class starts in");
+			$('.timer-ago').addClass('hidden');
 		} else {
 			$('#timer-text').html("Your class started");
+			$('.timer-ago').removeClass('hidden');
 		}
 
 
@@ -93,21 +96,22 @@
 		$('#seconds_d').html(seconds_d);
 		$('#seconds_u').html(seconds_u);
 
-		total_seconds = (total_seconds * positive)
-		
+
 		if(total_seconds < 600) {
-			if(total_seconds < 300) {
-				$('#enter-next-class-button').removeClass('hidden');
-			} else {
-				$('#enter-next-class-button').addClass('hidden');
-			}
 			$('.timer-seconds').removeClass('hidden');
 		} else {
-			$('#enter-next-class-button').addClass('hidden');
 			$('.timer-seconds').addClass('hidden');
 		}
+
+		total_seconds = (total_seconds * positive)
 		
-		var timer_size = 0;
+		if(total_seconds < 300) {
+			$('#enter-next-class-button').removeClass('hidden');
+		} else {
+			$('#enter-next-class-button').addClass('hidden');
+		}
+		
+		var timer_size = 10;
 		$('#timer-container').children().each(function() {
 		    timer_size += $(this).outerWidth( true );
 		});
