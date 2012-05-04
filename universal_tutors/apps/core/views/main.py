@@ -23,6 +23,9 @@ def _get_simple_results(data):
     q = data.get('text', None)
     what = data.get('what')
     sort = data.get('sort', None)
+    price = data.get('price', None)
+    day = data.get('price', None)
+    
     tutors = None
     if q:
         tutors = User.objects.select_related().filter(profile__type=UserProfile.TYPES.TUTOR)
@@ -40,6 +43,24 @@ def _get_simple_results(data):
                 tutors = tutors.order_by('-profile__avg_rate')
             elif sort == 'classes':
                 tutors = tutors.order_by('-profile__classes_given')
+                
+        if price:
+
+            price = int(price)
+            if price == 1:
+                tutors = tutors.filter(profile__max_credits__lt=5)
+            elif price == 2:
+                tutors = tutors.filter(profile__max_credits__gte=5, profile__max_credits__lt=10)
+            elif price == 3:
+                tutors = tutors.filter(profile__max_credits__gte=10, profile__max_credits__lt=15)
+            elif price == 4:
+                tutors = tutors.filter(profile__max_credits__gte=15, profile__max_credits__lt=20)
+            elif price == 5:
+                tutors = tutors.filter(profile__max_credits__gte=20, profile__max_credits__lt=25)
+            elif price == 6:
+                tutors = tutors.filter(profile__max_credits__gte=25, profile__max_credits__lt=30)
+            elif price == 7:
+                tutors = tutors.filter(profile__max_credits__gte=30)
     return tutors
         
 
@@ -49,8 +70,7 @@ def search(request):
 
     if request.GET:
         search_type = request.GET.get('search')
-        if search_type == 'simple':
-            tutors = _get_simple_results(request.GET)
+        tutors = _get_simple_results(request.GET)
 
     query = ''
     query_type = ''
