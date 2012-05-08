@@ -11,6 +11,7 @@
     </div>
   </div>
   
+  {% if user == person %}
   <form id="modal-message-form" class="nice" method="post">
   	{% csrf_token %}
     <div class="row">
@@ -23,6 +24,7 @@
       </div>
     </div>
   </form>
+  {% endif %}
 
   <a class="close-reveal-modal" onclick="clearTimeout(modal_message_timeout);">&#215;</a>
 </div>
@@ -37,7 +39,7 @@
 		modal_message_to = to;
 		modal_message_class = class_;
 		
-		var url = '{% url view_modal_messages %}'+ to +'/';
+		var url = '{% if person %}{% url view_modal_messages person.username %}{% else %}{% url view_modal_messages user.username %}{% endif %}'+ to +'/';
 		url += class_ ? class_+'/' : '';
 		
 		if(!force_stay) {

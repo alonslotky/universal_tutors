@@ -642,3 +642,44 @@ class NewsletterSubscription(BaseModel):
         super(self.__class__, self).save()
         if new_subscription:
             self.send_verify_email()
+
+
+class Referral(BaseModel):
+    user = models.ForeignKey(User, related_name='referrals')
+    name = models.CharField(max_length=30)
+    email = models.EmailField()
+    key = models.CharField(max_length=30, unique=True, db_index=True)
+    used = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        is_new = not self.id
+        if is_new:
+            safe = False
+            while True:
+                self.key = ''.join(random.choice(string.ascii_letters + string.digits) for x in xrange(30))
+                if not Referral.objects.filter(key = self.key):
+                    break
+        
+        super(self.__class__, self).save(*args, **kwargs)
+        if is_new:
+            self.send_notification()
+
+    def send_notification(self):
+        subject = '%s referral Universal Tutors to you' % self.user.get_full_name()
+        html = render_to_string('emails/referral.html', {
+            'sender': self.user,
+            'name': self.name,
+            'key': self.key,
+        })
+
+        if subject and html:            
+            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+            to = ['%s <%s>' % (self.name, self.email)]
+                    
+            email_message = EmailMessage(subject, html, sender, to)
+            email_message.content_subtype = 'html'
+            
+            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
+            t.setDaemon(True)
+            t.start()
+

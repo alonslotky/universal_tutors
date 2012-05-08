@@ -60,7 +60,9 @@ urlpatterns += patterns('apps.profile.views.ajax',
 # Students
 urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)student/classes/$', 'student_classes', {}, name = "student_classes"),
+    url(r'^(?i)student/classes/(?P<username>[\w\-\_]+)/$', 'student_classes', {}, name = "student_classes"),
     url(r'^(?i)student/messages/$', 'student_messages', {}, name = "student_messages"),
+    url(r'^(?i)student/messages/(?P<username>[\w\-\_]+)/$', 'student_messages', {}, name = "student_messages"),
 )
 
 urlpatterns += patterns('apps.profile.views.ajax',
@@ -85,15 +87,18 @@ urlpatterns += patterns('apps.profile.views.main',
 urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)add_newsletter_subscription/$', 'add_newsletter_subscription', name = "add_newsletter_subscription"),
 
-    url(r'^(?i)view_modal_messages/$', 'view_modal_messages', {}, name = "view_modal_messages"),
-    url(r'^(?i)view_modal_messages/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
-    url(r'^(?i)view_modal_messages/(?P<to>\d+)/(?P<class_id>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/(?P<to>\d+)/(?P<class_id>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
 
     url(r'^(?i)send_modal_message/$', 'send_modal_message', {}, name = "send_modal_message"),
     url(r'^(?i)send_modal_message/(?P<to>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
     url(r'^(?i)send_modal_message/(?P<to>\d+)/(?P<class_id>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
 
     url(r'^(?i)parent/add_child/$', 'add_child', {}, name = "add_child"),
+
+    url(r'^(?i)referral-friend/$', 'referral_friend', {}, name = "referral_friend"),
 )
 
 

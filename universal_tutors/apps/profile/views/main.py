@@ -35,6 +35,7 @@ def profile(request, username=None):
         raise http.Http404()
 
     profile = person.profile
+    parent = profile.parent if profile.type == profile.TYPES.UNDER16 else None
 
     if profile.type == profile.TYPES.TUTOR:
         template = 'profile/tutor/profile.html'
@@ -50,6 +51,7 @@ def profile(request, username=None):
         'person': person,
         'profile': profile,
         'TEMPLATE': template,
+        'parent': parent,
     }
 
 
@@ -218,14 +220,26 @@ def edit_student_profile(request):
 @login_required
 @over16_required()
 @main_render(template='profile/student/classes.html')
-def student_classes(request):
+def student_classes(request, username=None):
     """
     view my recent activity
     """
+
     user = request.user
-    profile = user.profile
+
+    if username:
+        person = get_object_or_404(User, username = username)
+        if person != user and person.profile.parent != user:
+            raise http.Http404()
+    elif user.is_authenticated():
+        person = user
+    else:
+        raise http.Http404()
+
+    profile = person.profile
 
     return {
+        'person': person,
         'profile':profile,
     }
 
@@ -233,16 +247,28 @@ def student_classes(request):
 @login_required
 @over16_required()
 @main_render(template='profile/student/messages.html')
-def student_messages(request):
+def student_messages(request, username=None):
     """
     view my recent activity
     """
+
     user = request.user
 
-    usermessages = User.objects.select_related().filter(sent_messages__to = user).distinct()
+    if username:
+        person = get_object_or_404(User, username = username)
+    elif user.is_authenticated():
+        person = user
+    else:
+        raise http.Http404()
+
+    profile = user.profile
+
+    usermessages = User.objects.select_related().filter(sent_messages__to = person).distinct()
 
     return {
         'usermessages':usermessages,
+        'person': person,
+        'profile': profile,
     }
     
 @login_required
@@ -382,3 +408,4 @@ def history(request, username=None):
         person = request.user
 
     return { 'person': person }
+

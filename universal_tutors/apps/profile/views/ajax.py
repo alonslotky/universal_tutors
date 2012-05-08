@@ -50,8 +50,18 @@ def add_newsletter_subscription(request):
 
 
 @login_required
-def view_modal_messages(request, to, class_id=0):
+def view_modal_messages(request, username, to, class_id=0):
     user = request.user
+
+    if username:
+        person = get_object_or_404(User, username = username)
+        if person != user and person.profile.parent != user:
+            raise http.Http404()
+    elif user.is_authenticated():
+        person = user
+    else:
+        raise http.Http404()
+        
     to = get_object_or_404(User, id=to)
     class_id = int(class_id)
     
@@ -61,9 +71,9 @@ def view_modal_messages(request, to, class_id=0):
         except Class.DoesNotExist:
             raise http.Http404()
     
-        messages = Message.objects.select_related().filter(Q(related_class=class_), Q(user=user, to=to) | Q(user=to, to=user))
+        messages = Message.objects.select_related().filter(Q(related_class=class_), Q(user=person, to=to) | Q(user=to, to=person))
     else:
-        messages = Message.objects.select_related().filter(Q(user=user, to=to) | Q(user=to, to=user))
+        messages = Message.objects.select_related().filter(Q(user=person, to=to) | Q(user=to, to=person))
 
     messages.filter(to=user).update(read=True)
 
@@ -102,7 +112,7 @@ def send_modal_message(request, to, class_id=0):
     else:
         Message.objects.create(user=user, to=to, message=text)
     
-    return http.HttpResponseRedirect(reverse('view_modal_messages', args=[to.id, class_id]))
+    return http.HttpResponseRedirect(reverse('view_modal_messages', args=[user.username, to.id, class_id]))
 
 
 @login_required
@@ -264,6 +274,25 @@ def remove_interest(request, subject_id):
         pass
     
     return http.HttpResponse('done')
+
+
+@login_required
+def referral_friend(request):
+    user = request.user
+
+    if request.method != 'POST':
+        raise http.Http404()
+
+    form = ReferralForm(request.POST)
+    if form.is_valid():
+        referral = form.save(commit = False)
+        referral.user = user
+        referral.save()
+        
+        return http.HttpResponse('done')
+    
+    return http.HttpResponse('error')
+
 
 
 #### AVAILABILITY ###########################################################
@@ -506,6 +535,7 @@ def send_parent_request(request):
                                [email])
             msg.content_subtype = 'html'
             msg.send()
+            
             return http.HttpResponse("Email sent successfully");
         except:
             return http.HttpResponseServerError("An error occurred while sending the email.");
@@ -550,7 +580,6 @@ def ajax_book_class(request, username, date):
     except IndexError:
         raise http.Http404()
 
-    
     return {
         'person': tutor,
         'profile': tutor.profile,
@@ -577,3 +606,4 @@ def add_credits(request, username=None):
     profile.topup_account(30)
     
     return http.HttpResponse('done')
+
