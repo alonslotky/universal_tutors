@@ -1,0 +1,72 @@
+{% load fb_versions tz %}
+  
+  <li id="referralTab">
+    <h2 class="clear">Referral a Friend</h2>
+    
+      <div id="id_referral_name_error" class="formError hidden">This field is required</div>
+	  <div class="row">
+	    <div class="four columns">
+	      <label>Name</label>
+	    </div>
+	    <div class="eight columns">
+	      <input id="id_referral_name" name="name" type="text" class="input-text stretch" placeholder="Name" />
+	    </div>
+	  </div>
+	  
+      <div id="id_referral_email_error" class="formError hidden">This field is required</div>
+	  <div class="row">
+	    <div class="four columns">
+	      <label>Email</label>
+	    </div>
+	    <div class="eight columns">
+	      <input id="id_referral_email" name="email" type="text" class="input-text stretch" placeholder="Email" />
+	    </div>
+	  </div>
+	  <div class="row">
+	    <div class="four columns">&nbsp;</div>
+	    <div class="eight columns">
+	        <div class="button"><input id="id_referral_button" type="button" class="icon thumb-up" value="Send"></div>
+	  	</div>
+	  </div>
+  </li>
+  <script type="text/javascript">
+  	$('#id_referral_button').click(function(){
+  		var name = $('#id_referral_name').val();
+  		var email = $('#id_referral_email').val();
+  		
+  		if(name) {
+  			$('#id_referral_name_error').addClass('hidden');
+  		} else {
+  			$('#id_referral_email_error').html('This field is required');
+  			$('#id_referral_name_error').removeClass('hidden');
+  		}
+  		
+  		if(email) {
+  			$('#id_referral_email_error').addClass('hidden');
+  		} else {
+  			$('#id_referral_email_error').html('This field is required');
+  			$('#id_referral_email_error').removeClass('hidden');
+  		}
+  		
+  		if(name && email) {
+  			$.ajax({
+  				type: 'post',
+  				data: {
+  					'name': name, 
+  					'email': email,
+  					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+  				},
+  				url: '{% url referral_friend %}',
+  				success: function(response) {
+  					if(response!='done') {
+			  			$('#id_referral_email_error').html('Please insert a valid email');
+			  			$('#id_referral_email_error').removeClass('hidden');
+  					} else {
+			  			$('#id_referral_name_error').html('Congratulations! Your email has been sent.');
+			  			$('#id_referral_name_error').removeClass('hidden');
+  					}
+  				}
+  			});
+  		}
+  	});
+  </script>

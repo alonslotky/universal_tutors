@@ -262,3 +262,11 @@ class ProfilePhotoForm(forms.Form):
     helper.add_input(button)
     submit = Submit('submit','Import', css_class='primaryAction')
     helper.add_input(submit)
+
+
+class ReferralForm(forms.ModelForm):
+    class Meta:
+        model = Referral
+        fields = ('name', 'email')
+
+    

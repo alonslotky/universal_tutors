@@ -19,6 +19,8 @@
     width: 261px;
 }
 #signup-form2 .facebook_connect_link { margin-left: 120px; }
+#signup-form2 .dropdown { width: 220px !important; height: 70px !important; }
+#signup-form2 .dropdown ul { width: 218px !important; }
 
 .formError { padding: 0px; margin: 10px 0 0 0; color: #900; }
 .formError ul, .formError li { padding: 0px !important; margin: 0px !important; }

@@ -28,18 +28,26 @@
           <div class="row">&nbsp;</div>
           <div class="row">
             <div class="nine columns">
-              <label>Children</br></label>
-              	{% for item in user.children.all %}
+	          <table class="stretch">
+	            <tr>
+	              <th>Children</th>
+	              <th>Classes</th>
+	              <th>Messages</th>
+	            </tr>
+              	{% for item in person.children.all %}
               	{% with item.child as child %}
-	              <div class="row">
-	                <div class="four columns tags">
-	                  <a href="{% url profile child.username %}" class="tag">{{child.get_full_name}}</a>
-	                </div>
-	              </div>
+		            <tr>
+		              <td><a href="{% url profile child.username %}">{{child.get_full_name}}</a></td>
+		              <td><a href="{% url student_classes child.username %}">view classes</a></td>
+		              <td><a href="{% url student_messages child.username %}">view messages</a></td>
+		            </tr>
 	            {% endwith %}
 	            {% empty %}
-	            <div class="row">No children has been added.</div>
+		            <tr>
+		              <td>No children has been added.</td>
+		            </tr>
                	{% endfor %}
+	          </table>
             </div>
             <div class="three columns action">
             {% if owner %}

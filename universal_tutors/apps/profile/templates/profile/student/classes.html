@@ -8,12 +8,12 @@
 {% block content %}
 
 <section class="blue feature-box"><div class="inner">
-      <h1>Classes <span>Upcoming and previously taken classes.</span></h1>
+      <h1>{% if user != person %}{{person.get_full_name}}'s {% endif %}Classes <span>Upcoming and previously taken classes.</span></h1>
 </div></section>
       
       {% include 'profile/fragments/_timer.html' %}
       
-      {% for class in user_profile.get_classes_as_student %}
+      {% for class in profile.get_classes_as_student %}
       {% with class.tutor as tutor %}
       {% with tutor.profile as tutor_profile %}
       <article class="{% if class.status != class.STATUS_TYPES.BOOKED %}faded{% endif %}">
@@ -40,15 +40,17 @@
           <div class="two columns action">
             <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}}, {{class.id}})">View Messages</a>
           	{% if class.status == class.STATUS_TYPES.BOOKED %}
-            <a href="javascript" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});">Cancel Class</a>
+            	{% if user == person %}<a href="javascript" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});">Cancel Class</a>{% endif %}
 			{% else %}
-				{% with class.tutor_rating as tutor_rating %}
-					{% if tutor_rating %}
-		            <a href="javascript:;" class="view-rating" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}}, "{{tutor_rating.text}}", {{tutor_rating.rate}});'>View Tutor Rating</a>
-					{% else %}
-		            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}});'>Rate Tutor</a>
-		            {% endif %}
-				{% endwith %}
+				{% if user == person %}
+					{% with class.tutor_rating as tutor_rating %}
+						{% if tutor_rating %}
+			            <a href="javascript:;" class="view-rating" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}}, "{{tutor_rating.text}}", {{tutor_rating.rate}});'>View Tutor Rating</a>
+						{% else %}
+			            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}});'>Rate Tutor</a>
+			            {% endif %}
+					{% endwith %}
+				{% endif %}
 				
 	            {% if class.status == class.STATUS_TYPES.DONE %}
 					{% with class.student_rating as rating %}
@@ -61,7 +63,10 @@
 			            <a class="no-feedback">Waiting for feedback</a>
 			            {% endif %}
 					{% endwith %}
+					
+					{% if user == person %}
 		            <a href="#" class="class-material">Class Material</a>
+		            {% endif %}
 	 			{% endif %}
  			{% endif %}
           </div>
