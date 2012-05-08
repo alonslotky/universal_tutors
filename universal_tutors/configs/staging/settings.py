@@ -16,7 +16,7 @@ DATABASES = {
 ACCOUNT_ACTIVATION_ADMINS = ['ben@rawjam.co.uk',]
 
 # Project settings and active names
-PROJECT_SITE_DOMAIN = 'universal_tutors.rawjam.co.uk'
+PROJECT_SITE_DOMAIN = 'universaltutors.rawjam.co.uk'
 
 # Caching
 CACHE_BACKEND = 'johnny.backends.memcached://127.0.0.1:11211'
