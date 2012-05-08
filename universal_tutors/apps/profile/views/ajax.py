@@ -535,8 +535,8 @@ def add_child(request):
 
 
 @login_required
-@main_render(template='profile/tutor/book_class/_weekday_calendar.html')
-def book_class(request, username, date):
+@main_render('profile/tutor/book_class/_weekday_calendar.html')
+def ajax_book_class(request, username, date):
     """
     view my recent activity
     """
