@@ -240,21 +240,20 @@ class Class(BaseModel):
                 'tutor': tutor,
             })
             
-            if key:
-                for referral in Referral.objects.selected_related().filter(Q(key=tutor_profile.key) | Q(key=self.user.profile.key), Q(used=False)):
-                    user = referral.user
-                    profile = user.profile
-                    count = user.referrals.filter(user=user, done=True).count()
-                    if count < 3:
-                        if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
-                            profile.credit += 5
-                            profile.save()
-                            referral.used = True 
-                        elif profile.type == profile.TYPES.TUTOR:
-                            referral.activated = True
-                    else:
-                       referral.used = True 
-                    referral.save()
+            for referral in Referral.objects.selected_related().filter(Q(key=tutor_profile.key) | Q(key=self.user.profile.key), Q(used=False)):
+                user = referral.user
+                profile = user.profile
+                count = user.referrals.filter(user=user, done=True).count()
+                if count < 3:
+                    if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
+                        profile.credit += 5
+                        profile.save()
+                        referral.used = True 
+                    elif profile.type == profile.TYPES.TUTOR:
+                        referral.activated = True
+                else:
+                   referral.used = True 
+                referral.save()
 
     def book(self):
         tutor = self.tutor
