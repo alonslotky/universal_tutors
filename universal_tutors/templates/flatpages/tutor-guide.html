@@ -1,0 +1,122 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Home{% endblock %}
+{% block body_class %}marketing tutors{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box"><div class="inner">
+
+		<h1><span>An Overview of Universal Tutors </span>For Tutors</h1>
+
+		<div class="feature-black">
+  			<div class="feature-text">
+    			<h3>Some text about generally how amazing this site is, and how it will change lives, etc.</h3>
+  			</div>
+		</div>
+  
+  	</div></section>
+  
+  	<section>
+		<div class="row clear">
+  			<div class="eight columns">
+    			<h3>Acquiring Classes</h3>
+    			<p>Creating a basic tutor account is a simple process. You just need to provide your basic background details, profile picture, tutoring information, and Paypal account details to receive payment.</p>
+  			</div>
+
+  			<div class="four columns">
+ 		 	</div>
+		</div>
+
+		<div class="row">
+  			<div class="four columns">
+    			<img src="http://placehold.it/500x230" alt="Screenshot">
+    			<h4>Enhance Your Profile</h4>
+    			<p>To increase your chances of attracting students it is necessary to complete as much of the profile as possible including verifying your educational and professional background, and creating your 30 second video introduction.</p>
+  			</div>
+  
+          	<div class="four columns">
+            	<img src="http://placehold.it/500x230" alt="Screenshot">
+            	<h4>Engage With Students</h4>
+            	<p>Ensure that whenever you are contacted by a student either with a class request or with a message, you are quick to respond. A high level of engagement will ensure that contact is converted into classes.</p>
+          	</div>
+          
+          	<div class="four columns">
+            	<img src="http://placehold.it/500x230" alt="Screenshot">
+            	<h4>Schedule a Class</h4>
+            	<p>If you receive a class invite, once this is accepted the class will automatically drop into your class schedule in your dashboard area.</p>
+          	</div>
+		</div>
+	</section>
+  
+  	<a class="squeezemein button" href="#" data-reveal-id="modal-video"><span>Get a Tour of the Classroom</span></a>
+  
+    <section class="blue"><div class="inner">
+		<div class="row space">
+      		<div class="eight columns">
+       			<h3>Giving a Class</h3>
+        		<p>You will be reminded by email that you’re class is due to start as well as seeing a countdown to your class in you’re dashboard. You can then click on the link in this banner to enter into your private classroom.</p>
+      		</div>
+      
+      		<div class="four columns">
+      		</div>
+    	</div>
+    
+        <div class="row">
+          	<div class="four columns">
+            	<img src="http://placehold.it/500x230" alt="Screenshot">
+            	<h4>Check Out the Class</h4>
+            	<p>We give you 5 minutes at the start of a class to check that the tutor is right for you and that you are getting exactly what you want. If for any reason you are not happy you can cancel the class at this stage at no cost.</p>
+          	</div>
+          
+          	<div class="four columns">
+            	<img src="http://placehold.it/500x230" alt="Screenshot">
+            	<h4>Video / Audio Chat</h4>
+            	<p>For each class you will have the option of using either Video or simply Audio to communicate. All you require is a functioning microphone for the latter and a webcam in addition for the former.</p>
+          	</div>
+          
+          	<div class="four columns">
+            	<img src="http://placehold.it/500x230" alt="Screenshot">
+            	<h4>Instant Messenger</h4>
+            	<p>This provides a further means of communication, for situations where you would prefer to communicate through typed messages.</p>
+          	</div>
+        </div>
+    
+        <div class="row">
+          	<div class="four columns">
+	            <img src="http://placehold.it/500x230" alt="Screenshot">
+	            <h4>File Sharing</h4>
+	            <p>Tutors and students are able to upload any file* or URL snapshot to the classroom and open them in the whiteboard. This enables tutors to use material such as exam papers or syllabuses to help facilitate an effective class.</p>
+         	 </div>
+          
+          	<div class="four columns">
+	            <img src="http://placehold.it/500x230" alt="Screenshot">
+	            <h4>The Whiteboard</h4>
+	            <p>This is the area where the class really takes place. Tutors and students can interact using shapes, text, drawing, mathematical equations and even an educational search engine (Wolfram Alpha).</p>
+          	</div>
+          
+          	<div class="four columns">
+	            <img src="http://placehold.it/500x230" alt="Screenshot">
+	            <h4>Wolfram Alpha</h4>
+	            <p>This new feature brings this leading educational search (answer) engine right into the classroom. This resource is another example of why Universal Tutors is the only choice for private tuition.</p>
+          	</div>
+        </div>
+  	</div></section>
+  
+  	{% if not user.is_authenticated %}
+  	<section>
+		<div class="row">
+          	<div class="seven columns centered center">
+	            <h2 class="tight"><span>Ready to give us a try?</span></h2>
+	            <a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Tutor Account</span></a>
+	            <p class="faded">If you're a tutor, <a href="{% url signup %}">sign up here</a>.</p>
+          	</div>
+    	</div>
+  	</section>
+  	{% endif %}
+
+	<div id="modal-video" class="reveal-modal video">
+  		<a class="close-reveal-modal">&#215;</a>
+	</div>
+{% endblock %}

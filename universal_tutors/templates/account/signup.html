@@ -68,8 +68,6 @@
             </div>
 		</div>
         {% endif %}
-
-		
 		
 		<div class="row">&nbsp;</div>
         {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
@@ -79,13 +77,37 @@
             </div>
 			<div class="nine columns">{{form.country}}</div>
 		</div>
+
+		<div class="row">&nbsp;</div>
+        {% if form.referral.errors %}<div class="formError">{{ form.referral.errors }}</div>{% endif %}
+		<div class="row">
+            <div class="three columns">            	
+				<label class="margin-top" for="location">Where did you know about us</label>
+            </div>
+			<div class="nine columns">{{form.referral}}</div>
+		</div>
+		<div class="row">
+            <div class="three columns">
+				<label class="margin-top" for="id_first_name">How</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_referral_other" name="referral_other" value="{{ form.referral_other.value }}" class="input-text oversize stretch" /></div>
+		</div>
+
+		<div class="row">&nbsp;</div>
+		<div class="row">
+            <div class="three columns">
+				<label class="margin-top" for="id_first_name">Referral key</label>
+            </div>
+			<div class="nine columns"><input type="text" id="id_referral_key" name="referral_key" value="{{ form.referral_key.value }}" class="input-text oversize stretch" /></div>
+		</div>
+		
 		<div class="row">&nbsp;</div>
 		<div class="row">
 			<div class="three columns">
   				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="{% if not child_creator %}Sign Up{% else %}Create{% endif %}"></div>
 			</div>			
 		</div>
-		
+
 		{% if not child_creator %}
 		<div class="row hidden">
 			{{form.date_of_birth}}
@@ -102,6 +124,7 @@
 	<script type="text/javascript">
 		$(window).ready(function(e){
 			appendCustomSelect($('#id_country'));
+			appendCustomSelect($('#id_referral'));
 		});
 		$('#signup-form2').submit(function(e){
 			e.preventDefault();
