@@ -130,6 +130,10 @@ class SignupForm(forms.ModelForm):
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
     type = forms.IntegerField(label=_('Type'),)
+    
+    referral = forms.ChoiceField(label=_('Referral'), choices=UserProfile.REFERRAL_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
+    referral_other = forms.CharField(required = False)
+    referral_key = forms.CharField(required = False)
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -167,6 +171,9 @@ class SignupForm(forms.ModelForm):
 
         profile = user.profile        
         profile.country = self.cleaned_data['country']
+        profile.referral = int(self.cleaned_data.get('referral', 0))
+        profile.other_referral = self.cleaned_data.get('referral_other', None)
+        profile.referral_key = self.cleaned_data.get('referral_key', None)
         if self.parent:
             user.parent_set.create(parent=self.parent, active=True)
             profile.type = profile.TYPES.UNDER16

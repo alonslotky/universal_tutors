@@ -218,10 +218,19 @@ class Class(BaseModel):
             super(self.__class__, self).save()
             rooms.edit(roomid=self.scribblar_id, locked='1')
 
-            from apps.profile.models import UserCreditMovement
+            from apps.profile.models import UserCreditMovement, Referral
+
             tutor = self.tutor
+            try:
+                referral = Referral.objects.filter(user = tutor, used=False, activated=True).latest('id')
+                referral.used = True
+                referral.save()
+                with_referral = True
+            except Referral.DoesNotExist:
+                with_referral = False
+                pass
             tutor_profile = tutor.profile
-            tutor_profile.income += self.earning_fee
+            tutor_profile.income += self.earning_fee if not with_referral else self.credit_fee
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count() 
             tutor_profile.save()
             tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee)
@@ -230,6 +239,22 @@ class Class(BaseModel):
                 'student': self.student,
                 'tutor': tutor,
             })
+            
+            if key:
+                for referral in Referral.objects.selected_related().filter(Q(key=tutor_profile.key) | Q(key=self.user.profile.key), Q(used=False)):
+                    user = referral.user
+                    profile = user.profile
+                    count = user.referrals.filter(user=user, done=True).count()
+                    if count < 3:
+                        if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
+                            profile.credit += 5
+                            profile.save()
+                            referral.used = True 
+                        elif profile.type == profile.TYPES.TUTOR:
+                            referral.activated = True
+                    else:
+                       referral.used = True 
+                    referral.save()
 
     def book(self):
         tutor = self.tutor

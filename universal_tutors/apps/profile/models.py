@@ -49,10 +49,11 @@ class UserProfile(BaseModel):
     ))
 
     REFERRAL_TYPES = get_namedtuple_choices('USER_REFERRAL_TYPES', (
-        (0, 'NONE', 'None'),
+        (0, 'SEARCH', 'Searching'),
         (1, 'FACEBOOK', 'Facebook'),
         (2, 'TWITTER', 'Twitter'),
         (3, 'GOOGLE', 'Google+'),
+        (4, 'FRIEND', 'A friend'),
         (20, 'OTHER', 'Other'),
     ))
 
@@ -94,6 +95,8 @@ class UserProfile(BaseModel):
     income = models.FloatField(default=0)
 
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
+    other_referral = models.CharField(max_length=200, null=True, blank=True)
+    referral_key = models.CharField(max_length=30, null=True, blank=True)
     
     crb = models.BooleanField(default=False)
     crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
@@ -650,6 +653,7 @@ class Referral(BaseModel):
     email = models.EmailField()
     key = models.CharField(max_length=30, unique=True, db_index=True)
     used = models.BooleanField(default=False)
+    activated = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         is_new = not self.id
