@@ -15,9 +15,11 @@ from allauth.account.utils import user_display, perform_login, send_email_confir
 from allauth.utils import email_address_exists
 
 from apps.classes.models import ClassSubject
+from apps.common.utils.form_fields import ListField
 from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
-        
+
+
 
 class SubjectField(forms.CharField):
     def to_python(self, value):
@@ -129,11 +131,13 @@ class SignupForm(forms.ModelForm):
 
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
-    type = forms.IntegerField(label=_('Type'),)
+
+    gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.common_timezones], widget=forms.Select(attrs={'class': 'stretch'}))
     
     referral = forms.ChoiceField(label=_('Referral'), choices=UserProfile.REFERRAL_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
-    referral_other = forms.CharField(required = False)
-    referral_key = forms.CharField(required = False)
+    referral_other = forms.CharField(required = False, initial='')
+    referral_key = forms.CharField(required = False, initial='')
 
     def clean_username(self):
         username = self.cleaned_data['username']
@@ -174,12 +178,14 @@ class SignupForm(forms.ModelForm):
         profile.referral = int(self.cleaned_data.get('referral', 0))
         profile.other_referral = self.cleaned_data.get('referral_other', None)
         profile.referral_key = self.cleaned_data.get('referral_key', None)
+        profile.gender = self.cleaned_data.get('gender', 0)
+        profile.timezone = self.cleaned_data.get('timezone', None)
+        
         if self.parent:
             user.parent_set.create(parent=self.parent, active=True)
             profile.type = profile.TYPES.UNDER16
         else:
             profile.date_of_birth = self.cleaned_data['date_of_birth']
-            profile.type = self.cleaned_data['type']
         profile.crb = self.cleaned_data.get('crb', False)
         profile.save()
         
@@ -197,14 +203,55 @@ class SignupForm(forms.ModelForm):
         
 
 class StudentSignupForm(SignupForm):
+    subjects = ListField(required = False)
+    new_subjects = ListField(required = False)
+
     def __init__(self, *args, **kwargs):
         super(StudentSignupForm, self).__init__(*args, **kwargs)
-        self.fields['type'].initial = '2'
         
+    def save(self, *args, **kwargs):
+        user = super(StudentSignupForm, self).save(*args, **kwargs)
+        profile = user.profile
+
+        list_subjects = self.cleaned_data['subjects']
+        list_new_subjects = self.cleaned_data['new_subjects']
+
+        profile.interests.clear()
+        for id in list_subjects:
+            try:
+                subject = ClassSubject.objects.get(id = id)
+                profile.interests.add(subject)
+            except ClassSubject.DoesNotExist:
+                pass
+                    
+        for title in list_new_subjects:
+            try:
+                subject = ClassSubject.objects.get(subject__iexact = title)
+            except ClassSubject.DoesNotExist:
+                subject = ClassSubject(subject = title)
+            subject.save()
+            profile.interests.add(subject)
+            
+        profile.type = profile.TYPES.STUDENT
+        profile.save()
+        
+        return user
+
+    
 class ParentSignupForm(SignupForm):
+    about = forms.CharField(label=_('Description'), initial='')
+
     def __init__(self, *args, **kwargs):
         super(ParentSignupForm, self).__init__(*args, **kwargs)
-        self.fields['type'].initial = '3'
+
+    def save(self, *args, **kwargs):
+        user = super(ParentSignupForm, self).save(*args, **kwargs)
+        profile = user.profile
+        profile.about = self.cleaned_data.get('about', '')
+        profile.type = profile.TYPES.PARENT
+        profile.save()
+        
+        return user
 
 
 class TutorSignupForm(SignupForm):
@@ -212,11 +259,15 @@ class TutorSignupForm(SignupForm):
     
     def __init__(self, *args, **kwargs):
         super(TutorSignupForm, self).__init__(*args, **kwargs)
-        self.fields['type'].initial = '1'
+
+    def save(self, *args, **kwargs):
+        user = super(TutorSignupForm, self).save(*args, **kwargs)
+        profile = user.profile
+        profile.type = profile.TYPES.TUTOR
+        profile.save()
+        
+        return user
     
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email', )
 
 class NewsletterSubscribeForm(forms.Form):
     email = forms.EmailField(required=True)

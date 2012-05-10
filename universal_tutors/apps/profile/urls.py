@@ -5,6 +5,8 @@ from django.contrib import admin
 
 # Registration/Login views
 urlpatterns = patterns('apps.profile.views.login',
+    url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
+    url(r"^(?i)account/signup/student/$", 'student_signup',  name="student_signup"),
     url(r"^(?i)account/signup/$", 'signup',  name="signup"),
     url(r"^(?i)account/signin/$", 'signin', name="login"),
     url(r"^(?i)account/logout/$", 'logout_view', name="logout"),

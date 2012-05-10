@@ -1,0 +1,253 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Home{% endblock %}
+{% block body_class %}students{% endblock %}
+
+{% block content %}
+  <section class="blue feature-box"><div class="inner">
+    <h1>Sign Up</h1>
+  </div></section>
+  
+  <section>
+
+    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
+      <div class="row">
+        <div class="twelve columns">
+          <h3>Personal Details</h3>
+        </div>
+      </div>
+    
+      <div class="row">
+        <div class="eight columns">
+          <label>Name</label>
+          
+         {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
+         {% if form.last_name.errors %}<div class="formError">Last name is required</div>{% endif %}
+          <div class="row space">
+            <div class="six columns">
+              <input name="first_name" type="text" class="input-text" placeholder="First Name" value="{{form.first_name.value}}">
+            </div>
+            <div class="six columns">
+              <input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{form.last_name.value}}">
+            </div>
+          </div>
+          
+          <div class="row space">
+            <div class="three columns">
+              <label>Gender</label>
+            </div>
+            <div class="nine columns">
+              {{form.gender}}
+            </div>
+          </div>
+          
+          <div class="row space">
+            <div class="three columns">
+              <label>D.O.B</label>
+            </div>
+            
+          {% if form.date_of_birth.errors %}<div class="formError">{{ form.date_of_birth.errors }}</div>{% endif %}
+            <div class="nine columns">
+              <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
+              <div class="row">
+                <div class="four columns phone-one">
+                  <select id="id_dob_day" class="stretch">
+                  </select>
+                </div>
+                <div class="four columns phone-one">
+                  <select id="id_dob_month" class="stretch">
+                  </select>
+                </div>
+                <div class="four columns phone-two">
+                  <select id="id_dob_year" class="stretch">
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>Country</label>
+            </div>
+            <div class="nine columns phone-three">
+              {{form.country}}
+            </div>  
+          </div>
+
+          {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>Timezone</label>
+            </div>
+            <div class="nine columns phone-three">
+              	{{form.timezone}}
+            </div>  
+          </div>
+          
+		  {% if form.username.errors %}<div class="formError">{{ form.username.errors }}</div>{% endif %}
+          <div class="row space">
+            <div class="three columns">
+              <label>Username</label>
+            </div>
+            <div class="nine columns">
+              <input type="text" id="id_username" name="username" value="{{ form.username.value }}" class="input-text oversize stretch" />
+            </div>
+          </div>
+          
+		  {% if form.email.errors %}<div class="formError">{{ form.email.errors }}</div>{% endif %}
+          <div class="row space">
+            <div class="three columns">
+              <label>Email</label>
+            </div>
+            <div class="nine columns">
+              <input type="text" id="id_email" name="email" value="{{ form.email.value }}" class="input-text oversize stretch" />
+            </div>
+          </div>
+
+		  {% if form.password1.errors %}<div class="formError">{{ form.password1.errors }}</div>{% endif %}
+		  {% if form.password2.errors %}<div class="formError">{{ form.password2.errors }}</div>{% endif %}
+          <div class="row space">
+            <div class="three columns">
+              <label>Account Password</label>
+            </div>
+            <div class="four columns">
+              <input type="password" id="id_password1" name="password1" value="" class="input-text oversize stretch" />
+            </div>
+            <div class="four columns">
+              <input type="password" id="id_password2" name="password2" value="" class="input-text oversize stretch" />
+            </div>
+          </div>
+          
+          <hr class="inside">
+
+	      <div class="row">
+	        <div class="twelve columns">
+	          <h3>Referral</h3>
+	        </div>
+	      </div>
+
+          {% if form.referral.errors %}<div class="formError">{{ form.referral.errors }}</div>{% endif %}
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>How did you know about us?</label>
+            </div>
+            <div class="nine columns phone-three">
+              	{{form.referral}}
+            </div>  
+          </div>
+
+		  {% if form.referral_other.errors %}<div class="formError">{{ form.referral_other.errors }}</div>{% endif %}
+          <div id="id_div_referral_other" class="row space hidden">
+            <div class="three columns">
+              <label>Other option</label>
+            </div>
+            <div class="nine columns">
+              <input type="text" id="id_referral_other" name="referral_other" value="{% if form.referral_other.value %}{{ form.referral_other.value }}{% endif %}" class="input-text oversize stretch" />
+            </div>
+          </div>
+          
+		  {% if form.referral_key.errors %}<div class="formError">{{ form.referral_key.errors }}</div>{% endif %}
+          <div class="row space">
+            <div class="three columns">
+              <label>Referral Key</label>
+            </div>
+            <div class="nine columns">
+              <input type="text" id="id_referral_key" name="referral_key" value="{% if form.referral_key.value %}{{ form.referral_key.value }}{% endif %}" class="input-text oversize stretch" />
+            </div>
+          </div>
+          
+          <hr class="inside">
+          
+          <div class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
+          
+        </div>
+        
+        <div class="four columns photo">
+          <img id="id_image_preview" src="http://placehold.it/175x175" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
+          <div><input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40"></div>
+        </div>
+        
+      </div>
+    
+    </form>
+  </section>
+  
+<script type="text/javascript">
+	var today = new Date();
+	var today_year = today.getFullYear();
+	
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+	function getQueryVariable(variable)
+	{
+	       var query = window.location.search.substring(1);
+	       var vars = query.split("&");
+	       for (var i=0;i<vars.length;i++) {
+	               var pair = vars[i].split("=");
+	               if(pair[0] == variable){return pair[1];}
+	       }
+	       return '';
+	}
+	
+	var dob_date = getQueryVariable('date');
+	dob_date = dob_date.split('-');
+	
+	var dob_year = parseInt(dob_date[0]);
+	var dob_month = parseInt(dob_date[1]);
+	var dob_day = parseInt(dob_date[2]);
+
+	for(i=1; i<=31; i++)
+		$('#id_dob_day').append('<option value="'+ i +'" '+ (i==dob_day?'selected=selected':'') +'>'+ i +'</option>');
+
+	for(i=0; i<months.length; i++)
+		$('#id_dob_month').append('<option value="'+ (i+1) +'" '+ (i==dob_month-1?'selected=selected':'') +'>'+ months[i] +'</option>');
+
+	for(i=today_year; i>today_year-100; i--)
+		$('#id_dob_year').append('<option value="'+ i +'" '+ (i==dob_year?'selected=selected':'') +'>'+ i +'</option>');
+		
+	$('.signup_dob2').change(function(e){
+		check_over16_2();
+	});
+	
+	$('#student-signup-form').submit(function(){
+		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
+	});
+		
+	var check_over16_2 = function(){
+		var day = parseInt($('#id_dob_day').val());
+		var month = parseInt($('#id_dob_month').val());
+		var year = parseInt($('#id_dob_year').val());
+		var date = new Date(year, month-1, day);
+		var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
+		var input_date = year +'-'+ month +'-'+ day;
+
+		if(str_date == input_date) {			
+			var age_date = new Date(year+16, month, day);
+			var today = new Date();
+			
+			if(today >= age_date) {
+				$('#model-signup-button').removeClass('hidden');
+				$('#model-signup-under16-container2').addClass('hidden');
+				return true;
+			} else {
+				$('#model-signup-button').addClass('hidden');
+				$('#model-signup-under16-container2').removeClass('hidden');
+				return false;
+			}
+		}
+		
+		return false;
+	}
+	
+	$('#student-signup-form').submit(function(e){
+		if(!check_over16_2()){
+			e.preventDefault();
+		}
+	});
+</script>
+{% endblock %}

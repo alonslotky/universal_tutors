@@ -22,6 +22,20 @@
 #signup-form2 .dropdown { width: 220px !important; }
 #signup-form2 .dropdown ul { width: 218px !important; }
 
+.ac_item-container {
+    background: url("../images/shared/tag.jpg") repeat-x scroll 0 0 transparent;
+    border: 1px solid #55AE40;
+    border-radius: 30px 30px 30px 30px;
+    color: #FFFFFF;
+    display: block;
+    margin: 0 0 2px;
+    padding: 3px 20px;
+    text-shadow: 0 -1px 0 #56B142;
+    overflow: auto;
+}
+.ac_item-text { float: left; }
+.ac_item-delete { float: right; cursor: pointer; }
+
 .formError { padding: 0px; margin: 10px 0 0 0; color: #900; }
 .formError ul, .formError li { padding: 0px !important; margin: 0px !important; }
 label.margin-top { margin: 5px 0 0 0; }
