@@ -7,6 +7,7 @@ from django.contrib import admin
 urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
     url(r"^(?i)account/signup/student/$", 'student_signup',  name="student_signup"),
+    url(r"^(?i)account/signup/parent/$", 'parent_signup',  name="parent_signup"),
     url(r"^(?i)account/signup/$", 'signup',  name="signup"),
     url(r"^(?i)account/signin/$", 'signin', name="login"),
     url(r"^(?i)account/logout/$", 'logout_view', name="logout"),
@@ -83,6 +84,7 @@ urlpatterns += patterns('apps.profile.views.ajax',
 
 # Common
 urlpatterns += patterns('apps.profile.views.main',
+    url(r'^(?i)parent/add_child/$', 'add_child', {}, name = "add_child"),
     url(r'^(?i)newsletter_verify_email_address/(?P<key>[\w\-\_]+)/$', 'newsletter_verify_email_address', {}, name = "newsletter_verify_email_address"),
 )
 
@@ -98,7 +100,6 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)send_modal_message/(?P<to>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
     url(r'^(?i)send_modal_message/(?P<to>\d+)/(?P<class_id>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
 
-    url(r'^(?i)parent/add_child/$', 'add_child', {}, name = "add_child"),
 
     url(r'^(?i)referral-friend/$', 'referral_friend', {}, name = "referral_friend"),
 )

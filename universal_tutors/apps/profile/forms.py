@@ -199,7 +199,6 @@ class SignupForm(forms.ModelForm):
         super(SignupForm, self).__init__(*args, **kwargs)
         if self.parent:
             self.fields['date_of_birth'].required = False
-            self.fields['type'].required = False
         
 
 class StudentSignupForm(SignupForm):
@@ -237,17 +236,26 @@ class StudentSignupForm(SignupForm):
         
         return user
 
+
+class Under16SignupForm(StudentSignupForm):
+    def save(self, *args, **kwargs):
+        user = super(Under16SignupForm, self).save(*args, **kwargs)
+        profile = user.profile
+
+        profile.type = profile.TYPES.UNDER16
+        profile.save()
+        
+        return user
+
+
     
 class ParentSignupForm(SignupForm):
-    about = forms.CharField(label=_('Description'), initial='')
-
     def __init__(self, *args, **kwargs):
         super(ParentSignupForm, self).__init__(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         user = super(ParentSignupForm, self).save(*args, **kwargs)
         profile = user.profile
-        profile.about = self.cleaned_data.get('about', '')
         profile.type = profile.TYPES.PARENT
         profile.save()
         
@@ -255,6 +263,7 @@ class ParentSignupForm(SignupForm):
 
 
 class TutorSignupForm(SignupForm):
+    about = forms.CharField(label=_('Description'), initial='')
     crb = forms.BooleanField(label='I have a CRB', required=False)
     
     def __init__(self, *args, **kwargs):
@@ -263,6 +272,7 @@ class TutorSignupForm(SignupForm):
     def save(self, *args, **kwargs):
         user = super(TutorSignupForm, self).save(*args, **kwargs)
         profile = user.profile
+        profile.about = self.cleaned_data.get('about', '')
         profile.type = profile.TYPES.TUTOR
         profile.save()
         

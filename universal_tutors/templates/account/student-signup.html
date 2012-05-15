@@ -7,7 +7,7 @@
 
 {% block content %}
   <section class="blue feature-box"><div class="inner">
-    <h1>Sign Up</h1>
+    <h1>Sign Up as a Student</h1>
   </div></section>
   
   <section>
@@ -89,6 +89,14 @@
             </div>  
           </div>
           
+          <hr class="inside">
+
+	      <div class="row">
+	        <div class="twelve columns">
+	          <h3>Account details</h3>
+	        </div>
+	      </div>
+
 		  {% if form.username.errors %}<div class="formError">{{ form.username.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
@@ -142,7 +150,7 @@
           </div>
 
 		  {% if form.referral_other.errors %}<div class="formError">{{ form.referral_other.errors }}</div>{% endif %}
-          <div id="id_div_referral_other" class="row space hidden">
+          <div id="id_div_referral_other" class="row space {% if not form.referral_other.errors and not form.referral_other.value %}hidden{% endif %}">
             <div class="three columns">
               <label>Other option</label>
             </div>
@@ -309,5 +317,15 @@
 			e.preventDefault();
 		}
 	});
+
+	$('#id_referral').change(function(){
+		if( $(this).val() == '20' ) {
+			$('#id_div_referral_other').removeClass('hidden');
+		} else {
+			$('#id_div_referral_other').addClass('hidden');
+			$('#id_referral_other').val('');
+		}
+	});
+
 </script>
 {% endblock %}

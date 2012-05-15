@@ -23,7 +23,9 @@ from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time
 
 from apps.classes.models import Class, ClassSubject
+from apps.core.models import Currency
 from apps.classes.settings import *
+
 
 from scribblar import users
 
@@ -167,6 +169,14 @@ class UserProfile(BaseModel):
             )
                                 
         self.__update_location()
+
+    def delete(self):
+        try:
+            users.delete(user_id=self.scribblar_id)
+        except:
+            pass
+        
+        super(self.__class__, self).delete()
 
     def get_video_id(self):
         video_id = None
@@ -339,15 +349,25 @@ class UserProfile(BaseModel):
     def get_scribblar_id(self):
         if not self.scribblar_id:
             user = self.user
-            scribblar_user = users.add(
-                username = user.username,
-                firstname = user.first_name,
-                lastname = user.last_name,
-                email = user.email,
-                roleid = 50 if self.type == self.TYPES.TUTOR else 10,
-            )
-            self.scribblar_id = scribblar_user['userid']
-            super(self.__class__, self).save()
+            username = user.username
+            try:
+                scribblar_user = users.add(
+                    username = user.username,
+                    firstname = user.first_name,
+                    lastname = user.last_name,
+                    email = user.email,
+                    roleid = 50 if self.type == self.TYPES.TUTOR else 10,
+                )
+            except:
+                scribblar_user = None
+                for s_user in users.list():
+                    if s_user['username'] == username:
+                        scribblar_user = s_user
+                        break
+                
+            if scribblar_user:
+                self.scribblar_id = scribblar_user['userid']
+                super(self.__class__, self).save()
         
         return self.scribblar_id
 
@@ -411,6 +431,33 @@ class UserProfile(BaseModel):
             super(self.__class__, self).save()
             self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
 
+
+    def get_completeness(self):
+        user = self.user
+        no_items = 4.0
+        if self.type == self.TYPES.TUTOR:
+            no_items += 1 if self.video else 0
+            no_items += 1 if self.crb else 0
+            no_items += 1 if user.subjects.count() else 0
+            no_items += 1 if user.qualifications.count() else 0
+            no_items += 1 if user.week_availability else 0
+            no_items += 1 if self.profile_image and self.profile_image != settings.DEFAULT_PROFILE_IMAGE else 0
+            
+            completeness = int(no_items / 10.0 * 100)
+
+        elif self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
+            no_items += 1 if self.interests.count() else 0
+            no_items += 1 if self.profile_image and self.profile_image != settings.DEFAULT_PROFILE_IMAGE else 0
+        
+            completeness = int(no_items / 6.0 * 100)
+        elif self.type == self.TYPES.PARENT:
+            no_items += 4 if self.children.count() else 0
+            completeness = int(no_items / 8.0 * 100)
+        else:
+            completeness = 0
+        
+        return completeness
+            
 
 class UserCreditMovement(BaseModel):
     class Meta:

@@ -57,3 +57,11 @@ h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 .tabs-content li#availabilityTab { min-width: 1040px; }
 
 ul.errorlist li { color: red; }
+
+.profile-completeness { position: relative; width: 99%; overflow: auto; background: #bbb; height: 20px; border: 1px solid #777; }
+.profile-completeness .bar{ position: absolute; top: 0; left: 0; z-index: 1; height: 20px; background: #55AE40; }
+.profile-completeness .value{ 
+	position: absolute; top: 0; left: 0; padding: 3px 0; width: 100%; z-index: 2; 
+	font-size: 12px; line-height: 14px; height: 14px; color: #fff; text-align: center;
+}
+

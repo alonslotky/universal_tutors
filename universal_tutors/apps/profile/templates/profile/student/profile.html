@@ -16,11 +16,22 @@
       </div>
       
       <div class="row">
-        <div class="two columns">
-          <div class="profile-picture">
-	        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{person.get_full_name}}">
-          </div>
-        </div>
+	    <div class="two columns">
+	      <div class="row space">
+		      <div class="profile-picture">
+		        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{person.get_full_name}}">
+		      </div>
+		  </div>
+	      <div class="row space">
+	      	{% with profile.get_completeness as completeness %}
+	        <label>Profile completeness</label>
+		  	<div class="profile-completeness">
+		  		<div class="bar" style="width: {{completeness}}%;"></div>
+		  		<div class="value">{{ completeness }}%</div>
+		  	</div>
+		  	{% endwith %}
+		  </div>
+	    </div>
         
         <div class="ten columns">
           <h2>{{person.get_full_name}}</h2>

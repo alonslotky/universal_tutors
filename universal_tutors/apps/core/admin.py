@@ -1,9 +1,10 @@
 from django.contrib import admin
-
 from django.contrib.flatpages.admin import FlatPageAdmin, FlatpageForm
 from django.contrib.flatpages.models import FlatPage
 
 from tinymce.widgets import TinyMCE
+
+from apps.core.models import Currency
 
 class TinyMCEFlatPageAdmin(FlatPageAdmin):
     class Media:
@@ -14,3 +15,8 @@ class TinyMCEFlatPageAdmin(FlatPageAdmin):
 
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, TinyMCEFlatPageAdmin)
+
+
+class CurrencyAdmin(admin.ModelAdmin):
+    list_display = ('acronym', 'name', 'symbol', 'manual')
+admin.site.register(Currency, CurrencyAdmin)

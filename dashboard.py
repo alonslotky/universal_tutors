@@ -49,6 +49,11 @@ class CustomIndexDashboard(Dashboard):
             column=1,
             children = [
                 modules.ModelList(
+                    _('Core'),
+                    css_classes=('collapse',),
+                    models=('apps.core.models.Currency', ),
+                ),
+                modules.ModelList(
                     _('Classes'),
                     css_classes=('collapse',),
                     models=('apps.classes.models.Class', ),

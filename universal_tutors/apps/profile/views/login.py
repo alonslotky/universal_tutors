@@ -11,7 +11,7 @@ from django.contrib.auth import logout
 from django.core.paginator import Paginator, EmptyPage
 
 from allauth.account.views import signup as allauth_signup, login
-from apps.profile.forms import SigninForm, SignupForm, TutorSignupForm, ParentSignupForm, StudentSignupForm  
+from apps.profile.forms import SigninForm, SignupForm, TutorSignupForm, ParentSignupForm, StudentSignupForm, Under16SignupForm  
 
 
 def logout_view(request):
@@ -47,10 +47,14 @@ def successfull_signup(request):
 
 def student_signup(request, *args, **kwargs):
     form = StudentSignupForm
+    next_url = reverse('edit_student_profile')
     
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+
     kwargs.update({
         'form_class': form,
-        'success_url': request.REQUEST.get('next', reverse('edit_student_profile')),
+        'success_url': next_url,
         'template_name': 'account/student-signup.html',
     })
     
@@ -59,11 +63,31 @@ def student_signup(request, *args, **kwargs):
 
 def tutor_signup(request, *args, **kwargs):
     form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
+
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
     
     kwargs.update({
         'form_class': form,
-        'success_url': request.REQUEST.get('next', reverse('edit_tutor_profile')),
+        'success_url': next_url,
         'template_name': 'account/tutor-signup.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs)
+
+
+def parent_signup(request, *args, **kwargs):
+    form = ParentSignupForm
+    next_url = reverse('edit_parent_profile')
+    
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/parent-signup.html',
     })
     
     return allauth_signup(request, *args, **kwargs)

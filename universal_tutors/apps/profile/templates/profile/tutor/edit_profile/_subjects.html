@@ -13,6 +13,9 @@
             <div class="three columns phone-one">
               Credits per hour
             </div>
+            <div class="three columns phone-one">
+              Price in {{profile.currency}}
+            </div>
             <div class="one columns phone-one">
               Delete
             </div>
@@ -28,11 +31,14 @@
           
           {% for item in user.subjects.all %}
 	          <div class="row">
-	            <div class="eight columns phone-two">
-	              <input id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" type="text" class="input-text" value="{{item.subject}}" placeholder="Subject">
+	            <div class="eight columns phone-onw">
+	              <input id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" type="text" class="input-text" value="{{item.subject}}" placeholder="Subject" />
 	            </div>
 	            <div class="three columns phone-one">
-	              <input id="id_subject-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text" value="{{item.credits}}" placeholder="Credits">
+	              <input id="id_subject-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text" value="{{item.credits}}" placeholder="Credits" />
+	            </div>
+	            <div class="three columns phone-one">
+	              <span id="id_subject-{{forloop.counter0}}-price"></span>
 	            </div>
 	            <div class="one columns phone-one">
 					<input id="id_subjects-{{forloop.counter0}}-DELETE" type="checkbox" name="subjects-{{forloop.counter0}}-DELETE">

@@ -409,3 +409,23 @@ def history(request, username=None):
 
     return { 'person': person }
 
+
+@login_required
+@main_render('account/children-signup.html')
+def add_child(request):
+    user = request.user
+    profile = user.profile
+    
+    if profile.type != profile.TYPES.PARENT:
+        raise http.Http404()
+
+    form = Under16SignupForm(request.POST or None, parent=user)
+    if request.method == "POST":
+        if form.is_valid():
+            user = form.save(request=request)
+            return http.HttpResponseRedirect('%s#children' % reverse('edit_parent_profile'))
+    
+    return {
+        'form': form,
+    }
+

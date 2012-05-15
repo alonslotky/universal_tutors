@@ -5,9 +5,21 @@
     
     <div class="row">
       <div class="four columns photo">
-        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{user.get_full_name}}">
-        <div>{{form.profile_image}}</div>
-        {% if form.profile_image.errors %}<div class="formError">{{ form.profile_image.errors }}</div>{% endif %}
+          <div class="row space">
+	        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{user.get_full_name}}">
+	        <div>{{form.profile_image}}</div>
+	        {% if form.profile_image.errors %}<div class="formError">{{ form.profile_image.errors }}</div>{% endif %}
+		  </div>
+
+          <div class="row space">
+          	{% with profile.get_completeness as completeness %}
+            <label>Profile completeness</label>
+		  	<div class="profile-completeness">
+		  		<div class="bar" style="width: {{completeness}}%;"></div>
+		  		<div class="value">{{ completeness }}%</div>
+		  	</div>
+		  	{% endwith %}
+		  </div>
       </div>
       <div class="eight column">
          {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
@@ -31,12 +43,15 @@
             <div class="nine columns phone-three">
               <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
               <div class="row">
-                  <select id="id_dob_day" class="stretch">
-                  </select>
-                  <select id="id_dob_month" class="stretch nice">
-                  </select>
-                  <select id="id_dob_year" class="stretch">
-                  </select>
+              	<div class="four columns phone-one">
+                  <select id="id_dob_day" class="stretch"></select>
+                </div>
+                <div class="four columns phone-one">
+                  <select id="id_dob_month" class="stretch"></select>
+                </div>
+                <div class="four columns phone-one">
+                  <select id="id_dob_year" class="stretch"></select>
+                </div>
               </div>
             </div>  
           </div>
