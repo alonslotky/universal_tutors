@@ -151,21 +151,11 @@
 			}			
 			
 			if(is_valid) {
-				$('#modal-signup-form-container').fadeOut(function(){
-					$('#modal-signup-form-loading').fadeIn(function(){
-						$.ajax({
-							type: 'GET',
-							data: {'user_type': parseInt($('#signup_user_type').val())},
-							url: '{% url signup %}',
-							success: function(data) {
-								$('#modal-signup-form-container').html(data);
-								$('#modal-signup-form-loading').fadeOut(function(){
-									$('#modal-signup-form-container').fadeIn();
-								});
-							}
-						});
-					});
-				});
+				switch(signup_type) {
+					case 1: window.location.href='{% url tutor_signup %}?date='+ signup_dob; break;
+					case 2: window.location.href='{% url student_signup %}?date='+ signup_dob; break;
+					case 3: window.location.href='{% url parent_signup %}?date='+ signup_dob; break;
+				}
 			}
 		});
 		

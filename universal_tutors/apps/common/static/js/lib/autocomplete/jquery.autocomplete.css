@@ -1,0 +1,77 @@
+.ac_results {
+	padding: 1px;
+	border: 1px solid #aaa;
+	background-color: #eee;
+	overflow: hidden;
+	z-index: 99999;
+}
+
+.ac_results ul {
+	width: 100%;
+	list-style-position: outside;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.ac_results li {
+	margin: 0px;
+	padding: 2px 5px;
+	cursor: default;
+	display: block;
+	/* 
+	if width will be 100% horizontal scrollbar will apear 
+	when scroll mode will be used
+	*/
+	/*width: 100%;*/
+	font: menu;
+	font-size: 12px;
+	/* 
+	it is very important, if line-height not setted or setted 
+	in relative units scroll will be broken in firefox
+	*/
+	line-height: 16px;
+	overflow: hidden;
+}
+
+.ac_loading {
+	background: white url('indicator.gif') right center no-repeat;
+}
+
+.ac_odd {
+	background-color: #eee;
+}
+
+.ac_over {
+	background-color: #cbcbcb;
+}
+
+.ac_tracked_list {
+	margin: 10px 0px 0px 260px;
+	overflow: auto;
+}
+.ac_tracked_list .ac_item-container {
+	float: left;
+	overflow: auto;
+	background: #abd034;
+	background: -moz-linear-gradient(top, #abd034 0%, #97c008 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#abd034), color-stop(100%,#97c008));
+	background: -webkit-linear-gradient(top,  #abd034 0%,#97c008 100%);
+	background: -o-linear-gradient(top,  #abd034 0%,#97c008 100%);
+	background: -ms-linear-gradient(top,  #abd034 0%,#97c008 100%);
+	background: linear-gradient(top,  #abd034 0%,#97c008 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#abd034', endColorstr='#97c008',GradientType=0 );
+	padding: 1px 5px;
+	border-radius: 3px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -o-border-radius: 3px; -khtml-border-radius: 3px;
+	font-size: 12px;
+	margin-right: 3px;
+	color: #fff;
+}
+.ac_tracked_list .ac_item-text {
+	float: left;
+	margin-right: 3px;
+}
+.ac_tracked_list .ac_item-delete {
+	float: left;
+	cursor: pointer;
+}

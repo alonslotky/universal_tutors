@@ -34,7 +34,7 @@
         {% if profile.type == profile.TYPES.STUDENT %}<dd><a href="#credits">Credits</a></dd>{% endif %}
       </dl>
       
-      <form id="profile-form" method="post" enctype="multipart/form-data" class="nice custom">
+      <form id="profile-form" method="post" enctype="multipart/form-data" class="nice">
 	      {% csrf_token %}
 	      <ul class="nice tabs-content contained">
 			{% include "profile/student/edit_profile/_details.html" %}

@@ -22,6 +22,20 @@
 #signup-form2 .dropdown { width: 220px !important; }
 #signup-form2 .dropdown ul { width: 218px !important; }
 
+.ac_item-container {
+    background: url("../images/shared/tag.jpg") repeat-x scroll 0 0 transparent;
+    border: 1px solid #55AE40;
+    border-radius: 30px 30px 30px 30px;
+    color: #FFFFFF;
+    display: block;
+    margin: 0 0 2px;
+    padding: 3px 20px;
+    text-shadow: 0 -1px 0 #56B142;
+    overflow: auto;
+}
+.ac_item-text { float: left; }
+.ac_item-delete { float: right; cursor: pointer; }
+
 .formError { padding: 0px; margin: 10px 0 0 0; color: #900; }
 .formError ul, .formError li { padding: 0px !important; margin: 0px !important; }
 label.margin-top { margin: 5px 0 0 0; }
@@ -41,3 +55,16 @@ h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 .message .messages .inside { overflow: auto; }
 .message .messages .inside.loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; }
 .tabs-content li#availabilityTab { min-width: 1040px; }
+<<<<<<< HEAD
+=======
+
+ul.errorlist li { color: red; }
+
+.profile-completeness { position: relative; width: 99%; overflow: auto; background: #bbb; height: 20px; border: 1px solid #777; }
+.profile-completeness .bar{ position: absolute; top: 0; left: 0; z-index: 1; height: 20px; background: #55AE40; }
+.profile-completeness .value{ 
+	position: absolute; top: 0; left: 0; padding: 3px 0; width: 100%; z-index: 2; 
+	font-size: 12px; line-height: 14px; height: 14px; color: #fff; text-align: center;
+}
+
+>>>>>>> 8982b4bb1c642046fa3d250fd5c1042e626a75fd

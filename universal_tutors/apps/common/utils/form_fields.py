@@ -1,5 +1,13 @@
 from django import forms
 
+class ListField(forms.CharField):
+    def __init__(self, *args, **kwargs):
+        super(ListField, self).__init__(*args, **kwargs)
+        self.widget = forms.Textarea(attrs = {'class': 'hidden'})
+        
+    def to_python(self, value):
+        return eval(value)
+
 class MultiSelectFormField(forms.MultipleChoiceField):
     widget = forms.CheckboxSelectMultiple
     
