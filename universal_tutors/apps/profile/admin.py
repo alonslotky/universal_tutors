@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from models import UserProfile, NewsletterSubscription
+from models import *
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
@@ -11,9 +11,18 @@ class MyUserAdmin(UserAdmin):
     list_editable = ['is_active']
     inlines = [ UserProfileInline ]
 
-class NewsletterSubscriptionAdmin(admin.ModelAdmin):
-    pass
 
 admin.site.unregister(User)
 admin.site.register(User, MyUserAdmin)
-admin.site.register(NewsletterSubscription, NewsletterSubscriptionAdmin)
+admin.site.register(Tutor, MyUserAdmin)
+
+
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('violator', 'user', 'created', 'description')
+admin.site.register(Report, ReportAdmin)
+
+#class NewsletterSubscriptionAdmin(admin.ModelAdmin):
+#    pass
+#admin.site.register(NewsletterSubscription, NewsletterSubscriptionAdmin)
+
+

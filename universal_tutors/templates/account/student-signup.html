@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags flatblock_tags %}
 
 {% block title %}Home{% endblock %}
 {% block body_class %}students{% endblock %}
@@ -189,6 +189,24 @@
               <div id="div_id_subjects_container" class="tags clear">
               </div>
             </div>
+          </div>
+          
+          <hr class="inside">
+
+	      <div class="row">
+	        <div class="twelve columns">
+	          <h3>Terms and conditions</h3>
+	        </div>
+	      </div>
+
+          <div class="row space">
+			<div class="sign-up-terms-and-conditions">{% flatblock "terms_and_conditions" %}</div>
+          </div>
+
+		  {% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
+          <div class="row space">
+          	  <div>{{form.agreement}} <span>{{form.agreement.help_text}}</span></div>
+          	  <div>{{form.newsletter}} <span>{{form.newsletter.help_text}}</span></div>
           </div>
           
           <hr class="inside">

@@ -12,7 +12,7 @@
         </div>
       </section>
       
-      <section class="blue feature-box"><div class="inner">
+      <section class="blue feature-box" style="margin-bottom: 20px !important;"><div class="inner">
         
         <div class="row">
         <div class="feature-browser"></div>
@@ -22,19 +22,26 @@
         <div class="feature-black">
           <div class="feature-text">
             <h3>Some text about generally how amazing this site is, and how it will change lives, etc.</h3>
-            <a class="video button" href="#" data-reveal-id="video"><span></span>Launch the Video</a>
+            <a href="javascript:;" class="video button" data-reveal-id="modal-video" onclick="$('#video-frame').removeClass('hidden');"><span></span>Launch the Video</a>
           </div>
         </div>
       
       </div></section>
       
-      <div class="row clear">
-        <div class="six columns centered center">
-          Social
+      <div class="row">
+        <div class="three columns centered center" style="padding-left: 70px;">
+			<!-- AddThis Button BEGIN -->
+			<div class="addthis_toolbox addthis_default_style ">
+				<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+				<a class="addthis_button_tweet"></a>
+			</div>
+			<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+			<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4fb386b55399dc7b"></script>
+			<!-- AddThis Button END -->
         </div>
       </div>
       
-      <hr class="big">
+      <hr class="big" style="margin-top: 10px !important;">
       
       <section>
         <div class="row clear">
@@ -113,41 +120,26 @@
             <h2><span>Check out some of our </span>Featured Tutors</h2>
           </div>
         </div>
-        
         <div class="row">
+        {% for tutor in featured_tutors %}
+        {% with tutor.profile as tutor_profile %}
           <div class="four columns">
             <div class="row">
               <div class="four columns phone-one">
-                <img src="http://placehold.it/200x200" alt="Photo of Tutor">
+                <img src="{% version tutor_profile.profile_image.path 'homepage_list_tutors' %}" alt="{{tutor.get_full_name}}">
               </div>
               <div class="eight columns phone-three">
-                <h5>Tutor Name</h5>
-                <p>Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula.</p>
+                <a href="{% url profile tutor.username %}"><h5>{{tutor.get_full_name}}</h5></a>
+                <p>{{tutor_profile.about|truncatechars:200}}</p>
               </div>
             </div>
           </div>
-          <div class="four columns">
-            <div class="row">
-              <div class="four columns phone-one">
-                <img src="http://placehold.it/200x200" alt="Photo of Tutor">
-              </div>
-              <div class="eight columns phone-three">
-                <h5>Tutor Name</h5>
-                <p>Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula.</p>
-              </div>
-            </div>
-          </div>
-          <div class="four columns">
-            <div class="row">
-              <div class="four columns phone-one">
-                <img src="http://placehold.it/200x200" alt="Photo of Tutor">
-              </div>
-              <div class="eight columns phone-three">
-                <h5>Tutor Name</h5>
-                <p>Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula. Ut erat nunc, viverra sit amet vehicula quis, eleifend sit amet ligula.</p>
-              </div>
-            </div>
-          </div>
+        {% endwith %}
+        {% empty %}
+          <div class="twelve columns clear">
+        	<h2><span>There are no featured tutors at moment.</span></h2>
+	      </div>
+        {% endfor %}
         </div>
       </div></section>
       
@@ -160,8 +152,6 @@
           </div>
         </div>
       </section>
-      
-	<div id="modal-video" class="reveal-modal video">
-  		<a class="close-reveal-modal">&#215;</a>
-	</div>
+    
+    {% if video %}{% include "core/fragments/_modal_video.html" %}{% endif %}
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags flatblock_tags %}
 
 {% block title %}Home{% endblock %}
 {% block body_class %}students{% endblock %}
@@ -155,10 +155,38 @@
             </div>
             <div class="nine columns phone-three">
               	<div class="">{{form.crb}}</div>
-              	<div class="">To apply for a CRB <a href="">click here</a></div>
+              	<div id="id_crb_apply" class="{% if form.crb.value %}hidden{% endif %}">To apply for a CRB <a href="">click here</a>.</div>
+		        <div id="id_div_crb_document" class="{% if not form.crb.value %}hidden{% endif %}">You need to upload your CRB Document after you Sign Up.</div>
             </div> 
           </div>
           
+          <hr class="inside">
+
+	      <div class="row">
+	        <div class="twelve columns">
+	          <h3>Financial Information</h3>
+	        </div>
+	      </div>
+
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>Currency</label>
+            </div>
+            <div class="nine columns phone-three">
+              	{{form.currency}}
+            </div>  
+          </div>
+
+		  <div class="row">
+	        <div class="three columns phone-one">
+	          <label>Withdraw</label>
+	        </div>
+	        <div class="nine columns phone-three">
+	          To withdraw your income you need to enter your PayPal account after you Sign Up.
+	        </div>  
+		  </div>
+
+
           <hr class="inside">
 
 	      <div class="row">
@@ -177,7 +205,7 @@
             </div>  
           </div>
 
-		  {% if form.referral_other.errors %}<div class="formError">{{ form.referral_other.errors }}</div>{% endif %}
+		  {% if form.referral_other.errors %}<div id="id_div_referral_other_errors" class="formError">{{ form.referral_other.errors }}</div>{% endif %}
           <div id="id_div_referral_other" class="row space {% if not form.referral_other.errors and not form.referral_other.value %}hidden{% endif %}">
             <div class="three columns">
               <label>Other option</label>
@@ -197,6 +225,24 @@
             </div>
           </div>
           
+          <hr class="inside">
+
+	      <div class="row">
+	        <div class="twelve columns">
+	          <h3>Terms and conditions</h3>
+	        </div>
+	      </div>
+
+          <div class="row space">
+			<div class="sign-up-terms-and-conditions">{% flatblock "terms_and_conditions" %}</div>
+          </div>
+
+		  {% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
+          <div class="row space">
+          	  <div>{{form.agreement}} <span>{{form.agreement.help_text}}</span></div>
+          	  <div>{{form.newsletter}} <span>{{form.newsletter.help_text}}</span></div>
+          </div>
+
           <hr class="inside">
           
           <div class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
@@ -288,11 +334,26 @@
 	$('#id_referral').change(function(){
 		if( $(this).val() == '20' ) {
 			$('#id_div_referral_other').removeClass('hidden');
+			$('#id_div_referral_other_errors').removeClass('hidden');
 		} else {
 			$('#id_div_referral_other').addClass('hidden');
+			$('#id_div_referral_other_errors').addClass('hidden');
 			$('#id_referral_other').val('');
 		}
 	});
+
+	$('#id_crb').click(function(){
+		if( $(this).attr('checked') == 'checked' ) {
+			$('#id_div_crb_document').removeClass('hidden');
+			$('#id_div_crb_document_errors').removeClass('hidden');
+			$('#id_crb_apply').addClass('hidden');
+		} else {
+			$('#id_div_crb_document').addClass('hidden');
+			$('#id_div_crb_document_errors').addClass('hidden');
+			$('#id_crb_apply').removeClass('hidden');
+		}
+	});
+
 
 </script>
 {% endblock %}

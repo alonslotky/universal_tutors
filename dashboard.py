@@ -49,14 +49,19 @@ class CustomIndexDashboard(Dashboard):
             column=1,
             children = [
                 modules.ModelList(
-                    _('Core'),
+                    _('Settings'),
                     css_classes=('collapse',),
-                    models=('apps.core.models.Currency', ),
+                    models=('apps.core.models.*', ),
                 ),
                 modules.ModelList(
                     _('Classes'),
                     css_classes=('collapse',),
-                    models=('apps.classes.models.Class', ),
+                    models=('apps.classes.models.*', ),
+                ),
+                modules.ModelList(
+                    _('Users'),
+                    css_classes=('collapse',),
+                    models=('apps.profile.models.*', ),
                 ),
 #                modules.ModelList(
 #                    _('Blog'),
@@ -79,7 +84,7 @@ class CustomIndexDashboard(Dashboard):
             collapsible=True,
             column=1,
             css_classes=('collapse closed',),
-            models=('django.contrib.*', 'apps.profile.models.NewsletterSubscription', ),
+            models=('django.contrib.*', 'apps.profile.models.NewsletterSubscription', 'flatblocks.*'),
         ))
 
         # append another link list module for "support".
