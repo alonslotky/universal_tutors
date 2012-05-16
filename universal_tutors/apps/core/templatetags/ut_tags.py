@@ -9,7 +9,10 @@ register = template.Library()
 
 class ContentQuoteNode(template.Node):
     def render(self, context):
-        context['quote'] = random.choice(Quote.objects.all())
+        try:
+            context['quote'] = random.choice(Quote.objects.all())
+        except IndexError:
+            context['quote'] = None
         return ''
 
 @register.tag

@@ -45,7 +45,9 @@
   	</div>
   	
   	{% get_quote %}
+  	{% if quote %}
   	<p class="quote">{{quote}}  <a class="tweet" href="https://twitter.com/share?url={% url home %}&via=UniversalTutors&text={{quote}}" target="_blank">Tweet this</a></p>
+  	{% endif %}
   	<p class="socials">Follow us<a href="http://twitter.com/#!/UniversalTutors" class="twitter ir">Twitter</a> <a href="http://www.facebook.com/UniversalTutors" class="facebook ir">Facebook</a></p>
 </footer>
 {% endwith %}
