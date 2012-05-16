@@ -316,14 +316,14 @@ def tutors(request):
 
 @login_required
 @over16_required()
-@main_render(template='profile/tutor/report.html')
+@main_render(template='profile/report.html')
 def report(request, username):
     """
     view my recent activity
     """
     user = request.user
     
-    tutor = get_object_or_404(User, username = username)
+    person = get_object_or_404(User, username = username)
     
     success = False
     if request.method == 'POST':
@@ -332,7 +332,8 @@ def report(request, username):
         success = True
 
     return {
-        'tutor': tutor,
+        'person': person,
+        'person_profile': person.profile,
         'success': success,
     }
 

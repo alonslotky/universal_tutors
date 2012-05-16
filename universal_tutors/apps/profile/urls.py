@@ -34,7 +34,7 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutors/$', 'tutors', {}, name = "tutors"),
 
     url(r'^(?i)book-class/(?P<username>[\w\-\_]+)/$', 'book_class', {}, name = "book_class"),
-    url(r'^(?i)tutor/report/(?P<username>[\w\-\_]+)/$', 'report', {}, name = "report"),
+    url(r'^(?i)report/(?P<username>[\w\-\_]+)/$', 'report', {}, name = "report"),
 )
 
 urlpatterns += patterns('apps.profile.views.ajax',
