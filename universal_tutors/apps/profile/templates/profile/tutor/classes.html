@@ -33,7 +33,7 @@
           </div>
           
           <div class="two columns timestamp">
-            <p>Scheduled for <br><strong>{{class.start|time:"H:i"}} - {{class.end|time:"H:i"}}<br>{{class.date|date:"M d, Y"}}</strong></p>
+            <p><strong>{{class.start|time:"H:i"}} - {{class.end|time:"H:i"}}<br>{{class.date|date:"M d, Y"}}</strong></p>
           </div>
           
           <div class="two columns action">
@@ -60,9 +60,10 @@
 			            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}",{{class.id}});'>Rate Student</a>
 			            {% endif %}
 					{% endwith %}
-		            <a href="#" class="class-material">Class Material</a>
+		            <a href="javascript:;" class="class-material">Class Material</a>
 	 			{% endif %}
  			{% endif %}
+	          <a href="{% url report student.username %}" class="report">Report Student</a>
            </div>
         </div>
       </article>

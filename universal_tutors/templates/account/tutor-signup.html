@@ -90,13 +90,22 @@
           </div>
 
           {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
-          <div class="row date_of_birth">
+          <div class="row date_of_birth space">
             <div class="three columns phone-one">
               <label>Timezone</label>
             </div>
             <div class="nine columns phone-three">
               	{{form.timezone}}
             </div>  
+          </div>
+
+          <div class="row">
+            <div class="three columns phone-one">
+              <label>I have a Webcam</label>
+            </div>
+            <div class="nine columns phone-three">
+              	<div class="">{{form.webcam}}</div>
+            </div> 
           </div>
           
           <hr class="inside">

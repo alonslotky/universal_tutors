@@ -65,6 +65,11 @@
 	                <li>No qualifications</li>                	                
                 {% endfor %}
               </ul>
+
+              <label>Webcam</label>
+              <ul class="tutor-qualifications-list">
+				{% if profile.webcam %}Yes{% else %}No{% endif %}
+              </ul>
             </div>
             
             {% with person.subjects.all as subjects %}

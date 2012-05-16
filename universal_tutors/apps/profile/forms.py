@@ -42,7 +42,7 @@ class ProfileForm(forms.ModelForm):
     last_name = forms.CharField()
 
     class Meta:
-        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', 'currency')
+        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', 'currency', 'webcam', )
         model = UserProfile
         widgets = {
             'photo': forms.FileInput(),
@@ -286,6 +286,7 @@ class ParentSignupForm(SignupForm):
 class TutorSignupForm(SignupForm):
     about = forms.CharField(label=_('Description'), initial='')
     crb = forms.BooleanField(label='I have a CRB', required=False)
+    webcam = forms.BooleanField(label='I have a WebCam', required=False)
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
         
     def __init__(self, *args, **kwargs):
@@ -300,6 +301,8 @@ class TutorSignupForm(SignupForm):
         user = super(TutorSignupForm, self).save(*args, **kwargs)
         profile = user.profile
         profile.about = self.cleaned_data.get('about', '')
+        profile.crb = self.cleaned_data.get('crb', False)
+        profile.webcam = self.cleaned_data.get('webcam', False)
         profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency'))
         profile.type = profile.TYPES.TUTOR
         profile.save()

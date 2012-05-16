@@ -17,4 +17,12 @@ class ContentQuoteNode(template.Node):
 
 @register.tag
 def get_quote(pareser, token):
-    return ContentQuoteNode()    
+    return ContentQuoteNode()
+
+@register.filter
+def is_today(date):
+    today = datetime.date.today()
+    if hasattr(date, 'date'):
+        return date.date() == today
+    else:
+        return date == today
