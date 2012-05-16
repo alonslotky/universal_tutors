@@ -114,6 +114,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    'django.contrib.humanize',
     'flatblocks',
     
     # Utilities & Helper Apps

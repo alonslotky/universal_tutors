@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import logout
 from django.contrib import messages
 from django.conf import settings
+from django.db.models import Max
 
 from allauth.facebook.models import FacebookAccount
 from allauth.twitter.models import TwitterAccount
@@ -180,7 +181,7 @@ def tutor_messages(request):
     """
     user = request.user
 
-    usermessages = User.objects.select_related().filter(sent_messages__to = user).distinct()
+    usermessages = User.objects.select_related().filter(sent_messages__to = user).annotate(max_date = Max('sent_messages__created')).order_by('-max_date')
 
     return {
         'usermessages':usermessages,
@@ -267,7 +268,7 @@ def student_messages(request, username=None):
 
     profile = user.profile
 
-    usermessages = User.objects.select_related().filter(sent_messages__to = person).distinct()
+    usermessages = User.objects.select_related().filter(sent_messages__to = person).annotate(max_date = Max('sent_messages__created')).order_by('-max_date')
 
     return {
         'usermessages':usermessages,

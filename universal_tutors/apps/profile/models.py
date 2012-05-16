@@ -112,6 +112,7 @@ class UserProfile(BaseModel):
     interests = models.ManyToManyField(ClassSubject, related_name='students', null=True, blank=True)
     
     video = models.CharField(verbose_name=_('Video'), max_length=200, null=True, blank=True)
+    webcam = models.BooleanField(default=False)
 
     type = models.PositiveSmallIntegerField(choices=TYPES.get_choices(), default=TYPES.NONE)
     credit = models.FloatField(default=0)

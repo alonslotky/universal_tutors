@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tz tutor_tags %}
+{% load fb_versions common_tags tz tutor_tags ut_tags humanize %}
 
 {% block title %}Messages{% endblock %}
 {% block body_class %}student messages app{% endblock %}
@@ -36,7 +36,9 @@
           </div>
           
           <div class="two columns timestamp">
-            <p>Received on <br><strong>{{last_message.created|date:"H:i"}} <br>{{last_message.created|date:"d M Y"}}</strong></p>
+            <p>Received on <br><strong>
+            	{% if last_message.created|is_today %}{{last_message.created|naturaltime}}{% else %}{{last_message.created|naturalday}}{% endif %}
+            </strong></p>
           </div>
           
           <div class="two columns action">

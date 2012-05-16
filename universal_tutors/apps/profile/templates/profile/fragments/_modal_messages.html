@@ -11,7 +11,7 @@
     </div>
   </div>
   
-  {% if user == person %}
+  {% if user == person or can_send_message %}
   <form id="modal-message-form" class="nice" method="post">
   	{% csrf_token %}
     <div class="row">

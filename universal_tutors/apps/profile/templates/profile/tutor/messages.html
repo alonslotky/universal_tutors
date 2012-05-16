@@ -1,13 +1,13 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tz tutor_tags %}
+{% load fb_versions common_tags tz tutor_tags ut_tags humanize %}
 
 {% block title %}Messages{% endblock %}
 {% block body_class %}tutor messages app{% endblock %}
 
 {% block content %}
 
-{% timezone user.profile.timezone %}
+{% timezone user_profile.timezone %}
 	<section class="blue feature-box"><div class="inner">
         <h1>Messages <span>Conversations with students</span></h1>
       </div></section>
@@ -18,13 +18,13 @@
       
       
       {% for person in usermessages %}      
-      {% with person.profile as user_profile %}
+      {% with person.profile as person_profile %}
       {% with person|get_messages:user as messages %}
       {% with messages.messages.0 as last_message %}
       <article>
         <div class="row">
           <div class="one columns hide-on-phones">
-            <img src="{% version user_profile.profile_image.path 'class_list_profile_image' %}" alt="{{person.get_full_name}}">
+            <img src="{% version person_profile.profile_image.path 'class_list_profile_image' %}" alt="{{person.get_full_name}}">
             {% if messages.unread %}<div class="unread">{{messages.unread}}<span> Unread Message{{messages.unread|pluralize}}</span></div>{% endif %}
           </div>
           
@@ -37,7 +37,9 @@
           </div>
           
           <div class="two columns timestamp">
-            <p>Received on <br><strong>{{last_message.created|date:"H:i"}} <br>{{last_message.created|date:"d M Y"}}</strong></p>
+            <p>Received on <br><strong>
+            	{% if last_message.created|is_today %}{{last_message.created|naturaltime}}{% else %}{{last_message.created|naturalday}}{% endif %}
+            </strong></p>
           </div>
           
           <div class="two columns action">
@@ -53,6 +55,6 @@
       <article><div class="row" style="text-align: center;">You didn't received any message yet.</div></article>	  
 	  {% endfor %}
 		
-	{% include 'profile/fragments/_modal_messages.html' %}
+	  {% with 'True' as can_send_message %}{% include 'profile/fragments/_modal_messages.html' %}{% endwith %}
 {% endtimezone %}
 {% endblock %}
