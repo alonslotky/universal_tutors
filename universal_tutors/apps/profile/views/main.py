@@ -37,9 +37,13 @@ def profile(request, username=None):
     profile = person.profile
     parent = profile.parent if profile.type == profile.TYPES.UNDER16 else None
 
+    can_send_message = True
     if profile.type == profile.TYPES.TUTOR:
         template = 'profile/tutor/profile.html'
     elif profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
+        if not Message.objects.filter(Q(user=person, to=user) | Q(user=user, to=person)) and \
+            not user.classes_as_tutor.filter(student=person) and not profile.parent == user:
+            can_send_message = False
         template = 'profile/student/profile.html'
     elif profile.type == profile.TYPES.PARENT:
         template = 'profile/parent/profile.html'

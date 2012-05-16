@@ -8,6 +8,7 @@
 .sign-in .row.padding { padding: 10px 0; }
 
 .signup-loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; height: 150px; }
+.sign-up-terms-and-conditions { border: 1px solid #ccc; padding: 5px; height: 200px; overflow: auto; }
 
 .sign-in .row.center .facebook_connect_link { margin-left: 275px; }
 .facebook_connect_link {

@@ -114,6 +114,7 @@ INSTALLED_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    'flatblocks',
     
     # Utilities & Helper Apps
     'south',
@@ -309,6 +310,7 @@ FILEBROWSER_VERSIONS = {
     'class_list_profile_image': {'width': 61, 'height': 61, 'opts': 'crop upscale'},
     'profile_image': {'width': 175, 'height': 175, 'opts': 'crop upscale'},
     'list_tutors': {'width': 67, 'height': 67 , 'opts': 'crop upscale'},
+    'homepage_list_tutors': {'width': 79, 'height': 79 , 'opts': 'crop upscale'},
 }
 FILEBROWSER_ADMIN_VERSIONS = [
     'thumb', 'small','medium','large',

@@ -54,7 +54,10 @@
             {% if owner %}
           	  <a href="{% url edit_student_profile %}" class="book-class">Edit profile</a>            
             {% else %}
+              {% if can_send_message %}
               <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});">Send a Message</a>
+	          {% endif %}
+	          <a href="{% url report person.username %}" class="report">Report</a>
 			{% endif %}
             </div>
           </div>

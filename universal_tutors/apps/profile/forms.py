@@ -18,6 +18,7 @@ from apps.classes.models import ClassSubject
 from apps.common.utils.form_fields import ListField
 from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
+from apps.core.models import Currency
 
 
 
@@ -41,7 +42,7 @@ class ProfileForm(forms.ModelForm):
     last_name = forms.CharField()
 
     class Meta:
-        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', )
+        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', 'currency')
         model = UserProfile
         widgets = {
             'photo': forms.FileInput(),
@@ -139,6 +140,16 @@ class SignupForm(forms.ModelForm):
     referral_other = forms.CharField(required = False, initial='')
     referral_key = forms.CharField(required = False, initial='')
 
+    agreement = forms.BooleanField(required = False, help_text='I have read and accepted the Terms and Conditions from the box above.')
+    newsletter = forms.BooleanField(required = False, initial=True, help_text='I want to receive newsletters from Universal Tutors with offers and other news.')
+    
+    def clean_agreement(self):
+        agreement = self.cleaned_data.get('agreement', False)
+        if not agreement:
+            raise forms.ValidationError(_(u"You need agree with terms and conditions to Sign Up."))
+        
+        return agreement
+    
     def clean_username(self):
         username = self.cleaned_data['username']
         if User.objects.filter(username=username).count() > 0:
@@ -161,6 +172,15 @@ class SignupForm(forms.ModelForm):
 
         return passwd1
 
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        referral = int(self.cleaned_data.get('referral', 0))
+        referral_other = self.cleaned_data.get('referral_other', None)
+        if referral == UserProfile.REFERRAL_TYPES.OTHER and not referral_other:
+            self._errors['referral_other'] = self.error_class(['Please specify how you learned about us.'])
+
+        return cleaned_data
+
     def save(self, commit=True, request=None):
         user = super(SignupForm, self).save(commit=False)
 
@@ -179,6 +199,7 @@ class SignupForm(forms.ModelForm):
         profile.other_referral = self.cleaned_data.get('referral_other', None)
         profile.referral_key = self.cleaned_data.get('referral_key', None)
         profile.gender = self.cleaned_data.get('gender', 0)
+        profile.newsletters = self.cleaned_data.get('newsletter', False)
         profile.timezone = self.cleaned_data.get('timezone', None)
         
         if self.parent:
@@ -265,14 +286,21 @@ class ParentSignupForm(SignupForm):
 class TutorSignupForm(SignupForm):
     about = forms.CharField(label=_('Description'), initial='')
     crb = forms.BooleanField(label='I have a CRB', required=False)
-    
+    currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
+        
     def __init__(self, *args, **kwargs):
         super(TutorSignupForm, self).__init__(*args, **kwargs)
 
+    def clean(self):
+        cleaned_data = super(TutorSignupForm, self).clean()
+        crb = cleaned_data.get('crb', False)
+        return cleaned_data
+            
     def save(self, *args, **kwargs):
         user = super(TutorSignupForm, self).save(*args, **kwargs)
         profile = user.profile
         profile.about = self.cleaned_data.get('about', '')
+        profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency'))
         profile.type = profile.TYPES.TUTOR
         profile.save()
         

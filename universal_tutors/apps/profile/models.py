@@ -29,12 +29,31 @@ from apps.classes.settings import *
 
 from scribblar import users
 
+
+class ActiveTutorsManager(models.Manager):
+    def get_query_set(self):
+        return super(ActiveTutorsManager, self).get_query_set().filter(
+                    profile__type = UserProfile.TYPES.TUTOR,
+                    profile__activated = True,
+                )
+
+class UnchekedCRBTutorsManager(models.Manager):
+    def get_query_set(self):
+        return super(EditableWorksManager, self).get_query_set().exclude(crb_checked = True).order_by('date_joined')
+
+class Tutor(User):
+    objects = ActiveTutorsManager()
+    unchecked_crb = UnchekedCRBTutorsManager()
+
+    class Meta:
+        proxy = True
+
+
 class UserProfile(BaseModel):
     """
     Profile and configurations for a user
     """
     DEFAULT_PHOTO = 'images/default/profile.png'
-    
     
 
     TYPES = get_namedtuple_choices('USER_TYPE', (
@@ -64,6 +83,8 @@ class UserProfile(BaseModel):
         (1, 'CANCELED_BY_TUTOR', 'Class canceled by tutor'),
         (2, 'CANCELED_BY_STUDENT', 'Class canceled by student'),
         (3, 'INCOME', 'Credits income'),
+        (4, 'ACTIVATED', 'Activated account'),
+        (5, 'CLASS', 'Class is about to start'),
     ))
     
     def get_upload_to(instance, filename):
@@ -88,13 +109,14 @@ class UserProfile(BaseModel):
     gender = models.PositiveSmallIntegerField(verbose_name=_('Gender'), choices=GENDER_TYPES.get_choices(), default=GENDER_TYPES.MALE)
     timezone = models.CharField(verbose_name=_('Phone Timezone'), max_length=50, default=pytz.tz)
     favorite = models.ManyToManyField(User, verbose_name=_('Favorite'), related_name='favorites', null=True, blank=True)
-    interests = models.ManyToManyField(ClassSubject, related_name='students')
+    interests = models.ManyToManyField(ClassSubject, related_name='students', null=True, blank=True)
     
     video = models.CharField(verbose_name=_('Video'), max_length=200, null=True, blank=True)
 
     type = models.PositiveSmallIntegerField(choices=TYPES.get_choices(), default=TYPES.NONE)
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
+    currency = models.ForeignKey(Currency)
 
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
     other_referral = models.CharField(max_length=200, null=True, blank=True)
@@ -102,6 +124,11 @@ class UserProfile(BaseModel):
     
     crb = models.BooleanField(default=False)
     crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
+    crb_checked = models.BooleanField(default=False)
+    
+    activated = models.BooleanField(default=False)
+    activation_date = models.DateTimeField(null=True, blank=True, default=None)
+    featured = models.BooleanField(default=False)
 
     # tutor
     avg_rate = models.FloatField(default=0)
@@ -156,10 +183,20 @@ class UserProfile(BaseModel):
     def save(self, *args, **kwargs):
         if self.type != self.TYPES.NONE and not self.is_over16:
             self.type = self.TYPES.UNDER16
+
+        if self.type == self.TYPES.TUTOR and \
+           self.profile_image and \
+           self.profile_image != settings.DEFAULT_PROFILE_IMAGE and \
+           self.about and \
+           self.video:
+            self.activated = True
+                
+        else:
+            self.activated = False
         super(self.__class__, self).save(*args, **kwargs)
 
+        user = self.user
         if self.type != self.TYPES.NONE and self.type != self.TYPES.PARENT:
-            user = self.user
             users.edit(
                 userid = self.get_scribblar_id(),
                 firstname = user.first_name,
@@ -167,6 +204,11 @@ class UserProfile(BaseModel):
                 email = user.email,
                 roleid = 50 if self.type == self.TYPES.TUTOR else 10,
             )
+
+        if self.activated and not self.activation_date:
+            self.activation_date = datetime.datetime.now()
+            super(self.__class__, self).save(*args, **kwargs)
+            self.send_notification(self.NOTIFICATIONS_TYPES.ACTIVATED, {})
                                 
         self.__update_location()
 
@@ -413,6 +455,12 @@ class UserProfile(BaseModel):
         if type == self.NOTIFICATIONS_TYPES.INCOME:
             subject = 'Income credits received'
             html = render_to_string('emails/income.html', context)
+        if type == self.NOTIFICATIONS_TYPES.ACTIVATED:
+            subject = 'Account activated'
+            html = render_to_string('emails/activated.html', context)
+        if type == self.NOTIFICATIONS_TYPES.CLASS:
+            subject = 'Your class is about to start'
+            html = render_to_string('emails/class.html', context)
         
         if subject and html:            
             sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
@@ -487,13 +535,14 @@ class TutorSubject(models.Model):
     credits = models.FloatField()
     
     def save(self, *args, **kwargs):
-        super(self.__class__, self).save(*args, **kwargs)
-        user = self.user
-        profile = user.profile 
-        results = user.subjects.aggregate(min_credits = models.Min('credits'), max_credits = models.Max('credits'))   
-        profile.min_credits = results['min_credits']
-        profile.max_credits = results['max_credits']
-        profile.save()
+        if not TutorSubject.objects.filter(user=self.user, subject=self.subject).exclude(id=self.id):
+            super(self.__class__, self).save(*args, **kwargs)
+            user = self.user
+            profile = user.profile 
+            results = user.subjects.aggregate(min_credits = models.Min('credits'), max_credits = models.Max('credits'))   
+            profile.min_credits = results['min_credits']
+            profile.max_credits = results['max_credits']
+            profile.save()
     
     def __unicode__(self):
         return '%s' % self.subject
@@ -509,7 +558,11 @@ class TutorQualification(models.Model):
     user = models.ForeignKey(User, related_name='qualifications')
     qualification = models.CharField(max_length=200)
     document = models.FileField(null=True, blank=True, upload_to=get_upload_to)
-        
+
+    def save(self, *args, **kwargs):
+        if not TutorQualification.objects.filter(user=self.user, qualification__iexact=self.qualification).exclude(id=self.id):
+            super(self.__class__, self).save(*args, **kwargs)
+    
     def __unicode__(self):
         return self.qualification
 
@@ -656,7 +709,7 @@ class Report(BaseModel):
     description = models.TextField()
     
     def __unicode__(self):
-        return '%s reported %s' (self.user, self.violator)
+        return '%s reported %s' % (self.user, self.violator)
 
 
 class NewsletterSubscription(BaseModel):

@@ -12,7 +12,7 @@ from django.core.mail import EmailMessage
 from django.template import Context, loader
 from django.conf import settings
 
-from apps.profile.models import NewsletterSubscription
+from apps.profile.models import NewsletterSubscription, Message
 from apps.profile.forms import *
 from apps.classes.models import ClassSubject
 from apps.common.utils.view_utils import main_render, handle_uploaded_file
@@ -99,6 +99,12 @@ def send_modal_message(request, to, class_id=0):
     
     if request.method != 'POST':
         return http.HttpResponseForbidden()
+    
+    profile = to.profile
+    if (profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16) and \
+       not Message.objects.filter(Q(user=to, to=user) | Q(user=user, to=to)) and \
+       not user.classes_as_tutor.filter(student=to) and not profile.parent == user:
+        raise http.Http404()
     
     text = request.POST.get('modal-message-text')
     

@@ -1,3 +1,5 @@
+{% load ut_tags %}
+
 {% with user.is_authenticated as is_authenticated %}
 <footer>
   	<div class="row hide-on-phones">
@@ -41,7 +43,9 @@
           </ul>
         </div>
   	</div>
-  	<p class="quote">"Genius without education is like silver in the mine" Benjamin Franklin  <!--a class="tweet" href="#">Tweet this</a--></p>
+  	
+  	{% get_quote %}
+  	<p class="quote">{{quote}}  <a class="tweet" href="https://twitter.com/share?url={% url home %}&via=UniversalTutors&text={{quote}}" target="_blank">Tweet this</a></p>
   	<p class="socials">Follow us<a href="http://twitter.com/#!/UniversalTutors" class="twitter ir">Twitter</a> <a href="http://www.facebook.com/UniversalTutors" class="facebook ir">Facebook</a></p>
 </footer>
 {% endwith %}

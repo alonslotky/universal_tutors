@@ -8,16 +8,28 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
-from apps.profile.models import UserProfile, WeekAvailability
-from universal_tutors.apps.classes.models import ClassSubject
+from apps.profile.models import UserProfile, WeekAvailability, Tutor
+from apps.classes.models import ClassSubject
+from apps.core.models import Video
 
-import datetime
+import datetime, random
 
 @main_render(template='core/home.html')
 def home(request):
     user = request.user
 
-    return {}
+    featured_tutors = Tutor.objects.select_related().filter(profile__featured=True).order_by('-profile__activation_date')
+    no_featured_tutors = featured_tutors.count()
+
+    try:
+        video = Video.objects.filter(active=True).latest('id')
+    except Video.DoesNotExist:
+        video = None
+
+    return {
+        'featured_tutors': random.sample(featured_tutors, 3) if no_featured_tutors > 3 else random.sample(featured_tutors, no_featured_tutors),
+        'video': video,
+    }
 
 def _get_simple_results(data):
     q = data.get('text', None)
