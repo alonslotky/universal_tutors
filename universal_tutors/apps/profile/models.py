@@ -565,7 +565,7 @@ class TopUpItem(BaseModel):
     def topup(self):
         self.status = self.STATUS_TYPES.DONE
         self.save()
-        self.user.profile.topup_account(credits)
+        self.user.profile.topup_account(self.credits)
     
     def flagged(self):
         self.status = self.STATUS_TYPES.FLAGGED
