@@ -21,6 +21,10 @@ class ReportAdmin(admin.ModelAdmin):
     list_display = ('violator', 'user', 'created', 'description')
 admin.site.register(Report, ReportAdmin)
 
+class TopUpItemAdmin(admin.ModelAdmin):
+    list_display = ('user', 'credits', 'value', 'currency', 'status')
+admin.site.register(TopUpItem, TopUpItemAdmin)
+
 #class NewsletterSubscriptionAdmin(admin.ModelAdmin):
 #    pass
 #admin.site.register(NewsletterSubscription, NewsletterSubscriptionAdmin)

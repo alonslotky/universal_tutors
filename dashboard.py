@@ -62,6 +62,12 @@ class CustomIndexDashboard(Dashboard):
                     _('Users'),
                     css_classes=('collapse',),
                     models=('apps.profile.models.*', ),
+                    exclude=('apps.profile.models.TopUpItem', ),
+                ),
+                modules.ModelList(
+                    _('Top Up Credits'),
+                    css_classes=('collapse',),
+                    models=('paypal.*', 'apps.profile.models.TopUpItem', ),
                 ),
 #                modules.ModelList(
 #                    _('Blog'),
@@ -84,7 +90,7 @@ class CustomIndexDashboard(Dashboard):
             collapsible=True,
             column=1,
             css_classes=('collapse closed',),
-            models=('django.contrib.*', 'apps.profile.models.NewsletterSubscription', 'flatblocks.*', 'paypal.*'),
+            models=('django.contrib.*', 'apps.profile.models.NewsletterSubscription', 'flatblocks.*', ),
         ))
 
         # append another link list module for "support".
