@@ -1,0 +1,31 @@
+{% load classes_tags %}
+
+<div id="modal-topup" class="reveal-modal message">
+	<h4>Top Up Credits</h4>
+    <div id="modal-topup-loading" class="modal-loading"></div>
+    <div id="modal-topup-container">
+    	
+    </div>
+  	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	$('#modal-topup-container').hide();
+	
+	var topup_account = function(url){
+		$('#modal-topup-container').fadeOut(function(){
+			$('#modal-topup-loading').fadeIn(function(){
+				$.ajax({
+					'type': 'get',
+					'url': url,
+					'success': function(response) {
+						$('#modal-topup-container').html(response);
+						$('#modal-topup-loading').fadeOut(function(){
+							$('#modal-topup-container').fadeIn();
+						});				
+					}
+				});
+			});
+		});
+	};
+</script>

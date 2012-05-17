@@ -104,6 +104,13 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)referral-friend/$', 'referral_friend', {}, name = "referral_friend"),
 )
 
+urlpatterns += patterns('apps.profile.views.topup',
+    url(r'^(?i)topup/cart/$', 'topup_cart', name = "topup_cart"),
+    url(r'^(?i)topup/cart/(?P<username>[\w\-\_]+)/$', 'topup_cart', name = "topup_cart"),
+    url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/$', 'topup_cancel', name = "topup_cancel"),
+    url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/(?P<ajax>\d)/$', 'topup_cancel', name = "topup_cancel"),
+    url(r'^(?i)topup/successful/(?P<username>[\w\-\_]+)/$', 'topup_successful', name = "topup_successful"),
+)
 
 
 

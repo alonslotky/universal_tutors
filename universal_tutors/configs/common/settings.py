@@ -145,6 +145,8 @@ INSTALLED_APPS = (
     'apps.profile',
     'apps.classes',
     
+    'paypal.standard.ipn',
+    
     # CMS
 #    'cms',
 #    'mptt',
@@ -342,6 +344,11 @@ TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, 'grappelli/tinymce/jscripts/tiny_mce/
 
 # SCRIBBLAR_API_KEY
 SCRIBBLAR_API_KEY = "4E05E226-B564-8140-D1E65546167F353C"
+
+# PAYPAL CONFIGURATIONS
+PAYPAL_RECEIVER_EMAIL = "sandbo_1318841681_biz@rawjam.co.uk"
+PAYPAL_TEST = True
+
 
 #CONTACT
 CONTACT_EMAIL = ['nick@universaltutors.com']

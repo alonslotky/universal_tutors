@@ -1,7 +1,7 @@
 from django import http
 from django.conf import settings
 from django.http import  HttpResponseServerError
-from django.db.models import Q, Sum
+from django.db.models import Q, Sum, Max
 from django.template import RequestContext, Context, loader
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
@@ -31,78 +31,75 @@ def home(request):
         'video': video,
     }
 
-def _get_simple_results(data):
-    q = data.get('text', None)
-    what = data.get('what')
-    sort = data.get('sort', None)
-    price = data.get('price', None)
-    day = data.get('day', None)
-    time = data.get('time', None)
-    
-    tutors = None
-    if q:
-        tutors = User.objects.select_related().filter(profile__type=UserProfile.TYPES.TUTOR)
-        if what == 'tutors':
-            tutors = tutors.filter(Q(first_name__icontains=q) | Q(last_name__icontains=q))
-    
-        elif what == 'subjects':
-            subjects = ClassSubject.objects.all()
-            subjects = subjects.filter(subject__icontains=q)
-            tutors = tutors.filter(classes_as_tutor__in=subjects)
-        if sort:
-            if sort == 'price':
-                tutors = tutors.order_by('profile__max_credits')
-            elif sort == 'rating':
-                tutors = tutors.order_by('-profile__avg_rate')
-            elif sort == 'classes':
-                tutors = tutors.order_by('-profile__classes_given')
-                
-        if price:
-
-            price = int(price)
-            if price == 1:
-                tutors = tutors.filter(profile__max_credits__lt=5)
-            elif price == 2:
-                tutors = tutors.filter(profile__max_credits__gte=5, profile__max_credits__lt=10)
-            elif price == 3:
-                tutors = tutors.filter(profile__max_credits__gte=10, profile__max_credits__lt=15)
-            elif price == 4:
-                tutors = tutors.filter(profile__max_credits__gte=15, profile__max_credits__lt=20)
-            elif price == 5:
-                tutors = tutors.filter(profile__max_credits__gte=20, profile__max_credits__lt=25)
-            elif price == 6:
-                tutors = tutors.filter(profile__max_credits__gte=25, profile__max_credits__lt=30)
-            elif price == 7:
-                tutors = tutors.filter(profile__max_credits__gte=30)
-                
-            
-        if time:
-            weekdays = WeekAvailability.objects.filter(user__in=tutors)
-            if day:
-                weekdays = weekdays.filter(weekday=int(day))
-            t = datetime.time(int(time), 0)
-            weekdays = weekdays.filter(begin=t)
-            tutors = tutors.filter(id__in=[i.user.id for i in weekdays])
-        elif day:
-            tutors = tutors.filter(week_availability__weekday=int(day))
-            
-    return tutors
         
 
 @main_render(template='core/search.html')
 def search(request):
     tutors = None
-
-    if request.GET:
-        search_type = request.GET.get('search')
-        tutors = _get_simple_results(request.GET)
-
-    query = ''
-    query_type = ''
-    # tutors = User.objects.select_related().filter(profile__type = UserProfile.TYPES.TUTOR)
     
+    subjects = set()
+    levels = set()
+    
+    for sub in ClassSubject.objects.all():
+        splited_sub = sub.subject.split(',')
+        try:
+            subjects.add(splited_sub[0].strip())
+        except IndexError:
+            pass
+
+        try:
+            levels.add(splited_sub[1].strip())
+        except IndexError:
+            pass        
+
+    query = request.GET.get('text', None)
+    what = request.GET.get('what', None)
+    
+    system = request.GET.get('system', None)
+    subject = request.GET.get('subject', None)
+    level = request.GET.get('level', None)
+
+    price = int(request.GET.get('price', 0))
+    day = int(request.GET.get('day', -1))
+    time = int(request.GET.get('time', -1))
+    crb = request.GET.get('crb', False)
+    sort = request.GET.get('crb', 'price')
+    
+    tutors = Tutor.objects.select_related()    
+    
+    if crb:
+        tutors = tutors.filter(profile__crb_checked=True)
+    
+    if query:
+        if what == 'tutors':
+            tutors = tutors.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+        else :
+            tutors = tutors.filter(subjects__subject__subject__icontains=query)
+
+    if price:
+        tutors = tutors.filter(Q(subjects__subject__subject__icontains=subject), Q(subjects__subject__subject__icontains=level), Q(subjects__credits__lte=price))
+    else:
+        tutors = tutors.filter(Q(subjects__subject__subject__icontains=subject), Q(subjects__subject__subject__icontains=level))
+    
+    
+    if day >= 0 and time >=0:
+        tutors = tutors.filter(week_availability__weekday=day, week_availability__begin=datetime.time(time,0))
+    else:
+        if day >= 0:
+            tutors = tutors.filter(week_availability__weekday=day)    
+        if time >= 0:
+            tutors = tutors.filter(week_availability__begin=datetime.time(time,0))
+
+    if sort == 'price':
+        tutors = tutors.annotate(price = Max('subjects__credits')).order_by('price')
+    elif sort == 'rating':
+        tutors = tutors.distinct().order_by('-profile__avg_rate')
+    elif sort == 'classes':
+        tutors = tutors.distinct().order_by('-profile__classes_given')
+            
     return { 
+        'subjects': sorted(subjects),
+        'levels': sorted(levels),
+        
         'tutors': tutors,
-        'query': query,
-        'query_type': query_type,
     }

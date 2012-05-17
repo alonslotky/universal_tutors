@@ -84,7 +84,7 @@ class CustomIndexDashboard(Dashboard):
             collapsible=True,
             column=1,
             css_classes=('collapse closed',),
-            models=('django.contrib.*', 'apps.profile.models.NewsletterSubscription', 'flatblocks.*'),
+            models=('django.contrib.*', 'apps.profile.models.NewsletterSubscription', 'flatblocks.*', 'paypal.*'),
         ))
 
         # append another link list module for "support".

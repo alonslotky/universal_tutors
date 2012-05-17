@@ -40,6 +40,8 @@ recaptcha-client
 python-twitter
 pygeoip
 django-fancy-autocomplete==0.1a1
+django-paypal
+#M2Crypto
 
 #CMS, blogging and other content management
 django-flatblocks
