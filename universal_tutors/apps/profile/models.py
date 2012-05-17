@@ -844,7 +844,7 @@ def topup_successful(sender, **kwargs):
     ipn_obj = sender
     try:
         topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-        if topup.value == ipn_obj.mc_gross:
+        if topup.value == float(ipn_obj.mc_gross):
             topup.topup()
         else:
             topup.set_as_hacked()
