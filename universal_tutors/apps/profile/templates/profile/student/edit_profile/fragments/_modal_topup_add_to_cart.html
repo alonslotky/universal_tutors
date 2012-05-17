@@ -1,0 +1,66 @@
+{% load classes_tags %}
+
+  <form id="topup-form" class="nice">
+  	{% csrf_token %}
+	<div class="row">&nbsp;</div>
+  	<div class="row">
+      <div class="four columns">        
+        <label>User Account</label>
+      </div>
+
+      <div class="eight columns">
+    	<strong>{{person.get_full_name}}</strong>
+	  </div>	  
+	</div>
+	<div id="id_credits_errors" class="formError hidden">Please select the number of credits you want to top up.</div>
+  	<div class="row">
+      <div class="four columns">        
+        <label>Credits to top up</label>
+      </div>
+
+      <div class="eight columns">
+    	<select id="id_credits" name="credits" class="stretch">
+    		<option value="">-------</option>
+    		<option value="5">5 credits ({{currency.symbol}} {{5|in_currency:currency|floatformat:2}})</option>
+    		<option value="10">10 credits ({{currency.symbol}} {{10|in_currency:currency|floatformat:2}})</option>
+    		<option value="15">15 credits ({{currency.symbol}} {{15|in_currency:currency|floatformat:2}})</option>
+    		<option value="20">20 credits ({{currency.symbol}} {{20|in_currency:currency|floatformat:2}})</option>
+    		<option value="25">25 credits ({{currency.symbol}} {{25|in_currency:currency|floatformat:2}})</option>
+    		<option value="50">50 credits ({{currency.symbol}} {{50|in_currency:currency|floatformat:2}})</option>
+    		<option value="100">100 credits ({{currency.symbol}} {{100|in_currency:currency|floatformat:2}})</option>
+    	</select>
+	  </div>	  
+	</div>
+	<div class="row">&nbsp;</div>
+  	<div class="row">
+	    <input type="submit" class="small button" value="Top Up">
+	</div>
+  </form>
+
+
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#topup-form').submit(function(e){
+			e.preventDefault();
+			if($('#id_credits').val()) {
+				$('#modal-topup-container').fadeOut(function(){
+					$('#modal-topup-loading').fadeIn(function(){
+						$.ajax({
+							type: 'post',
+							url: '{% url topup_cart person.username %}',
+							data: $('#topup-form').serialize(),
+							success: function(response) {
+								$('#modal-topup-container').html(response);
+								$('#modal-topup-loading').fadeOut(function(){
+									$('#modal-topup-container').fadeIn();
+								});				
+							}
+						});
+					});
+				});
+			} else {
+				$('#id_credits_errors').removeClass('hidden');
+			}
+		});
+	});
+</script>

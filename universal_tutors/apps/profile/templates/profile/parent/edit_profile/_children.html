@@ -32,7 +32,7 @@
 	            	{{child_profile.credit}} credit{{child_profile.credit|pluralize}}
 	            </div>
 	            <div class="one columns phone-two">
-				    <a class="button" href="javascript:;" onclick="add_credits('{{child.username}}');"><span class="icon credits">Top Up Credits</span></a>
+				    <a class="button" href="javascript:;" data-reveal-id="modal-topup" onclick="topup_account('{% url topup_cart child.username %}');"><span class="icon credits">Top Up Credits</span></a>
 				    <a class="button" href="{% url history child.username %}"><span class="icon history">View History</span></a>
 	            </div>
 	          </div>
@@ -46,17 +46,5 @@
       </tr>
     </table>
   </li>
-
-  <script type="text/javascript">
-  	var add_credits = function(id){
-  		if(confirm('This will simulate a transaction to add 30 credits to your account. Click "OK" to continue.')) {
-  			$.get('{% url add_credits %}'+ id +'/', function(){
-  				window.location.reload();
-  			});
-  		}
-  	};
-  </script>
-  
-
 {% endwith %}
 {% endwith %}

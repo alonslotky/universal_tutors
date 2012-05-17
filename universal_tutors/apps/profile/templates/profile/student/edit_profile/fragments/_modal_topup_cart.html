@@ -1,0 +1,56 @@
+{% load classes_tags %}
+
+<div class="row">&nbsp;</div>
+<div class="row">
+  <div class="four columns">        
+    <label>User Account</label>
+  </div>
+  <div class="eight columns">
+	<strong>{{person.get_full_name}}</strong>
+  </div>	  
+</div>
+<div class="row">
+  <div class="four columns">        
+    <label>Credits</label>
+  </div>
+  <div class="eight columns">
+	<strong>{{topup.credits}} credits</strong>
+  </div>	  
+</div>
+<div class="row">
+  <div class="four columns">        
+    <label>Value</label>
+  </div>
+  <div class="eight columns">
+  	{% with topup.currency as currency %}
+	<strong>{{currency.symbol}} {{topup.credits|in_currency:currency|floatformat:2}}</strong>
+	{% endwith %}
+  </div>	  
+</div>
+<div class="row">&nbsp;</div>
+<div class="row center">
+  {% if settings.DEBUG %}{{form.sandbox}}{% else %}{{form.render}}{% endif %}
+</div>
+<div class="row">&nbsp;</div>
+<div class="row center">
+  <a href="javascript:;" id="cancel-topup">Cancel or change the amount of credits</a>
+</div>
+
+<script type="text/javascript">
+	$('#cancel-topup').click(function(){
+		$('#modal-topup-container').fadeOut(function(){
+			$('#modal-topup-loading').fadeIn(function(){
+				$.ajax({
+					type: 'get',
+					url: '{% url topup_cancel person.username 1 %}',
+					success: function(response) {
+						$('#modal-topup-container').html(response);
+						$('#modal-topup-loading').fadeOut(function(){
+							$('#modal-topup-container').fadeIn();
+						});				
+					}
+				});
+			});
+		});		
+	});
+</script>

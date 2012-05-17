@@ -1,0 +1,15 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Top Up Credits{% endblock %}
+{% block body_class %}app student{% endblock %}
+
+{% block content %}
+
+<section class="blue feature-box"><div class="inner">
+      <h1>Top Up Credits<span>{% if user != person %}{{person.get_full_name}}'s{% else %}Your{% endif %} account has been top up credits successful.</span></h1>
+</div></section>
+
+<div class="row center"><a href="{% url profile %}">Click here to back to your profile</a></div>      
+{% endblock %}

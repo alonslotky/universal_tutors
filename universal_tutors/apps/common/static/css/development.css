@@ -54,6 +54,8 @@ h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 .tutor-qualifications-list li { margin: 0; }
 
 .message .messages .inside { overflow: auto; }
+
+.modal-loading { height: 200px; background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; }
 .message .messages .inside.loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; }
 .tabs-content li#availabilityTab { min-width: 1040px; }
 <<<<<<< HEAD

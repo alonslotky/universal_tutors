@@ -15,6 +15,7 @@ from django.template.loader import render_to_string
 
 import re, unicodedata, random, string, datetime, os, pytz, threading, urlparse
 
+from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
@@ -500,7 +501,7 @@ class UserProfile(BaseModel):
         
             completeness = int(no_items / 6.0 * 100)
         elif self.type == self.TYPES.PARENT:
-            no_items += 4 if self.children.count() else 0
+            no_items += 4 if user.children.count() else 0
             completeness = int(no_items / 8.0 * 100)
         else:
             completeness = 0
@@ -527,6 +528,55 @@ class UserCreditMovement(BaseModel):
 
     def __unicode__(self):
         return '%s: %s' % (self.get_type_display(), self.credits)
+
+class TopUpItem(BaseModel):
+    """
+    A TopUpItem
+    """
+    class Meta:
+        ordering = ['-created']
+
+    STATUS_TYPES = get_namedtuple_choices('TOPUP_STATUS_TYPES', (
+        (0, 'CART', 'On Cart'),
+        (1, 'CANCELED', 'Canceled'),
+        (2, 'FLAGGED', 'Flagged'),
+        (3, 'HACKED', 'HACKED! The amount paid were changed'),
+        (99, 'DONE', 'Done'),
+    ))
+    
+    user = models.ForeignKey(User, related_name = 'topups')
+    currency = models.ForeignKey(Currency, related_name='topups')
+    value = models.FloatField()
+    credits = models.PositiveIntegerField()
+    status = models.PositiveSmallIntegerField(choices = STATUS_TYPES.get_choices(), default = STATUS_TYPES.CART)
+    invoice = models.CharField(max_length = 20, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.invoice:
+            while True:
+                self.invoice = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(20))
+                if not TopUpItem.objects.filter(invoice=self.invoice).exclude(id=self.id):
+                    break
+        super(self.__class__, self).save(*args, **kwargs)
+    
+    def __unicode__(self):
+        return "[%s] %s: %s" % (self.user, self.get_type_display(), self.credit_fee)
+
+    def topup(self):
+        self.status = self.STATUS_TYPES.DONE
+        self.user.profile.topup_account(credits)
+    
+    def flagged(self):
+        self.status = self.STATUS_TYPES.FLAGGED
+        self.save()
+
+    def cancel(self):
+        self.status = self.STATUS_TYPES.CANCELED
+        self.save()
+
+    def set_as_hacked(self):
+        self.status = self.STATUS_TYPES.HACKED
+        self.save()
 
 
 ### TUTOR ###########
@@ -787,4 +837,28 @@ class Referral(BaseModel):
             t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
             t.setDaemon(True)
             t.start()
+
+
+#### TOPUP CREDITS #######################################################
+def topup_successful(sender, **kwargs):
+    ipn_obj = sender
+    try:
+        topup = TopUpItem.objects.get(id = ipn_obj.item_number)
+        if topup.value == ipn_obj.value:
+            topup.topup()
+        else:
+            topup.set_as_hacked()
+    except TopUpItem.DoesNotExist:
+        pass
+    
+def topup_flagged(sender, **kwargs):
+    ipn_obj = sender
+    try:
+        topup = TopUpItem.objects.get(id = ipn_obj.item_number)
+        topup.flagged()
+    except TopUpItem.DoesNotExist:
+        pass
+
+payment_was_successful.connect(topup_successful, dispatch_uid='topup_successful')
+payment_was_flagged.connect(topup_flagged, dispatch_uid='topup_flagged')
 

@@ -34,7 +34,7 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutors/$', 'tutors', {}, name = "tutors"),
 
     url(r'^(?i)book-class/(?P<username>[\w\-\_]+)/$', 'book_class', {}, name = "book_class"),
-    url(r'^(?i)tutor/report/(?P<username>[\w\-\_]+)/$', 'report', {}, name = "report"),
+    url(r'^(?i)report/(?P<username>[\w\-\_]+)/$', 'report', {}, name = "report"),
 )
 
 urlpatterns += patterns('apps.profile.views.ajax',
@@ -104,6 +104,13 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)referral-friend/$', 'referral_friend', {}, name = "referral_friend"),
 )
 
+urlpatterns += patterns('apps.profile.views.topup',
+    url(r'^(?i)topup/cart/$', 'topup_cart', name = "topup_cart"),
+    url(r'^(?i)topup/cart/(?P<username>[\w\-\_]+)/$', 'topup_cart', name = "topup_cart"),
+    url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/$', 'topup_cancel', name = "topup_cancel"),
+    url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/(?P<ajax>\d)/$', 'topup_cancel', name = "topup_cancel"),
+    url(r'^(?i)topup/successful/(?P<username>[\w\-\_]+)/$', 'topup_successful', name = "topup_successful"),
+)
 
 
 

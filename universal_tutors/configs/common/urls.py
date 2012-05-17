@@ -49,7 +49,7 @@ urlpatterns += patterns('',
     (r'^robots\.txt$', redirect_to, {'url': '/static/robots.txt'}),
 	(r'^tinymce/', include('tinymce.urls')),
 	(r'^jsi18n/(?P<packages>\S+?)/$', 'django.views.i18n.javascript_catalog'),
-	(r'^jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages':'django.conf'}), 
+	(r'^jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages':'django.conf'}),
 )
 
 if settings.DEBUG:
@@ -68,6 +68,11 @@ urlpatterns += patterns('',
     url(r'^accounts/social/connections/$', redirect_to, {'url': '/dashboard/edit_profile/'}),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
+)
+
+# PAYPAL
+urlpatterns += patterns('',
+    (r'^topupcredits/paypal/ipn/universaltutors/', include('paypal.standard.ipn.urls')),
 )
 
 urlpatterns += staticfiles_urlpatterns()

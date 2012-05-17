@@ -15,55 +15,55 @@
       <div class="hide-on-phones">
       {% include 'profile/fragments/_timer.html' %}
       </div>
+
+
       <section class="row clear">
-      <form method="get" action="{% url search %}" class="nice custom">
+	    <form method="get" action="{% url search %}" class="nice">
         <div class="twelve columns">
           <div class="row">
               <div class="four columns">
               
                 <div class="row space">
                   <div class="three columns">
-                    <select name="what">
-	    				<option value="tutors">Tutors</option>
-	    				<option value="subjects">Subjects</option>
-	  				</select>
+                    <label>Subject</label>
                   </div>
                   <div class="nine columns">
-	  				<input name="text" type="text" class="input-text" placeholder="Search" />
-	  				<input type="submit" class="search-icon" value="Search" />
+                    <select id="id_subject" class="stretch" name="subject">
+                      <option value="">Any Subject</option>
+                      {% for subject in subjects %}
+                      <option value="{{subject}}">{{subject}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="row space">
+                  <div class="three columns">
+                    <label>Price</label>
+                  </div>
+                  <div class="nine columns">
+                    <select id="id_price" class="stretch" name="price">
+                		<option value="0">Any price</option>
+	                  	<option value="10"> up to 10 credits</option>
+	                  	<option value="20"> up to 20 credits </option>
+	                  	<option value="30"> up to 30 credits </option>
+	                  	<option value="40"> up to 40 credits </option>
+	                  	<option value="50"> up to 50 credits </option>
+                    </select>
                   </div>
                 </div>
                 
               </div>
-              <div class="four columns">
-	           <div class="row space">
-	              <div class="three columns">
-	                <label>Price</label>
-	              </div>
-	              <div class="nine columns">
-	                <select id="price" name="price" class="stretch">
-                		<option value="">-----</option>
-	                  	<option value="1"> < 5 </option>
-	                  	<option value="2"> 5 - 10 </option>
-	                  	<option value="3"> 10 - 15 </option>
-	                  	<option value="4"> 15 - 20 </option>
-	                  	<option value="5"> 20 - 25 </option>
-	                  	<option value="6"> 25 - 30 </option>
-	                  	<option value="7"> > 30 </option>
-	                </select>
-	              </div>
-	            </div>
-            </div>
               
-             <!--  <div class="four columns">
+              <div class="four columns">
                 
                 <div class="row space">
                   <div class="three columns">
                     <label>System</label>
                   </div>
                   <div class="nine columns">
-                    <select class="stretch">
-                      <option>Option</option>
+                    <select  id="id_system" class="stretch" name="system">
+                      <option value="">Any System</option>
                     </select>
                   </div>
                 </div>
@@ -73,13 +73,16 @@
                     <label>Level</label>
                   </div>
                   <div class="nine columns">
-                    <select class="stretch">
-                      <option>Option</option>
+                    <select id="id_level" class="stretch" name="level">
+                      <option value="">Any Level</option>
+                      {% for level in levels %}
+                      <option value="{{level}}">{{level}}</option>
+                      {% endfor %}
                     </select>
                   </div>
                 </div>
 
-              </div> -->
+              </div>
               
               <div class="four columns">
               
@@ -90,8 +93,8 @@
                   <div class="nine columns">
                     <div class="row">
                       <div class="six columns">
-                        <select id="day" name="day" class="stretch">
-                        	<option value="">-----</option>
+                        <select id="id_day" class="stretch" name="day">
+                        	<option value="-1">Any Day</option>
                           	<option value="0">Monday</option>
     						<option value="1">Tuesday</option>
         					<option value="2">Wednesday</option>
@@ -102,46 +105,55 @@
                         </select>
                       </div>
                       <div class="six columns">
-                        <select id="time" name="time" class="stretch">
-                          	<option value="">-----</option>
-                          	<option value="0">0</option>
-    						<option value="1">1</option>
-        					<option value="2">2</option>
-					        <option value="3">3</option>
-					        <option value="4">4</option>
-					        <option value="5">5</option>
-					        <option value="6">6</option>
-					        <option value="7">7</option>
-                          	<option value="8">8</option>
-    						<option value="9">9</option>
-        					<option value="10">10</option>
-					        <option value="11">11</option>
-					        <option value="12">12</option>
-					        <option value="13">13</option>
-					        <option value="14">14</option>
-					        <option value="15">15</option>
-                          	<option value="16">16</option>
-    						<option value="17">17</option>
-        					<option value="18">18</option>
-					        <option value="19">19</option>
-					        <option value="20">20</option>
-					        <option value="21">21</option>
-					        <option value="22">22</option>
-				         	<option value="23">23</option>
+                        <select class="stretch" id="id_time" name="time">
+                          	<option value="-1">Any Time</option>
+                          	<option value="0">12:00 a.m.</option>
+    						<option value="1">01:00 a.m.</option>
+        					<option value="2">02:00 a.m.</option>
+					        <option value="3">03:00 a.m.</option>
+					        <option value="4">04:00 a.m.</option>
+					        <option value="5">05:00 a.m.</option>
+					        <option value="6">06:00 a.m.</option>
+					        <option value="7">07:00 a.m.</option>
+                          	<option value="8">08:00 a.m.</option>
+    						<option value="9">09:00 a.m.</option>
+        					<option value="10">10:00 a.m.</option>
+					        <option value="11">11:00 a.m.</option>
+					        <option value="12">12:00 p.m.</option>
+					        <option value="13">01:00 p.m.</option>
+					        <option value="14">02:00 p.m.</option>
+					        <option value="15">03:00 p.m.</option>
+                          	<option value="16">04:00 p.m.</option>
+    						<option value="17">05:00 p.m.</option>
+        					<option value="18">06:00 p.m.</option>
+					        <option value="19">07:00 p.m.</option>
+					        <option value="20">08:00 p.m.</option>
+					        <option value="21">09:00 p.m.</option>
+					        <option value="22">10:00 p.m.</option>
+				         	<option value="23">11:00 p.m.</option>
                         </select>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="button"><input type="submit" class="icon search" value="Search"></div>
+
+                <div class="row">
+                  <div class="three columns">
+                    <label>CRB checked</label>
+                  </div>
+                  <div class="nine columns">
+                    <input id="id_crb" name="crb" type="checkbox" />
+                  </div>
+                </div>
+                
               </div>
               
-            
+
           </div>
+            <div class="button" style="float: right;"><input type="submit" class="icon search" value="Search"></div>
         </div>
-        </form>
+      </form>
       </section>
-      
       
       <hr class="big">
       
@@ -151,7 +163,6 @@
           <div class="right filter">
             <form id="search-filter">
               <select id="search-filter">
-              	<option value="">-----</option>
                 <option value="price">Sort by Price</option>
                 <option value="rating">Sort by Rating</option>
                 <option value="classes">Sort by Classes Given</option>
@@ -206,32 +217,45 @@
 <script>
 	$(document).ready(function(){
 		var sort = $.query.get('sort');
-		if (sort != "") {
+		if (sort) {
 			$("select#search-filter option[value='" + sort +"']").attr("selected", true);
 		}
 		
-		var price = $.query.get('price');
-		if (price != "") {
-			$("select#price option[value='" + price +"']").attr("selected", true);
+		var subject = $.query.get('subject');
+		if (subject) {
+			$("select#id_subject option[value='" + subject +"']").attr("selected", true);
+		}
+
+		var system = $.query.get('system');
+		if (system) {
+			$("select#id_system option[value='" + system +"']").attr("selected", true);
 		}
 		
-		var text = $.query.get('text');
-		if (text != "") {
-			$(".main input[name=text]").val(text).html(text);
+		var level = $.query.get('level');
+		if (level) {
+			$("select#id_level option[value='" + level +"']").attr("selected", true);
+		}
+
+		var price = $.query.get('price');
+		if (price) {
+			$("select#id_price option[value='" + price +"']").attr("selected", true);
 		}
 		
 		var day = $.query.get('day');
-		console.log(day!="");
-		if (day > -1) {
-			console.log($("select#day option[value=" + day +"]"));
-			$("select#day option[value=" + day +"]").attr("selected", true);
+		if (day) {
+			$("select#id_day option[value='" + day +"']").attr("selected", true);
+		}
+
+		var time = $.query.get('time');
+		if (time) {
+			$("select#id_time option[value='" + time +"']").attr("selected", true);
 		}
 		
-		var time = $.query.get('time');
-		if (day > -1) {
-			$("select#time option[value=" + time +"]").attr("selected", true);
+		var crb = $.query.get('crb');
+		if (crb) {
+			$('#id_crb').attr('checked', 'checked');
 		}
-				
+		
 		$("#search-filter").change(function(e){
 			var value = e.target.value;
 			if (value !== undefined || value !== ""){
