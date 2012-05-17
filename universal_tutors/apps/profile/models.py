@@ -560,7 +560,7 @@ class TopUpItem(BaseModel):
         super(self.__class__, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return "[%s] %s: %s" % (self.user, self.get_type_display(), self.credit_fee)
+        return "[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
 
     def topup(self):
         self.status = self.STATUS_TYPES.DONE
@@ -844,7 +844,7 @@ def topup_successful(sender, **kwargs):
     ipn_obj = sender
     try:
         topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-        if topup.value == ipn_obj.value:
+        if topup.value == ipn_obj.mc_gross:
             topup.topup()
         else:
             topup.set_as_hacked()
