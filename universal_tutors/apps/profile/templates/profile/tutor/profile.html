@@ -66,6 +66,11 @@
                 {% endfor %}
               </ul>
 
+              <label>CRB certified</label>
+              <ul class="tutor-qualifications-list">
+				{% if profile.crb_checked %}Yes{% else %}No{% endif %}
+              </ul>
+
               <label>Webcam</label>
               <ul class="tutor-qualifications-list">
 				{% if profile.webcam %}Yes{% else %}No{% endif %}
@@ -75,6 +80,7 @@
               <ul class="tutor-qualifications-list">
 				{{profile.classes_given}}
               </ul>
+
             </div>
             
             {% with person.subjects.all as subjects %}

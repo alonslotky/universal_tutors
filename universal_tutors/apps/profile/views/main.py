@@ -19,7 +19,7 @@ from apps.common.utils.decorators import over16_required
 from apps.profile.models import UserProfile, NewsletterSubscription
 from apps.profile.forms import *
 
-import pytz
+import pytz, datetime
 
 @main_render()
 def profile(request, username=None):
@@ -219,6 +219,7 @@ def edit_student_profile(request):
         'profile':profile,
         'form': form,
         'timezones': pytz.common_timezones,
+        'date': datetime.date.today(),
     }
 
 

@@ -188,21 +188,31 @@
           </div>
           
           <div class="four columns">
-            <p>{{tutor_profile.about|truncatechars:300}}</br><a href="{% url profile tutor.username %}">Read More</a></p>
+            <p>{{tutor_profile.about|truncatechars:300}}{% if tutor_profile.crb_checked %}<br/>(is CRB certified){% endif %}<br/><a href="{% url profile tutor.username %}">Read More</a></p>
           </div>
           
 		  <div class="two columns rating">
 			{% get_stars tutor_profile.avg_rate %}
             <div class="reviews">
               <span class="hidden">Rating: {{tutor_profile.avg_rate}}.</span>
-              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} Review{{tutor_profile.no_reviews|pluralize}}</a>
+              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} given</a>
             </div>
           </div>
           
           <div class="two columns action">
+            {% if tutor_profile.video %}<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');">Watch Video</a>{% endif %}
+			{% if not tutor_profile.crb_checked %}
+				{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
+		            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb">Send a Message</a>
+		            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb">Book a Class</a>
+				{% else %}
+		            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
+		            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>				
+				{% endif %}
+            {% else %}
             <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
-            <!-- a href="#" class="watch-video" data-reveal-id="modal-video">Watch Video</a-->
             <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>
+			{% endif %}
             <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}">{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
             <a href="{% url report tutor.username %}" class="report">Report</a>
           </div>
@@ -213,6 +223,14 @@
 
 {% endwith %}
 {% endwith %}
+
+{% with 'True' as can_send_message %}
+  {% include 'profile/fragments/_modal_messages.html' %}
+{% endwith %}
+
+  {% include 'profile/fragments/_modal_video.html' %}
+  {% include 'profile/fragments/_alert_crb.html' %}
+
 
 <script>
 	$(document).ready(function(){
@@ -242,12 +260,12 @@
 		}
 		
 		var day = $.query.get('day');
-		if (day) {
+		if (day>=0) {
 			$("select#id_day option[value='" + day +"']").attr("selected", true);
 		}
 
 		var time = $.query.get('time');
-		if (time) {
+		if (time>=0) {
 			$("select#id_time option[value='" + time +"']").attr("selected", true);
 		}
 		

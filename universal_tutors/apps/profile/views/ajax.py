@@ -593,6 +593,26 @@ def ajax_book_class(request, username, date):
     }
 
 
+@main_render('profile/student/edit_profile/classes/default_weekday_calendar.html')
+def ajax_week_classes(request, date):
+    """
+    view my recent activity
+    """
+    user = request.user
+    
+    try:
+        date_str = date.split('-')
+        date = datetime.date(int(date_str[0]), int(date_str[1]), int(date_str[2]))
+        date = date - datetime.timedelta(days=date.weekday())
+    except IndexError:
+        raise http.Http404()
+
+    return {
+        'person': user,
+        'profile': user.profile,
+        'date': date,
+    }
+
 
 @login_required
 def add_credits(request, username=None):

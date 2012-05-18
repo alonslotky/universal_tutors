@@ -425,6 +425,23 @@ class UserProfile(BaseModel):
     
         return week
 
+    def week_classes(self, date=None):
+        user = self.user
+        today = datetime.date.today()
+        date = date if date else datetime.date.today()
+        start_date = date - datetime.timedelta(days=date.weekday())
+        end_date = date + datetime.timedelta(days=7)
+                
+        booked = user.classes_as_student.filter(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE], date__gte=start_date, date__lte=end_date)
+        WEEKDAYS = WeekAvailability.WEEKDAYS.get_choices()
+        week = [(WEEKDAYS[weekday][1], weekday, []) for weekday in range(7)]
+
+        for b in booked:
+            week[b.date.weekday()][2].append(b)
+    
+        return week
+        
+
     def get_first_photo(self):
         return self.photos.all()[0].photo.path if self.photos.all() else os.path.join(settings.MEDIA_ROOT, self.DEFAULT_PHOTO)
 
