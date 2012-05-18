@@ -328,7 +328,7 @@ def report(request, username):
     success = False
     if request.method == 'POST':
         description = request.POST.get('violation-description')
-        user.sent_report.create(violator=tutor, description=description)
+        user.sent_report.create(violator=person, description=description)
         success = True
 
     return {
