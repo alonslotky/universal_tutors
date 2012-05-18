@@ -593,8 +593,8 @@ def ajax_book_class(request, username, date):
     }
 
 
-@main_render('profile/student/edit_profile/classes/default_weekday_calendar.html')
-def ajax_week_classes(request, date):
+@main_render()
+def ajax_week_classes(request, date, is_tutor = 0):
     """
     view my recent activity
     """
@@ -607,7 +607,13 @@ def ajax_week_classes(request, date):
     except IndexError:
         raise http.Http404()
 
+    if int(is_tutor):
+        template = 'profile/tutor/edit_profile/classes/default_weekday_calendar.html'
+    else:
+        template = 'profile/student/edit_profile/classes/default_weekday_calendar.html'
+
     return {
+        'TEMPLATE': template,
         'person': user,
         'profile': user.profile,
         'date': date,

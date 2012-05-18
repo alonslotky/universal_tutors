@@ -1,12 +1,12 @@
 {% load common_tags tutor_tags %}
 
-{% with period.tutor as tutor %}
+{% with period.student as student %}
 <div id="schedule-week-period_{{period.id}}" class="slider-box" style="{{period|get_class_period_calendar_size}}">
 	<div class="drop"><a id="schedule-week-period-open-link-{{period.id}}" href="javascript:;" class="drop-link">+</a></div>
 </div>
 <div id="schedule-week-period-dropbox-{{period.id}}" class="drop-box hidden">
 	<div class="drop-box-menu-item">
-		<a href="{% url class_detail period.id %}">{{period.subject}}</a> with <a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a>
+		<a href="{% url class_detail period.id %}">{{period.subject}}</a> with <a href="{% url profile student.username %}">{{student.get_full_name}}</a>
 	</div>
 </div>
 {% endwith %}

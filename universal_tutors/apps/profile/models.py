@@ -432,9 +432,8 @@ class UserProfile(BaseModel):
         start_date = date - datetime.timedelta(days=date.weekday())
         end_date = date + datetime.timedelta(days=7)
                 
-        booked = user.classes_as_student.filter(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE], date__gte=start_date, date__lte=end_date)
-        WEEKDAYS = WeekAvailability.WEEKDAYS.get_choices()
-        week = [(WEEKDAYS[weekday][1], weekday, []) for weekday in range(7)]
+        booked = Class.objects.filter(Q(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE], date__gte=start_date, date__lte=end_date), Q(tutor=user) | Q(student=user))
+        week = [(start_date+datetime.timedelta(days=weekday), weekday, []) for weekday in range(7)]
 
         for b in booked:
             week[b.date.weekday()][2].append(b)

@@ -110,6 +110,7 @@ def edit_tutor_profile(request):
         'subject_formset': subject_formset,
         'qualifications_formset': qualifications_formset,
         'timezones': pytz.common_timezones,
+        'date': datetime.date.today(),
     }
 
 
