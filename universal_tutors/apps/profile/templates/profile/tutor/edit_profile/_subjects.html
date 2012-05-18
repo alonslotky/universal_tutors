@@ -27,7 +27,7 @@
       </tr>
       <tr>
         <td>
-		  
+		  0
 		  <input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
 		  <input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
 		  <input id="id_subjects-MAX_NUM_FORMS" type="hidden" name="subjects-MAX_NUM_FORMS">
@@ -81,6 +81,9 @@
   	var currency_symbol = '{{currency.symbol}}';
   
   	$('#add-subject-link').click(function(){
+  		if (parseInt($('#id_subjects-TOTAL_FORMS').val()) > 11) {
+  			return;
+  		}
   		$(
 	  		'<div class="row">'+
 	  		'	<div class="one columns phone-one">'+
