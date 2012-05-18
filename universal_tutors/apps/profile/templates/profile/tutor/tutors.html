@@ -59,7 +59,9 @@
 	      {% endwith %}
 	      {% endfor %}
 	  {% empty %}
+	  	<div class="row center">
 	      You don't have any favorite Tutors and haven't attended any classes yet.
+      	</div>
       {% endfor %}
       
   	{% include 'profile/fragments/_modal_messages.html' %}
