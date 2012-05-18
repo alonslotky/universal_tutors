@@ -52,7 +52,7 @@
 	  {% endwith %}
 	  
 	  {% empty %}
-      <article><div class="row" style="text-align: center;">You didn't received any message yet.</div></article>	  
+      <article><div class="row" style="text-align: center;">You have not received any messages yet.</div></article>	  
 	  {% endfor %}
 		
 	  {% with 'True' as can_send_message %}{% include 'profile/fragments/_modal_messages.html' %}{% endwith %}
