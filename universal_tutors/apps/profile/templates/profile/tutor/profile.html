@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tutor_tags %}
+{% load fb_versions common_tags tutor_tags pagination_tags %}
 
 {% block title %}{{person.get_full_name}}'s profile{% endblock %}
 {% block body_class %}app student tutor-profile{% endblock %}
@@ -114,8 +114,8 @@
             </div>
           </div>
 	      <div class="row">&nbsp; </div>
-            
-        {% for review1, review2 in person.reviews_as_tutor.all|reviews_style %}
+            {% autopaginate reviews 20 %}
+        {% for review1, review2 in reviews|reviews_style %}
 	          <div class="row clear">
 	            <div class="six columns">
 	              <div class="small rating">
@@ -140,7 +140,7 @@
 	      {% empty %}
 	      		No reviews at moment.
           {% endfor %}
-          
+          {% paginate %}
           {% comment %}
           <!-- ul class="pagination">
             <li class="unavailable"><a href="">&laquo;</a></li>
