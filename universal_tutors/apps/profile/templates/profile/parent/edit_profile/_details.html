@@ -69,6 +69,31 @@
               </select>
             </div>  
           </div>
+          
+          {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
+          <div class="row user">
+            <div class="three columns phone-one">
+              <label>Country</label>
+            </div>
+            <div class="nine columns phone-three">
+              {{form.country}}
+            </div>  
+          </div>
+
+          {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
+          <div class="row date_of_birth">
+            <div class="three columns phone-one">
+              <label>Timezone</label>
+            </div>
+            <div class="nine columns phone-three">
+              <select id="id_timezone" name="timezone" class="stretch">
+              	{% for tz in timezones %}
+	                <option value="{{tz}}" {% if profile.timezone == tz %}selected="selected"{% endif %}>{{tz}}</option>
+              	{% endfor %}
+              </select>
+            </div>  
+          </div>
+
       </div>
     </div>
    
