@@ -21,7 +21,7 @@ def logout_view(request):
 
 def signin(request, *args, **kwargs):
 
-    next = request.REQUEST.get('next', reverse('profile'))
+    next = request.REQUEST.get('next', reverse('edit_profile'))
     
     if request.user.is_authenticated():
         return http.HttpResponseRedirect(next)

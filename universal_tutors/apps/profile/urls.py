@@ -16,9 +16,11 @@ urlpatterns = patterns('apps.profile.views.login',
 
 # Front-end profile
 urlpatterns += patterns('apps.profile.views.main',
-    url(r"^(?i)dashboard/$", 'dashboard', name="dashboard"),
+    url(r"^(?i)dashboard/$", 'edit_profile', name="dashboard"),
     url(r'^(?i)profile/$', 'profile', {}, name = "profile"),
     url(r'^(?i)profile/(?P<username>[\w\-\_]+)/$', 'profile', {}, name = "profile"),
+    url(r'^(?i)edit_profile/$', 'edit_profile', {}, name = "edit_profile"),
+
     url(r'^(?i)tutor/profile/edit/$', 'edit_tutor_profile', {}, name = "edit_tutor_profile"),
     url(r'^(?i)student/profile/edit/$', 'edit_student_profile', {}, name = "edit_student_profile"),
     url(r'^(?i)parent/profile/edit/$', 'edit_parent_profile', {}, name = "edit_parent_profile"),
