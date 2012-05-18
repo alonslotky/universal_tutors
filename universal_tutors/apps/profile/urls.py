@@ -81,6 +81,7 @@ urlpatterns += patterns('apps.profile.views.ajax',
 
     url(r'^(?i)ajax-class-week/$', 'ajax_week_classes', {}, name = "ajax_week_classes"),
     url(r'^(?i)ajax-class-week/(?P<date>[\d\-]+)/$', 'ajax_week_classes', {}, name = "ajax_week_classes"),
+    url(r'^(?i)ajax-class-week/(?P<date>[\d\-]+)/(?P<is_tutor>\d)/$', 'ajax_week_classes', {}, name = "ajax_week_classes"),
 )
 
 

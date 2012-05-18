@@ -1,0 +1,52 @@
+{% load common_tags tutor_tags %}
+
+<div id="schedule-this-week-period_{{period.id}}_{{type}}" class="slider-box type-{{type}}" style="{{period|get_edit_period_calendar_size}}">
+	<div class="drop"><a id="schedule-this-week-period-open-link-{{period.id}}_{{type}}" href="javascript:;" class="drop-link">open</a></div>
+</div>
+<div id="schedule-this-week-period-dropbox-{{period.id}}_{{type}}" class="drop-box hidden">
+	{% if type == profile.AVAILABILITY_TYPES.CUSTOM_DAY %}
+	<div class="drop-box-menu-item"><a id="schedule-this-week-period-delete-link_{{period.id}}_{{type}}" href="javascript:;">Delete</a></div>
+	{% else %}
+	{% endif %}
+</div>
+<script type="text/javascript">
+	$('#schedule-this-week-period-dropbox-{{period.id}}_{{type}}').appendTo('#schedule-this-week-{{weekday}}-container');
+
+	$('#schedule-this-week-period-open-link-{{period.id}}_{{type}}').click(function() {
+		var el = $('#schedule-this-week-period_{{period.id}}_{{type}}');
+		$('#schedule-this-week-period-dropbox-{{period.id}}_{{type}}').css({
+			'right': 970 - el.position().left - el.outerWidth() - 322 + $('#schedule-this-week-scrollbar-bar').position().left +'px'
+		});
+		$('#schedule-this-week-period-dropbox-{{period.id}}_{{type}}').toggle();
+	});
+	
+	$('#schedule-this-week-period-delete-link_{{period.id}}_{{type}}').click(function(){
+		$('#schedule-this-week-period-dropbox-{{period.id}}_{{type}}').remove();
+		$('#schedule-this-week-period_{{period.id}}_{{type}}').fadeOut(function(){
+			var el = $(this);
+			$.get('{% url user_delete_this_week_period period.id %}', function(data){
+				var parent = el.parent();
+				while (!parent.hasClass('shedule5')) 
+					parent = parent.parent();
+				
+				var parent_id = parent.attr('id');
+				$('#'+parent_id+' .slider-box').remove();
+				$('#'+parent_id).html(data);
+			});
+		});		
+	});
+	
+	$('#schedule-this-week-period_{{period.id}}_{{type}}').mousedown(function(e){
+		position = e.pageX - $(this).offset().left;
+		if(position < BORDER_SIZE) {
+			schedule_tw_slider_bar_mousedown_begin = true;		}
+		if(position > $(this).outerWidth() - BORDER_SIZE) {
+			schedule_tw_slider_bar_mousedown_end = true;		
+		}
+		schedule_tw_slider_bar_mousedown_id = $(this).attr('id');
+		schedule_tw_slider_bar_mousedown_x = e.pageX;
+		schedule_tw_slider_bar_mousedown_left = $(this).position().left;
+		schedule_tw_slider_bar_mousedown_width = $(this).width();
+		schedule_tw_slider_bar_mousedown_outerwidth = $(this).outerWidth();
+	});
+</script>
