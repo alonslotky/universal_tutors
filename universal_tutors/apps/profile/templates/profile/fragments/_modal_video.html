@@ -1,6 +1,13 @@
 <div id="modal-video" class="reveal-modal message">
   <h4>Video</h4>
-	<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ profile.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>
+	<iframe id="video-frame" width="520" height="300" src="{% if profile.video %}http://www.youtube.com/embed/{{ profile.get_video_id }}{% endif %}" class="hidden" frameborder="0" allowfullscreen></iframe>
 
-  <a class="close-reveal-modal">&#215;</a>
+  <a id="close-video-link" class="close-reveal-modal" onclick="$('#video-frame').addClass('hidden');">&#215;</a>
 </div>
+
+<script type="text/javascript">
+	var change_video_profile = function(id) {
+		$('#video-frame').attr('src', 'http://www.youtube.com/embed/'+id);
+		$('#video-frame').removeClass('hidden');
+	}
+</script>

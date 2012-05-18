@@ -1,0 +1,286 @@
+{% load common_tags tutor_tags %}
+
+<div class="schedule-this-week-controls">
+	<div class="schedule-this-week-controls-nav prev"><a href="javascript:;" onclick="change_calendar_date('{{prev_week|date:"Y-m-d"}}');">&laquo; previous week</a></div>
+	<div class="schedule-this-week-controls-nav next"><a href="javascript:;" onclick="change_calendar_date('{{next_week|date:"Y-m-d"}}');">next week &raquo;</a></div>
+	<div class="schedule-this-week-controls-label">
+		<label>Standard day</label><span class="day-color normal">&nbsp;</span>
+		<label>Custom day</label><span class="day-color custom">&nbsp;</span>
+		<label>Select date</label><a class="datepicker" onclick="$('#schedule-this-week-calendar-box').toggle();" href="javascript:;">17</a>
+	</div>
+</div>
+<div id="schedule-this-week-calendar-box" class="calendar-box float-calendar schedule-this-week-calendar hidden">
+	<div id="calendar-box-container">{% include "core/fragments/home/_calendar.html" %}</div>
+	<span class="arrow">arrow</span>
+</div>
+<div class="scroll-item-container">
+	<ul class="shedule4 scroll-item">
+		{% for hour in 0|range_to:24 %}
+		<li><span class="time">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}:00</span></li>
+		{% endfor %}
+	</ul>
+</div>
+
+{% for date, day, weekday, periods in this_week %}
+	<div id="schedule-this-week-{{weekday}}-container" class="schedule-this-weekday {% if periods %}shedule-row{% else %}rest-day-box{% endif %}">
+		<span class="week-number with-date">
+			<span class="weekday">{{day|slice_list:3}}</span></br>
+			<span class="day">{{date|date:"d"}}</span></br>
+			<span class="date">{{date|date:"M y"}}</span>
+		</span>
+		<div id="schedule-this-week-{{weekday}}" class="scroll-item-container {% if not periods %}hidden{% endif %}">
+			<div id="schedule-this-week-{{weekday}}-periods-container" class="shedule5 scroll-item">
+				{% for type, period in periods %}
+					{% include "profile/tutor/edit_profile/availability/_this_week_period.html" %}
+				{% endfor %}
+			</div>
+		</div>
+		<div id="schedule-this-week-{{weekday}}-dayoff" class="scroll-item-container {% if periods %}hidden{% endif %}">
+			<span class="txt2">Day off</span>
+		</div>
+	</div>
+{% endfor %}
+			<!-- div class="drop-box" style="top:12px;right:12px;">
+				<a href="#" class="prev">preview</a>
+				<form action="#" class="select-date-form">
+					<fieldset>
+						<label for="date1">Date</label>
+						<div class="custom-row">
+							<input id="date1" type="text" value="27" class="default change-num" title="min=1;max=31" />
+							<a href="#" class="up">up</a>
+							<a href="#" class="down">down</a>
+						</div>
+						<div class="custom-row">
+							<input type="text" value="09" class="default change-num" title="min=1;max=12" />
+							<a href="#" class="up">up</a>
+							<a href="#" class="down">down</a>
+						</div>
+						<div class="custom-row year-row">
+							<input type="text" value="2011" class="default change-num" title="min=1;max=5000" />
+							<a href="#" class="up">up</a>
+							<a href="#" class="down">down</a>
+						</div>
+						<a href="#" class="datepicker2">17</a>
+					</fieldset>
+				</form>
+				<a href="#" class="next">next</a>
+			</div -->
+
+<div id="schedule-this-week-scrollbar-container" class="schedule-scrollbar-container">
+	<div id="schedule-this-week-scrollbar-bar" class="schedule-scrollbar-bar"></div>
+</div>
+<script type="text/javascript">
+	/* SCROLLER */
+	var schedule_tw_scrollbar_bar_mousedown = false;
+	var schedule_tw_scrollbar_bar_mousedown_x = null;
+	var schedule_tw_scrollbar_bar_mousedown_left = null;
+
+	$('#schedule-this-week-scrollbar-bar').mousedown(function(e){
+		e.preventDefault();
+		schedule_tw_scrollbar_bar_mousedown = true;
+		schedule_tw_scrollbar_bar_mousedown_left = $(this).position().left;
+		schedule_tw_scrollbar_bar_mousedown_x = e.pageX;
+		$('.drop-box').hide();
+	});
+	$(window).mousemove(function(e){
+		if(schedule_tw_scrollbar_bar_mousedown) {
+			e.preventDefault();
+			var position = schedule_tw_scrollbar_bar_mousedown_left + (e.pageX - schedule_tw_scrollbar_bar_mousedown_x);
+			position = position < 321 ? position : 321;
+			position = position > 0 ? position : 0;
+			$('#schedule-this-week-scrollbar-bar').css('left', position +'px');
+			$('.scroll-item-container .scroll-item').css('margin-left', -position +'px');
+		}
+	});
+	$(window).mouseup(function(){
+		schedule_tw_scrollbar_bar_mousedown = false;		
+	});
+	
+	
+	/* TIME SLIDER */
+	var BORDER_SIZE = 20;
+	var schedule_tw_slider_bar_mousedown_begin = false;
+	var schedule_tw_slider_bar_mousedown_end = false;
+	var schedule_tw_slider_bar_mousedown_min = false;
+	var schedule_tw_slider_bar_mousedown_max = false;
+	var schedule_tw_slider_bar_mousedown_x = null;
+	var schedule_tw_slider_bar_mousedown_left = null;
+	var schedule_tw_slider_bar_mousedown_width = null;
+	var schedule_tw_slider_bar_mousedown_id = null;
+
+	var schedule_tw_slider_row_mousedown = false;
+	var schedule_tw_slider_row_mousedown_x = null;
+	var schedule_tw_slider_row_mousedown_left = null;
+	var schedule_tw_slider_row_mousedown_id = null;
+
+	
+	$('#schedule-this-week-container .drop-link').mousedown(function(e){ e.preventDefault(); });
+	
+	$('#schedule-this-week-container .shedule5').mousedown(function(e){
+		e.preventDefault();
+		schedule_tw_slider_row_mousedown = true;
+		schedule_tw_slider_row_mousedown_id = $(this).attr('id');
+		schedule_tw_slider_row_mousedown_x = e.pageX;
+		schedule_tw_slider_row_mousedown_left = e.pageX - $(this).offset().left;
+		schedule_tw_slider_bar_mousedown_weekday = schedule_tw_slider_row_mousedown_id.split('-')[3];		
+	});
+	
+	$(window).mousemove(function(e){
+		if(schedule_tw_slider_bar_mousedown_begin) {
+			e.preventDefault();
+			var position = schedule_tw_slider_bar_mousedown_left + (e.pageX - schedule_tw_slider_bar_mousedown_x);
+			var width = schedule_tw_slider_bar_mousedown_width - (e.pageX - schedule_tw_slider_bar_mousedown_x);
+			var outer_width = schedule_tw_slider_bar_mousedown_outerwidth - (e.pageX - schedule_tw_slider_bar_mousedown_x);
+
+			position = parseInt(position / 10) * 10;
+			width = schedule_tw_slider_bar_mousedown_width - (position - schedule_tw_slider_bar_mousedown_left);
+			outer_width = schedule_tw_slider_bar_mousedown_outerwidth - (position - schedule_tw_slider_bar_mousedown_left);
+
+			if (width > 20) {
+				var el = $('#'+schedule_tw_slider_bar_mousedown_id);
+				var parent = el.parent();
+				while (!parent.hasClass('shedule5')) 
+					parent = parent.parent(); 
+				
+				if (schedule_tw_slider_bar_check_overlay(parent.attr('id'), schedule_tw_slider_bar_mousedown_id, position, position+outer_width)) {
+					el.removeClass('type-0');
+					el.addClass('type-2');
+					position = position > 0 ? position : 0;
+					$('#'+schedule_tw_slider_bar_mousedown_id).css({'left': position +'px', 'width': width});
+				}
+			}
+		}
+		
+		if(schedule_tw_slider_bar_mousedown_end) {
+			e.preventDefault();
+			var position = schedule_tw_slider_bar_mousedown_left;
+			var width = schedule_tw_slider_bar_mousedown_width + (e.pageX - schedule_tw_slider_bar_mousedown_x);
+			var outer_width = schedule_tw_slider_bar_mousedown_outerwidth + (e.pageX - schedule_tw_slider_bar_mousedown_x);
+			
+			position = parseInt(position / 10) * 10;
+			width = width - (outer_width - parseInt(outer_width / 10) * 10);
+			outer_width = parseInt(outer_width / 10) * 10;
+			
+			if (width > 20) {
+				var el = $('#'+schedule_tw_slider_bar_mousedown_id);
+				var parent = el.parent();
+				while (!parent.hasClass('shedule5')) 
+					parent = parent.parent(); 
+				
+				if (schedule_tw_slider_bar_check_overlay(parent.attr('id'), schedule_tw_slider_bar_mousedown_id, position, position+outer_width)) {
+					el.removeClass('type-0');
+					el.addClass('type-2');
+					position = position > 0 ? position : 0;
+					el.css({'left': position +'px', 'width': width});
+				};
+				
+			}
+		}
+		
+		if(schedule_tw_slider_row_mousedown && !(schedule_tw_slider_bar_mousedown_begin || schedule_tw_slider_bar_mousedown_end)) {
+			var width = e.pageX - schedule_tw_slider_row_mousedown_x;
+			if(width > 20) {
+				schedule_tw_slider_row_mousedown = false;
+		   		if(schedule_tw_slider_bar_check_overlay(schedule_tw_slider_row_mousedown_id, '', schedule_tw_slider_row_mousedown_left, schedule_tw_slider_row_mousedown_left+20)){
+					$('#'+ schedule_tw_slider_row_mousedown_id).append(
+						'<div id="schedule-this-week-period_0_0" class="slider-box type-2" style="left:'+ schedule_tw_slider_row_mousedown_left +'px;width:'+ width +'px;">'+
+						'	<div class="drop"><a href="javascript:;" class="drop-link">+</a></div>'+
+						'</div>'
+					);
+					
+					schedule_tw_slider_bar_mousedown_id = 'schedule-this-week-period_0_0';
+					schedule_tw_slider_bar_mousedown_end = true;		
+					schedule_tw_slider_bar_mousedown_x = e.pageX;
+					schedule_tw_slider_bar_mousedown_left = schedule_tw_slider_row_mousedown_left;
+					schedule_tw_slider_bar_mousedown_width = width;
+					schedule_tw_slider_bar_mousedown_outerwidth = width+22;
+				}
+			} 
+		}
+	});
+	$(window).mouseup(function(e){
+		if(schedule_tw_slider_bar_mousedown_x != e.pageX && (schedule_tw_slider_bar_mousedown_begin || schedule_tw_slider_bar_mousedown_end)) {
+			var splited_id = schedule_tw_slider_bar_mousedown_id.split('_');
+			var id = parseInt(splited_id[1]);
+			var type = parseInt(splited_id[2]);
+			var el = $('#'+schedule_tw_slider_bar_mousedown_id);
+			var left = el.position().left;
+			var right = left + el.outerWidth();
+			
+			var begin_hour = parseInt(left / 40);
+			var begin_minute = parseInt((left % 40) / 10 * 15);
+			var end_hour = parseInt(right / 40);
+			var end_minute = parseInt((right % 40) / 10 * 15);
+			
+			var begin = begin_hour +'-'+ begin_minute;
+			var end = end_hour +'-'+ end_minute;
+			
+			if(id && type) {
+				$.get('{% url user_edit_this_week_period first_day_of_week|date:"Y-m-d" %}'+ type +'/'+ id +'/'+ begin +'/'+ end +'/'+ schedule_tw_slider_bar_mousedown_weekday +'/');
+			} else {
+				$.ajax({
+					url: '{% url user_edit_this_week_period first_day_of_week|date:"Y-m-d" %}'+ type +'/'+ id +'/'+ begin +'/'+ end +'/'+ schedule_tw_slider_bar_mousedown_weekday +'/',
+					type: 'GET',
+					error: function() { el.remove(); },
+					success: function(data) {
+						var parent = el.parent();
+						while (!parent.hasClass('shedule5')) 
+							parent = parent.parent();
+						
+						var parent_id = parent.attr('id');
+						$('#'+parent_id+' .slider-box').remove();
+						$('#'+parent_id).html(data);
+					}
+				});
+			}
+		}
+		
+		schedule_tw_slider_bar_mousedown_begin = false;
+		schedule_tw_slider_bar_mousedown_end = false;
+		schedule_tw_slider_bar_mousedown_weekday = null;
+
+		schedule_tw_slider_row_mousedown = false;
+		schedule_tw_slider_row_mousedown_x = null;
+		schedule_tw_slider_row_mousedown_left = null;
+		schedule_tw_slider_row_mousedown_id = null;
+
+	});
+
+	var schedule_tw_slider_bar_check_overlay = function(parent_id, id, el_begin, el_end) {
+		var return_value = true;
+		
+		$('#'+parent_id+' .slider-box').each(function(){
+			if($(this).attr('id')!=id) {
+				this_begin = $(this).position().left
+				this_end = this_begin + $(this).outerWidth();
+				
+				if( (el_begin < this_begin && this_begin < el_end) || (el_begin < this_end && this_end < el_end) 
+				     || (this_begin < el_begin && el_begin < this_end) || (this_begin < el_end && el_end < this_end) ) {
+					return_value = false;
+				}
+			}
+		});
+		
+		return return_value;
+	}
+
+
+	/* DAYS OFF */
+	$('.schedule-this-weekday').mouseenter(function(){
+		var weekday = $(this).attr('id').split('-')[3];
+		$(this).removeClass('rest-day-box');
+		$(this).addClass('shedule-row');
+		$('#schedule-this-week-'+ weekday +'-dayoff').addClass('hidden');
+		$('#schedule-this-week-'+ weekday).removeClass('hidden');
+	});
+	$('.schedule-this-weekday').mouseleave(function(){
+		var weekday = $(this).attr('id').split('-')[3];
+		if(!$('#schedule-this-week-'+ weekday +' .slider-box').length){
+			$(this).addClass('rest-day-box');
+			$(this).removeClass('shedule-row');
+			$('#schedule-this-week-'+ weekday +'-dayoff').removeClass('hidden');
+			$('#schedule-this-week-'+ weekday).addClass('hidden');
+		}
+	});
+</script>
+

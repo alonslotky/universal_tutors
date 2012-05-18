@@ -1,0 +1,26 @@
+{% load common_tags tutor_tags %}
+
+<div class="scroll-item-container">
+	<ul class="shedule4 scroll-item">
+		{% for hour in 0|range_to:24 %}
+		<li><span class="time">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}:00</span></li>
+		{% endfor %}
+	</ul>
+</div>
+
+{% for day, weekday, periods in profile|weekclasses:date %}
+	<div id="schedule-week-{{weekday}}-container" class="schedule-weekday {% if periods %}shedule-row{% else %}rest-day-box{% endif %}">
+		<span class="week-number">{{day|slice_list:3}}</span>
+		<div id="schedule-week-{{weekday}}" class="scroll-item-container {% if not periods %}hidden{% endif %}">
+			<div id="schedule-week-{{weekday}}-periods-container" class="shedule5 scroll-item">
+				{% for period in periods %}
+					{% include "profile/student/edit_profile/classes/_week_period.html" %}
+				{% endfor %}
+			</div>
+		</div>
+		<div id="schedule-week-{{weekday}}-dayoff" class="scroll-item-container {% if periods %}hidden{% endif %}">
+			<span class="txt2">No classes</span>
+		</div>
+	</div>
+{% endfor %}
+

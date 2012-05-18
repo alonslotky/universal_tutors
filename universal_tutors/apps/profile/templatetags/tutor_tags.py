@@ -21,6 +21,24 @@ def get_edit_period_calendar_size(period):
     
     return 'left:%spx; width:%spx;' % (begin, size)
 
+
+@register.filter
+def get_class_period_calendar_size(class_):
+    HOUR_SIZE = 40
+    OFFSET = 22
+     
+    # begin position
+    begin = class_.start.hour * HOUR_SIZE + class_.start.minute * HOUR_SIZE / 60
+
+    # end position
+    end = (class_.end.hour if class_.end.hour > 0 or class_.end.minute > 0 else 24) * HOUR_SIZE + class_.end.minute * HOUR_SIZE / 60
+    
+    # size
+    size = end - begin - OFFSET
+    
+    return 'left:%spx; width:%spx;' % (begin, size)
+
+
 @register.filter
 def get_search_period_calendar_size(period):
     HOUR_SIZE = 45
@@ -106,3 +124,7 @@ def get_messages(person, user):
 @register.filter
 def get_week(profile, date):
     return profile.get_week(date)
+
+@register.filter
+def weekclasses(profile, date=None):
+    return profile.week_classes(date)

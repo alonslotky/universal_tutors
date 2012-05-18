@@ -1,0 +1,39 @@
+  <li id="classesTab">
+    <h2 class="clear">Classes</h2>
+
+	<div class="row">
+      <div class="eight columns">
+      	<a href="javascript:;" onclick="prev_week();">&lsaquo; prev week</a>
+      	<span> | </span>
+      	<a href="javascript:;" onclick="next_week();">next week &rsaquo;</a>
+      </div>
+      <p>&nbsp;</p>
+	</div>
+	
+	<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">
+		{% include "profile/student/edit_profile/classes/default_weekday_calendar.html" %}
+	</div>
+
+  <script type="text/javascript">
+  	var map_date = new Date();
+  
+  	var next_week = function() {
+  		map_date.setDate(map_date.getDate() + 7);
+  		change_week(map_date);		
+  	};
+  	
+  	var prev_week = function() {
+  		map_date.setDate(map_date.getDate() - 7);
+  		change_week(map_date);  		
+  	};
+  	
+  	var change_week = function(date){
+  		date_str = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
+ 		console.log(date_str);
+  		
+  		$.get('{% url ajax_week_classes %}'+ date_str +'/', function(response){
+	  		$('#schedule-default-week-container').html(response);
+  		});
+  	};
+	</script>
+  </li>
