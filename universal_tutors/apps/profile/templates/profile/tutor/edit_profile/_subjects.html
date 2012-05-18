@@ -52,6 +52,7 @@
 	          <script type="text/javascript">$(window).ready(function(){ add_autocomplete('#id_subjects-{{forloop.counter0}}-subject'); });</script>
 	          <hr>
           {% endfor %}
+          {% if user.subjects.all|length < 12 %}
           <div class="row">
             <div class="one columns phone-one">
               <input id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" type="text" class="input-text edit-profile-subjects-list" placeholder="Subject" />
@@ -71,6 +72,7 @@
           <script type="text/javascript">$(window).ready(function(){ add_autocomplete('#id_subjects-{{no_subjects}}-subject'); });</script>
           <hr>
 		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
+		  {% endif %}
         </td>
       </tr>
     </table>
