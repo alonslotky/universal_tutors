@@ -92,10 +92,16 @@
 			checkPopups();
 		}, 500);
 	};
+	
+	var checkFlash = function() {
+		if(!swfobject.hasFlashPlayerVersion("1")) {
+		    alert("You don't have flash player installed! Please install it to be able to see this class.");
+		}
+	};
 
 	checkStatus();
 	checkPopups();
-	
+	checkFlash();
 	
 </script>
 {% endblock %}
