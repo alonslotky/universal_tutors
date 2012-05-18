@@ -1,0 +1,29 @@
+<div id="modal-class-material" class="reveal-modal message">
+	<h4>Class material</h4>
+    <div id="modal-class-material-loading" class="modal-loading"></div>
+    <div id="modal-class-material-container">
+    	
+    </div>
+  	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	$('#modal-class-material-container').hide();
+	
+	var open_class_material = function(url){
+		$('#modal-class-material-container').fadeOut(function(){
+			$('#modal-class-material-loading').fadeIn(function(){
+				$.ajax({
+					'type': 'get',
+					'url': url,
+					'success': function(response) {
+						$('#modal-class-material-container').html(response);
+						$('#modal-class-material-loading').fadeOut(function(){
+							$('#modal-class-material-container').fadeIn();
+						});				
+					}
+				});
+			});
+		});
+	};
+</script>

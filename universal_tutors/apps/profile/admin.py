@@ -6,15 +6,24 @@ from models import *
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     
-class MyUserAdmin(UserAdmin):
+class AdminUserAdmin(UserAdmin):
     list_display = ('username','email','first_name','last_name','date_joined','last_login','is_staff', 'is_active')
     list_editable = ['is_active']
     inlines = [ UserProfileInline ]
 
+class UTUserAdmin(UserAdmin):
+    list_display = ('username','email','first_name','last_name','date_joined','last_login',)
+    list_editable = []
+    inlines = [ UserProfileInline ]
+
+
 
 admin.site.unregister(User)
-admin.site.register(User, MyUserAdmin)
-admin.site.register(Tutor, MyUserAdmin)
+admin.site.register(User, AdminUserAdmin)
+admin.site.register(Tutor, UTUserAdmin)
+admin.site.register(TutorList, UTUserAdmin)
+admin.site.register(Student, UTUserAdmin)
+admin.site.register(Parent, UTUserAdmin)
 
 
 class ReportAdmin(admin.ModelAdmin):

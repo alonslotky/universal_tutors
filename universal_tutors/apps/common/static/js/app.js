@@ -60,8 +60,20 @@ jQuery(document).ready(function ($) {
   
   
   $('.sign-up-button').click(function() {
-    $('.sign-in').slideDown('slow');
-    $('.sign-up-button').fadeOut();
+    if( $('.sign-up-button').hasClass('isOpen') ){
+	    $('.sign-in').slideUp();
+	    $('.sign-up-button').removeClass('isOpen');	
+    } else {
+	    $('.sign-in').slideDown();
+	    $('.sign-up-button').addClass('isOpen');	
+    }
+  });
+  
+  $('#signup-header-button').click(function(){
+	  $('#signup_user_type').val('0'); 
+	  $('#signup_user_type').change();
+      $('.sign-in').slideUp();
+      $('.sign-up-button').removeClass('isOpen');	
   });
   
 });

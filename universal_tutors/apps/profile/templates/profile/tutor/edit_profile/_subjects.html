@@ -11,7 +11,7 @@
         <th>
           <div class="row">
             <div class="one columns phone-one">
-              Subject litle and level
+              Subject and level (eg: Math, GCSE)
             </div>
             <div class="one columns phone-one">
               Credits per hour
@@ -35,7 +35,7 @@
           {% for item in user.subjects.all %}
 	          <div class="row">
 	            <div class="one columns phone-one">
-	              <input id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" type="text" class="input-text" value="{{item.subject}}" placeholder="Subject" />
+	              <input id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" type="text" class="input-text edit-profile-subjects-list" value="{{item.subject}}" placeholder="Subject" />
 	            </div>
 	            <div class="one columns phone-one">
 	              <input id="id_subject-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text subject-credits" value="{{item.credits}}" placeholder="Credits" />
@@ -49,11 +49,12 @@
 				<input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
 				<input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
 	          </div>
+	          <script type="text/javascript">$(window).ready(function(){ add_autocomplete('#id_subjects-{{forloop.counter0}}-subject'); });</script>
 	          <hr>
           {% endfor %}
           <div class="row">
             <div class="one columns phone-one">
-              <input id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" type="text" class="input-text" placeholder="Subject" />
+              <input id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" type="text" class="input-text edit-profile-subjects-list" placeholder="Subject" />
             </div>
             <div class="one olumns phone-one">
               <input id="id_subjects-{{no_subjects}}-credits" name="subjects-{{no_subjects}}-credits" type="text" class="input-text subject-credits" placeholder="Credits" />
@@ -67,6 +68,7 @@
 			<input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
 			<input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
           </div>
+          <script type="text/javascript">$(window).ready(function(){ add_autocomplete('#id_subjects-{{no_subjects}}-subject'); });</script>
           <hr>
 		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
         </td>
@@ -82,7 +84,7 @@
   		$(
 	  		'<div class="row">'+
 	  		'	<div class="one columns phone-one">'+
-	  		'		<input id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" type="text" class="input-text" placeholder="Subject" />'+
+	  		'		<input id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" type="text" class="input-text edit-profile-subjects-list" placeholder="Subject" />'+
 	  		'	</div>'+
 	  		'	<div class="one columns phone-one">'+
 	  		'		<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text subject-credits" placeholder="Credits" />'+
@@ -99,6 +101,7 @@
 	  		'<hr>'
   		).insertBefore(this);
   		$('#id_subjects-TOTAL_FORMS').val(parseInt($('#id_subjects-TOTAL_FORMS').val())+1);
+  		add_autocomplete('#id_subjects-'+ id_subject +'-subject');
   		id_subject++;
   	});
   	
@@ -107,6 +110,39 @@
   		var value = parseFloat($(this).val());
   		$('#id_subjects-'+ id +'-price').html(currency_symbol +' '+ (value * credit_value).toFixed(2));
   	});
+
+	var add_autocomplete = function(id){ 
+		// handle autocomplete data
+		$(id).autocomplete('{% url autocomplete_subjects %}', {
+			extraParams: {
+				'q': function(){
+					return $(id).val();
+				}
+			},
+			formatItem: function(r){
+				return r[1];
+			},
+			parse: function(r){
+				var rvData = eval(r);
+				var rv = [];
+				$.each(rvData, function(index, row){
+					rv.push({
+						data: row,
+						value: row[1],
+						result: row[1]
+					});
+				});
+				return rv;
+			}	
+		}).bind("result", function(data, value){
+			// TODO: load info about item via AJAX
+			var itemId = value[0];
+			var itemTitle = value[1];
+			$(this).data('itemId', itemId);
+			$(this).data('itemTitle', itemTitle);
+			return value[1];
+		});
+	};     	
   </script>
 {% endwith %}
 {% endwith %}
