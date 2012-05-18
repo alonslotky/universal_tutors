@@ -21,6 +21,7 @@
       <dl class="nice contained tabs hide-on-phones">
         <dd><a href="#details" class="active">Details</a></dd>
         <dd><a href="#interests">Interests</a></dd>
+        <dd><a href="#classes">Classes</a></dd>
         <dd><a href="#account">Account</a></dd>
         <dd><a href="#referral">Referral</a></dd>
         {% if profile.type == profile.TYPES.STUDENT %}<dd><a href="#credits">Credits</a></dd>{% endif %}
@@ -29,6 +30,7 @@
       <dl class="nice contained vertical tabs show-on-phones">
         <dd><a href="#details" class="active">Details</a></dd>
         <dd><a href="#interests">Interests</a></dd>
+        <dd><a href="#classes">Classes</a></dd>
         <dd><a href="#account">Account</a></dd>
         <dd><a href="#referral">Referral</a></dd>
         {% if profile.type == profile.TYPES.STUDENT %}<dd><a href="#credits">Credits</a></dd>{% endif %}
@@ -39,6 +41,7 @@
 	      <ul class="nice tabs-content contained">
 			{% include "profile/student/edit_profile/_details.html" %}
 			{% include "profile/student/edit_profile/_interests.html" %}
+			{% include "profile/student/edit_profile/_classes.html" %}          
 			{% include "profile/student/edit_profile/_account.html" %}          
 			{% include "profile/fragments/_referral.html" %}
 			{% if profile.type == profile.TYPES.STUDENT %}{% include "profile/student/edit_profile/_credits.html" %}{% endif %}

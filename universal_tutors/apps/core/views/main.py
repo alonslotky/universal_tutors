@@ -102,5 +102,5 @@ def search(request):
         'subjects': sorted(subjects),
         'levels': sorted(levels),
         
-        'tutors': tutors,
+        'tutors': tutors.distinct(),
     }
