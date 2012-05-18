@@ -20,6 +20,8 @@
 		  	</div>
 		  	{% endwith %}
 		  </div>
+		  <div class="row space">&nbsp;</div>
+          <div class="row space"><div class="button"><a href="{% url profile %}" class="icon">view public profile</a></div></div>
       </div>
       <div class="eight column">
          {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}

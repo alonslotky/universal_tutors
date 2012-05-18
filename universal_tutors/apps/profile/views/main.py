@@ -63,6 +63,24 @@ def profile(request, username=None):
 
 
 @login_required
+def edit_profile(request):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+    profile = user.profile
+
+    if profile.type == profile.TYPES.TUTOR:
+        return http.HttpResponseRedirect(reverse('edit_tutor_profile'))
+    elif profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
+        return http.HttpResponseRedirect(reverse('edit_student_profile'))
+    elif profile.type == profile.TYPES.PARENT:
+        return http.HttpResponseRedirect(reverse('edit_parent_profile'))
+    else:
+        raise http.Http404()
+
+
+@login_required
 @main_render(template='profile/tutor/edit_profile/base.html')
 def edit_tutor_profile(request):
     """
@@ -102,7 +120,7 @@ def edit_tutor_profile(request):
             success = False
 
         if success:
-            return http.HttpResponseRedirect(reverse('profile'))
+            return http.HttpResponseRedirect(reverse('edit_profile'))
 
     return {
         'profile':profile,
@@ -216,7 +234,7 @@ def edit_student_profile(request):
             profile.update_tutor_information(form)
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
 
-            return http.HttpResponseRedirect(reverse('profile'))
+            return http.HttpResponseRedirect(reverse('edit_profile'))
 
     return {
         'profile':profile,
@@ -390,7 +408,7 @@ def edit_parent_profile(request):
             success = False
 
         if success:
-            return http.HttpResponseRedirect(reverse('profile'))
+            return http.HttpResponseRedirect(reverse('edit_profile'))
 
     return {
         'profile':profile,
