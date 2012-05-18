@@ -28,7 +28,8 @@ admin.site.register(Parent, UTUserAdmin)
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('violator', 'user', 'created', 'description')
-admin.site.register(Report, ReportAdmin)
+admin.site.register(ReportedTutor, ReportAdmin)
+admin.site.register(ReportedStudent, ReportAdmin)
 
 class TopUpItemAdmin(admin.ModelAdmin):
     list_display = ('user', 'credits', 'value', 'currency', 'status')
