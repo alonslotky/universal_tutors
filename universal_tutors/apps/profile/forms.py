@@ -201,6 +201,7 @@ class SignupForm(forms.ModelForm):
         profile.gender = self.cleaned_data.get('gender', 0)
         profile.newsletters = self.cleaned_data.get('newsletter', False)
         profile.timezone = self.cleaned_data.get('timezone', None)
+        profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency', 1))
         
         if self.parent:
             user.parent_set.create(parent=self.parent, active=True)
@@ -303,7 +304,6 @@ class TutorSignupForm(SignupForm):
         profile.about = self.cleaned_data.get('about', '')
         profile.crb = self.cleaned_data.get('crb', False)
         profile.webcam = self.cleaned_data.get('webcam', False)
-        profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency'))
         profile.type = profile.TYPES.TUTOR
         profile.save()
         

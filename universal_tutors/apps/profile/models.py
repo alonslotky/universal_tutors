@@ -156,7 +156,7 @@ class UserProfile(BaseModel):
     type = models.PositiveSmallIntegerField(choices=TYPES.get_choices(), default=TYPES.NONE)
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
-    currency = models.ForeignKey(Currency)
+    currency = models.ForeignKey(Currency, null=True, blank=True)
 
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
     other_referral = models.CharField(max_length=200, null=True, blank=True)
@@ -801,6 +801,27 @@ class Report(BaseModel):
     def __unicode__(self):
         return '%s reported %s' % (self.user, self.violator)
 
+class ReportedTutorManager(models.Manager):
+    def get_query_set(self):
+        return super(ReportedTutorManager, self).get_query_set().filter(violator__profile__type = UserProfile.TYPES.TUTOR)
+
+class ReportedStudentManager(models.Manager):
+    def get_query_set(self):
+        return super(ReportedStudentManager, self).get_query_set().filter(violator__profile__type__in = [UserProfile.TYPES.STUDENT, UserProfile.TYPES.UNDER16])
+
+class ReportedStudent(Report):
+    objects = ReportedStudentManager()
+
+    class Meta:
+        verbose_name = 'Reported Student'
+        proxy = True
+
+class ReportedTutor(Report):
+    objects = ReportedTutorManager()
+
+    class Meta:
+        verbose_name = 'Reported Tutor'
+        proxy = True
 
 class NewsletterSubscription(BaseModel):
     email = models.EmailField(max_length=255, unique=True)
