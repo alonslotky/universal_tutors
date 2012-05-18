@@ -156,7 +156,7 @@ class UserProfile(BaseModel):
     type = models.PositiveSmallIntegerField(choices=TYPES.get_choices(), default=TYPES.NONE)
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
-    currency = models.ForeignKey(Currency)
+    currency = models.ForeignKey(Currency, null=True, blank=True)
 
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
     other_referral = models.CharField(max_length=200, null=True, blank=True)
