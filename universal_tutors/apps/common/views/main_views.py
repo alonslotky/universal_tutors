@@ -27,17 +27,26 @@ def server_error(request, template_name='500.html'):
         'request':request
     })))
 
+EMAIL_TOPICS = {
+  'search': 'Search',
+  'profiles': 'Profiles',
+  'dashboard': 'Dashboard',
+  'classroom': 'Classroom',
+  'other': 'Other',
+}
+
 def _send_contact_email(data):
     try:
         template = loader.get_template('common/emails/new_message.html')
         context = Context({
             'data': data,
             'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+            'topic': EMAIL_TOPICS.get(data.get('topic')),
         })
         html = template.render(context)
     
         if settings.DEBUG:
-            to_email = 'vitor@rawjam.co.uk'
+            to_email = 'ben@rawjam.co.uk'
         else:
             to_email = settings.CONTACT_EMAIL
         msg = EmailMessage(
