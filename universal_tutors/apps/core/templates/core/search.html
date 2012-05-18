@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tutor_tags %}
+{% load fb_versions common_tags tutor_tags pagination_tags %}
 
 {% block title %}Search{% endblock %}
 {% block body_class %}app student{% endblock %}
@@ -173,7 +173,7 @@
           {% if query %}<h2>Tutors named 'John Doe'</h2>{% endif %}
         </div>
       </div>
-
+	  {% autopaginate tutors 10 %}
       {% for tutor in tutors %}
       {% with tutor.profile as tutor_profile %}
       <article>
@@ -220,6 +220,7 @@
       </article>
       {% endwith %}
       {% endfor %}
+      {% paginate %}
 
 {% endwith %}
 {% endwith %}
