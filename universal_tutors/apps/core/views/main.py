@@ -83,7 +83,6 @@ def search(request):
     
     
     if day >= 0 and time >=0:
-        print time
         tutors = tutors.filter(week_availability__weekday=day, week_availability__begin__lte=datetime.time(time,0), week_availability__end__gte=datetime.time(time,0))
     else:
         if day >= 0:
