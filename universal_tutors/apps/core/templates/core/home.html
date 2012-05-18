@@ -143,6 +143,7 @@
         </div>
       </div></section>
       
+      {% if not user.is_authenticated %}
       <section>
         <div class="row">
           <div class="seven columns centered center">
@@ -152,6 +153,7 @@
           </div>
         </div>
       </section>
+      {% endif %}
     
     {% if video %}{% include "core/fragments/_modal_video.html" %}{% endif %}
 {% endblock %}

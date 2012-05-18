@@ -27,6 +27,7 @@ urlpatterns = patterns('apps.classes.views.main',
 urlpatterns += patterns('apps.classes.views.ajax',
     url(r'^(?i)check_status/(?P<class_id>\d+)/$', 'check_status', {}, name = "check_status"),
     url(r'^(?i)stop_class/(?P<class_id>\d+)/$', 'stop_class', {}, name = "stop_class"),
+    url(r'^(?i)material/(?P<class_id>\d+)/$', 'class_material', {}, name = "class_material"),
     url(r'^autocomplete/subjects/$', SubjectsAutocomplete.as_view(), name='autocomplete_subjects'),
 )
 

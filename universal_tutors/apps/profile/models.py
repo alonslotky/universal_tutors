@@ -31,6 +31,24 @@ from apps.classes.settings import *
 from scribblar import users
 
 
+class StudentManager(models.Manager):
+    def get_query_set(self):
+        return super(StudentManager, self).get_query_set().filter(
+                    profile__type__in = [UserProfile.TYPES.STUDENT, UserProfile.TYPES.UNDER16],
+                )
+
+class ParentManager(models.Manager):
+    def get_query_set(self):
+        return super(ParentManager, self).get_query_set().filter(
+                    profile__type = UserProfile.TYPES.PARENT,
+                )
+
+class TutorManager(models.Manager):
+    def get_query_set(self):
+        return super(TutorManager, self).get_query_set().filter(
+                    profile__type = UserProfile.TYPES.TUTOR,
+                )
+
 class ActiveTutorsManager(models.Manager):
     def get_query_set(self):
         return super(ActiveTutorsManager, self).get_query_set().filter(
@@ -47,6 +65,26 @@ class Tutor(User):
     unchecked_crb = UnchekedCRBTutorsManager()
 
     class Meta:
+        verbose_name = 'Active Tutors'
+        proxy = True
+
+
+class TutorList(User):
+    objects = TutorManager()
+    class Meta:
+        verbose_name = 'Tutor'
+        proxy = True
+
+class Student(User):
+    objects = StudentManager()
+    class Meta:
+        verbose_name = 'Student'
+        proxy = True
+
+class Parent(User):
+    objects = ParentManager()
+    class Meta:
+        verbose_name = 'Parent'
         proxy = True
 
 
@@ -517,7 +555,7 @@ class UserCreditMovement(BaseModel):
         (0, 'PAYMENT', 'Payment for a class'),
         (1, 'INCOME', 'Class income'),
         (2, 'CANCELED_BY_TUTOR', 'Class canceled by tutor (Refund)'),
-        (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Income)'),
+        (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Refund)'),
         (4, 'STOPPED_BY_STUDENT', 'Stopped by student (Refund)'),
         (5, 'TOPUP', 'Top-up account'),
     ))
@@ -628,8 +666,8 @@ class TutorReview(BaseModel):
         user = self.user
         super(self.__class__, self).save(*args, **kwargs)
         profile = user.profile
-        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))
-        profile.no_rate = user.reviews_as_tutor.count()
+        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        profile.no_reviews = user.reviews_as_tutor.count()
         profile.save()
     
     def delete(self):
@@ -638,7 +676,7 @@ class TutorReview(BaseModel):
         profile = user.profile
         reviews = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'), no_reviews = models.Count('rate'))
         profile.avg_rate = reviews['avg_rate']
-        profile.no_rate = reviews['no_reviews']
+        profile.no_reviews = reviews['no_reviews']
         profile.save()
 
     def __unicode__(self):

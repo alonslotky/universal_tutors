@@ -1,0 +1,33 @@
+{% load fb_versions common_tags %}
+
+<div class="row">
+	<div class="three columns">
+		Assets
+	</div>
+	<div class="nine columns">
+		{% for item in material %}
+		{% if item.allowdownload == '1' %}
+			<div class="row">
+				&rsaquo; <a href="{% url class_download class.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}}</a>
+			</div>
+		{% endif %}		
+		{% empty %}
+			<div class="row">No assets where found to download</div>      		
+		{% endfor %}
+	</div>
+	<div class="three columns">
+		Recordings
+	</div>
+	<div class="nine columns">
+		{% for item in recordings %}
+		{% if item.allowdownload == '1' %}
+			<div class="row">
+				&rsaquo; <a href="{% url class_download class.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}}</a>
+			</div>
+		{% endif %}		
+		{% empty %}
+			<div class="row">No recordings where found to download</div>      		
+		{% endfor %}
+	</div>
+</div>
+

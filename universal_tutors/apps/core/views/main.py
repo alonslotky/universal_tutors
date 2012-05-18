@@ -52,12 +52,12 @@ def search(request):
         except IndexError:
             pass        
 
-    query = request.GET.get('text', None)
+    query = request.GET.get('text', '')
     what = request.GET.get('what', None)
     
     system = request.GET.get('system', None)
-    subject = request.GET.get('subject', None)
-    level = request.GET.get('level', None)
+    subject = request.GET.get('subject', '')
+    level = request.GET.get('level', '')
 
     price = int(request.GET.get('price', 0))
     day = int(request.GET.get('day', -1))

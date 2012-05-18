@@ -12,7 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 import re, unicodedata, random, string, datetime, os, pytz
-from scribblar import rooms, assets
+from scribblar import rooms, assets, recordings
 
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
@@ -76,6 +76,7 @@ class Class(BaseModel):
     cancelation_reason = models.CharField(max_length = 500, null=True, blank=True)
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
+    alert_sent = models.BooleanField(False)
     
     def get_updated_credit_fee(self, commit=True):
         tutor = self.tutor
@@ -201,16 +202,38 @@ class Class(BaseModel):
             rooms.delete(roomid=self.scribblar_id)
             
             from apps.profile.models import UserCreditMovement
+            student = self.student
+            student_profile = student.profile
+            student_profile.credit += self.credit_fee
+            student_profile.save()
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_STUDENT, credits=self.credit_fee)
             tutor = self.tutor
             tutor_profile = tutor.profile
-            tutor_profile.income += self.earning_fee
+            tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count()
             tutor_profile.save()
-            tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_STUDENT, credits=self.credit_fee)
             tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CANCELED_BY_STUDENT, {
                 'class': self,
-                'student': self.student,
+                'student': student,
                 'tutor': tutor,
             })
+
+    def alert(self):
+        student = self.student
+        tutor = self.tutor
+        tutor_profile = tutor.profile
+        tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CLASS, {
+            'class': self,
+            'student': student,
+            'tutor': tutor,
+        })
+        tutor_profile = tutor.profile
+        tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CLASS, {
+            'class': self,
+            'student': student,
+            'tutor': tutor,
+        })
+        self.alert_sent = True
+        super(self.__class__, self).save()
 
     def done(self):
         if self.status == self.STATUS_TYPES.BOOKED:
@@ -290,8 +313,12 @@ class Class(BaseModel):
     def get_material(self):
         return assets.list(roomid=self.scribblar_id)
     
+    def get_recordings(self):
+        return recordings.list(roomid=self.scribblar_id)
+    
     def download(self, id):
-        return assets.details(assetid=id)
+        detail = assets.details(assetid=id)
+        return '/'
 
 
 class ClassUserHistory(models.Model):

@@ -60,7 +60,7 @@
 			            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}",{{class.id}});'>Rate Student</a>
 			            {% endif %}
 					{% endwith %}
-		            <a href="javascript:;" class="class-material">Class Material</a>
+		            <a href="javascript:;" class="class-material" data-reveal-id="modal-class-material" onclick="open_class_material('{% url class_material class.id %}');">Class Material</a>
 	 			{% endif %}
  			{% endif %}
 	          <a href="{% url report student.username %}" class="report">Report Student</a>
@@ -77,6 +77,7 @@
       </article>      
       {% endfor %}
 	{% include 'profile/fragments/_modal_messages.html' %}
+	{% include 'profile/fragments/_modal_class_material.html' %}
 	{% include 'profile/tutor/fragments/_modal_cancel_class.html' %}
 	{% include 'profile/tutor/fragments/_modal_rate_student.html' %}
 	{% include 'profile/tutor/fragments/_modal_review_view.html' %}

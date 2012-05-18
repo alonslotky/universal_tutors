@@ -85,9 +85,6 @@ def download(request, class_id):
     if class_.tutor != user and class_.student != user and class_.student.parent != user:
         raise http.Http404()
 
-    try:
-        return http.HttpResponseRedirect(class_.download(request.GET.get('id')))
-    except:
-        raise http.Http404()
+    return http.HttpResponseRedirect(class_.download(request.GET.get('id')))
 
 
