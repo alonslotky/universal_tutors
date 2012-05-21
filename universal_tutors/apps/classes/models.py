@@ -314,7 +314,7 @@ class Class(BaseModel):
         return assets.list(roomid=self.scribblar_id)
     
     def get_recordings(self):
-        return recordings.list(roomid=self.scribblar_id)
+        return recordings.listbyroom(roomid=self.scribblar_id)
     
     def download(self, id):
         detail = assets.details(assetid=id)
