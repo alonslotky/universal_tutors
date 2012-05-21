@@ -4,8 +4,8 @@ def list(*args, **kwargs):
     kwargs.update({'function': 'recordings.list'})
     return get_result(*args, **kwargs)
 
-def listbyrooms(*args, **kwargs):
-    kwargs.update({'function': 'recordings.listbyrooms'})
+def listbyroom(*args, **kwargs):
+    kwargs.update({'function': 'recordings.listbyroom'})
     return get_result(*args, **kwargs)
 
 def delete(*args, **kwargs):
