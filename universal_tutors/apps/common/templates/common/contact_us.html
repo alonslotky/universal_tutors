@@ -8,39 +8,61 @@
 {% block content %}
 	<section class="blue feature-box">
 		<div class="inner">
-	    	<h1>{{ flatpage.title }}</h1>	
+	    	<h1>Contact Us</h1>	
 	  	</div>
 	</section>
 	
 	<div class="hide-on-phones">
       {% include 'profile/fragments/_timer.html' %}
-     </div>	
-     
+     </div>
+	
 	<div class="row">
-		{% if sent and success %}
-			<p><span>Message sent successfully. We will contact you as soon as we can with feedback to your message.</span></p>
+		{% if sent and feedback %}
+			<p><span>Thank you for your feedback. This will help us to greatly improve Universal Tutors.</span></p>
 			<p><span><a href="/">Go</a> back to homepage</span></p>
 		{% else %}
-			{% if sent and not success %}
-				<p><span>An error occurred while sending the message. Please try again in a few moments.</span></p>
-				<p><span><a href="/">Go</a> back to homepage</span></p>
+			{% if sent and contact %}
+				{% if success %}
+					<p><span>Message sent successfully. We will contact you as soon as we can with feedback on your message.</span></p>
+					<p><span><a href="/">Go</a> back to homepage</span></p>
+				{% else %}
+					<p><span>An error occurred while sending the message. Please try again in a few moments.</span></p>
+					<p><span><a href="/">Go</a> back to homepage</span></p>
+				{% endif %}
 			{% endif %}
 		{% endif %}
 		
 		{% if not sent %}
-		
-		{{ flatpage.content|safe }}
- 			<form class="nice custom" action="/contact-us/" method="post">{% csrf_token %}
- 				
-					{{ form.as_p }}
-				
-				<input type="submit" value="Submit" />
-			</form>
-		{% endif %}
- 	</div>
- 	<script>
- 		$(document).ready(function(){
- 			$("form input[type=text]").addClass("input-text", "clear");
- 		});
- 	</script>
+	    	<div class="eight columns">
+	    		<!-- FORM: HEAD SECTION -->
+	        <link href="{{STATIC_URL}}css/form.css" rel="stylesheet" type="text/css"></link>
+	        <!-- FORM: BODY SECTION -->
+	        <h3>Site Feedback</h3>
+	        <form method="post" action="/contact-us/" class="nice custom"> {% csrf_token %}
+	
+	     	{{  feedback_form.as_p }}
+	          
+	          <input type="submit" class="button" value="Submit">
+	          <input type="hidden" value="244717" name="feedback-submit" id="tfa_dbFormId"><input type="hidden" value="input-text" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="8a55ad301648f9d486cc4f2e79208e5b" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="2" name="tfa_dbVersionId" id="tfa_dbVersionId">
+	        </form>
+	    	</div>
+	    	<div class="four columns">
+	      	<div class="panel">
+	        	<h3>Got a Question?</h3>
+	          <form class="nice" action="/contact-us/" method="post"> {% csrf_token %}
+	            {{ contact_form.as_p }}
+	              
+	              
+	            <p><input type="submit" value="Submit" name="contact-submit" class="button" /></p>
+	          </form>
+	        </div>
+     		 </div>
+ 		 {% endif %}
+    </div>
+    
+    <script>
+      $(document).ready(function(){
+        $("form input[type=text]").addClass("input-text", "clear");
+      });
+    </script>
 {% endblock %}

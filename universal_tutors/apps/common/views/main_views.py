@@ -15,7 +15,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.flatpages.models import FlatPage
 from django.core.mail import EmailMessage
 
-from universal_tutors.apps.common.forms import ContactForm 
+from universal_tutors.apps.common.forms import ContactForm, FeedbackForm
+
+import threading 
 
 def server_error(request, template_name='500.html'):
     """
@@ -46,7 +48,7 @@ def _send_contact_email(data):
         html = template.render(context)
     
         if settings.DEBUG:
-            to_email = 'ben@rawjam.co.uk'
+            to_email = 'vitor@rawjam.co.uk'
         else:
             to_email = settings.CONTACT_EMAIL
         msg = EmailMessage(
@@ -55,24 +57,48 @@ def _send_contact_email(data):
                            data.get('email'), 
                            [to_email])
         msg.content_subtype = 'html'
-        msg.send()
+        t = threading.Thread(target=msg.send, kwargs={'fail_silently': True})
+        t.setDaemon(True)
+        t.start()
         return True
     except:
         return False
 
 def contact_us(request):
-    flatpage = FlatPage.objects.get(url='/contact-us/')
+    # flatpage = FlatPage.objects.get(url='/contact-us/')
     sent = False
     success = False
+    contact = False
+    feedback = False
+    
     if request.POST:
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            sent = True
-            if _send_contact_email(form.cleaned_data):
-                success = True
-            else:
-                success = False
+        if request.POST.get('contact-submit', None):
+            contact_form = ContactForm(request.POST, prefix='contact')
+            if contact_form.is_valid():
+                sent = True
+                contact = True
+                if _send_contact_email(contact_form.cleaned_data):
+                    success = True
+                else:
+                    success = False
+            feedback_form = FeedbackForm(prefix='feedback')
+        else:
+            feedback_form = FeedbackForm(request.POST, prefix='feedback')
+            if feedback_form.is_valid():
+                feedback_form.save()
+                sent = True
+                feedback = True
+            contact_form = ContactForm(prefix='contact')
     else:
-        form = ContactForm()
+        contact_form = ContactForm(prefix='contact')
+        feedback_form = FeedbackForm(prefix='feedback')
         
-    return render_to_response('common/contact_us.html', {'form': form, 'flatpage': flatpage, 'sent': sent, 'success': success}, RequestContext(request))
+    return render_to_response('common/contact_us.html', {
+         'contact_form': contact_form,
+         'feedback_form': feedback_form,
+         # 'flatpage': flatpage,
+         'sent': sent,
+         'success': success,
+         'contact': contact,
+         'feedback': feedback,
+     }, RequestContext(request))
