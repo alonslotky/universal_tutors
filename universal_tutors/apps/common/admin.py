@@ -1,12 +1,17 @@
 from django.contrib import admin
 
-from models import Feedback
+from models import FeedbackQuestion, FeedbackQuestionOption, FeedbackAnswer
 
-class FeedbackAdmin(admin.ModelAdmin):
-    class Media:
-        css = {
-            "all": ("/static/css/feedback.css",)
-        }
-    pass
+class FeedbackQuestionOptionsInline(admin.TabularInline):
+    model = FeedbackQuestionOption
+    
+class FeedbackAnswerAdmin(admin.ModelAdmin):
+    search_fields = ['question', 'option',]
+    list_filter = ['question', 'option',]
 
-admin.site.register(Feedback, FeedbackAdmin)
+admin.site.register(FeedbackAnswer, FeedbackAnswerAdmin)
+
+class FeedbackQuestionAdmin(admin.ModelAdmin):
+    inlines = [FeedbackQuestionOptionsInline]
+
+admin.site.register(FeedbackQuestion, FeedbackQuestionAdmin)

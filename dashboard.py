@@ -61,7 +61,7 @@ class CustomIndexDashboard(Dashboard):
                 modules.ModelList(
                     _('Users'),
                     css_classes=('collapse',),
-                    models=('apps.profile.models.*', ),
+                    models=('apps.profile.models.*', 'apps.common.models.*', ),
                     exclude=('apps.profile.models.TopUpItem', ),
                 ),
                 modules.ModelList(

@@ -15,7 +15,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.flatpages.models import FlatPage
 from django.core.mail import EmailMessage
 
-from universal_tutors.apps.common.forms import ContactForm, FeedbackForm
+from universal_tutors.apps.common.forms import ContactForm# , FeedbackForm
+
+from apps.common.models import *
 
 import threading 
 
@@ -63,6 +65,15 @@ def _send_contact_email(data):
         return True
     except:
         return False
+    
+    
+def _save_feedback(post, questions):
+    for question in questions:
+        FeedbackAnswer.objects.create(
+              question=question,
+              option=question.feedbackquestionoption_set.get(id=int(post.get('question-%s' % question.id))),
+              comment=post.get('comment-%s' % question.id)
+        )
 
 def contact_us(request):
     # flatpage = FlatPage.objects.get(url='/contact-us/')
@@ -70,6 +81,8 @@ def contact_us(request):
     success = False
     contact = False
     feedback = False
+    
+    questions = FeedbackQuestion.objects.all()
     
     if request.POST:
         if request.POST.get('contact-submit', None):
@@ -81,21 +94,25 @@ def contact_us(request):
                     success = True
                 else:
                     success = False
-            feedback_form = FeedbackForm(prefix='feedback')
+            #feedback_form = FeedbackForm(prefix='feedback')
         else:
-            feedback_form = FeedbackForm(request.POST, prefix='feedback')
-            if feedback_form.is_valid():
-                feedback_form.save()
-                sent = True
-                feedback = True
             contact_form = ContactForm(prefix='contact')
+            _save_feedback(request.POST, questions)
+            sent = True
+            feedback = True
+#            feedback_form = FeedbackForm(request.POST, prefix='feedback')
+#            if feedback_form.is_valid():
+#                feedback_form.save()
+#                sent = True
+#                feedback = True
     else:
         contact_form = ContactForm(prefix='contact')
-        feedback_form = FeedbackForm(prefix='feedback')
-        
+        # feedback_form = FeedbackForm(prefix='feedback')
+
     return render_to_response('common/contact_us.html', {
          'contact_form': contact_form,
-         'feedback_form': feedback_form,
+         'questions': questions,
+         #'feedback_form': feedback_form,
          # 'flatpage': flatpage,
          'sent': sent,
          'success': success,
