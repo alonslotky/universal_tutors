@@ -168,7 +168,7 @@ class SignupForm(forms.ModelForm):
     def clean_agreement(self):
         agreement = self.cleaned_data.get('agreement', False)
         if not agreement:
-            raise forms.ValidationError(_(u"You need agree with terms and conditions to Sign Up."))
+            raise forms.ValidationError(_(u"You need to agree with terms and conditions to Sign Up."))
         
         return agreement
     
@@ -409,7 +409,7 @@ class GenericSocialSignupForm(SocialSignupForm):
     def clean_agreement(self):
         agreement = self.cleaned_data.get('agreement', False)
         if not agreement:
-            raise forms.ValidationError(_(u"You need agree with terms and conditions to Sign Up."))
+            raise forms.ValidationError(_(u"You need to agree with terms and conditions to Sign Up."))
         
         return agreement
     

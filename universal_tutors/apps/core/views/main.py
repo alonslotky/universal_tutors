@@ -63,7 +63,7 @@ def search(request):
     day = int(request.GET.get('day', -1))
     time = int(request.GET.get('time', -1))
     crb = request.GET.get('crb', False)
-    sort = request.GET.get('crb', 'price')
+    sort = request.GET.get('sort', 'price')
     
     tutors = Tutor.objects.select_related()    
     
