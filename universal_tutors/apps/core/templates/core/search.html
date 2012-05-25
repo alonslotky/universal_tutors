@@ -5,283 +5,292 @@
 {% block title %}Search{% endblock %}
 {% block body_class %}app student{% endblock %}
 {% block content %}
-{% with class.tutor as tutor %}
-{% with class.student as student %}
-
-      <section class="blue feature-box"><div class="inner">
-        <h1>Search <span>Find the perfect tutor for your next class.</span></h1>
-      </div></section>
-      
-      <div class="hide-on-phones">
-      {% include 'profile/fragments/_timer.html' %}
-      </div>
-
-
-      <section class="row clear">
-	    <form method="get" action="{% url search %}" class="nice">
-        <div class="twelve columns">
-          <div class="row">
-              <div class="four columns">
-              
-                <div class="row space">
-                  <div class="three columns">
-                    <label>Subject</label>
-                  </div>
-                  <div class="nine columns">
-                    <select id="id_subject" class="stretch" name="subject">
-                      <option value="">Any Subject</option>
-                      {% for subject in subjects %}
-                      <option value="{{subject}}">{{subject}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-
-                <div class="row space">
-                  <div class="three columns">
-                    <label>Price</label>
-                  </div>
-                  <div class="nine columns">
-                    <select id="id_price" class="stretch" name="price">
-                		<option value="0">Any price</option>
-	                  	<option value="10"> up to 10 credits</option>
-	                  	<option value="20"> up to 20 credits </option>
-	                  	<option value="30"> up to 30 credits </option>
-	                  	<option value="40"> up to 40 credits </option>
-	                  	<option value="50"> up to 50 credits </option>
-                    </select>
-                  </div>
-                </div>
-                
-              </div>
-              
-              <div class="four columns">
-                
-                <div class="row space">
-                  <div class="three columns">
-                    <label>System</label>
-                  </div>
-                  <div class="nine columns">
-                    <select  id="id_system" class="stretch" name="system">
-                      <option value="">Any System</option>
-                    </select>
-                  </div>
-                </div>
-                
-                <div class="row">
-                  <div class="three columns">
-                    <label>Level</label>
-                  </div>
-                  <div class="nine columns">
-                    <select id="id_level" class="stretch" name="level">
-                      <option value="">Any Level</option>
-                      {% for level in levels %}
-                      <option value="{{level}}">{{level}}</option>
-                      {% endfor %}
-                    </select>
-                  </div>
-                </div>
-
-              </div>
-              
-              <div class="four columns">
-              
-                <div class="row space">
-                  <div class="three columns">
-                    <label>Day / Time</label>
-                  </div>
-                  <div class="nine columns">
-                    <div class="row">
-                      <div class="six columns">
-                        <select id="id_day" class="stretch" name="day">
-                        	<option value="-1">Any Day</option>
-                          	<option value="0">Monday</option>
-    						<option value="1">Tuesday</option>
-        					<option value="2">Wednesday</option>
-					        <option value="3">Thursday</option>
-					        <option value="4">Friday</option>
-					        <option value="5">Saturday</option>
-					        <option value="6">Sunday</option>
-                        </select>
-                      </div>
-                      <div class="six columns">
-                        <select class="stretch" id="id_time" name="time">
-                          	<option value="-1">Any Time</option>
-                          	<option value="0">12:00 a.m.</option>
-    						<option value="1">01:00 a.m.</option>
-        					<option value="2">02:00 a.m.</option>
-					        <option value="3">03:00 a.m.</option>
-					        <option value="4">04:00 a.m.</option>
-					        <option value="5">05:00 a.m.</option>
-					        <option value="6">06:00 a.m.</option>
-					        <option value="7">07:00 a.m.</option>
-                          	<option value="8">08:00 a.m.</option>
-    						<option value="9">09:00 a.m.</option>
-        					<option value="10">10:00 a.m.</option>
-					        <option value="11">11:00 a.m.</option>
-					        <option value="12">12:00 p.m.</option>
-					        <option value="13">01:00 p.m.</option>
-					        <option value="14">02:00 p.m.</option>
-					        <option value="15">03:00 p.m.</option>
-                          	<option value="16">04:00 p.m.</option>
-    						<option value="17">05:00 p.m.</option>
-        					<option value="18">06:00 p.m.</option>
-					        <option value="19">07:00 p.m.</option>
-					        <option value="20">08:00 p.m.</option>
-					        <option value="21">09:00 p.m.</option>
-					        <option value="22">10:00 p.m.</option>
-				         	<option value="23">11:00 p.m.</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="row">
-                  <div class="three columns">
-                    <label>CRB checked</label>
-                  </div>
-                  <div class="nine columns">
-                    <input id="id_crb" name="crb" type="checkbox" />
-                  </div>
-                </div>
-                
-              </div>
-              
-
-          </div>
-            <div class="button" style="float: right;"><input type="submit" class="icon search" value="Search"></div>
-        </div>
-      </form>
-      </section>
-      
-      <hr class="big">
-      
-      <div class="row">
-        <div class="twelve columns">
-          
-          <div class="right filter">
-            <form id="search-filter">
-              <select id="search-filter">
-                <option value="price">Sort by Price</option>
-                <option value="rating">Sort by Rating</option>
-                <option value="classes">Sort by Classes Given</option>
-              </select>
-            </form>
-          </div>
-        
-          {% if query %}<h2>Tutors named 'John Doe'</h2>{% endif %}
-        </div>
-      </div>
-	  {% autopaginate tutors 10 %}
-      {% for tutor in tutors %}
-      {% with tutor.profile as tutor_profile %}
-      <article>
-        <div class="row">
-          <div class="one columns hide-on-phones">
-            <img src="{% version tutor_profile.profile_image.path 'list_tutors' %}" alt="{{tutor.get_full_name}}">
-          </div>
-          
-          <div class="three columns">
-            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
-            <p><span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span></p>
-          </div>
-          
-          <div class="four columns">
-            <p>{{tutor_profile.about|truncatechars:300}}{% if tutor_profile.crb_checked %}<br/>(is CRB certified){% endif %}<br/><a href="{% url profile tutor.username %}">Read More</a></p>
-          </div>
-          
-		  <div class="two columns rating">
-			{% get_stars tutor_profile.avg_rate %}
-            <div class="reviews">
-              <span class="hidden">Rating: {{tutor_profile.avg_rate}}.</span>
-              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} given</a>
-            </div>
-          </div>
-          
-          <div class="two columns action">
-            {% if tutor_profile.video %}<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');">Watch Video</a>{% endif %}
-			{% if not tutor_profile.crb_checked %}
-				{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
-		            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb">Send a Message</a>
-		            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb">Book a Class</a>
-				{% else %}
-		            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
-		            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>				
-				{% endif %}
-            {% else %}
-            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
-            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>
-			{% endif %}
-            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}">{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
-            <a href="{% url report tutor.username %}" class="report">Report</a>
-          </div>
-        </div>
-      </article>
-      {% endwith %}
-      {% endfor %}
-      {% paginate %}
-
-{% endwith %}
-{% endwith %}
-
-{% with 'True' as can_send_message %}
-  {% include 'profile/fragments/_modal_messages.html' %}
-{% endwith %}
-
-  {% include 'profile/fragments/_modal_video.html' %}
-  {% include 'profile/fragments/_alert_crb.html' %}
-
-
-<script>
-	$(document).ready(function(){
-		var sort = $.query.get('sort');
-		if (sort) {
-			$("select#search-filter option[value='" + sort +"']").attr("selected", true);
-		}
+	{% with user.is_authenticated as is_authenticated %}
+		{% with class.tutor as tutor %}
+		{% with class.student as student %}
 		
-		var subject = $.query.get('subject');
-		if (subject) {
-			$("select#id_subject option[value='" + subject +"']").attr("selected", true);
-		}
-
-		var system = $.query.get('system');
-		if (system) {
-			$("select#id_system option[value='" + system +"']").attr("selected", true);
-		}
+		      <section class="blue feature-box"><div class="inner">
+		        <h1>Search <span>Find the perfect tutor for your next class.</span></h1>
+		      </div></section>
+		      
+		      <div class="hide-on-phones">
+		      {% include 'profile/fragments/_timer.html' %}
+		      </div>
 		
-		var level = $.query.get('level');
-		if (level) {
-			$("select#id_level option[value='" + level +"']").attr("selected", true);
-		}
-
-		var price = $.query.get('price');
-		if (price) {
-			$("select#id_price option[value='" + price +"']").attr("selected", true);
-		}
 		
-		var day = $.query.get('day');
-		if (day>=0) {
-			$("select#id_day option[value='" + day +"']").attr("selected", true);
-		}
-
-		var time = $.query.get('time');
-		if (time>=0) {
-			$("select#id_time option[value='" + time +"']").attr("selected", true);
-		}
+		      <section class="row clear">
+			    <form method="get" action="{% url search %}" class="nice">
+		        <div class="twelve columns">
+		          <div class="row">
+		              <div class="four columns">
+		              
+		                <div class="row space">
+		                  <div class="three columns">
+		                    <label>Subject</label>
+		                  </div>
+		                  <div class="nine columns">
+		                    <select id="id_subject" class="stretch" name="subject">
+		                      <option value="">Any Subject</option>
+		                      {% for subject in subjects %}
+		                      <option value="{{subject}}">{{subject}}</option>
+		                      {% endfor %}
+		                    </select>
+		                  </div>
+		                </div>
 		
-		var crb = $.query.get('crb');
-		if (crb) {
-			$('#id_crb').attr('checked', 'checked');
-		}
+		                <div class="row space">
+		                  <div class="three columns">
+		                    <label>Price</label>
+		                  </div>
+		                  <div class="nine columns">
+		                    <select id="id_price" class="stretch" name="price">
+		                		<option value="0">Any price</option>
+			                  	<option value="10"> up to 10 credits</option>
+			                  	<option value="20"> up to 20 credits </option>
+			                  	<option value="30"> up to 30 credits </option>
+			                  	<option value="40"> up to 40 credits </option>
+			                  	<option value="50"> up to 50 credits </option>
+		                    </select>
+		                  </div>
+		                </div>
+		                
+		              </div>
+		              
+		              <div class="four columns">
+		                
+		                <div class="row space">
+		                  <div class="three columns">
+		                    <label>System</label>
+		                  </div>
+		                  <div class="nine columns">
+		                    <select  id="id_system" class="stretch" name="system">
+		                      <option value="">Any System</option>
+		                    </select>
+		                  </div>
+		                </div>
+		                
+		                <div class="row">
+		                  <div class="three columns">
+		                    <label>Level</label>
+		                  </div>
+		                  <div class="nine columns">
+		                    <select id="id_level" class="stretch" name="level">
+		                      <option value="">Any Level</option>
+		                      {% for level in levels %}
+		                      <option value="{{level}}">{{level}}</option>
+		                      {% endfor %}
+		                    </select>
+		                  </div>
+		                </div>
 		
-		$("#search-filter").change(function(e){
-			var value = e.target.value;
-			if (value !== undefined || value !== ""){
-				var url = window.location.host;
-				window.location = $.query.set('sort', value);
-			}
-		});
-	});
-</script>
+		              </div>
+		              
+		              <div class="four columns">
+		              
+		                <div class="row space">
+		                  <div class="three columns">
+		                    <label>Day / Time</label>
+		                  </div>
+		                  <div class="nine columns">
+		                    <div class="row">
+		                      <div class="six columns">
+		                        <select id="id_day" class="stretch" name="day">
+		                        	<option value="-1">Any Day</option>
+		                          	<option value="0">Monday</option>
+		    						<option value="1">Tuesday</option>
+		        					<option value="2">Wednesday</option>
+							        <option value="3">Thursday</option>
+							        <option value="4">Friday</option>
+							        <option value="5">Saturday</option>
+							        <option value="6">Sunday</option>
+		                        </select>
+		                      </div>
+		                      <div class="six columns">
+		                        <select class="stretch" id="id_time" name="time">
+		                          	<option value="-1">Any Time</option>
+		                          	<option value="0">12:00 a.m.</option>
+		    						<option value="1">01:00 a.m.</option>
+		        					<option value="2">02:00 a.m.</option>
+							        <option value="3">03:00 a.m.</option>
+							        <option value="4">04:00 a.m.</option>
+							        <option value="5">05:00 a.m.</option>
+							        <option value="6">06:00 a.m.</option>
+							        <option value="7">07:00 a.m.</option>
+		                          	<option value="8">08:00 a.m.</option>
+		    						<option value="9">09:00 a.m.</option>
+		        					<option value="10">10:00 a.m.</option>
+							        <option value="11">11:00 a.m.</option>
+							        <option value="12">12:00 p.m.</option>
+							        <option value="13">01:00 p.m.</option>
+							        <option value="14">02:00 p.m.</option>
+							        <option value="15">03:00 p.m.</option>
+		                          	<option value="16">04:00 p.m.</option>
+		    						<option value="17">05:00 p.m.</option>
+		        					<option value="18">06:00 p.m.</option>
+							        <option value="19">07:00 p.m.</option>
+							        <option value="20">08:00 p.m.</option>
+							        <option value="21">09:00 p.m.</option>
+							        <option value="22">10:00 p.m.</option>
+						         	<option value="23">11:00 p.m.</option>
+		                        </select>
+		                      </div>
+		                    </div>
+		                  </div>
+		                </div>
+		
+		                <div class="row">
+		                  <div class="three columns">
+		                    <label>CRB checked</label>
+		                  </div>
+		                  <div class="nine columns">
+		                    <input id="id_crb" name="crb" type="checkbox" />
+		                  </div>
+		                </div>
+		                
+		              </div>
+		              
+		
+		          </div>
+		            <div class="button" style="float: right;"><input type="submit" class="icon search" value="Search"></div>
+		        </div>
+		      </form>
+		      </section>
+		      
+		      <hr class="big">
+		      
+		      <div class="row">
+		        <div class="twelve columns">
+		          
+		          <div class="right filter">
+		            <form id="search-filter">
+		              <select id="search-filter">
+		                <option value="price">Sort by Price</option>
+		                <option value="rating">Sort by Rating</option>
+		                <option value="classes">Sort by Classes Given</option>
+		              </select>
+		            </form>
+		          </div>
+		        
+		          {% if query %}<h2>Tutors named 'John Doe'</h2>{% endif %}
+		        </div>
+		      </div>
+			  {% autopaginate tutors 10 %}
+		      {% for tutor in tutors %}
+		      {% with tutor.profile as tutor_profile %}
+		      <article>
+		        <div class="row">
+		          <div class="one columns hide-on-phones">
+		            <img src="{% version tutor_profile.profile_image.path 'list_tutors' %}" alt="{{tutor.get_full_name}}">
+		          </div>
+		          
+		          <div class="three columns">
+		            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
+		            <p><span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span></p>
+		          </div>
+		          
+		          <div class="four columns">
+		            <p>{{tutor_profile.about|truncatechars:300}}{% if tutor_profile.crb_checked %}<br/>(is CRB certified){% endif %}<br/><a href="{% url profile tutor.username %}">Read More</a></p>
+		          </div>
+		          
+				  <div class="two columns rating">
+					{% get_stars tutor_profile.avg_rate %}
+		            <div class="reviews">
+		              <span class="hidden">Rating: {{tutor_profile.avg_rate}}.</span>
+		              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} given</a>
+		            </div>
+		          </div>
+		          
+		          <div class="two columns action">
+		            {% if tutor_profile.video %}<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');">Watch Video</a>{% endif %}
+					
+					{% if is_autheticated %}
+						{% if not tutor_profile.crb_checked %}
+							{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
+					            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb">Send a Message</a>
+					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb">Book a Class</a>
+							{% else %}
+					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
+					            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>				
+							{% endif %}
+			            {% else %}
+			            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
+			            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>
+						{% endif %}
+			            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}">{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+			            <a href="{% url report tutor.username %}" class="report">Report</a>
+			        {% else %}
+			            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>			        
+			        {% endif %}
+		          </div>
+		        </div>
+		      </article>
+		      {% endwith %}
+		      {% endfor %}
+		      {% paginate %}
+		
+		{% endwith %}
+		{% endwith %}
+		
+		{% if is_authenticated %}
+			{% with 'True' as can_send_message %}
+			  {% include 'profile/fragments/_modal_messages.html' %}
+			{% endwith %}
+		{% endif %}
+		
+		  {% include 'profile/fragments/_modal_video.html' %}
+		  {% include 'profile/fragments/_alert_crb.html' %}
+		
+		
+		<script>
+			$(document).ready(function(){
+				var sort = $.query.get('sort');
+				if (sort) {
+					$("select#search-filter option[value='" + sort +"']").attr("selected", true);
+				}
+				
+				var subject = $.query.get('subject');
+				if (subject) {
+					$("select#id_subject option[value='" + subject +"']").attr("selected", true);
+				}
+		
+				var system = $.query.get('system');
+				if (system) {
+					$("select#id_system option[value='" + system +"']").attr("selected", true);
+				}
+				
+				var level = $.query.get('level');
+				if (level) {
+					$("select#id_level option[value='" + level +"']").attr("selected", true);
+				}
+		
+				var price = $.query.get('price');
+				if (price) {
+					$("select#id_price option[value='" + price +"']").attr("selected", true);
+				}
+				
+				var day = $.query.get('day');
+				if (day>=0) {
+					$("select#id_day option[value='" + day +"']").attr("selected", true);
+				}
+		
+				var time = $.query.get('time');
+				if (time>=0) {
+					$("select#id_time option[value='" + time +"']").attr("selected", true);
+				}
+				
+				var crb = $.query.get('crb');
+				if (crb) {
+					$('#id_crb').attr('checked', 'checked');
+				}
+				
+				$("#search-filter").change(function(e){
+					var value = e.target.value;
+					if (value !== undefined || value !== ""){
+						var url = window.location.host;
+						window.location = $.query.set('sort', value);
+					}
+				});
+			});
+		</script>
+	{% endwith %}
 {% endblock %}
