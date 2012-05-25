@@ -23,7 +23,7 @@
 	<div class="nine columns">
 		{% for item in recordings %}
 			<div class="row">
-				&rsaquo; <a target="_blank">Record {{forloop.counter}}</a>
+				&rsaquo; <a target="_blank" class="{{class|rec_id:item.recid}}">Record {{forloop.counter}}</a>
 			</div>
 		{% empty %}
 			<div class="row">No recordings where found to download</div>      		

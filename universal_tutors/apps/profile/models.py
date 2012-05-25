@@ -176,6 +176,8 @@ class UserProfile(BaseModel):
     min_credits = models.PositiveIntegerField(default=0)
     max_credits = models.PositiveIntegerField(default=0)
     
+    paypal_email = models.EmailField(null=True, blank=True)
+    
     classes_given = models.PositiveIntegerField(default=0)
 
     @property
@@ -379,9 +381,9 @@ class UserProfile(BaseModel):
 
         # inject total availability on array
         for period in availability:
-            start_index = (period.begin.hour - begin.hour) * PERIOD_STEPS + (period.begin.minute / MINIMUM_PERIOD)
+            start_index = (period.begin.hour - begin.hour) * PERIOD_STEPS + (period.begin.minute - begin.minute / MINIMUM_PERIOD)
             if period.end.hour != 0:
-                end_index = (period.end.hour - begin.hour) * PERIOD_STEPS + (period.end.minute / MINIMUM_PERIOD)
+                end_index = (period.end.hour - begin.hour) * PERIOD_STEPS + (period.end.minute - begin.end / MINIMUM_PERIOD)
             else:
                 end_index = size
 
@@ -535,6 +537,12 @@ class UserProfile(BaseModel):
             super(self.__class__, self).save()
             self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
 
+    def withdraw_account(self, credits):
+        if self.type == self.TYPES.TUTOR:
+            self.credit -= credits
+            super(self.__class__, self).save()
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.WITHDRAW, credits=credits)
+
 
     def get_completeness(self):
         user = self.user
@@ -574,6 +582,7 @@ class UserCreditMovement(BaseModel):
         (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Refund)'),
         (4, 'STOPPED_BY_STUDENT', 'Stopped by student (Refund)'),
         (5, 'TOPUP', 'Top-up account'),
+        (6, 'WITHDRAW', 'Withdraw to PayPal Account')
     ))
 
     user = models.ForeignKey(User, related_name='movements')
@@ -631,6 +640,52 @@ class TopUpItem(BaseModel):
 
     def set_as_hacked(self):
         self.status = self.STATUS_TYPES.HACKED
+        self.save()
+
+class WithdrawItem(BaseModel):
+    """
+    A Withdraw item
+    """
+    class Meta:
+        ordering = ['-created']
+
+    STATUS_TYPES = get_namedtuple_choices('WITHDRAW_STATUS_TYPES', (
+        (0, 'PROCESSING', 'Processing'),
+        (1, 'CANCELED', 'Canceled'),
+        (2, 'FLAGGED', 'Flagged'),
+        (99, 'DONE', 'Done'),
+    ))
+    
+    user = models.ForeignKey(User, related_name = 'withdraws')
+    currency = models.ForeignKey(Currency, related_name='withdraws')
+    value = models.FloatField()
+    credits = models.PositiveIntegerField()
+    status = models.PositiveSmallIntegerField(choices = STATUS_TYPES.get_choices(), default = STATUS_TYPES.PROCESSING)
+    invoice = models.CharField(max_length = 20, null=True, blank=True)
+    email = models.EmailField()
+
+    def save(self, *args, **kwargs):
+        if not self.invoice:
+            while True:
+                self.invoice = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(20))
+                if not TopUpItem.objects.filter(invoice=self.invoice).exclude(id=self.id):
+                    break
+        super(self.__class__, self).save(*args, **kwargs)
+    
+    def __unicode__(self):
+        return "[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
+
+    def withdraw(self):
+        self.status = self.STATUS_TYPES.DONE
+        self.save()
+        self.user.profile.withdraw_account(self.credits)
+    
+    def flagged(self):
+        self.status = self.STATUS_TYPES.FLAGGED
+        self.save()
+
+    def cancel(self):
+        self.status = self.STATUS_TYPES.CANCELED
         self.save()
 
 
@@ -918,14 +973,25 @@ class Referral(BaseModel):
 #### TOPUP CREDITS #######################################################
 def topup_successful(sender, **kwargs):
     ipn_obj = sender
-    try:
-        topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-        if topup.value == float(ipn_obj.mc_gross):
-            topup.topup()
-        else:
-            topup.set_as_hacked()
-    except TopUpItem.DoesNotExist:
-        pass
+    if ipn_obj.txn_type.lower() == 'web_accept':         
+        try:
+            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
+            if topup.value == float(ipn_obj.mc_gross):
+                topup.topup()
+            else:
+                topup.set_as_hacked()
+        except TopUpItem.DoesNotExist:
+            pass
+    elif ipn_obj.txn_type.lower() == 'masspay':
+        query = ipn_obj.query
+        try:
+            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
+            if topup.value == float(ipn_obj.mc_gross):
+                topup.topup()
+            else:
+                topup.set_as_hacked()
+        except TopUpItem.DoesNotExist:
+            pass
     
 def topup_flagged(sender, **kwargs):
     ipn_obj = sender

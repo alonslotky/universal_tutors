@@ -11,7 +11,9 @@ urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signup/$", 'signup',  name="signup"),
     url(r"^(?i)account/signin/$", 'signin', name="login"),
     url(r"^(?i)account/logout/$", 'logout_view', name="logout"),
-    url(r"^(?i)account/successfull/-signup/$", 'successfull_signup', name="successfull_signup"),
+    url(r"^(?i)account/successfull/signup/$", 'successfull_signup', name="successfull_signup"),
+    url(r"^(?i)accounts/social/signup/$", 'social_signup', name="socialaccount_signup"),
+    
 )
 
 # Front-end profile

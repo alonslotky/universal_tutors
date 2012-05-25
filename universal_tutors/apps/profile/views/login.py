@@ -11,7 +11,8 @@ from django.contrib.auth import logout
 from django.core.paginator import Paginator, EmptyPage
 
 from allauth.account.views import signup as allauth_signup, login
-from apps.profile.forms import SigninForm, SignupForm, TutorSignupForm, ParentSignupForm, StudentSignupForm, Under16SignupForm  
+from allauth.socialaccount.views import signup as socialaccount_signup
+from apps.profile.forms import *
 
 
 def logout_view(request):
@@ -117,4 +118,33 @@ def signup(request, *args, **kwargs):
     })
     
     return allauth_signup(request, *args, **kwargs)
+
+
+def social_signup(request, *args, **kwargs):
+    # next = request.REQUEST.get('next', reverse('profile'))
+    user_type = int(request.GET.get('user_type', 0))
+    
+    if user_type == 1:
+        form = TutorSocialSignupForm
+        template_name = 'account/tutor-signup.html'
+    elif user_type == 2:
+        form = StudentSocialSignupForm
+        template_name = 'account/student-signup.html'
+    elif user_type == 3:
+        form = ParentSocialSignupForm
+        template_name = 'account/parent-signup.html'
+    else:
+        template_name = 'socialaccount/signup.html'
+        form = SocialSignupForm
+        
+    next = reverse('successfull_signup')
+    
+    kwargs.update({
+        'form_class': form,
+        # 'success_url': request.REQUEST.get('next', reverse('profile')),
+        'success_url': next + '?user_type=%s' % user_type,
+        'template_name': template_name,
+    })
+    
+    return socialaccount_signup(request, *args, **kwargs)
 
