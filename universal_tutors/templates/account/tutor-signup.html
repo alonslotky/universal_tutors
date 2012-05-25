@@ -2,8 +2,8 @@
 
 {% load fb_versions common_tags flatblock_tags %}
 
-{% block title %}Home{% endblock %}
-{% block body_class %}students{% endblock %}
+{% block title %}Sigh Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
 
 {% block content %}
   <section class="blue feature-box"><div class="inner">
@@ -22,6 +22,7 @@
     
       <div class="row">
         <div class="eight columns">
+          {% if form.password1 %}
           <label>Name</label>
           
          {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
@@ -34,6 +35,7 @@
               <input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{form.last_name.value}}">
             </div>
           </div>
+          {% endif %}
           
           {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
           <div class="row space">
@@ -136,19 +138,21 @@
             </div>
           </div>
 
-		  {% if form.password1.errors %}<div class="formError">{{ form.password1.errors }}</div>{% endif %}
-		  {% if form.password2.errors %}<div class="formError">{{ form.password2.errors }}</div>{% endif %}
-          <div class="row space">
-            <div class="three columns">
-              <label>Account Password</label>
-            </div>
-            <div class="four columns">
-              <input type="password" id="id_password1" name="password1" value="" class="input-text oversize stretch" />
-            </div>
-            <div class="four columns">
-              <input type="password" id="id_password2" name="password2" value="" class="input-text oversize stretch" />
-            </div>
-          </div>
+		  {% if form.password1 %}
+			  {% if form.password1.errors %}<div class="formError">{{ form.password1.errors }}</div>{% endif %}
+			  {% if form.password2.errors %}<div class="formError">{{ form.password2.errors }}</div>{% endif %}
+	          <div class="row">
+	            <div class="three columns">
+	              <label>Account Password</label>
+	            </div>
+	            <div class="four columns">
+	              <input type="password" id="id_password1" name="password1" value="" class="input-text oversize stretch" />
+	            </div>
+	            <div class="four columns">
+	              <input type="password" id="id_password2" name="password2" value="" class="input-text oversize stretch" />
+	            </div>
+	          </div>
+	      {% endif %}
 
           <hr class="inside">
 
@@ -254,7 +258,10 @@
 
           <hr class="inside">
           
-          <div class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
+		  <div id="model-signup-button" class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
+		  <div id="model-signup-under16-container2" class="hidden formError">
+				Under 16? Your parent need to create a account for you. <br />
+		  </div>          
           
         </div>
         

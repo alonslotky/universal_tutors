@@ -8,3 +8,7 @@ from apps.classes.settings import *
 @register.filter
 def in_currency(value, currency):
     return value * currency.credit_value()
+
+@register.filter
+def rec_url(class_, id):
+    return class_.get_rec_url(id)
