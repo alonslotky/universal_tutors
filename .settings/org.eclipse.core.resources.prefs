@@ -1,0 +1,9 @@
+#Mon May 21 12:11:23 BST 2012
+eclipse.preferences.version=1
+encoding//env/lib/python2.7/site-packages/paypal/standard/forms.py=utf-8
+encoding//env/lib/python2.7/site-packages/paypal/standard/ipn/forms.py=utf-8
+encoding//env/lib/python2.7/site-packages/paypal/standard/ipn/views.py=utf-8
+encoding//env/lib/python2.7/site-packages/paypal/standard/models.py=utf-8
+encoding//universal_tutors/apps/classes/migrations/0004_auto__add_field_class_cancelation_reason.py=utf-8
+encoding//universal_tutors/apps/core/models.py=utf-8
+encoding//universal_tutors/apps/profile/migrations/0016_auto__add_usercreditmovement.py=utf-8

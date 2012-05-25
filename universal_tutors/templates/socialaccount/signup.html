@@ -1,30 +1,215 @@
-{% extends "socialaccount/base.html" %}
+{% extends "ui/layouts/base.html" %}
 
-{% load i18n %}
-{% load uni_form_tags %}
+{% load fb_versions common_tags flatblock_tags %}
 
-{% block head_title %}{% trans "Signup" %}{% endblock %}
+{% block title %}Sigh Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
 
-{% block body %}
-    <h1>{% trans "Sign Up" %}</h1>
-
-<p>{% blocktrans with provider_name=account.get_provider.name site_name=site.name %}You are about to use your {{provider_name}} account to login to 
-{{site_name}}. As a final step, please complete the following form:{% endblocktrans %}</p>
+{% block content %}
+  <section class="blue feature-box"><div class="inner">
+    <h1>Sign Up</h1>
+  </div></section>
+  
+  <section>
+    <form action="" id="social-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
     
-<form class="signup uniForm" id="signup_form" method="post" action="">
-  {% csrf_token %}
-  <fieldset class="inlineLabels">
-    {{ form|as_uni_form }}
-    {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-    {% endif %}
-    <div class="buttonHolder">
-      <button class="primaryAction" type="submit">{% trans "Sign Up" %} &raquo;</button>
-    </div>
-  </fieldset>
-</form>
-        
+      <div class="row">
+        <div class="two columns">&nbsp;</div>
+        <div class="six columns">
+	      <div class="row">
+	        <div class="twelve columns">
+	          <h3>Please fill the form below</h3>
+	          <div>&nbsp;</div>
+	        </div>
+	      </div>
 
+          <div id="id_dob_error" class="formError hidden">Choose a valid date please</div>
+          <div class="row space">
+            <div class="three columns">
+              <label>D.O.B</label>
+            </div>
+            
+            <div class="nine columns">
+              <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
+              <div class="row">
+                <div class="four columns phone-one">
+                  <select id="id_dob_day" class="stretch signup_dob2">
+                  	<option value="0">Day</option>
+                  </select>
+                </div>
+                <div class="four columns phone-one">
+                  <select id="id_dob_month" class="stretch signup_dob2">
+                  	<option value="0">Month</option>
+                  </select>
+                </div>
+                <div class="four columns phone-two">
+                  <select id="id_dob_year" class="stretch signup_dob2">
+                  	<option value="0">Year</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="signup-user-type-errors2" class="formError hidden">Please, choose on of the options bellow</div>
+          <div class="row space">
+            <div class="three columns">
+              <label>Who I am</label>
+            </div>
+            
+            <div class="nine columns">
+              <div class="row">
+                <div class="four columns phone-one">
+					<select id="signup_user_type2">
+						<option value="0">Select your choice</option>
+						<option value="1">a Tutor</option>
+						<option value="2">a Student</option>
+						<option value="3">a Parent</option>
+					</select>
+                </div>
+                <div class="four columns phone-one"></div>
+                <div class="four columns phone-two"></div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="inside">
+          
+		  <div id="model-signup-button" class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
+		  <div id="model-signup-under16-container2" class="hidden formError">
+			Under 16? Your parent need to create a account for you. <br />
+			Send an email to your parent with a request to sign you up: <br />
+			{% comment %}
+			<div id="parent-request2-errors" class="formError hidden">Invalid Email</div>
+			<div id="parent-request2-info" class="hidden"></div>
+			<form class="nice">
+				<input class="input-text" type="text" name="parent-email" id="parent-email" />
+				<div class="button"><input type="button" id="send-parent-request2" class="icon rocket" value="Send" /></div>
+			</form>
+			{% endcomment %}
+		  </div>          
+		</div>
+		<div class="columns four">&nbsp;</div>
+	  </div>
+	</form>
+  </section>
+<script type="text/javascript">
+	var today = new Date();
+	var today_year = today.getFullYear();
+	var signup_type = null;
+	
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+	function getQueryVariable(variable) {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return '';
+	}
+	
+	var dob_date = getQueryVariable('date');
+	dob_date = dob_date.split('-');
+	
+	var dob_year = parseInt(dob_date[0]);
+	var dob_month = parseInt(dob_date[1]);
+	var dob_day = parseInt(dob_date[2]);
+
+	for(i=1; i<=31; i++)
+		$('#id_dob_day').append('<option value="'+ i +'" '+ (i==dob_day?'selected=selected':'') +'>'+ i +'</option>');
+
+	for(i=0; i<months.length; i++)
+		$('#id_dob_month').append('<option value="'+ (i+1) +'" '+ (i==dob_month-1?'selected=selected':'') +'>'+ months[i] +'</option>');
+
+	for(i=today_year; i>today_year-100; i--)
+		$('#id_dob_year').append('<option value="'+ i +'" '+ (i==dob_year?'selected=selected':'') +'>'+ i +'</option>');
+		
+	$('.signup_dob2').change(function(e){
+		check_over16_2();
+	});
+	
+	$('#student-signup-form').submit(function(){
+		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
+	});
+		
+	var check_over16_2 = function(){
+		var day = parseInt($('#id_dob_day').val());
+		var month = parseInt($('#id_dob_month').val());
+		var year = parseInt($('#id_dob_year').val());
+		var date = new Date(year, month-1, day);
+		var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
+		var input_date = year +'-'+ month +'-'+ day;
+		var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+		if(str_date == input_date) {			
+			var age_date = new Date(year+16, month, day);
+			var today = new Date();
+			
+			if(today >= age_date) {
+				$('#model-signup-button').removeClass('hidden');
+				$('#model-signup-under16-container2').addClass('hidden');
+				return true;
+			} else {
+				$('#model-signup-button').addClass('hidden');
+				$('#model-signup-under16-container2').removeClass('hidden');
+				return false;
+			}
+		}
+		
+		return false;
+	}
+	
+	$('#social-signup-form').submit(function(e){
+		e.preventDefault();
+		
+		signup_type = parseInt($('#signup_user_type2').val());
+		if(signup_type) {
+			$('#signup-user-type-errors2').addClass('hidden');
+			if(check_over16_2()){
+				var day = parseInt($('#id_dob_day').val());
+				var month = parseInt($('#id_dob_month').val());
+				var year = parseInt($('#id_dob_year').val());
+				var date = year +'-'+ month +'-'+ day;
+	
+				if (day>0 && month>=0 && year>0) {
+					$('#id_dob_errors').addClass('hidden');
+					window.location.href +='?date='+ date +'&user_type='+ signup_type;
+				} else {
+					$('#id_dob_errors').removeClass('hidden');
+				}		
+			}
+		} else {
+			$('#signup-user-type-errors2').removeClass('hidden');
+		}
+	});
+
+	$("#send-parent-request2").click(function(e){
+		e.preventDefault();
+
+		$('#parent-request2-errors').addClass('hidden');
+		$("#parent-request2-info").addClass('hidden').empty();
+		var email = $("#parent-email").val();
+		if(reg.test(email) == false) {
+			$('#parent-request2-errors').removeClass('hidden');
+	   	} else {
+	   		$.ajax({
+				type: 'POST',
+				data: {'email': email},
+				url: '{% url send_parent_request %}',
+				success: function(data) {
+					$("#model-signup-under16-container").html(data);
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					$("#parent-request2-info").removeClass('hidden');
+					$("#parent-request2-info").html(jqXHR.response);
+				}
+			});
+	   	}
+		
+	});
+
+</script>
 {% endblock %}
-
-

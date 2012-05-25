@@ -317,9 +317,10 @@ class Class(BaseModel):
         return recordings.listbyroom(roomid=self.scribblar_id)
     
     def download(self, id):
-        detail = assets.details(assetid=id)
-        return '/'
-
+        return assets.url(assetid=id, client=143)
+    
+    def get_rec_url(self, id):
+        return recordings.url(recid=id)
 
 class ClassUserHistory(models.Model):
     """

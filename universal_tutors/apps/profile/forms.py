@@ -11,6 +11,7 @@ from uni_form.helpers import Layout, Fieldset, Row, HTML, Div
 
 from allauth.account.app_settings import *
 from allauth.account.forms import LoginForm
+from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from allauth.account.utils import user_display, perform_login, send_email_confirmation
 from allauth.utils import email_address_exists
 
@@ -40,9 +41,12 @@ class TutorSubjectForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
+    password  = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
+    password1 = forms.CharField(label=_('New Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
+    password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
 
     class Meta:
-        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', 'currency', 'webcam', )
+        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', 'currency', 'webcam', 'paypal_email')
         model = UserProfile
         widgets = {
             'photo': forms.FileInput(),
@@ -53,6 +57,24 @@ class ProfileForm(forms.ModelForm):
         super(ProfileForm, self).__init__(*args, **kwargs)
         self.fields['country'].required = True
 
+    def clean(self):
+        cleaned_data = self.cleaned_data
+
+        passwd  = cleaned_data.get('password', '')
+        passwd1 = cleaned_data.get('password1', None)
+        passwd2 = cleaned_data.get('password2', None)
+
+        if passwd1 or passwd2:
+            user = self.instance.user
+            if not user.check_password(passwd):
+                self._errors['password'] = self.error_class(_(u'Password is invalid'))
+            elif passwd1 != passwd2:
+                self._errors['password1'] = self.error_class(_(u'Passwords should match'))
+            else:
+                user.set_password(passwd1)
+
+        return cleaned_data
+    
 TutorSubjectFormSet = inlineformset_factory(User, TutorSubject, form=TutorSubjectForm)
 TutorQualificationFormSet = inlineformset_factory(User, TutorQualification)
     
@@ -368,4 +390,126 @@ class ReferralForm(forms.ModelForm):
         model = Referral
         fields = ('name', 'email')
 
+
+
+class GenericSocialSignupForm(SocialSignupForm):
+    country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
+    date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
+
+    gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.common_timezones], widget=forms.Select(attrs={'class': 'stretch'}))
     
+    referral = forms.ChoiceField(label=_('Referral'), choices=UserProfile.REFERRAL_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
+    referral_other = forms.CharField(required = False, initial='')
+    referral_key = forms.CharField(required = False, initial='')
+
+    agreement = forms.BooleanField(required = False, help_text='I have read and accepted the Terms and Conditions from the box above.')
+    newsletter = forms.BooleanField(required = False, initial=True, help_text='I want to receive newsletters from Universal Tutors with offers and other news.')
+
+    def clean_agreement(self):
+        agreement = self.cleaned_data.get('agreement', False)
+        if not agreement:
+            raise forms.ValidationError(_(u"You need agree with terms and conditions to Sign Up."))
+        
+        return agreement
+    
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).count() > 0:
+            raise forms.ValidationError(_(u"This username is already used."))
+
+        return username
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError(_(u"This email is already registered."))
+
+        return email
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        referral = int(self.cleaned_data.get('referral', 0))
+        referral_other = self.cleaned_data.get('referral_other', None)
+        if referral == UserProfile.REFERRAL_TYPES.OTHER and not referral_other:
+            self._errors['referral_other'] = self.error_class(['Please specify how you learned about us.'])
+
+        return cleaned_data
+
+
+    def save(self, request=None):
+        user = super(GenericSocialSignupForm, self).save(request)
+        profile = user.profile
+        profile.country = self.cleaned_data['country']
+        profile.referral = int(self.cleaned_data.get('referral', 0))
+        profile.other_referral = self.cleaned_data.get('referral_other', None)
+        profile.referral_key = self.cleaned_data.get('referral_key', None)
+        profile.gender = self.cleaned_data.get('gender', 0)
+        profile.newsletters = self.cleaned_data.get('newsletter', False)
+        profile.timezone = self.cleaned_data.get('timezone', None)
+        profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency', 1))
+        profile.date_of_birth = self.cleaned_data['date_of_birth']
+        profile.crb = self.cleaned_data.get('crb', False)
+        profile.save()
+
+        return user
+
+
+class TutorSocialSignupForm(GenericSocialSignupForm):
+    about = forms.CharField(label=_('Description'), initial='')
+    crb = forms.BooleanField(label='I have a CRB', required=False)
+    webcam = forms.BooleanField(label='I have a WebCam', required=False)
+    currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
+
+    def save(self, request=None):
+        user = super(TutorSocialSignupForm, self).save(request)
+        profile = user.profile
+        profile.about = self.cleaned_data.get('about', '')
+        profile.crb = self.cleaned_data.get('crb', False)
+        profile.webcam = self.cleaned_data.get('webcam', False)
+        profile.type = profile.TYPES.TUTOR
+        profile.save()
+
+        return user
+
+class StudentSocialSignupForm(GenericSocialSignupForm):
+    subjects = ListField(required = False)
+    new_subjects = ListField(required = False)
+
+    def save(self, request=None):
+        user = super(StudentSocialSignupForm, self).save(request)
+        profile = user.profile
+
+        list_subjects = self.cleaned_data['subjects']
+        list_new_subjects = self.cleaned_data['new_subjects']
+
+        profile.interests.clear()
+        for id in list_subjects:
+            try:
+                subject = ClassSubject.objects.get(id = id)
+                profile.interests.add(subject)
+            except ClassSubject.DoesNotExist:
+                pass
+                    
+        for title in list_new_subjects:
+            try:
+                subject = ClassSubject.objects.get(subject__iexact = title)
+            except ClassSubject.DoesNotExist:
+                subject = ClassSubject(subject = title)
+            subject.save()
+            profile.interests.add(subject)
+            
+        profile.type = profile.TYPES.STUDENT
+        profile.save()
+
+        return user
+
+class ParentSocialSignupForm(GenericSocialSignupForm):
+
+    def save(self, request=None):
+        user = super(ParentSocialSignupForm, self).save(request)
+        profile = user.profile
+        profile.type = profile.TYPES.PARENT
+        profile.save()
+
+        return user

@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     'apps.classes',
     
     'paypal.standard.ipn',
+    'paypal2.standart.ap',
     
     # CMS
 #    'cms',
@@ -210,16 +211,16 @@ EMAIL_MANAGER = ['ben@rawjam.co.uk',]
 # Authentication / Account Management Settings
 AUTH_PROFILE_MODULE = 'profile.UserProfile'
 LOGIN_URL = '/account/signin/'
-LOGIN_REDIRECT_URL = "/dashboard/"
+LOGIN_REDIRECT_URL = "/edit_profile/"
 UNDER16_URL = '/account/under16/'
 TYPE_URL = '/account/type/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = False
 ACCOUNT_EMAIL_AUTHENTICATION = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 SOCIALACCOUNT_QUERY_EMAIL = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_AVATAR_SUPPORT = False
 EMAIL_CONFIRMATION_DAYS = 99
 FACEBOOK_ENABLED = True
@@ -346,9 +347,13 @@ TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, 'grappelli/tinymce/jscripts/tiny_mce/
 SCRIBBLAR_API_KEY = "4E05E226-B564-8140-D1E65546167F353C"
 
 # PAYPAL CONFIGURATIONS
+PAYPAL_SENDER_EMAIL = "sandbo_1318841681_biz@rawjam.co.uk"
 PAYPAL_RECEIVER_EMAIL = "sandbo_1318841681_biz@rawjam.co.uk"
+PAYPAL_API_APPLICATION_ID = "APP-80W284485P519543T"
+PAYPAL_API_USERNAME = "sandbo_1318841681_biz_api1.rawjam.co.uk"
+PAYPAL_API_PASSWORD = "1318841709"
+PAYPAL_API_SIGNATURE = "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AvPh38EgPokDBXH1F0pyh46RydCh"
 PAYPAL_TEST = True
-
 
 #CONTACT
 CONTACT_EMAIL = ['nick@universaltutors.com']
