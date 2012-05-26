@@ -203,7 +203,7 @@
 		          <div class="two columns action">
 		            {% if tutor_profile.video %}<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');">Watch Video</a>{% endif %}
 					
-					{% if is_autheticated %}
+					{% if is_authenticated %}
 						{% if not tutor_profile.crb_checked %}
 							{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
 					            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb">Send a Message</a>
