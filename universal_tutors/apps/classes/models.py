@@ -300,13 +300,13 @@ class Class(BaseModel):
     
     def tutor_rating(self):
         try:
-            return self.tutor.reviews_as_tutor.filter(related_class = self).latest(id)
+            return self.tutor.reviews_as_tutor.filter(related_class = self).latest('id')
         except ObjectDoesNotExist:
             return None
 
     def student_rating(self):
         try:
-            return self.student.reviews_as_student.filter(related_class = self).latest(id)
+            return self.student.reviews_as_student.filter(related_class = self).latest('id')
         except ObjectDoesNotExist:
             return None
     
