@@ -381,9 +381,9 @@ class UserProfile(BaseModel):
 
         # inject total availability on array
         for period in availability:
-            start_index = (period.begin.hour - begin.hour) * PERIOD_STEPS + (period.begin.minute - begin.minute / MINIMUM_PERIOD)
+            start_index = (period.begin.hour - begin.hour) * PERIOD_STEPS + ((period.begin.minute - begin.minute) / MINIMUM_PERIOD)
             if period.end.hour != 0:
-                end_index = (period.end.hour - begin.hour) * PERIOD_STEPS + (period.end.minute - begin.end / MINIMUM_PERIOD)
+                end_index = (period.end.hour - begin.hour) * PERIOD_STEPS + ((period.end.minute - end.minute) / MINIMUM_PERIOD)
             else:
                 end_index = size
 
@@ -399,9 +399,9 @@ class UserProfile(BaseModel):
 
         # inject booking on array
         for item in booking:
-            start_index = (item.start.hour - begin.hour) * PERIOD_STEPS + (item.start.minute / MINIMUM_PERIOD)
+            start_index = (item.start.hour - begin.hour) * PERIOD_STEPS + ((item.start.minute - begin.minute) / MINIMUM_PERIOD)
             if item.end.hour != 0:
-                end_index = (item.end.hour - begin.hour) * PERIOD_STEPS + (item.end.minute / MINIMUM_PERIOD)
+                end_index = (item.end.hour - begin.hour) * PERIOD_STEPS + ((item.end.minute - end.minute) / MINIMUM_PERIOD)
             else:
                 end_index = size
             
@@ -983,6 +983,7 @@ def topup_successful(sender, **kwargs):
         except TopUpItem.DoesNotExist:
             pass
     elif ipn_obj.txn_type.lower() == 'masspay':
+        # TO DO
         query = ipn_obj.query
         try:
             topup = TopUpItem.objects.get(id = ipn_obj.item_number)
@@ -995,11 +996,23 @@ def topup_successful(sender, **kwargs):
     
 def topup_flagged(sender, **kwargs):
     ipn_obj = sender
-    try:
-        topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-        topup.flagged()
-    except TopUpItem.DoesNotExist:
-        pass
+    if ipn_obj.txn_type.lower() == 'web_accept':         
+        try:
+            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
+            topup.flagged()
+        except TopUpItem.DoesNotExist:
+            pass
+    elif ipn_obj.txn_type.lower() == 'masspay':
+        # TO DO
+        query = ipn_obj.query
+        try:
+            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
+            if topup.value == float(ipn_obj.mc_gross):
+                topup.topup()
+            else:
+                topup.set_as_hacked()
+        except TopUpItem.DoesNotExist:
+            pass
 
 payment_was_successful.connect(topup_successful, dispatch_uid='topup_successful')
 payment_was_flagged.connect(topup_flagged, dispatch_uid='topup_flagged')

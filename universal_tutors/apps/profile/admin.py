@@ -3,6 +3,10 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from models import *
 
+class ChildReviews(admin.TabularInline):
+    model = TutorReview
+    extra = 0
+
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     
@@ -11,17 +15,21 @@ class AdminUserAdmin(UserAdmin):
     list_editable = ['is_active']
     inlines = [ UserProfileInline ]
 
+class TutorAdmin(UserAdmin):
+    list_display = ('username','email','first_name','last_name','date_joined','last_login',)
+    list_editable = []
+    inlines = [ UserProfileInline, ChildReviews ]
+
 class UTUserAdmin(UserAdmin):
     list_display = ('username','email','first_name','last_name','date_joined','last_login',)
     list_editable = []
     inlines = [ UserProfileInline ]
 
 
-
 admin.site.unregister(User)
 admin.site.register(User, AdminUserAdmin)
-admin.site.register(Tutor, UTUserAdmin)
-admin.site.register(TutorList, UTUserAdmin)
+admin.site.register(Tutor, TutorAdmin)
+admin.site.register(TutorList, TutorAdmin)
 admin.site.register(Student, UTUserAdmin)
 admin.site.register(Parent, UTUserAdmin)
 
