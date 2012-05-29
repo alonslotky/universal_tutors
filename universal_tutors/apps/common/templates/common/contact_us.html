@@ -33,37 +33,7 @@
 		{% endif %}
 		
 		{% if not sent %}
-	    	<div class="eight columns">
-	    		<!-- FORM: HEAD SECTION -->
-	        <link href="{{STATIC_URL}}css/form.css" rel="stylesheet" type="text/css"></link>
-	        <!-- FORM: BODY SECTION -->
-	        <h3>Site Feedback</h3>
-	        <form id="feedback" method="post" action="/contact-us/" class="nice custom"> {% csrf_token %}
-	
-	     		{% for question in questions %}
-	     		<p>
-		     		<label>{{ question.title }}</label>
-		     		 <select name="question-{{ question.id }}" id="tfa_8" class="">
-		     		 	<option value="">Please select...</option>
-		     		 	{% for option in question.feedbackquestionoption_set.all %}
-		     		 		<option value="{{ option.id }}">{{ option.title }}</option>
-		     		 	{% endfor %}
-	 		 		</select>
- 		 		</p>
- 		 		<br>
-				<p>
-			        <label>{{ question.optional_text_title }}</label>
-			        <input type="text" id="tfa_16" name="comment-{{ question.id }}" value="" placeholder="" class="input-text">
-		        </p>
-		          
-		        <br>
-	     		{% endfor %}
-	          
-	          <input type="submit" class="button" value="Submit">
-	          <input type="hidden" value="244717" name="feedback-submit" id="tfa_dbFormId"><input type="hidden" value="input-text" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="8a55ad301648f9d486cc4f2e79208e5b" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="2" name="tfa_dbVersionId" id="tfa_dbVersionId">
-	        </form>
-	    	</div>
-	    	<div class="four columns">
+	    	<div class="six columns centered">
 	      	<div class="panel">
 	        	<h3>Got a Question?</h3>
 	          <form id="contact" class="nice" action="/contact-us/" method="post"> {% csrf_token %}

@@ -10,7 +10,7 @@
 .signup-loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; height: 150px; }
 .sign-up-terms-and-conditions { border: 1px solid #ccc; padding: 5px; height: 200px; overflow: auto; }
 
-.sign-in .row.center .facebook_connect_link { margin-left: 275px; }
+.sign-in .row.center .facebook_connect_link { margin: 0 auto; }
 .facebook_connect_link {
     background: url("../images/social/facebook_connect.jpg") no-repeat scroll 0 0 transparent;
     display: block;

@@ -49,10 +49,10 @@
 	          </div>
 	          
 	          <div class="two columns action">
-	            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
-	            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>
-	            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}">{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
-	            <a href="{% url report tutor.username %}" class="report">Report</a>
+	            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> Send a Message</a>
+	            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
+	            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i> {% if tutor|is_favorite:user %} Remove favorite{% else %}Add favorite{% endif %}</a>
+	            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 	          </div>
 	        </div>
 	      </article>

@@ -18,7 +18,7 @@
       {% include 'profile/fragments/_timer.html' %}
       </div>
       
-      <dl class="nice contained tabs hide-on-phones">
+      <dl class="nice contained tabs hide-on-phones hide-on-tablets">
         <dd><a href="#details" class="active">Details</a></dd>
         <dd><a href="#interests">Interests</a></dd>
         <dd><a href="#classes">Classes</a></dd>
@@ -27,7 +27,7 @@
         {% if profile.type == profile.TYPES.STUDENT %}<dd><a href="#credits">Credits</a></dd>{% endif %}
       </dl>
       
-      <dl class="nice contained vertical tabs show-on-phones">
+      <dl class="nice contained vertical tabs show-on-phones show-on-tablets">
         <dd><a href="#details" class="active">Details</a></dd>
         <dd><a href="#interests">Interests</a></dd>
         <dd><a href="#classes">Classes</a></dd>

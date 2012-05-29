@@ -64,7 +64,7 @@
 		                  </div>
 		                  <div class="nine columns">
 		                    <select  id="id_system" class="stretch" name="system">
-		                      <option value="">Any System</option>
+		                      <option value="">Any Educational System</option>
 		                    </select>
 		                  </div>
 		                </div>
@@ -89,7 +89,7 @@
 		              
 		                <div class="row space">
 		                  <div class="three columns">
-		                    <label>Day / Time</label>
+		                    <label>Availability</label>
 		                  </div>
 		                  <div class="nine columns">
 		                    <div class="row">
@@ -201,25 +201,25 @@
 		          </div>
 		          
 		          <div class="two columns action">
-		            {% if tutor_profile.video %}<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');">Watch Video</a>{% endif %}
+		            {% if tutor_profile.video %}<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a>{% endif %}
 					
 					{% if is_authenticated %}
 						{% if not tutor_profile.crb_checked %}
 							{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
-					            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb">Send a Message</a>
-					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb">Book a Class</a>
+					            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> Send a Message</a>
+					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-thumbs-up"></i> Book a Class</a>
 							{% else %}
-					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
-					            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>				
+					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> Send a Message</a>
+					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>				
 							{% endif %}
 			            {% else %}
-			            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});">Send a Message</a>
-			            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>
+			            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  gSend a Message</a>
+			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
 						{% endif %}
-			            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}">{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
-			            <a href="{% url report tutor.username %}" class="report">Report</a>
+			            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i> {% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+			            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 			        {% else %}
-			            <a href="{% url book_class tutor.username %}" class="book-class">Book a Class</a>			        
+			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>			        
 			        {% endif %}
 		          </div>
 		        </div>

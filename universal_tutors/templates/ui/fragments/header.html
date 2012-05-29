@@ -24,12 +24,12 @@
 
 		<div class="user-links">
 			{% if authenticated %}
-        		<a href="{% url edit_profile %}" class="link-profile">Private Dashboard</a><a href="{% url logout %}">Sign Out</a>
+        		<a href="{% url edit_profile %}" class="link-profile">Profile</a><a href="{% url logout %}">Sign Out</a>
 			{% else %}
 				<a href="javascript:;" id="signup-header-button" data-reveal-id="modal-signup">Sign Up</a>			
 				<a href="javascript:;" class="sign-up-button">Sign In</a>
 			{% endif %}
-			<a href="#" class="search">Search</a>
+			<a href="{% url search %}" class="search">Search</a>
 			<form method="get" action="{% url search %}" class="nice custom compact-search hide-on-phones">
   				<select name="what">
     				<option value="tutors">Tutors</option>

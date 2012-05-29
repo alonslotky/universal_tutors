@@ -22,18 +22,18 @@
         <div class="feature-black">
           <div class="feature-text">
             <h3>Some text about generally how amazing this site is, and how it will change lives, etc.</h3>
-            <a href="javascript:;" class="video button" data-reveal-id="modal-video" onclick="$('#video-frame').removeClass('hidden');"><span></span>Launch the Video</a>
+            <a href="javascript:;" class="video button" data-reveal-id="modal-video" onclick="$('#video-frame').removeClass('hidden');"><i class="icon-play-circle2 block text-center full-width text-large"></i>Launch the Video</a>
           </div>
         </div>
       
       </div></section>
       
       <div class="row">
-        <div class="three columns centered center" style="padding-left: 70px;">
+        <div class="five columns centered text-center">
 			<!-- AddThis Button BEGIN -->
-			<div class="addthis_toolbox addthis_default_style ">
-				<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-				<a class="addthis_button_tweet"></a>
+			<div class="addthis_toolbox addthis_default_style">
+				<a class="addthis_button_facebook_like inline" fb:like:layout="button_count"></a>
+				<a class="addthis_button_tweet inline"></a>
 			</div>
 			<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
 			<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4fb386b55399dc7b"></script>
@@ -51,7 +51,7 @@
         </div>
         
         <div class="row row-1">
-          <div class="eight columns">
+          <div class="eight columns clear">
             <div class="row">
               <div class="twelve columns space">
                 <h3 class="home-1">Unique classroom experience</h3>
@@ -73,8 +73,15 @@
             </div>
           </div>
   
-          <div class="four columns">
-            <div class="messages"></div>
+          <div class="four columns clear">
+            <div class="testimonials">
+              <blockquote><p>"Since I started learning on Universal Tutors I've actually really started to enjoy Biology, and I even finished top of my class in our last exam"</p> <cite>Biology student</cite></blockquote>
+              
+              <blockquote><p>"Thanks to the tutoring Sam received on Universal Tutors he passed his 11+ exams with flying colours and got into the school we'd all been hoping for"</p> <cite>Parent</cite></blockquote>
+              
+              <blockquote><p>"Learning on Universal Tutors is so fun and interactive that I now actually look forward to my weekly Maths class, it also means I no longer have to worry about falling behind in class"</p> <cite>Maths student</cite></blockquote>
+            
+            </div>
           </div>
   
           <!--<div class="four columns testimonials">
@@ -146,7 +153,7 @@
       {% if not user.is_authenticated %}
       <section>
         <div class="row">
-          <div class="seven columns centered center">
+          <div class="seven columns centered text-center">
             <h2 class="tight"><span>Ready to give us a try?</span></h2>
             <a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('2'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Student Account</span></a>
             <p class="faded">If you're a tutor, <a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();">sign up here</a>.</p>

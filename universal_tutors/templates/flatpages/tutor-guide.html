@@ -31,22 +31,22 @@
 
 		<div class="row">
   			<div class="four columns">
-    			<img src="http://placehold.it/500x230" alt="Screenshot">
+    			<img src="{{STATIC_URL}}images/marketing/tutor-1.png" alt="Screenshot">
     			<h4>Enhance Your Profile</h4>
     			<p>To increase your chances of attracting students it is necessary to complete as much of the profile as possible including verifying your educational and professional background, and creating your 30 second video introduction.</p>
   			</div>
   
-          	<div class="four columns">
-            	<img src="http://placehold.it/500x230" alt="Screenshot">
-            	<h4>Engage With Students</h4>
-            	<p>Ensure that whenever you are contacted by a student either with a class request or with a message, you are quick to respond. A high level of engagement will ensure that contact is converted into classes.</p>
-          	</div>
-          
-          	<div class="four columns">
-            	<img src="http://placehold.it/500x230" alt="Screenshot">
-            	<h4>Schedule a Class</h4>
-            	<p>If you receive a class invite, once this is accepted the class will automatically drop into your class schedule in your dashboard area.</p>
-          	</div>
+      	<div class="four columns">
+        	<img src="{{STATIC_URL}}images/marketing/tutor-2.png" alt="Screenshot">
+        	<h4>Engage With Students</h4>
+        	<p>Ensure that whenever you are contacted by a student either with a class request or with a message, you are quick to respond. A high level of engagement will ensure that contact is converted into classes.</p>
+      	</div>
+      
+      	<div class="four columns">
+        	<img src="{{STATIC_URL}}images/marketing/tutor-3.png" alt="Screenshot">
+        	<h4>Schedule a Class</h4>
+        	<p>If you receive a class invite, once this is accepted the class will automatically drop into your class schedule in your dashboard area.</p>
+      	</div>
 		</div>
 	</section>
   
@@ -65,7 +65,7 @@
     
         <div class="row">
           	<div class="four columns">
-            	<img src="http://placehold.it/500x230" alt="Screenshot">
+            	<img src="{{STATIC_URL}}images/marketing/tutor-4.png" alt="Screenshot">
             	<h4>Check Out the Class</h4>
             	<p>We give you 5 minutes at the start of a class to check that the tutor is right for you and that you are getting exactly what you want. If for any reason you are not happy you can cancel the class at this stage at no cost.</p>
           	</div>
@@ -77,7 +77,7 @@
           	</div>
           
           	<div class="four columns">
-            	<img src="http://placehold.it/500x230" alt="Screenshot">
+            	<img src="{{STATIC_URL}}images/marketing/tutor-6.png" alt="Screenshot">
             	<h4>Instant Messenger</h4>
             	<p>This provides a further means of communication, for situations where you would prefer to communicate through typed messages.</p>
           	</div>
@@ -107,10 +107,10 @@
   	{% if not user.is_authenticated %}
   	<section>
 		<div class="row">
-          	<div class="seven columns centered center">
+          	<div class="seven columns centered text-center">
 	            <h2 class="tight"><span>Ready to give us a try?</span></h2>
 	            <a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Tutor Account</span></a>
-	            <p class="faded">If you're a tutor, <a href="{% url signup %}">sign up here</a>.</p>
+	            <p class="faded">If you're a student, <a href="{% url signup %}">sign up here</a>.</p>
           	</div>
     	</div>
   	</section>

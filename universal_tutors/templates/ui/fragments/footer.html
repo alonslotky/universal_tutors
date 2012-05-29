@@ -46,8 +46,17 @@
   	
   	{% get_quote %}
   	{% if quote %}
-  	<p class="quote">{{quote}}  <a class="tweet" href="https://twitter.com/share?url={% url home %}&via=UniversalTutors&text={{quote}}" target="_blank">Tweet this</a></p>
+  	<p class="quote">{{quote}}  <a class="tweet" href="https://twitter.com/share?url={% url home %}&via=UniversalTutors&text={{quote}}" target="_blank">Tweet this <i class="icon-twitter-bird"></i></a></p>
   	{% endif %}
-  	<p class="socials">Follow us<a href="http://twitter.com/#!/UniversalTutors" class="twitter ir">Twitter</a> <a href="http://www.facebook.com/UniversalTutors" class="facebook ir">Facebook</a></p>
+  	<p class="socials text-center">Follow us:<br>
+    	<a href="http://twitter.com/#!/UniversalTutors" class="twitter inline text-large">
+    	  <i class="icon-twitter-bird"></i>
+    	  <span class="hide">Twitter</span>
+    	</a>
+    	<a href="http://www.facebook.com/UniversalTutors" class="facebook inline text-large">
+    	  <i class="icon-facebook-rect"></i>
+    	  <span class="hide">Facebook</span>
+    	</a>
+    </p>
 </footer>
 {% endwith %}
