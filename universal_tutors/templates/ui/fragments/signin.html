@@ -31,181 +31,26 @@
 	</form>
 </div>
 
-<div id="modal-signup" class="reveal-modal form signup">
+<div id="modal-signin" class="reveal-modal">
+	<h2>Sign In</h2>
+	<form action="{% url login %}" method="post" class="nice">
+	    <div class="row">
+	      	<div class="four columns">
+	        	<input name="email" type="text" class="input-text oversize stretch" placeholder="Username">
+	      	</div>
+	      
+	      	<div class="four columns">
+	        	<input name="password" type="password" class="input-text oversize stretch" placeholder="Password">
+	      	</div>
+	      
+	      	<div class="four columns">
+	        	<div class="button stretch space"><input type="submit" class="icon rocket stretch" value="Sign In"></div>
+	        	<a href="{% url account_reset_password %}">Forgot password?</a>
+	      	</div>
+	    </div>
+	</form>
+	Temporary links: <a href="/student-guide/">Student</a> | <a href="/tutor-guide/">Tutor</a>
 	<a class="close-reveal-modal">&#215;</a>
-	<h2>Sign Up at Universal Tutors</h2>
-	<p>Welcome to Universal Tutors, Phasellus at elit risus, iaculis rhoncus arcu. Duis auctor neque in magna sollicitudin in adipiscing libero dictum.</p>
-	<br/>
-	<div id="modal-signup-form-container">
-		<form id="modal-signup-form" class="nice custom signup">
-			{% csrf_token %}
-			<div class="row margin date_of_birth">
-				<h3>My date of birth</h3>
-				<div id="signup-dob-errors" class="formError hidden">Please, insert a valid date</div>
-				<select id="signup_day" class="signup_dob" name="day">
-					<option value="0">Day</option>
-				</select>
-				<select id="signup_month" class="signup_dob" name="month">
-					<option value="0">Month</option>
-				</select>
-				<select id="signup_year" class="signup_dob" name="year">
-					<option value="0">Year</option>
-				</select>
-				<div style="clear:both;"></div>
-			</div>
-			<div id="model-signup-type-container">
-				<div class="row margin">
-					<h3>Who I am</h3>
-					<div id="signup-user-type-errors" class="formError hidden">Please, choose on of the options bellow</div>
-					<select id="signup_user_type">
-						<option value="0">Select your choice</option>
-						<option value="1">a Tutor</option>
-						<option value="2">a Student</option>
-						<option value="3">a Parent</option>
-					</select>
-				</div>
-				<div class="row">
-					<div class="three columns">
-		  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign Up"></div>
-					</div>	
-				</div>
-			</div>
-		</form>
-		<div id="model-signup-under16-container" class="hidden formError">
-			Under 16? Your parent need to create a account for you. <br />
-			Send an email to your parent with a request to sign you up: <br />
-			<div id="parent-request-errors" class="formError hidden">Invalid Email</div>
-			<div id="parent-request-info" class="hidden"></div>
-			<form class="nice">
-				<input class="input-text" type="text" name="parent-email" id="parent-email" />
-				<div class="button"><input type="button" id="send-parent-request" class="icon rocket" value="Send" /></div>
-			</form>
-		</div>
-	</div>
-	<div id="modal-signup-form-loading" class="signup-loading"></div>
-	<script type="text/javascript">
-		var today = new Date();
-		var today_year = today.getFullYear();
-		var signup_dob = null;
-		var signup_type = null;
-		var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-		
-		var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
-
-		$('#modal-signup-form-loading').hide();
-	
-		for(i=1; i<=31; i++)
-			$('#signup_day').append('<option value="'+ i +'">'+ i +'</option>');
-	
-		for(i=0; i<months.length; i++)
-			$('#signup_month').append('<option value="'+ (i+1) +'">'+ months[i] +'</option>');
-
-		for(i=today_year; i>today_year-100; i--)
-			$('#signup_year').append('<option value="'+ i +'">'+ i +'</option>');
-
-
-		var check_over16 = function(year, month, day){
-			var age_date = new Date(year+16, month, day);
-			var today = new Date();
-			
-			if(today >= age_date) {
-				$('#model-signup-type-container').removeClass('hidden');
-				$('#model-signup-under16-container').addClass('hidden');
-				return true;
-			} else {
-				$('#model-signup-type-container').addClass('hidden');
-				$('#model-signup-under16-container').removeClass('hidden');
-				return false;
-			}
-		}
-
-		$('#modal-signup-form').submit(function(e){
-			e.preventDefault();
-			var is_valid = true;
-			
-			var day = parseInt($('#signup_day').val());
-			var month = parseInt($('#signup_month').val());
-			var year = parseInt($('#signup_year').val());
-			var date = new Date(year, month-1, day);
-			var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
-
-			signup_type = parseInt($('#signup_user_type').val());
-			signup_dob = year +'-'+ month +'-'+ day;
-			
-			if(signup_type) {
-				$('#signup-user-type-errors').addClass('hidden');
-			} else {
-				$('#signup-user-type-errors').removeClass('hidden');
-				is_valid = false;
-			}
-			
-			if (str_date == signup_dob) {
-				$('#signup-dob-errors').addClass('hidden');
-				if(!check_over16(year, month-1, day)) {
-					is_valid = false;						
-				}
-			} else {
-				$('#signup-dob-errors').removeClass('hidden');
-				is_valid = false;
-			}			
-			
-			if(is_valid) {
-				switch(signup_type) {
-					case 1: window.location.href='{% url tutor_signup %}?date='+ signup_dob; break;
-					case 2: window.location.href='{% url student_signup %}?date='+ signup_dob; break;
-					case 3: window.location.href='{% url parent_signup %}?date='+ signup_dob; break;
-				}
-			}
-		});
-		
-		$('.signup_dob').change(function(e){
-			var day = parseInt($('#signup_day').val());
-			var month = parseInt($('#signup_month').val());
-			var year = parseInt($('#signup_year').val());
-			var date = new Date(year, month-1, day);
-			var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
-			var input_date = year +'-'+ month +'-'+ day;
-
-			if(str_date == input_date) {			
-				check_over16(year, month-1, day);
-			}
-		});
-		
-		$("#send-parent-request").click(function(e){
-			e.preventDefault();
-
-			$('#modal-signup-form-container').fadeOut(function(){
-				$('#modal-signup-form-loading').fadeIn(function(){
-					$('#parent-request-errors').addClass('hidden');
-					$("#parent-request-info").addClass('hidden').empty();
-					var email = $("#parent-email").val();
-					if(reg.test(email) == false) {
-						$('#parent-request-errors').removeClass('hidden');
-				   	} else {
-				   		$.ajax({
-							type: 'POST',
-							data: {'email': email},
-							url: '{% url send_parent_request %}',
-							success: function(data) {
-								$("#model-signup-under16-container").html(data);
-								setTimeout(function(){$('#modal-signup-form-container').trigger('reveal:close');}, 2000);
-							},
-							error: function(jqXHR, textStatus, errorThrown){
-								$("#parent-request-info").removeClass('hidden');
-								$("#parent-request-info").html(jqXHR.response);
-							},
-							complete: function() {
-								$('#modal-signup-form-loading').fadeOut(function(){
-									$('#modal-signup-form-container').fadeIn();
-								});								
-							}
-						});
-				   	}
-				});
-			});
-			
-		});
-		
-	</script>
 </div>
+
 
