@@ -1077,8 +1077,8 @@ def withdraw_complete(sender, **kwargs):
         try:
             withdraw = WithdrawItem.objects.get(id = unique_id)
             if withdraw.value == float(gross):
-                if status=='complete' or status=='pending':
-                    if status == 'complete':
+                if status=='completed' or status=='pending':
+                    if status == 'completed':
                         withdraw.complete()
                     else:
                         withdraw.pending()
