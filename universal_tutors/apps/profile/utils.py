@@ -2,13 +2,14 @@ import datetime
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from apps.core.models import Currency
 from apps.profile.models import Tutor, WithdrawItem
 from paypal2.standart.ap import pay
 
 def mass_payments():
-    notify_url = 'http://%s%s' % ('universaltutors.rawjam.co.uk', reverse('paypal-ipn')),
+    notify_url = 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')),
     for currency in Currency.objects.all():
         credit_value = currency.credit_value()
         tutors = Tutor.objects.select_related().filter(
