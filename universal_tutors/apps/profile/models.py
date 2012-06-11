@@ -114,6 +114,7 @@ class UserProfile(BaseModel):
         (2, 'TWITTER', 'Twitter'),
         (3, 'GOOGLE', 'Google+'),
         (4, 'FRIEND', 'A friend'),
+        (5, 'TES', 'TES'),
         (20, 'OTHER', 'Other'),
     ))
 
