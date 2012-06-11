@@ -47,7 +47,7 @@
 					$.ajax({
 						type: 'post',
 						url: '{% url topup_cart person.username %}',
-						data: $('#topup-form').serialize(),
+						data: $('#modal-topup-form').serialize(),
 						success: function(response) {
 							$('#modal-topup-container').html(response);
 							$('#modal-topup-loading').fadeOut(function(){
