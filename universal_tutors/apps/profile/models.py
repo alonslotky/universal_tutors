@@ -27,7 +27,7 @@ from apps.classes.models import Class, ClassSubject
 from apps.core.models import Currency
 from apps.classes.settings import *
 
-
+from paypal2.standart.ap import pay
 from scribblar import users
 
 
@@ -545,7 +545,7 @@ class UserProfile(BaseModel):
 
     def withdraw_account(self, credits):
         if self.type == self.TYPES.TUTOR:
-            self.credit -= credits
+            self.income -= credits
             super(self.__class__, self).save()
             self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.WITHDRAW, credits=credits)
 
@@ -575,7 +575,35 @@ class UserProfile(BaseModel):
             completeness = 0
         
         return completeness
-            
+
+
+    def process_manual_withdraw(self):
+        if self.type == self.TYPES.TUTOR:
+            currency = self.currency
+            credits = self.income
+            credit_value = currency.credit_value()
+            amount = credits * credit_value
+            email = self.paypal_email
+            withdraw = WithdrawItem(
+                user = self.user,
+                value = amount,
+                credits = credits, 
+                email = email,
+                currency = currency,
+            )
+            withdraw.save()
+        
+            receivers = [{
+                'email': email, 
+                'amount': '%.2f' % amount,
+                'unique_id': 'wd-%s' % withdraw.id,
+            }]
+        
+            pay({
+                'notify_url': 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')),
+                'currencyCode': currency.acronym,
+                'receivers': receivers,
+            })
 
 class UserCreditMovement(BaseModel):
     class Meta:

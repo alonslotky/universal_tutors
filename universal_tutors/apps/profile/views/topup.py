@@ -24,6 +24,19 @@ except ImportError:
 
 
 @login_required
+def withdraw(request):
+    user = request.user
+    profile = user.profile
+    
+    if profile.type != profile.TYPES.TUTOR or request.method != 'POST':
+        raise http.Http404()
+        
+    profile.process_manual_withdraw()
+    
+    return http.HttpResponse('done.')
+
+
+@login_required
 @main_render()
 def topup_cart(request, username=None):
     user = request.user

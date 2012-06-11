@@ -1,0 +1,68 @@
+{% load classes_tags %}
+
+<div id="modal-withdraw" class="reveal-modal message">
+	<h4>Top Up Credits</h4>
+    <div id="modal-withdraw-loading" class="modal-loading"></div>
+    <div id="modal-withdraw-container">
+ 
+	  <form id="modal-withdraw-form" class="nice">
+	  	{% csrf_token %}
+		<div class="row">&nbsp;</div>
+		<div class="row">
+		  <div class="four columns">        
+		    <label>Credits</label>
+		  </div>
+		  <div class="eight columns">
+			<strong>{{user_profile.income}} credits</strong>
+		  </div>	  
+		</div>
+		<div class="row">
+		  <div class="four columns">        
+		    <label>Value</label>
+		  </div>
+		  <div class="eight columns">
+		  	{% with user_profile.currency as currency %}
+			<strong>{{currency.symbol}} {{user_profile.income|in_currency:currency|floatformat:2}}</strong>
+			{% endwith %}
+		  </div>	  
+		</div>
+		<div class="row">&nbsp;</div>
+	  	<div class="row">
+		    <input type="submit" class="small button" value="Withdraw">
+		</div>
+	  </form>
+      	
+    </div>
+  	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	$('#modal-withdraw-loading').hide();
+	
+	$('#modal-withdraw-form').submit(function(e){
+		e.preventDefault();
+		$('#modal-withdraw-container').fadeOut(function(){
+			$('#modal-withdraw-loading').fadeIn(function(){
+				$.ajax({
+					type: 'post',
+					url: '{% url withdraw %}',
+					data: $('#modal-withdraw-form').serialize(),
+					success: function(response) {
+						$('#modal-withdraw-loading').fadeOut(function(){
+							$('#modal-withdraw-container').html(
+								'<form action="{% url edit_profile %}" method="get">'+
+								'<div class="row">&nbsp;</div>'+
+								'Your request has been sent. This action can take some minutes to be successful processed. Thank you.'+
+								'<div class="row">&nbsp;</div>'+
+								'<div class="row"><input type="submit" class="small button" value="Close"></div>'+
+								'</form>'
+							);
+							$('#modal-withdraw-container').fadeIn();
+						});				
+					}
+				});
+			});
+		});
+		$('#id_credits_errors').removeClass('hidden');
+	});
+</script>

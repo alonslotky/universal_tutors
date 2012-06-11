@@ -117,6 +117,7 @@ urlpatterns += patterns('apps.profile.views.topup',
     url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/$', 'topup_cancel', name = "topup_cancel"),
     url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/(?P<ajax>\d)/$', 'topup_cancel', name = "topup_cancel"),
     url(r'^(?i)topup/successful/(?P<username>[\w\-\_]+)/$', 'topup_successful', name = "topup_successful"),
+    url(r'^(?i)withdraw/manual/$', 'withdraw', name = "withdraw"),
 )
 
 
