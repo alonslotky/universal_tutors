@@ -108,7 +108,7 @@ def contact_us(request):
 
     return render_to_response('common/contact_us.html', {
          'contact_form': contact_form,
-         'questions': questions,
+         # 'questions': questions,
          #'feedback_form': feedback_form,
          # 'flatpage': flatpage,
          'sent': sent,

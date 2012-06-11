@@ -61,6 +61,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
     "apps.common.utils.context_processors.app_wide_vars",
+    "apps.common.context_processors.feedback_questions",
     "allauth.context_processors.allauth",
     "allauth.account.context_processors.account",
     #'cms.context_processors.media',
