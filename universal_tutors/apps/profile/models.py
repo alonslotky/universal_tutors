@@ -15,7 +15,7 @@ from django.template.loader import render_to_string
 
 import re, unicodedata, random, string, datetime, os, pytz, threading, urlparse
 
-from paypal.standard.ipn.signals import *
+from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
@@ -1129,5 +1129,4 @@ def paypal_error(type='topup_invalid', email=None):
 
 payment_was_successful.connect(topup_successful, dispatch_uid='topup_successful')
 payment_was_flagged.connect(topup_flagged, dispatch_uid='topup_flagged')
-recurring_create.connect(topup_successful, dispatch_uid='withdraw_created')
-recurring_payment.connect(topup_successful, dispatch_uid='withdraw_payment')
+
