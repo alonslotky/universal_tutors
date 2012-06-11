@@ -144,6 +144,7 @@ class UserProfile(BaseModel):
     country = CountryField(null=True, blank=True)
     phone = models.CharField(verbose_name=_('Phone number'), max_length=20, null=True, blank=True)
     newsletters = models.BooleanField(verbose_name=_('Newsletters'))
+    partners_newsletters = models.BooleanField(verbose_name=_('Partners Newsletters'))
     date_of_birth = models.DateField(verbose_name=_('Date of birth'), null=True, blank=True)
     scribblar_id = models.CharField(verbose_name=_('Scribblar ID'), max_length=100, null=True, blank=True)
     gender = models.PositiveSmallIntegerField(verbose_name=_('Gender'), choices=GENDER_TYPES.get_choices(), default=GENDER_TYPES.MALE)
