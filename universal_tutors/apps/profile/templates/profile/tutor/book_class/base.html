@@ -77,8 +77,11 @@
 	  <hr class="inside">
         <h2>Availability</h2>
     	<div class="row">
-		    <h4>Your current balance: {{user_profile.credit}} credit{{user_profile.credit|pluralize}}</h4>
-		    <div>(Please select from a blue period)</div>
+
+      	{% with user_profile.total_credits as total_credits %}
+	    <h4>Your current balance: {{total_credits}} credit{{total_credits|pluralize}} {% if total_credits != user_profile.credit %}(available {{user_profile.credit}} credit{{user_profile.credit|pluralize}}){% endif %}</h4>
+        {% endwith %}
+	    <div>(Please select from a blue period)</div>
     	</div>
     	<div class="row">&nbsp;</div>
 		<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">

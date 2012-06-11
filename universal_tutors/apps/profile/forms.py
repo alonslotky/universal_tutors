@@ -49,7 +49,7 @@ class ProfileForm(forms.ModelForm):
         fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', 'currency', 'webcam', 'paypal_email')
         model = UserProfile
         widgets = {
-            'photo': forms.FileInput(),
+            'profile_image': forms.FileInput(),
             'country': forms.Select(attrs = {'class': 'stretch'}),
         }
 
