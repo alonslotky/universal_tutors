@@ -38,5 +38,5 @@ def pay(options):
     http = httplib2.Http()
     response, content = http.request(url, 'POST', urlencode(data))
 
-    print '\n%s\n' % content
+    print '\n%s\n%s\n\n' % (data, content)
     
