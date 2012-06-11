@@ -1064,7 +1064,7 @@ def topup_flagged(sender, **kwargs):
 
 
 def withdraw_complete(sender, **kwargs):
-    ipn_obj = sender
+    ipnobj = sender
     query = urlparse.parse_qs(ipnobj.query)
 
     i = 1
