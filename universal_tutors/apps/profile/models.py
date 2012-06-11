@@ -1065,11 +1065,12 @@ def topup_flagged(sender, **kwargs):
 
 
 def withdraw_complete(sender, **kwargs):
-    query = ipn_obj.query
+    ipnobj = sender
+    query = urlparse.parse_qs(ipnobj.query)
 
     i = 1
     while True:
-        gross = query.get('payment_gross_%s' % i, [''])[0]
+        gross = query.get('mc_gross_%s' % i, [''])[0]
         status = query.get('status_%s' % i, [''])[0].lower()
         variable, unique_id = query.get('unique_id_%s' % i, ['wd-0'])[0].split('-')
         email = query.get('receiver_email_%s' % i, [''])[0]
