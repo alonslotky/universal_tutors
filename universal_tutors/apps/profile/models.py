@@ -479,12 +479,30 @@ class UserProfile(BaseModel):
 
 
     def get_classes_as_tutor(self):
+        classes = list(self.get_current_classes_as_tutor())
+        classes.extend(list(self.get_past_classes_as_tutor()))
+        return classes
+    
+    def get_current_classes_as_tutor(self):
         from apps.classes.models import Class
-        return self.user.classes_as_tutor.exclude(status=Class.STATUS_TYPES.PRE_BOOKED)
+        return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED)
+    
+    def get_past_classes_as_tutor(self):
+        from apps.classes.models import Class
+        return self.user.classes_as_tutor.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 
     def get_classes_as_student(self):
+        classes = list(self.get_current_classes_as_tutor())
+        classes.extend(list(self.get_past_classes_as_tutor()))
+        return classes
+    
+    def get_current_classes_as_tutor(self):
         from apps.classes.models import Class
-        return self.user.classes_as_student.exclude(status=Class.STATUS_TYPES.PRE_BOOKED)
+        return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED)
+    
+    def get_past_classes_as_tutor(self):
+        from apps.classes.models import Class
+        return self.user.classes_as_student.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 
     def get_next_class(self):
         from apps.classes.models import Class
