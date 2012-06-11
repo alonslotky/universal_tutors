@@ -869,6 +869,38 @@ class Report(BaseModel):
     user = models.ForeignKey(User, related_name='sent_report')
     description = models.TextField()
     
+    def send_report(self):
+        if self.violator.profile.type in [UserProfile.TYPES.STUDENT, UserProfile.TYPES.TUTOR]:
+            subject = 'A new report about a %s was added' % self.violator.profile.get_type_display()
+            if self.violator.profile.type == UserProfile.TYPES.STUDENT:
+                admin_url = reverse('admin:profile_reportedstudent_change', args=(self.id,))
+            else:
+                admin_url = reverse('admin:profile_reportedtutor_change', args=(self.id,))
+            html = render_to_string('emails/user_report.html', {
+                'violator': self.violator,
+                'user': self.user,
+                'description': self.description,
+                'report_url': 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, admin_url)
+                
+            })
+    
+            if subject and html:
+                sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+                # to = [settings.CONTACT_EMAIL]
+                to = ['vitor@rawjam.co.uk']
+                        
+                email_message = EmailMessage(subject, html, sender, to)
+                email_message.content_subtype = 'html'
+                
+                t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
+                t.setDaemon(True)
+                t.start()
+        
+    
+    def save(self, *args, **kwargs):
+        super(self.__class__, self).save()
+        self.send_report()
+    
     def __unicode__(self):
         return '%s reported %s' % (self.user, self.violator)
 

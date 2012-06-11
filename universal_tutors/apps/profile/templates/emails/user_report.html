@@ -1,0 +1,6 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+<p>{{ user.get_full_name }} reported a <a href="{{ report_url }}">violation</a> from user {{ violator.get_full_name }}. The reason is:</p>
+<p>{{ description }}</p>
+{% endblock %}
