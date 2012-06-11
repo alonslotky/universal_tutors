@@ -1,6 +1,6 @@
 {% load classes_tags %}
 
-  <form id="topup-form" class="nice">
+  <form id="modal-topup-form" class="nice">
   	{% csrf_token %}
 	<div class="row">&nbsp;</div>
   	<div class="row">
@@ -39,28 +39,26 @@
 
 
 <script type="text/javascript">
-	$(window).ready(function(){
-		$('#topup-form').submit(function(e){
-			e.preventDefault();
-			if($('#id_credits').val()) {
-				$('#modal-topup-container').fadeOut(function(){
-					$('#modal-topup-loading').fadeIn(function(){
-						$.ajax({
-							type: 'post',
-							url: '{% url topup_cart person.username %}',
-							data: $('#topup-form').serialize(),
-							success: function(response) {
-								$('#modal-topup-container').html(response);
-								$('#modal-topup-loading').fadeOut(function(){
-									$('#modal-topup-container').fadeIn();
-								});				
-							}
-						});
+	$('#modal-topup-form').submit(function(e){
+		e.preventDefault();
+		if($('#id_credits').val()) {
+			$('#modal-topup-container').fadeOut(function(){
+				$('#modal-topup-loading').fadeIn(function(){
+					$.ajax({
+						type: 'post',
+						url: '{% url topup_cart person.username %}',
+						data: $('#modal-topup-form').serialize(),
+						success: function(response) {
+							$('#modal-topup-container').html(response);
+							$('#modal-topup-loading').fadeOut(function(){
+								$('#modal-topup-container').fadeIn();
+							});				
+						}
 					});
 				});
-			} else {
-				$('#id_credits_errors').removeClass('hidden');
-			}
-		});
+			});
+		} else {
+			$('#id_credits_errors').removeClass('hidden');
+		}
 	});
 </script>
