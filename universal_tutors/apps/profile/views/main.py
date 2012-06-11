@@ -58,7 +58,8 @@ def profile(request, username=None):
         'profile': profile,
         'TEMPLATE': template,
         'parent': parent,
-        'reviews': reviews
+        'reviews': reviews,
+        'user': user,
     }
 
 
