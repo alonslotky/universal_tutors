@@ -56,6 +56,7 @@ class ProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
         self.fields['country'].required = True
+        self.fields['webcam'].help_text = 'Users will need atleast a 500kbps internet connection in order to use the classroom functionality'
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -309,7 +310,7 @@ class ParentSignupForm(SignupForm):
 class TutorSignupForm(SignupForm):
     about = forms.CharField(label=_('Description'), initial='')
     crb = forms.BooleanField(label='I have a CRB', required=False)
-    webcam = forms.BooleanField(label='I have a WebCam', required=False)
+    webcam = forms.BooleanField(label='I have a WebCam', required=False, help_text='Users will need at least a 500kbps internet connection in order to use the classroom functionality')
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
         
     def __init__(self, *args, **kwargs):
@@ -458,7 +459,7 @@ class GenericSocialSignupForm(SocialSignupForm):
 class TutorSocialSignupForm(GenericSocialSignupForm):
     about = forms.CharField(label=_('Description'), initial='')
     crb = forms.BooleanField(label='I have a CRB', required=False)
-    webcam = forms.BooleanField(label='I have a WebCam', required=False)
+    webcam = forms.BooleanField(label='I have a WebCam', required=False, help_text='Users will need at least a 500kbps internet connection in order to use the classroom functionality')
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
 
     def save(self, request=None):

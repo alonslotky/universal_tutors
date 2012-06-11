@@ -57,8 +57,9 @@
               <label>I have a Webcam</label>
             </div>
             <div class="nine columns phone-three">
-              {{ form.webcam }}
-            </div>  
+              {{ form.webcam }}<br/ >
+              {{form.webcam.help_text}}
+            </div>
           </div>
 
          {% if form.date_of_birth.errors %}<div class="formError">{{ form.date_of_birth.errors }}</div>{% endif %}
