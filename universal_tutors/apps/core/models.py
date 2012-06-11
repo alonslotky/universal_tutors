@@ -35,16 +35,23 @@ class Quote(models.Model):
 
 
 class Video(models.Model):
+    
+    VIDEO_TYPES = get_namedtuple_choices('VIDEO_TYPES', (
+        (0, 'HOME', 'Home'),
+        (1, 'TUTORGUIDE', 'Tutor Guide'),
+    ))
+    
     description = models.CharField(max_length=30)
     url = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
+    type = models.PositiveSmallIntegerField(choices=VIDEO_TYPES.get_choices())
 
     def __unicode__(self):
         return self.description
 
     def save(self, *args, **kwargs):
         if self.active:
-            Video.objects.filter(active = True).exclude(id = self.id).update(active = False)
+            Video.objects.filter(active=True, type=self.type).exclude(id = self.id).update(active = False)
         super(self.__class__, self).save(*args, **kwargs)
 
     def get_video_id(self):

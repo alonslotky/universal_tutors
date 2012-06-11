@@ -11,7 +11,7 @@
 		<div class="row">&nbsp;</div>
 		<div class="row">
 			<div class="two columns">
-  				<h3>Sign In</h3>
+  				<h3>Log In</h3>
 			</div>
   
 			<div class="four columns">
@@ -24,7 +24,7 @@
 			</div>
 
 			<div class="two columns">
-  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign In"></div>
+  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Log In"></div>
 			</div>
 		</div>
 		<div class="row">&nbsp;</div>
@@ -32,7 +32,7 @@
 </div>
 
 <div id="modal-signin" class="reveal-modal">
-	<h2>Sign In</h2>
+	<h2>Log In</h2>
 	<form action="{% url login %}" method="post" class="nice">
 		{% csrf_token %}
 	    <div class="row">
@@ -45,12 +45,11 @@
 	      	</div>
 	      
 	      	<div class="four columns">
-	        	<div class="button stretch space"><input type="submit" class="icon rocket stretch" value="Sign In"></div>
+	        	<div class="button stretch space"><input type="submit" class="icon rocket stretch" value="Log In"></div>
 	        	<a href="{% url account_reset_password %}">Forgot password?</a>
 	      	</div>
 	    </div>
 	</form>
-	Temporary links: <a href="/student-guide/">Student</a> | <a href="/tutor-guide/">Tutor</a>
 	<a class="close-reveal-modal">&#215;</a>
 </div>
 

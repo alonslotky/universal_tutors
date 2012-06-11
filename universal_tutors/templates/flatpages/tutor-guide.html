@@ -1,11 +1,12 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags ut_tags %}
 
 {% block title %}Home{% endblock %}
 {% block body_class %}marketing tutors{% endblock %}
 
 {% block content %}
+	{% get_tutor_video %}
 	<section class="blue feature-box"><div class="inner">
 
 		<h1><span>An Overview of Universal Tutors </span>For Tutors</h1>
@@ -116,7 +117,12 @@
   	</section>
   	{% endif %}
 
-	<div id="modal-video" class="reveal-modal video">
-  		<a class="close-reveal-modal">&#215;</a>
-	</div>
+  	{% if video %}
+  		<script>
+  			$("a[data-reveal-id=modal-video]").click(function() {
+  				$("div#modal-video iframe").removeClass("hidden");
+  			})
+  		</script>
+  		{% include "core/fragments/_modal_video.html" %}
+	{% endif %}
 {% endblock %}

@@ -35,5 +35,6 @@ admin.site.register(Currency, CurrencyAdmin)
 
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('description', 'url', 'active')
+    list_filter = ('type',)
 admin.site.register(Video, VideoAdmin)
 admin.site.register(Quote)

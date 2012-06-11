@@ -356,8 +356,6 @@ PAYPAL_API_PASSWORD = "1318841709"
 PAYPAL_API_SIGNATURE = "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AvPh38EgPokDBXH1F0pyh46RydCh"
 PAYPAL_TEST = True
 
-#CONTACT
-CONTACT_EMAIL = ['nick@universaltutors.com']
 
 # Allow for local (per-user) override
 try:

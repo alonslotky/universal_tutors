@@ -175,7 +175,7 @@ class SignupForm(forms.ModelForm):
     
     def clean_username(self):
         username = self.cleaned_data['username']
-        if User.objects.filter(username=username).count() > 0:
+        if User.objects.filter(username__iexact=username).count() > 0:
             raise forms.ValidationError(_(u"This username is already used."))
 
         return username

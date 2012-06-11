@@ -10,4 +10,10 @@
 		$('#video-frame').attr('src', 'http://www.youtube.com/embed/'+id);
 		$('#video-frame').removeClass('hidden');
 	}
+	$(function() {
+		$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ profile.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>');
+		$("a.close-reveal-modal").click(function(){
+			setTimeout(function(){$("div#modal-video iframe").remove();}, 100);
+		});
+	});
 </script>

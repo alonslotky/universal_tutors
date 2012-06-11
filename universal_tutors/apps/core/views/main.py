@@ -22,7 +22,7 @@ def home(request):
     no_featured_tutors = featured_tutors.count()
 
     try:
-        video = Video.objects.filter(active=True).latest('id')
+        video = Video.objects.filter(type=Video.VIDEO_TYPES.HOME, active=True).latest('id')
     except Video.DoesNotExist:
         video = None
 
