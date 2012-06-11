@@ -40,8 +40,13 @@ admin.site.register(ReportedTutor, ReportAdmin)
 admin.site.register(ReportedStudent, ReportAdmin)
 
 class TopUpItemAdmin(admin.ModelAdmin):
-    list_display = ('user', 'credits', 'value', 'currency', 'status')
+    list_display = ('user', 'credits', 'value', 'currency', 'status', 'created')
 admin.site.register(TopUpItem, TopUpItemAdmin)
+
+class WithdrawItemAdmin(admin.ModelAdmin):
+    list_display = ('user', 'credits', 'value', 'currency', 'status', 'created')
+admin.site.register(WithdrawItem, WithdrawItemAdmin)
+
 
 #class NewsletterSubscriptionAdmin(admin.ModelAdmin):
 #    pass

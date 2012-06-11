@@ -65,9 +65,9 @@ class CustomIndexDashboard(Dashboard):
                     exclude=('apps.profile.models.TopUpItem', ),
                 ),
                 modules.ModelList(
-                    _('Top Up Credits'),
+                    _('Top Up & Withdraw'),
                     css_classes=('collapse',),
-                    models=('paypal.*', 'apps.profile.models.TopUpItem', ),
+                    models=('paypal.*', 'apps.profile.models.TopUpItem', 'apps.profile.models.WithdrawItem', ),
                 ),
 #                modules.ModelList(
 #                    _('Blog'),
