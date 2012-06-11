@@ -1016,6 +1016,7 @@ class Referral(BaseModel):
             'sender': self.user,
             'name': self.name,
             'key': self.key,
+            'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
         })
 
         if subject and html:            
