@@ -49,10 +49,7 @@ def _send_contact_email(data):
         })
         html = template.render(context)
     
-        if settings.DEBUG:
-            to_email = 'vitor@rawjam.co.uk'
-        else:
-            to_email = settings.CONTACT_EMAIL
+        to_email = settings.CONTACT_EMAIL
         msg = EmailMessage(
                            'New Contact Message', 
                            html, 
