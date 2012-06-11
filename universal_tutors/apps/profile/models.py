@@ -1063,6 +1063,7 @@ def topup_flagged(sender, **kwargs):
 
 
 def withdraw_complete(sender, **kwargs):
+    ipn_obj = sender
     query = ipn_obj.query
 
     i = 1
