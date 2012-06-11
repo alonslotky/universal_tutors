@@ -205,6 +205,10 @@ class UserProfile(BaseModel):
         except Child.DoesNotExist:
             return None
 
+    @property
+    def total_credits(self):
+        return self.credit + self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).aggregate(credits_booked = models.Sum('credit_fee'))['credits_booked']
+        
     def __unicode__(self):
         user = self.user
         if user.first_name:
@@ -626,21 +630,30 @@ class TopUpItem(BaseModel):
         return "[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
 
     def topup(self):
-        self.status = self.STATUS_TYPES.DONE
-        self.save()
-        self.user.profile.topup_account(self.credits)
-    
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
+            self.status = self.STATUS_TYPES.DONE
+            super(self.__class__, self).save()
+            self.user.profile.topup_account(self.credits)
+        elif self.status == self.STATUS_TYPES.FLAGGED:
+            self.status = self.STATUS_TYPES.DONE
+            super(self.__class__, self).save()
+            
     def flagged(self):
-        self.status = self.STATUS_TYPES.FLAGGED
-        self.save()
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
+            self.status = self.STATUS_TYPES.FLAGGED
+            super(self.__class__, self).save()
+            self.user.profile.topup_account(self.credits)
 
     def cancel(self):
-        self.status = self.STATUS_TYPES.CANCELED
-        self.save()
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
+            self.status = self.STATUS_TYPES.CANCELED
+            self.save()
 
     def set_as_hacked(self):
-        self.status = self.STATUS_TYPES.HACKED
-        self.save()
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
+            self.status = self.STATUS_TYPES.HACKED
+            self.save()
+
 
 class WithdrawItem(BaseModel):
     """
@@ -652,7 +665,8 @@ class WithdrawItem(BaseModel):
     STATUS_TYPES = get_namedtuple_choices('WITHDRAW_STATUS_TYPES', (
         (0, 'PROCESSING', 'Processing'),
         (1, 'CANCELED', 'Canceled'),
-        (2, 'FLAGGED', 'Flagged'),
+        (2, 'PENDING', 'Pending'),
+        (3, 'HACKED', 'HACKED! The amount received were changed'),
         (99, 'DONE', 'Done'),
     ))
     
@@ -675,18 +689,30 @@ class WithdrawItem(BaseModel):
     def __unicode__(self):
         return "[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
 
-    def withdraw(self):
-        self.status = self.STATUS_TYPES.DONE
-        self.save()
-        self.user.profile.withdraw_account(self.credits)
+    def complete(self):
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
+            self.status = self.STATUS_TYPES.DONE
+            super(self.__class__, self).save()
+            self.user.profile.withdraw_account(self.credits)
+        elif self.status == self.STATUS_TYPES.PENDING:
+            self.status = self.STATUS_TYPES.DONE
+            super(self.__class__, self).save()
     
-    def flagged(self):
-        self.status = self.STATUS_TYPES.FLAGGED
-        self.save()
+    def pending(self):
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
+            self.status = self.STATUS_TYPES.PENDING
+            super(self.__class__, self).save()
+            self.user.profile.withdraw_account(self.credits)
 
     def cancel(self):
-        self.status = self.STATUS_TYPES.CANCELED
-        self.save()
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
+            self.status = self.STATUS_TYPES.CANCELED
+            self.save()
+
+    def set_as_hacked(self):
+        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
+            self.status = self.STATUS_TYPES.HACKED
+            self.save()
 
 
 ### TUTOR ###########
@@ -1012,39 +1038,90 @@ def topup_successful(sender, **kwargs):
                 topup.topup()
             else:
                 topup.set_as_hacked()
+                paypal_error(type='topup_hacked')
         except TopUpItem.DoesNotExist:
-            pass
+            paypal_error()
+
     elif ipn_obj.txn_type.lower() == 'masspay':
-        # TO DO
-        query = ipn_obj.query
-        try:
-            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-            if topup.value == float(ipn_obj.mc_gross):
-                topup.topup()
-            else:
-                topup.set_as_hacked()
-        except TopUpItem.DoesNotExist:
-            pass
+        withdraw_complete(sender, **kwargs)
     
 def topup_flagged(sender, **kwargs):
     ipn_obj = sender
     if ipn_obj.txn_type.lower() == 'web_accept':         
         try:
             topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-            topup.flagged()
-        except TopUpItem.DoesNotExist:
-            pass
-    elif ipn_obj.txn_type.lower() == 'masspay':
-        # TO DO
-        query = ipn_obj.query
-        try:
-            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
             if topup.value == float(ipn_obj.mc_gross):
-                topup.topup()
+                topup.flagged()
             else:
                 topup.set_as_hacked()
+                paypal_error(type='topup_hacked')
         except TopUpItem.DoesNotExist:
-            pass
+            paypal_error()
+            
+    elif ipn_obj.txn_type.lower() == 'masspay':
+        withdraw_complete(sender, **kwargs)
+
+
+def withdraw_complete(sender, **kwargs):
+    query = ipn_obj.query
+
+    i = 1
+    while True:
+        gross = query.get('payment_gross_%s' % i, [''])[0]
+        status = query.get('status_%s' % i, [''])[0].lower()
+        variable, unique_id = query.get('unique_id_%s' % i, ['wd-0'])[0].split('-')
+        email = query.get('receiver_email_%s' % i, [''])[0]
+        if not gross and not status:
+            break
+        
+        try:
+            withdraw = WithdrawItem.objects.get(id = unique_id)
+            if withdraw.value == float(gross):
+                if status=='complete' or status=='pending':
+                    if status == 'complete':
+                        withdraw.complete()
+                    else:
+                        withdraw.pending()
+                else:
+                    withdraw.error()
+                    paypal_error(type='withdraw_error', email=email)
+            else:
+                withdraw.set_as_hacked()
+                paypal_error(type='withdraw_hacked', email=email)
+                             
+        except WithdrawItem.DoesNotExist:
+            paypal_error(type='withdraw_invalid', email=email)
+
+        i += 1
+
+
+def paypal_error(type='topup_invalid', email=None):
+    if type=='topup_hacked':
+        subject = 'Hacked PayPal IPN'
+        html = 'An hacked PayPal IPN topup has been received. Please check if is only a system error first.'
+    elif type=='topup_invalid':
+        subject = 'Invalid PayPal IPN'
+        html = 'An invalid PayPal IPN topup has been received.'
+    elif type=='withdraw_hacked':
+        subject = 'Hacked PayPal IPN'
+        html = 'An hacked PayPal IPN withdraw has been received from <%s>. Please check if is only a system error first.' % email
+    elif type=='withdraw_invalid':
+        subject = 'Invalid PayPal IPN'
+        html = 'An invalid PayPal IPN topup has been received from <%s>.' % email
+    elif type=='withdraw_error':
+        subject = 'Withdraw PayPal Error'
+        html = 'An error occurred during a payment (withdraw) from email <%s>. Please check if email is from a valid PayPal account.' % email
+    
+    sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+    to = [settings.DEFAULT_FROM_EMAIL]
+            
+    email_message = EmailMessage(subject, html, sender, to)
+    email_message.content_subtype = 'html'
+    
+    t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
+    t.setDaemon(True)
+    t.start()
+
 
 payment_was_successful.connect(topup_successful, dispatch_uid='topup_successful')
 payment_was_flagged.connect(topup_flagged, dispatch_uid='topup_flagged')

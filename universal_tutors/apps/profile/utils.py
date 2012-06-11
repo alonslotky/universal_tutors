@@ -15,7 +15,7 @@ def mass_payments():
                     profile__currency = currency, 
                     profile__income__gt = 0, 
                     profile__paypal_email__isnull=False,
-                )
+                ).exclude(profile__paypal_email = '')
         
         receivers = []
         for user in tutors:
