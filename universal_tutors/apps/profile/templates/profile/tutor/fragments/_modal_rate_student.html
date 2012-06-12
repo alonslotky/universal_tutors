@@ -1,11 +1,11 @@
 <div id="modal-review" class="reveal-modal message review">
-  <h4>Rating for: <strong id="modal-review-student-name">John Doe</strong></h4>
+  <h4>Feedback for: <strong id="modal-review-student-name">John Doe</strong></h4>
     
   <form id="tutor-rate-student-form"  class="nice">
   	{% csrf_token %}
   	<input id="tutor-rate-student-id" name="user_id" type="hidden" value="0" />
   	<input id="tutor-rate-student-class" name="class_id" type="hidden" value="0" />
-    <textarea id="tutor-rate-student-text"  name="text">Rate this student ...</textarea>
+    <textarea id="tutor-rate-student-text"  name="text">Feedback for this student ...</textarea>
     <input type="submit" class="small button" value="Send">
   </form>
 
@@ -36,6 +36,6 @@
 		$('#modal-review-student-name').text(user_name);
 		$('#tutor-rate-student-id').val(user_id);
 		$('#tutor-rate-student-class').val(class_id);
-		$('#tutor-rate-student-text').val(text ? text : 'Rate this student ...');
+		$('#tutor-rate-student-text').val(text ? text : 'Feedback for this student ...');
 	}
 </script>

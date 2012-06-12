@@ -66,12 +66,12 @@
 	            {% if class.status == class.STATUS_TYPES.DONE %}
 					{% with class.student_rating as rating %}
 						{% if rating %}
-			            	<a href="javascript:;" class="view-feedback text-gray" data-reveal-id="modal-view-review-received-{{rating.id}}"><i class="icon-doc-text"></i> View Your Rating</a>
+			            	<a href="javascript:;" class="view-feedback text-gray" data-reveal-id="modal-view-review-received-{{rating.id}}"><i class="icon-doc-text"></i> View Your Review</a>
 							{% with tutor.get_full_name as rating_sender %}
 								{% include 'profile/fragments/_modal_review_view_received.html' %}
 							{% endwith %}
 						{% else %}
-			            <a class="no-feedback text-gray"><i class="icon-doc-text"></i> Awaiting Rating</a>
+			            <a class="no-feedback text-gray"><i class="icon-doc-text"></i> Awaiting Review</a>
 			            {% endif %}
 					{% endwith %}
 					
