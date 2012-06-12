@@ -55,7 +55,7 @@
           	  <a href="{% url edit_student_profile %}" class="book-class">Edit profile</a>            
             {% else %}
               {% if can_send_message %}
-              {% with user|get_messages:person as messages %}
+              {% with person|get_messages:user as messages %}
 		  	  {% with messages.messages as msgs %}
               <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"> 
               	{% if msgs|length == 0 %} 
