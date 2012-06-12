@@ -24,7 +24,7 @@
         <dd><a href="#classes">Classes</a></dd>
         <dd><a href="#account">Account</a></dd>
         <dd><a href="#referral">Referral</a></dd>
-        {% if profile.type == profile.TYPES.STUDENT %}<dd><a href="#credits">Credits</a></dd>{% endif %}
+        <dd><a href="#credits">Credits</a></dd>
       </dl>
       
       <dl class="nice contained vertical tabs show-on-phones show-on-tablets">
@@ -33,7 +33,7 @@
         <dd><a href="#classes">Classes</a></dd>
         <dd><a href="#account">Account</a></dd>
         <dd><a href="#referral">Referral</a></dd>
-        {% if profile.type == profile.TYPES.STUDENT %}<dd><a href="#credits">Credits</a></dd>{% endif %}
+        <dd><a href="#credits">Credits</a></dd>
       </dl>
       
       <form id="profile-form" method="post" enctype="multipart/form-data" class="nice">
@@ -44,7 +44,7 @@
 			{% include "profile/student/edit_profile/_classes.html" %}          
 			{% include "profile/student/edit_profile/_account.html" %}          
 			{% include "profile/fragments/_referral.html" %}
-			{% if profile.type == profile.TYPES.STUDENT %}{% include "profile/student/edit_profile/_credits.html" %}{% endif %}
+			{% include "profile/student/edit_profile/_credits.html" %}
 		  </ul>
         <div class="button"><input type="submit" class="icon thumb-up" value="Save Profile"></div>
       </form>
