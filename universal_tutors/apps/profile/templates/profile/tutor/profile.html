@@ -167,17 +167,19 @@
           <a href="{% url edit_tutor_profile %}" class="book-class">Edit profile</a>
 		  {% else %}
 		  {% with person|get_messages:user as messages %}
+		  {% with messages.messages as msgs %}
           <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i>
-          	{% if messages|length == 0 %} 
-          	Send a Message
+          	{% if msgs|length == 0 %}
+          		Send a Message
           	{% else %}
-          	{% if messages.unread %} 
+          		{% if messages.unread %} 
             		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
             	{% else %}
             		View Messages
             	{% endif %}
             {% endif %}
-      	</a>
+      	  </a>
+          {% endwith %}
           {% endwith %}
           <a href="{% url book_class person.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
           <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i> {% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
@@ -194,7 +196,7 @@
       </div>
     </div>
   </div>
- 
+  
   {% include 'profile/fragments/_modal_messages.html' %}
   {% if profile.video %}
   {% include 'profile/fragments/_modal_video.html' %}

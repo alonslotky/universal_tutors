@@ -43,7 +43,13 @@
           </div>
           
           <div class="two columns action">
-            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> View Messages</a>
+            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> 
+            	{% if messages.unread %} 
+            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
+            	{% else %}
+            		View Messages
+            	{% endif %}
+        	</a>
           </div>
         </div>
       </article>

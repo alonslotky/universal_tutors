@@ -492,15 +492,15 @@ class UserProfile(BaseModel):
         return self.user.classes_as_tutor.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 
     def get_classes_as_student(self):
-        classes = list(self.get_current_classes_as_tutor())
-        classes.extend(list(self.get_past_classes_as_tutor()))
+        classes = list(self.get_current_classes_as_student())
+        classes.extend(list(self.get_past_classes_as_student()))
         return classes
     
-    def get_current_classes_as_tutor(self):
+    def get_current_classes_as_student(self):
         from apps.classes.models import Class
         return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED)
     
-    def get_past_classes_as_tutor(self):
+    def get_past_classes_as_student(self):
         from apps.classes.models import Class
         return self.user.classes_as_student.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 

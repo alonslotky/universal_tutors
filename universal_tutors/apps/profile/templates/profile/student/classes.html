@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags tutor_tags %}
 
 {% block title %}Classes{% endblock %}
 {% block body_class %}app student classes{% endblock %}
@@ -16,6 +16,7 @@
       {% for class in profile.get_classes_as_student %}
       {% with class.tutor as tutor %}
       {% with tutor.profile as tutor_profile %}
+      {% get_class_messages tutor user class %}
       <article class="{% if class.status != class.STATUS_TYPES.BOOKED %}faded{% endif %}">
         <div class="row">
           <div class="one columns hide-on-phones">
@@ -38,7 +39,17 @@
           </div>
           
           <div class="two columns action">
-            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}}, {{class.id}})"><i class="icon-comment"></i> View Messages</a>
+            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}}, {{class.id}})"><i class="icon-comment"></i>
+            	{% if messages == 0 and sent_messages == 0 %}
+            		Send Message
+	            {% else %}
+	            	{% if unread_messages %} 
+	            		{{ unread_messages }} New Message{{ unread_messages|pluralize }}
+	            	{% else %}
+	            		View Messages
+	            	{% endif %}
+            	{% endif %}
+        	</a>
           	{% if class.status == class.STATUS_TYPES.BOOKED %}
             	{% if user == person %}<a href="javascript" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});"><i class="icon-cancel"></i> Cancel Class</a>{% endif %}
 			{% else %}

@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags tutor_tags %}
 
 {% block title %}{{class}}{% endblock %}
 {% block body_class %}app tutor{% endblock %}
@@ -20,7 +20,23 @@
       <div class="row">
           <h2>{{class}}</h2>
           <h4>{{class.date|date:"M d, Y"}} - from {{class.start|time:"H:i"}} to {{class.end|time:"H:i"}}</h4>
-          <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({% if tutor == user %}{{student.id}}{% else %}{{tutor.id}}{% endif %}, {{class.id}})">View Messages</a>
+          {% if tutor == user %}
+          	{% get_class_messages student tutor class %}
+          {% else %}
+          	{% get_class_messages tutor student class %}
+          {% endif %}
+          {% if messages == 0 and sent_messages == 0 %}
+          	No messages exchanged
+          {% else %}
+	          <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({% if tutor == user %}{{student.id}}{% else %}{{tutor.id}}{% endif %}, {{class.id}})">
+	          	{% if unread_messages %} 
+            		{{ unread_messages }} New Message{{ unread_messages|pluralize }}
+            	{% else %}
+            		View Messages
+            	{% endif %}
+	          </a>
+          {% endif %}
+          
       </div>
       
       <div class="row">&nbsp;</div>
