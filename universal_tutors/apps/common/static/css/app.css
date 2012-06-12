@@ -897,7 +897,7 @@
     box-shadow: 0 1px 1px #dddddd;
   }
 
-  .marketing.tutors .squeezemein {
+  .marketing.tutors .squeezemein, .marketing.students .squeezemein {
     margin: 0 auto;
     display: block;
     width: 300px;
@@ -905,9 +905,9 @@
   }
   
   @media only screen and (min-width: 767px) {
-    .marketing.tutors .squeezemein { margin-bottom: -68px; }}
+    .marketing.tutors .squeezemein, .marketing.students .squeezemein { margin-bottom: -68px; }}
   
-  .marketing.tutors .squeezemein span {
+  .marketing.tutors .squeezemein span, .marketing.students .squeezemein span {
     background: url("../images/shared/sprite.png") no-repeat right -647px;
     display: block;
     padding: 4px 0;
