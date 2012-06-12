@@ -30,6 +30,19 @@
 				}
 			});
 		});
+		
+		$('#tutor-rate-student-text').focusin(function(){
+			if ($(this).val() === "Feedback for this student ...") {
+				$(this).val("");
+			}
+		});
+		
+		$('#tutor-rate-student-text').focusout(function(){
+			if ($(this).val() === "") {
+				$(this).val("Feedback for this student ...");
+			}
+		});
+		
 	});
 	
 	var tutor_rate_student = function(user_id, user_name, class_id, text) {

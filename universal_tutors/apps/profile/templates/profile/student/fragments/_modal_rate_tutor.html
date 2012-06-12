@@ -50,6 +50,19 @@
 				}
 			});
 		});
+		
+		$('#student-rate-tutor-text').focusin(function(){
+			if ($(this).val() === "Review this guy ...") {
+				$(this).val("");
+			}
+		});
+		
+		$('#student-rate-tutor-text').focusout(function(){
+			if ($(this).val() === "") {
+				$(this).val("Review this guy ...");
+			}
+		});
+		
 	});
 	
 	var student_rate_tutor = function(user_id, user_name, class_id, text, rate) {
