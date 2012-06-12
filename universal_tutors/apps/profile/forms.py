@@ -164,7 +164,7 @@ class SignupForm(forms.ModelForm):
     referral_key = forms.CharField(required = False, initial='')
 
     agreement = forms.BooleanField(required = False, help_text='I have read and accepted the Terms and Conditions from the box above.')
-    newsletter = forms.BooleanField(required = False, initial=True, help_text='I want to receive newsletters from Universal Tutors with offers and other news.')
+    newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
     partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
     
     def clean_agreement(self):
@@ -409,7 +409,7 @@ class GenericSocialSignupForm(SocialSignupForm):
     referral_key = forms.CharField(required = False, initial='')
 
     agreement = forms.BooleanField(required = False, help_text='I have read and accepted the Terms and Conditions from the box above.')
-    newsletter = forms.BooleanField(required = False, initial=True, help_text='I want to receive newsletters from Universal Tutors with offers and other news.')
+    newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
     partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
 
     def clean_agreement(self):

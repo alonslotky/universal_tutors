@@ -48,7 +48,7 @@ class Class(BaseModel):
     STATUS_TYPES = get_namedtuple_choices('STATUS_TYPES', (
         (0, 'PRE_BOOKED', 'Pre-booked'),
         (1, 'BOOKED', 'BOOKED'),
-        (2, 'DONE', 'Done'),
+        (2, 'DONE', 'Completed'),
         (3, 'CANCELED_BY_STUDENT', 'Canceled by the student'),
         (4, 'CANCELED_BY_TUTOR', 'Canceled by the tutor'),
         (5, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),

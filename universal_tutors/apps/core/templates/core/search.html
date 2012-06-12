@@ -196,7 +196,7 @@
 					{% get_stars tutor_profile.avg_rate %}
 		            <div class="reviews">
 		              <span class="hidden">Rating: {{tutor_profile.avg_rate}}.</span>
-		              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} given</a>
+		              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} classes</a>
 		            </div>
 		          </div>
 		          
