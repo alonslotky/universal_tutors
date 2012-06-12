@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import pre_delete, post_save, pre_save
 from django.dispatch import receiver
-from django.core.mail import EmailMessage
 from django.contrib.sites.models import Site
 from django.template import loader, Context
 from django.core.urlresolvers import reverse
@@ -960,8 +959,7 @@ class Report(BaseModel):
     
             if subject and html:
                 sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-                # to = [settings.CONTACT_EMAIL]
-                to = ['vitor@rawjam.co.uk']
+                to = [settings.CONTACT_EMAIL]
                         
                 email_message = EmailMessage(subject, html, sender, to)
                 email_message.content_subtype = 'html'
@@ -1163,7 +1161,7 @@ def paypal_error(type='topup_invalid', email=None):
         html = 'An error occurred during a payment (withdraw) from email <%s>. Please check if email is from a valid PayPal account.' % email
     
     sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-    to = [settings.DEFAULT_FROM_EMAIL]
+    to = [settings.CONTACT_EMAIL]
             
     email_message = EmailMessage(subject, html, sender, to)
     email_message.content_subtype = 'html'
