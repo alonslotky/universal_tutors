@@ -21,7 +21,7 @@ from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
-from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time
+from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, convert_datetime, difference_in_minutes
 
 from apps.classes.models import Class, ClassSubject
 from apps.core.models import Currency
@@ -301,21 +301,21 @@ class UserProfile(BaseModel):
         data = form.cleaned_data
         user = self.user        
 
-    def check_day(self, date=None):
-        available, list = self.get_day(date)
+    def check_day(self, date=None, gtz=None):
+        available, list = self.get_day(date, gtz=gtz)
         return available
 
-    def get_day(self, date=None):
+    def get_day(self, date=None, gtz=None):
         """
         Get availability from a day
         """        
-        return self.get_period(date)
+        return self.get_period(date, gtz=gtz)
 
-    def check_week(self, date=None, begin=None, end=None):
-        available, list = self.get_day(date, begin, end)
+    def check_week(self, date=None, begin=None, end=None, gtz=None):
+        available, list = self.get_day(date, begin, end, gtz=gtz)
         return available
 
-    def get_week(self, date=None):
+    def get_week(self, date=None, gtz=None):
         """
         Get availability from a week
         """
@@ -332,16 +332,16 @@ class UserProfile(BaseModel):
             if day < today:
                 week_availability.append((day, (False, [])))
             else:
-                week_availability.append((day, get_day(day)))
+                week_availability.append((day, get_day(day, gtz=gtz)))
                         
         return week_availability
         
 
-    def check_period(self, date=None, begin=None, end=None):
-        available, list = self.get_period(date, begin, end)
+    def check_period(self, date=None, begin=None, end=None, gtz=None):
+        available, list = self.get_period(date, begin, end, gtz=gtz)
         return all([slot[1]-slot[2] > 0 for slot in list])
 
-    def get_period(self, date=None, begin=None, end=None):
+    def get_period(self, date=None, begin=None, end=None, gtz=None):
         """
         Get availability from a period of time
         
@@ -349,75 +349,94 @@ class UserProfile(BaseModel):
         all_slots_available - True if all slots on this period are available
         """
         user = self.user
-
-        now = datetime.datetime.now()
-        date = date if date else now.date()
-        begin = begin if begin else datetime.time(0,0)
-        end = end if end else datetime.time(0,0)
+        gtz = gtz or self.timezone
+        
+        date = date if date else datetime.date.today()
+        user_begin = datetime.datetime.combine(date, begin if begin else datetime.time(0,0))
+        user_end = datetime.datetime.combine(date, begin if begin else datetime.time(0,0))
+        if user_end <= user_begin:
+            user_end += datetime.timedelta(days=1)
+        
+        begin = convert_datetime(user_begin, gtz, self.timezone)
+        end = convert_datetime(user_end, gtz, self.timezone)
+        
+        
         all_slots_available = True
         
         weekday = date.weekday()
         begin_of_week = date - datetime.timedelta(days = weekday)
         
         
-        midnight = datetime.time(0,0)
-
         # select availability from date
-        availability = user.day_availability.filter(date=date)
+        availability = user.day_availability.filter(date__in=[begin.date(), end.date()])
         if not availability:
-
             # select availability from a default week
-            availability = user.week_availability.filter(weekday = weekday)
+            availability = user.week_availability.filter(weekday__in = [begin.weekday(), end.weekday()])
             if not availability:
                 all_slots_available = False
                 
         # select booking from date
-        booking = user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED, date=date)
+        booking = user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED, date__in=[begin.date(), end.date()])
 
         size = 0
         availability_by_time = []
         append = availability_by_time.append
-        time = datetime.time(begin.hour, begin.minute)
+        time = begin
+        user_time = user_begin
+        
         
         # create empty available array
-        while (end==midnight and time!=midnight) or (end!=midnight and time<end) or not size:
-            append([[time.hour, time.minute], 0, 0])
-            time = add_minutes_to_time(time, MINIMUM_PERIOD)
+        while time < end:
+            user_end_period = user_time + datetime.timedelta(minutes=MINIMUM_PERIOD)
+            append([[user_time.hour, user_time.minute, user_end_period.hour, user_end_period.minute], 0, 0])
+            time += datetime.timedelta(minutes=MINIMUM_PERIOD)
+            user_time = user_end_period
             size += 1
 
         # inject total availability on array
         for period in availability:
-            start_index = (period.begin.hour - begin.hour) * PERIOD_STEPS + ((period.begin.minute - begin.minute) / MINIMUM_PERIOD)
-            if period.end.hour != 0:
-                end_index = (period.end.hour - begin.hour) * PERIOD_STEPS + ((period.end.minute - end.minute) / MINIMUM_PERIOD)
+            if hasattr(period, 'weekday'):
+                begin_time = datetime.datetime.combine(begin.date(), period.begin) + datetime.timedelta(days = 1 if period.weekday != begin.weekday() else 0)
+                end_time = datetime.datetime.combine(begin.date(), period.end) + datetime.timedelta(days = 1 if period.weekday != begin.weekday() else 0)
+                if end_time <= begin_time:
+                    end_time += datetime.timedelta(days=1)
             else:
-                end_index = size
+                begin_time = datetime.datetime.combine(period.date, period.begin)
+                end_time = datetime.datetime.combine(period.date, period.end)
+                            
+            begin_min = difference_in_minutes(begin_time, begin) 
+            end_min = difference_in_minutes(end_time, begin)
+
+            begin_index = begin_min / MINIMUM_PERIOD
+            end_index = end_min / MINIMUM_PERIOD
 
             # cut index outside the array
-            if start_index < 0:     start_index = 0
-            if start_index > size:  start_index = size
+            if begin_index < 0:     begin_index = 0
+            if begin_index > size:  begin_index = size
             if end_index < 0:       end_index = 0
             if end_index > size:    end_index = size
             
-            for index in xrange(start_index, end_index):
-                availability_by_time[index][1] = 0 if hasattr(period, 'day_off') and period.dayoff else 1
-                
+            for index in xrange(begin_index, end_index):
+                availability_by_time[index][1] = 1
 
         # inject booking on array
         for item in booking:
-            start_index = (item.start.hour - begin.hour) * PERIOD_STEPS + ((item.start.minute - begin.minute) / MINIMUM_PERIOD)
-            if item.end.hour != 0:
-                end_index = (item.end.hour - begin.hour) * PERIOD_STEPS + ((item.end.minute - end.minute) / MINIMUM_PERIOD)
-            else:
-                end_index = size
+            # From UTC to profile timezone
+            begin_time = convert_datetime(item.date, pytz.utc, self.timezone)
+
+            begin_min = difference_in_minutes(item.date, begin) 
+            end_min = begin_min + item.duration
+
+            begin_index = begin_min / MINIMUM_PERIOD
+            end_index = end_min / MINIMUM_PERIOD
             
             # cut index outside the array
-            if start_index < 0:     start_index = 0
-            if start_index > size:  start_index = size
+            if begin_index < 0:     begin_index = 0
+            if begin_index > size:  begin_index = size
             if end_index < 0:       end_index = 0
             if end_index > size:    end_index = size
 
-            for index in xrange(start_index, end_index):
+            for index in xrange(begin_index, end_index):
                 availability_by_time[index][2] = 1
                 if availability_by_time[index][1] <= availability_by_time[index][2]:
                     all_slots_available = False
@@ -513,7 +532,18 @@ class UserProfile(BaseModel):
         time = now.time()
         
         try:
-            return Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED), Q(tutor=user) | Q(student=user)).filter(Q(date__gt=today) | Q(date=today, end__gte=time))[0]
+            return Class.objects.raw(
+                    """
+                    SELECT *
+                    FROM classes_class
+                    WHERE status = %(booked)s AND (tutor_id = %(tutor_id)s OR student_id = %(student_id)s)
+                      AND date - (duration || ' minutes')::interval >= CURRENT_TIMESTAMP
+                    ORDER BY date ASC
+                    """ % {
+                        'booked': Class.STATUS_TYPES.BOOKED,
+                        'tutor_id': user.id,
+                        'student_id': user.id,
+                    })[0]
         except IndexError:
             return 0
 

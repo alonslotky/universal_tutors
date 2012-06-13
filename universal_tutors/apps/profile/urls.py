@@ -44,6 +44,7 @@ urlpatterns += patterns('apps.profile.views.main',
 urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)edit_week_period/$', 'edit_week_period', {}, name = "user_edit_week_period"),
     url(r'^(?i)edit_week_period/(?P<period_id>\d+)/(?P<begin>[\d\-]+)/(?P<end>[\d\-]+)/(?P<weekday>\d)/$', 'edit_week_period', {}, name = "user_edit_week_period"),
+    url(r'^(?i)delete_week_period/$', 'delete_week_period', {}, name = "user_delete_week_period"),
     url(r'^(?i)delete_week_period/(?P<period_id>\d+)/$', 'delete_week_period', {}, name = "user_delete_week_period"),
     url(r'^(?i)view_week_period/$', 'view_week_period', {}, name = "user_edit_view_week_period"),
 

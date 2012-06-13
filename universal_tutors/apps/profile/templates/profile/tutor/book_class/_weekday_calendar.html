@@ -1,6 +1,6 @@
 {% load common_tags tutor_tags %}
 
-{% for day, availability in profile|get_week:date %}
+{% for day, availability in week %}
 	<div id="schedule-week-{{day.weekday}}-container" class="schedule-weekday shedule-row">
 		<span class="week-number with-date">
 			<span class="weekday">{{day|date:"D"}}</span></br>

@@ -12,10 +12,13 @@ from django.core.mail import EmailMessage
 from django.template import Context, loader
 from django.conf import settings
 
-from apps.profile.models import NewsletterSubscription, Message
+from apps.profile.models import NewsletterSubscription, Message, UserProfile
 from apps.profile.forms import *
 from apps.classes.models import ClassSubject
 from apps.common.utils.view_utils import main_render, handle_uploaded_file
+from apps.common.utils.date_utils import convert_datetime
+
+import pytz, datetime
 
 try:
     import simplejson
@@ -483,9 +486,9 @@ def book_class(request):
     subject_id = request.POST.get('subject', 0)
     date = request.POST.get('date', '')
     begin = request.POST.get('begin', '')
-    end = request.POST.get('end', '')
+    duration = int(request.POST.get('duration', 0))
 
-    tutor = get_object_or_404(User, id=tutor_id)
+    tutor = get_object_or_404(User, id=tutor_id, type=UserProfile.TYPES.TUTOR)
     subject = get_object_or_404(ClassSubject, id=subject_id)
 
     try:
@@ -493,23 +496,21 @@ def book_class(request):
         date = datetime.date(int(date_str[0]), int(date_str[1]), int(date_str[2]))
         begin_array = begin.split('-')
         begin_time = datetime.time(int(begin_array[0]), int(begin_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
-        end_array = end.split('-')
-        end_time = datetime.time(int(end_array[0]), int(end_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
     except IndexError:
         raise http.Http404()
 
-    
-    minutes = (datetime.datetime.combine(date, end_time) - datetime.datetime.combine(date, begin_time)).seconds / 60
-    if minutes < 30 or minutes > 120 or (minutes % 30 != 0):
+    if duration < 30 or duration > 120 or (duration % 30 != 0):
         return http.HttpResponse("Please select a class between 30min, 60min, 90min or 120min.")
+    
+    date = datetime.datetime.combine(date, begin_time)
+    utc_date = convert_datetime(date, profile.timezone, pytz.utc)
     
     class_ = Class(
         tutor = tutor,
         student = user,
         subject = subject,
         date = date,
-        start = begin_time,
-        end = end_time,
+        duration = duration,
     )
 
     credit_fee = class_.get_updated_credit_fee(commit=False)
@@ -577,7 +578,8 @@ def ajax_book_class(request, username, date):
     view my recent activity
     """
     user = request.user
-    tutor = get_object_or_404(User, username = username)
+    tutor = get_object_or_404(User, username = username, profile__type = UserProfile.TYPES.TUTOR)
+    profile = tutor.profile
     
     try:
         date_str = date.split('-')
@@ -589,6 +591,7 @@ def ajax_book_class(request, username, date):
     return {
         'person': tutor,
         'profile': tutor.profile,
+        'week': profile.get_week(date, gtz = (user.profile.timezone or pytz.utc)),
         'date': date,
     }
 

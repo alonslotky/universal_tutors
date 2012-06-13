@@ -368,12 +368,13 @@ def book_class(request, username):
     view my recent activity
     """
     user = request.user
-    tutor = get_object_or_404(User, username = username)
+    tutor = get_object_or_404(User, username = username, profile__type = UserProfile.TYPES.TUTOR)
     
     return {
         'person': tutor,
         'profile': tutor.profile,
         'date': datetime.date.today(),
+        'week': tutor.profile.get_week(gtz = (user.profile.timezone or pytz.utc)),
     }
     
     

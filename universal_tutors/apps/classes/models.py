@@ -43,7 +43,7 @@ class Class(BaseModel):
     """
     class Meta:
         verbose_name_plural = 'Classes'
-        ordering = ('status', 'date', 'start')
+        ordering = ('status', 'date')
 
     STATUS_TYPES = get_namedtuple_choices('STATUS_TYPES', (
         (0, 'PRE_BOOKED', 'Pre-booked'),
@@ -66,9 +66,8 @@ class Class(BaseModel):
     tutor = models.ForeignKey(User, related_name='classes_as_tutor')
     student = models.ForeignKey(User, related_name='classes_as_student')
     subject = models.ForeignKey(ClassSubject, related_name='classes')
-    date = models.DateField()
-    start = models.TimeField()
-    end = models.TimeField()
+    date = models.DateTimeField()
+    duration = models.PositiveSmallIntegerField()
     credit_fee = models.FloatField()
     earning_fee = models.FloatField()
     universal_fee = models.FloatField()
@@ -101,7 +100,7 @@ class Class(BaseModel):
         is_new = not self.id
         
         if is_new:
-            if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
+            if tutor_subject and tutor_profile.check_period(self.date, self.start, self.start + datetime.timedelta(minutes=self.duration), gtz=pytz.utc):
                 self.credit_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
                 self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
                 self.universal_fee = self.credit_fee * UNIVERSAL_FEE
