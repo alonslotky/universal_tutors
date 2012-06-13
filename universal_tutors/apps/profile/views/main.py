@@ -58,7 +58,9 @@ def profile(request, username=None):
         'profile': profile,
         'TEMPLATE': template,
         'parent': parent,
-        'reviews': reviews
+        'reviews': reviews,
+        'user': user,
+        'can_send_message': can_send_message
     }
 
 
@@ -190,6 +192,7 @@ def tutor_classes(request):
 
     return {
         'profile':profile,
+        'user': user
     }
 
 
@@ -332,7 +335,8 @@ def tutors(request):
         })
 
     return {
-        'tutor_groups': tutor_groups
+        'tutor_groups': tutor_groups,
+        'user': user
     }
 
 

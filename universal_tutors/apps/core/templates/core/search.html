@@ -196,7 +196,7 @@
 					{% get_stars tutor_profile.avg_rate %}
 		            <div class="reviews">
 		              <span class="hidden">Rating: {{tutor_profile.avg_rate}}.</span>
-		              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} given</a>
+		              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} classes</a>
 		            </div>
 		          </div>
 		          
@@ -204,22 +204,59 @@
 		            {% if tutor_profile.video %}<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a>{% endif %}
 					
 					{% if is_authenticated %}
+						{% with tutor|get_messages:user as messages %}
+  						{% with messages.messages as msgs %}
 						{% if not tutor_profile.crb_checked %}
 							{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
-					            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> Send a Message</a>
+								
+					            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> 
+					            	{% if msgs|length == 0 %}
+						          		Send a Message
+						          	{% else %}
+						          		{% if messages.unread %} 
+						            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
+						            	{% else %}
+						            		View Messages
+						            	{% endif %}
+						            {% endif %}
+					            </a>
+					            
 					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-thumbs-up"></i> Book a Class</a>
 							{% else %}
-					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> Send a Message</a>
+					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> 
+									{% if msgs|length == 0 %}
+						          		Send a Message
+						          	{% else %}
+						          		{% if messages.unread %} 
+						            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
+						            	{% else %}
+						            		View Messages
+						            	{% endif %}
+						            {% endif %}
+								</a>
 					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>				
 							{% endif %}
 			            {% else %}
-			            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  gSend a Message</a>
+			            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  
+			            	{% if msgs|length == 0 %}
+				          		Send a Message
+				          	{% else %}
+				          		{% if messages.unread %} 
+				            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
+				            	{% else %}
+				            		View Messages
+				            	{% endif %}
+				            {% endif %}
+		            	</a>
 			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
 						{% endif %}
 			            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i> {% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
 			            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
+			            {% endwith %}
+			            {% endwith %}
 			        {% else %}
-			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>			        
+			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
+		            			        
 			        {% endif %}
 		          </div>
 		        </div>

@@ -7,7 +7,7 @@
 
 {% block content %}
       <section class="blue feature-box"><div class="inner">
-        <h1>Report <span>Report a {% if person_profile.type == person_profile.TYPES.TUTOR %}Tutor{% else %}Student{% endif %} with inappropriate behavior.</span></h1>
+        <h1>Report <span>Report a {% if person_profile.type == person_profile.TYPES.TUTOR %}Tutor{% else %}Student{% endif %} for inappropriate behavior.</span></h1>
       </div></section>
       
       <div class="hide-on-phones">
@@ -17,7 +17,7 @@
       {% if not success %}
       <div class="row">
 	      <div class="ten columns">
-	         <h2>Offending {% if person_profile.type == person_profile.TYPES.TUTOR %}Tutor{% else %}Student{% endif %}'s: {{person.get_full_name}}</h2>
+	         <h2>Offending {% if person_profile.type == person_profile.TYPES.TUTOR %}Tutor{% else %}Student{% endif %}: {{person.get_full_name}}</h2>
 		  </div>
 	  </div>
 
@@ -49,7 +49,7 @@
     </form>
   </div>
   {% else %}
-  <div class="row">Your report has been sent. Thank you for being helping to improve Universal Tutors.</div> 
+  <div class="row">Your report has been sent. Thank you for helping to improve Universal Tutors.</div> 
   {% endif %}
   
   <script type="text/javascript">

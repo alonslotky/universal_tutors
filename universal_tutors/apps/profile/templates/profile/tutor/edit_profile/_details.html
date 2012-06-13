@@ -2,7 +2,6 @@
   
   <li class="active" id="detailsTab">
     <h2 class="clear">Profile Details</h2>
-    
     <div class="row">
       <div class="four columns photo">
           <div class="row space">
@@ -24,6 +23,7 @@
           <div class="row space"><div class="button"><a href="{% url profile %}" class="icon">view public profile</a></div></div>
       </div>
       <div class="eight column">
+      	<label>{{profile.user.get_full_name}}</label>
          {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
          {% if form.last_name.errors %}<div class="formError">Last name is required</div>{% endif %}
           <div class="row">

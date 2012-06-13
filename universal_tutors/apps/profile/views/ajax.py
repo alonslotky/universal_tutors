@@ -515,7 +515,7 @@ def book_class(request):
 
     credit_fee = class_.get_updated_credit_fee(commit=False)
     if credit_fee > profile.credit:
-        return http.HttpResponse("You don't have credits enough.")
+        return http.HttpResponse("You don't have enough credits.")
     
     class_.save()    
     if not class_.id:

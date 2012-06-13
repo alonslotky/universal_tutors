@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags tutor_tags %}
 
 {% block title %}Classes{% endblock %}
 {% block body_class %}app student classes{% endblock %}
@@ -16,6 +16,7 @@
       {% for class in profile.get_classes_as_student %}
       {% with class.tutor as tutor %}
       {% with tutor.profile as tutor_profile %}
+      {% get_class_messages tutor user class %}
       <article class="{% if class.status != class.STATUS_TYPES.BOOKED %}faded{% endif %}">
         <div class="row">
           <div class="one columns hide-on-phones">
@@ -38,7 +39,17 @@
           </div>
           
           <div class="two columns action">
-            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}}, {{class.id}})"><i class="icon-comment"></i> View Messages</a>
+            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}}, {{class.id}})"><i class="icon-comment"></i>
+            	{% if messages == 0 and sent_messages == 0 %}
+            		Send Message
+	            {% else %}
+	            	{% if unread_messages %} 
+	            		{{ unread_messages }} New Message{{ unread_messages|pluralize }}
+	            	{% else %}
+	            		View Messages
+	            	{% endif %}
+            	{% endif %}
+        	</a>
           	{% if class.status == class.STATUS_TYPES.BOOKED %}
             	{% if user == person %}<a href="javascript" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});"><i class="icon-cancel"></i> Cancel Class</a>{% endif %}
 			{% else %}
@@ -55,12 +66,12 @@
 	            {% if class.status == class.STATUS_TYPES.DONE %}
 					{% with class.student_rating as rating %}
 						{% if rating %}
-			            	<a href="javascript:;" class="view-feedback text-gray" data-reveal-id="modal-view-review-received-{{rating.id}}"><i class="icon-doc-text"></i> View Your Rating</a>
+			            	<a href="javascript:;" class="view-feedback text-gray" data-reveal-id="modal-view-review-received-{{rating.id}}"><i class="icon-doc-text"></i> View Your Review</a>
 							{% with tutor.get_full_name as rating_sender %}
 								{% include 'profile/fragments/_modal_review_view_received.html' %}
 							{% endwith %}
 						{% else %}
-			            <a class="no-feedback text-gray"><i class="icon-doc-text"></i> Awaiting Rating</a>
+			            <a class="no-feedback text-gray"><i class="icon-doc-text"></i> Awaiting Review</a>
 			            {% endif %}
 					{% endwith %}
 					

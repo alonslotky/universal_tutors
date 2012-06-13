@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import pre_delete, post_save, pre_save
 from django.dispatch import receiver
-from django.core.mail import EmailMessage
 from django.contrib.sites.models import Site
 from django.template import loader, Context
 from django.core.urlresolvers import reverse
@@ -511,15 +510,15 @@ class UserProfile(BaseModel):
         return self.user.classes_as_tutor.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 
     def get_classes_as_student(self):
-        classes = list(self.get_current_classes_as_tutor())
-        classes.extend(list(self.get_past_classes_as_tutor()))
+        classes = list(self.get_current_classes_as_student())
+        classes.extend(list(self.get_past_classes_as_student()))
         return classes
     
-    def get_current_classes_as_tutor(self):
+    def get_current_classes_as_student(self):
         from apps.classes.models import Class
         return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED)
     
-    def get_past_classes_as_tutor(self):
+    def get_past_classes_as_student(self):
         from apps.classes.models import Class
         return self.user.classes_as_student.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 
@@ -990,8 +989,7 @@ class Report(BaseModel):
     
             if subject and html:
                 sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-                # to = [settings.CONTACT_EMAIL]
-                to = ['vitor@rawjam.co.uk']
+                to = [settings.CONTACT_EMAIL]
                         
                 email_message = EmailMessage(subject, html, sender, to)
                 email_message.content_subtype = 'html'
@@ -1193,7 +1191,7 @@ def paypal_error(type='topup_invalid', email=None):
         html = 'An error occurred during a payment (withdraw) from email <%s>. Please check if email is from a valid PayPal account.' % email
     
     sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-    to = [settings.DEFAULT_FROM_EMAIL]
+    to = [settings.CONTACT_EMAIL]
             
     email_message = EmailMessage(subject, html, sender, to)
     email_message.content_subtype = 'html'

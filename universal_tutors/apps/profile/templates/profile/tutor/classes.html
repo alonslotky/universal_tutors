@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tz %}
+{% load fb_versions common_tags tz tutor_tags %}
 
 {% block title %}Classes{% endblock %}
 {% block body_class %}app tutor classes{% endblock %}
@@ -15,6 +15,7 @@
       {% for class in user_profile.get_classes_as_tutor %}
       {% with class.student as student %}
       {% with student.profile as student_profile %}
+      {% get_class_messages student user class %}
       <article class="{% if class.status != class.STATUS_TYPES.BOOKED %}faded{% endif %}">
         <div class="row">
           <div class="one columns hide-on-phones">
@@ -37,7 +38,17 @@
           </div>
           
           <div class="two columns action">
-            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{student.id}}, {{class.id}});"><i class="icon-comment"></i> View Messages</a>
+            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{student.id}}, {{class.id}});"><i class="icon-comment"></i>
+            	{% if messages == 0 and sent_messages == 0 %}
+            		Send Message
+	            {% else %}
+	            	{% if unread_messages %} 
+	            		{{ unread_messages }} New Message{{ unread_messages|pluralize }}
+	            	{% else %}
+	            		View Messages
+	            	{% endif %}
+            	{% endif %}
+        	</a>
           	{% if class.status == class.STATUS_TYPES.BOOKED %}
             <a href="javascript:;" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});"><i class="icon-cancel"></i> Cancel Class</a>
 			{% else %}
@@ -57,7 +68,7 @@
 						{% if student_rating %}
 			            <a href="javascript:;" class="view-feedback text-gray" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}", {{class.id}},"{{student_rating.text}}");'><i class="icon-doc-text"></i> View Student Rating</a>
 						{% else %}
-			            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}",{{class.id}});'><i class="icon-doc-text"></i> Rate Student</a>
+			            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}",{{class.id}});'><i class="icon-doc-text"></i> Provide Feedback</a>
 			            {% endif %}
 					{% endwith %}
 		            <a href="javascript:;" class="class-material" data-reveal-id="modal-class-material" onclick="open_class_material('{% url class_material class.id %}');"><i class="icon-folder"></i> Class Material</a>
@@ -76,7 +87,9 @@
         </div>      
       </article>      
       {% endfor %}
+    {% with 'True' as can_send_message %}
 	{% include 'profile/fragments/_modal_messages.html' %}
+	{% endwith %}
 	{% include 'profile/fragments/_modal_class_material.html' %}
 	{% include 'profile/tutor/fragments/_modal_cancel_class.html' %}
 	{% include 'profile/tutor/fragments/_modal_rate_student.html' %}

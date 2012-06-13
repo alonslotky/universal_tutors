@@ -1,5 +1,5 @@
 <div id="modal-review" class="reveal-modal message review">
-  <h4>Rating for: <strong id="modal-review-tutor-name" class="rate-tutor-name">John Doe</strong></h4>
+  <h4>Review for: <strong id="modal-review-tutor-name" class="rate-tutor-name">John Doe</strong></h4>
     
   <form id="student-rate-tutor-form"  class="nice">
   	{% csrf_token %}
@@ -9,7 +9,7 @@
   	
   	<div class="row">
       <div class="eight columns">
-    	<textarea id="student-rate-tutor-text"  name="text">Rate this tutor ...</textarea>
+    	<textarea id="student-rate-tutor-text"  name="text">Review this tutor ...</textarea>
 	  </div>
 	  
       <div class="four columns">
@@ -50,13 +50,26 @@
 				}
 			});
 		});
+		
+		$('#student-rate-tutor-text').focusin(function(){
+			if ($(this).val() === "Review this guy ...") {
+				$(this).val("");
+			}
+		});
+		
+		$('#student-rate-tutor-text').focusout(function(){
+			if ($(this).val() === "") {
+				$(this).val("Review this guy ...");
+			}
+		});
+		
 	});
 	
 	var student_rate_tutor = function(user_id, user_name, class_id, text, rate) {
 		$('.rate-tutor-name').html(user_name);
 		$('#student-rate-tutor-id').val(user_id);
 		$('#student-rate-tutor-class').val(class_id);
-		$('#student-rate-tutor-text').val(text ? text : 'Rate this guy ...');
+		$('#student-rate-tutor-text').val(text ? text : 'Review this guy ...');
 		$('#student-rate-tutor-rate').val(rate ? rate : 0);
 		
 		rate_tutor(rate);

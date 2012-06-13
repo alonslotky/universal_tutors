@@ -10,8 +10,8 @@
 
     </div>
   </div>
-  
-  {% if user == person or can_send_message %}
+
+  {% if user == person or can_send_message or messages.length > 0 %}
   <form id="modal-message-form" class="nice" method="post">
   	{% csrf_token %}
     <div class="row">
@@ -28,7 +28,6 @@
 
   <a class="close-reveal-modal" onclick="clearTimeout(modal_message_timeout);">&#215;</a>
 </div>
-
 <script type="text/javascript">
 	var modal_message_to;
 	var modal_message_class;
@@ -38,8 +37,10 @@
 		clearTimeout(modal_message_timeout);
 		modal_message_to = to;
 		modal_message_class = class_;
-		
+		{% comment %}
 		var url = '{% if person %}{% url view_modal_messages person.username %}{% else %}{% url view_modal_messages user.username %}{% endif %}'+ to +'/';
+		{% endcomment %}
+		var url = '{% url view_modal_messages user.username %}'+ to +'/';
 		url += class_ ? class_+'/' : '';
 		
 		if(!force_stay) {
@@ -57,6 +58,7 @@
 			},
 			error: function() {
 				$('#modal-messages-container').html("It is not possible show the messages right now. Please try again later.")
+				$("#modal-message-form").hide();
 			},
 			success: function(response) {
 				load_modal_messages(response);

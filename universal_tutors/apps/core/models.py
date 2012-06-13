@@ -39,6 +39,7 @@ class Video(models.Model):
     VIDEO_TYPES = get_namedtuple_choices('VIDEO_TYPES', (
         (0, 'HOME', 'Home'),
         (1, 'TUTORGUIDE', 'Tutor Guide'),
+        (2, 'STUDENTGUIDE', 'Student Guide'),
     ))
     
     description = models.CharField(max_length=30)
