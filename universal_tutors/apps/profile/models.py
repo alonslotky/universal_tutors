@@ -22,7 +22,7 @@ from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, convert_datetime, difference_in_minutes
 
-from apps.classes.models import Class, ClassSubject
+from apps.classes.models import Class, ClassSubject, ClassLevel
 from apps.core.models import Currency
 from apps.classes.settings import *
 
@@ -165,7 +165,7 @@ class UserProfile(BaseModel):
     
     crb = models.BooleanField(default=False)
     crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
-    crb_checked = models.BooleanField(default=False)
+    crb_expiry_date = models.DateField(null=True, blank=True)
     
     activated = models.BooleanField(default=False)
     activation_date = models.DateTimeField(null=True, blank=True, default=None)
@@ -180,6 +180,13 @@ class UserProfile(BaseModel):
     paypal_email = models.EmailField(null=True, blank=True)
     
     classes_given = models.PositiveIntegerField(default=0)
+
+    crb_checked = models.BooleanField(default=False)
+
+    @property
+    def crb_checked(self):
+        return self.crb_expiry_date >= datetime.date.today()
+
 
     @property
     def is_over16(self):
@@ -209,7 +216,7 @@ class UserProfile(BaseModel):
     @property
     def total_credits(self):
         return self.credit + self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).aggregate(credits_booked = models.Sum('credit_fee'))['credits_booked']
-        
+    
     def __unicode__(self):
         user = self.user
         if user.first_name:
@@ -455,15 +462,20 @@ class UserProfile(BaseModel):
         user = self.user
         today = datetime.date.today()
         date = date if date else datetime.date.today()
-        start_date = date - datetime.timedelta(days=date.weekday())
-        end_date = date + datetime.timedelta(days=7)
-                
-        booked = Class.objects.filter(Q(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE], date__gte=start_date, date__lte=end_date), Q(tutor=user) | Q(student=user))
-        week = [(start_date+datetime.timedelta(days=weekday), weekday, []) for weekday in range(7)]
+
+        user_begin = datetime.datetime.combine(date, datetime.time(0,0)) - datetime.timedelta(days=date.weekday()) 
+        user_end = user_begin + datetime.timedelta(days=7)
+        
+        begin = convert_datetime(user_begin, self.timezone, pytz.utc)
+        end = convert_datetime(user_end, self.timezone, pytz.utc)
+
+        booked = Class.objects.filter(Q(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE], date__gte=begin, date__lt=end), Q(tutor=user) | Q(student=user))
+        week = [(user_begin+datetime.timedelta(days=weekday), weekday, []) for weekday in range(7)]
 
         for b in booked:
-            week[b.date.weekday()][2].append(b)
-    
+            date = convert_datetime(b.date, pytz.utc, self.timezone)
+            week[b.date.weekday()][2].append((date, b))
+            
         return week
         
 
@@ -536,7 +548,7 @@ class UserProfile(BaseModel):
                     SELECT *
                     FROM classes_class
                     WHERE status = %(booked)s AND (tutor_id = %(tutor_id)s OR student_id = %(student_id)s)
-                      AND date - (duration || ' minutes')::interval >= CURRENT_TIMESTAMP
+                      AND date + (duration || ' minutes')::interval >= CURRENT_TIMESTAMP
                     ORDER BY date ASC
                     """ % {
                         'booked': Class.STATUS_TYPES.BOOKED,
@@ -796,10 +808,11 @@ class WithdrawItem(BaseModel):
 class TutorSubject(models.Model):
     user = models.ForeignKey(User, related_name='subjects')
     subject = models.ForeignKey(ClassSubject, related_name='tutors')
+    level = models.ForeignKey(ClassLevel, related_name='tutors')
     credits = models.FloatField()
     
     def save(self, *args, **kwargs):
-        if not TutorSubject.objects.filter(user=self.user, subject=self.subject).exclude(id=self.id):
+        if not TutorSubject.objects.filter(user=self.user, subject=self.subject, level=self.level).exclude(id=self.id):
             super(self.__class__, self).save(*args, **kwargs)
             user = self.user
             profile = user.profile 
@@ -809,7 +822,7 @@ class TutorSubject(models.Model):
             profile.save()
     
     def __unicode__(self):
-        return '%s' % self.subject
+        return '%s (%s)' % (self.subject, self.level)
 
 
 class TutorQualification(models.Model):

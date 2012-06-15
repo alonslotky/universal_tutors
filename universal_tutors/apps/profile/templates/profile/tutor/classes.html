@@ -1,12 +1,11 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tz tutor_tags %}
+{% load fb_versions common_tags tutor_tags %}
 
 {% block title %}Classes{% endblock %}
 {% block body_class %}app tutor classes{% endblock %}
 
 {% block content %}
-{% timezone user_profile.timezone %}
 <section class="blue feature-box"><div class="inner">
       <h1>Classes <span>Upcoming and previously given classes.</span></h1>
 </div></section>
@@ -15,6 +14,7 @@
       {% for class in user_profile.get_classes_as_tutor %}
       {% with class.student as student %}
       {% with student.profile as student_profile %}
+      {% with class.date|convert_datetime:user_profile.timezone as date %}
       {% get_class_messages student user class %}
       <article class="{% if class.status != class.STATUS_TYPES.BOOKED %}faded{% endif %}">
         <div class="row">
@@ -34,7 +34,7 @@
           </div>
           
           <div class="two columns timestamp">
-            <p><strong>{{class.start|time:"H:i"}} - {{class.end|time:"H:i"}}<br>{{class.date|date:"M d, Y"}}</strong></p>
+            <p><strong>{{date|time:"H:i"}} ({{class.duration}} min)<br>{{date|date:"M d, Y"}}</strong></p>
           </div>
           
           <div class="two columns action">
@@ -80,6 +80,7 @@
       </article>
       {% endwith %}
       {% endwith %}
+      {% endwith %}
       {% empty %}
       <article class="{% if class.is_active %}{% endif %}">
         <div class="row" style="text-align: center;">
@@ -97,5 +98,4 @@
 	{% include 'profile/fragments/_modal_review_view_received.html' %}
 	<div id="modal-windows" class="hidden"></div>
 
-{% endtimezone %}
 {% endblock %}

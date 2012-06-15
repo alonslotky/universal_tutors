@@ -116,3 +116,8 @@ def difference_in_minutes(d1, d2):
     tdays = d1 - d2 
     min, sec = divmod(tdays.days*86400 + tdays.seconds, 60)
     return min
+
+def difference_in_seconds(d1, d2):
+    tdays = d1 - d2 
+    min, sec = divmod(tdays.days*86400 + tdays.seconds, 60)
+    return min*60 + sec

@@ -40,18 +40,13 @@ def detail(request, class_id):
 
     now = datetime.datetime.now()
 
-    start = now + datetime.timedelta(minutes=5)
-    start_date = start.date()
-    start_time = start.time()
+    start = now + datetime.timedelta(minutes = 5)
+    end = now - datetime.timedelta(minutes = class_.duration + 5)
     
-    end = now - datetime.timedelta(minutes=5)
-    end_date = end.date()
-    end_time = end.time()
-    
-    if class_.date > start_date or (class_.date == start_date and class_.start > start_time):
+    if class_.date > start:
         before = True
     
-    elif class_.date < end_date or (class_.date == end_date and class_.end < end_time):
+    elif class_.date < end:
         after = True
         material = class_.get_material()
         

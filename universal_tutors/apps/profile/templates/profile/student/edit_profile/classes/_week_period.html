@@ -1,7 +1,7 @@
 {% load common_tags tutor_tags %}
 
 {% with period.tutor as tutor %}
-<div id="schedule-week-period_{{period.id}}" class="slider-box" style="{{period|get_class_period_calendar_size}}">
+<div id="schedule-week-period_{{period.id}}" class="slider-box" style="{{begin|get_class_period_calendar_size:period.duration}}">
 	<div class="drop"><a id="schedule-week-period-open-link-{{period.id}}" href="javascript:;" class="drop-link">+</a></div>
 </div>
 <div id="schedule-week-period-dropbox-{{period.id}}" class="drop-box hidden">

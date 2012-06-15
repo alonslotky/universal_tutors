@@ -8,6 +8,7 @@
 {% block content %}
 {% with class.tutor as tutor %}
 {% with class.student as student %}
+{% with class.date|convert_datetime:user_profile.timezone as date %}
 
       <section class="blue feature-box"><div class="inner">
         <h1>Class detail <span>Details on a specific class</span></h1>
@@ -58,6 +59,7 @@
 
   	{% include 'profile/fragments/_modal_messages.html' %}
 
+{% endwith %}
 {% endwith %}
 {% endwith %}
 {% endblock %}

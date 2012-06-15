@@ -181,8 +181,11 @@
       	  </a>
           {% endwith %}
           {% endwith %}
+          
+          {% if user_profile.type != user_profile.TYPES.TUTOR %}
           <a href="{% url book_class person.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
           <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i> {% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+          {% endif %}
           <a href="{% url report person.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 			<script type="text/javascript">
 				$('#favorite-tutor').click(function(){

@@ -313,8 +313,8 @@ def tutors(request):
     tutor_groups = []
 
     favorite_and_used = User.objects.select_related().filter(profile__favorite=user, classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).distinct()
-    favorite = User.objects.select_related().exclude(profile__favorite=user, classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).filter(profile__favorite=user).distinct()
-    used = User.objects.select_related().exclude(profile__favorite=user, classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).filter(classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).distinct()
+    favorite = User.objects.select_related().filter(profile__favorite=user).distinct()
+    used = User.objects.select_related().filter(classes_as_tutor__student=user, classes_as_tutor__status__in = [Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE]).distinct()
 
     if favorite_and_used:
         tutor_groups.append({

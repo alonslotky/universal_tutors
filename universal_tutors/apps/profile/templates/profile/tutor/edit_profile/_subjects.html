@@ -11,7 +11,13 @@
         <th>
           <div class="row">
             <div class="one columns phone-one">
-              Subject and level (eg: Math, GCSE)
+              System
+            </div>
+            <div class="one columns phone-one">
+              Subject
+            </div>
+            <div class="one columns phone-one">
+              Level
             </div>
             <div class="one columns phone-one">
               Credits per hour
@@ -30,13 +36,23 @@
 		  <input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
 		  <input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
 		  <input id="id_subjects-MAX_NUM_FORMS" type="hidden" name="subjects-MAX_NUM_FORMS">
-          
-          {% for item in user.subjects.all %}
+		  
+          {% for item in subjects %}
 	          <div class="row">
 	            <div class="one columns phone-one">
+				  <select id="id_system-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="systems">
+				  	{% for system in systems %}
+				  	<option value="{{system.id}}" {% if system == item.level.system %}selected="selected"{% endif %}>{{system}}</option>
+				  	{% endfor %}
+				  </select>
 	              <input id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" type="text" class="input-text edit-profile-subjects-list" value="{{item.subject}}" placeholder="Subject" />
 	            </div>
 	            <div class="one columns phone-one">
+				  <select id="id_system-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="levels">
+				  	{% for system in systems %}
+				  	<option value="{{system.id}}" {% if system == item.level.system %}selected="selected"{% endif %}>{{system}}</option>
+				  	{% endfor %}
+				  </select>
 	              <input id="id_subject-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text subject-credits" value="{{item.credits}}" placeholder="Credits" />
 	            </div>
 	            <div class="one columns phone-one">

@@ -6,8 +6,10 @@ from django.utils.functional import allow_lazy
 from django.template.defaultfilters import stringfilter
 from django.conf import settings
 from django.utils.encoding import force_unicode
+from apps.common.utils.date_utils import convert_datetime as convert_datetime_
 
 import datetime
+import pytz
 
 from HTMLParser import HTMLParser, HTMLParseError
     
@@ -360,4 +362,7 @@ def age(date):
         return years
     else:
         return '--'
-    
+
+@register.filter
+def convert_datetime(dt, timezone):
+    return convert_datetime_(dt, pytz.utc, timezone)

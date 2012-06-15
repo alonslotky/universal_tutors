@@ -1,7 +1,7 @@
 {% load common_tags tutor_tags %}
 
 <div style="min-width: 960px;" class="hide-on-phones">
-	<div id="schedule-classes-week-container" class="shedule-box4 edit-space-calendar">
+	<div class="shedule-box4 edit-space-calendar">
 		<div class="scroll-item-container">
 			<ul class="shedule4 scroll-item">
 				{% for hour in 0|range_to:24 %}
@@ -15,7 +15,7 @@
 				<div id="schedule-week-{{weekday}}" class="scroll-item-container">
 					<div id="schedule-week-{{weekday}}-periods-container" class="shedule5 scroll-item">
 						<div class="week-number">{{day|date:"[D] d M Y"}}</div>
-						{% for period in periods %}
+						{% for begin, period in periods %}
 							{% include "profile/tutor/edit_profile/classes/_week_period.html" %}
 						{% endfor %}
 					</div>
@@ -29,12 +29,9 @@
 	<div class="list-week">
 		{% for day, weekday, periods in profile|weekclasses:date %}
 			<div class="list-week-day">{{day|date:"D, d M y"}}</div>
-			{% for period in periods %}
-				<div id="list-week-availability-item-{{period.id}}" class="list-week-item">
-					<div class="text">from {{period.begin|time:"H:i"}} to {{period.end|time:"H:i"}}</div>
-					<div class="actions">
-						<a id="availability-delete-{{period.id}}" href="javascript:;" onclick="delete_list_availability_item({{period.id}});">delete</a>
-					</div>
+			{% for begin, period in periods %}
+				<div id="list-week-classes-item-{{period.id}}" class="list-week-item">
+					<div class="text">{{period.subject}} at {{begin|time:"H:i"}} ({{period.duration}} min) with {{period.student.get_full_name}}</div>
 				</div>
 			{% empty %}
 				<div class="list-week-item">

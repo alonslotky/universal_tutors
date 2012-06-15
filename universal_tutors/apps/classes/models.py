@@ -19,23 +19,61 @@ from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
-from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time
+from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, difference_in_seconds
 from apps.classes.settings import *
+
+
+class EducationalSystem(models.Model):
+    """
+    A system education
+    """
+    class Meta:
+        verbose_name = 'Educational system'
+        verbose_name_plural = 'Educational systems'
+
+    system = models.CharField(max_length = 30)
+
+    def __unicode__(self):
+        return self.system
+
+class EducationalSystemCountry(models.Model):
+    system = models.ForeignKey(EducationalSystem, related_name='countries')
+    country = CountryField()
+    
+    def __unicode__(self):
+        return self.get_country_display()
+
+
+class ClassLevel(models.Model):
+    """
+    A class type
+    """
+    class Meta:
+        verbose_name = 'Level'
+        verbose_name_plural = 'Levels'
+    
+    system = models.ForeignKey(EducationalSystem, related_name='levels')
+    level = models.CharField(max_length = 30)
+    
+    def __unicode__(self):
+        return self.level
+
 
 class ClassSubject(models.Model):
     """
     A class type
     """
     class Meta:
-        verbose_name_plural = 'Subject'
+        verbose_name = 'Subject'
         verbose_name_plural = 'Subjects'
     
     subject = models.CharField(max_length = 30)
+    systems = models.ManyToManyField(EducationalSystem, related_name='subjects')
     
     def __unicode__(self):
         return self.subject
-    
-    
+
+
 class ClassError(Exception): pass
 class Class(BaseModel):
     """
@@ -65,7 +103,7 @@ class Class(BaseModel):
     
     tutor = models.ForeignKey(User, related_name='classes_as_tutor')
     student = models.ForeignKey(User, related_name='classes_as_student')
-    subject = models.ForeignKey(ClassSubject, related_name='classes')
+    subject = models.ForeignKey('profile.TutorSubject', related_name='classes')
     date = models.DateTimeField()
     duration = models.PositiveSmallIntegerField()
     credit_fee = models.FloatField()
@@ -76,19 +114,30 @@ class Class(BaseModel):
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
     alert_sent = models.BooleanField(False)
+
+    @property
+    def end_date(self):
+        return self.date + datetime.timedelta(minutes=self.duration)
+    
+    def get_minutes_to_start(self):
+        now = datetime.datetime.now()
+        return difference_in_seconds(self.date, now) if self.date > now else -difference_in_seconds(now, self.date)
+    
+    def get_minutes_to_end(self):
+        now = datetime.datetime.now()
+        end = self.date + datetime.timedelta(minutes=self.duration)
+        return difference_in_seconds(end, now) if self.date > now else -difference_in_seconds(now, end)
     
     def get_updated_credit_fee(self, commit=True):
         tutor = self.tutor
         tutor_profile = tutor.profile
-        tutor_subject = tutor.subjects.filter(subject=self.subject)
-        is_new = not self.id
+        tutor_subject = tutor.subjects.get(id=self.subject.id)
         
-        if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
-            self.credit_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
-            self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
-            self.universal_fee = self.credit_fee * UNIVERSAL_FEE
-            if commit:
-                super(self.__class__, self).save(*args, **kwargs)
+        self.credit_fee = tutor_subject.credits * (self.duration / 60.0)
+        self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
+        self.universal_fee = self.credit_fee * UNIVERSAL_FEE
+        if commit:
+            super(self.__class__, self).save(*args, **kwargs)
 
         return self.credit_fee
     
@@ -96,12 +145,12 @@ class Class(BaseModel):
     def save(self, *args, **kwargs):
         tutor = self.tutor
         tutor_profile = tutor.profile
-        tutor_subject = tutor.subjects.filter(subject=self.subject)
+        tutor_subject = tutor.subjects.get(id=self.subject.id)
         is_new = not self.id
         
         if is_new:
-            if tutor_subject and tutor_profile.check_period(self.date, self.start, self.start + datetime.timedelta(minutes=self.duration), gtz=pytz.utc):
-                self.credit_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
+            if tutor_subject and tutor_profile.check_period(self.date, self.start.time(), (self.start + datetime.timedelta(minutes=self.duration)).time(), gtz=pytz.utc):
+                self.credit_fee = tutor_subject.credits * (self.duration / 60.0)
                 self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
                 self.universal_fee = self.credit_fee * UNIVERSAL_FEE
     
