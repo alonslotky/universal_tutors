@@ -442,7 +442,6 @@ class UserProfile(BaseModel):
         # inject booking on array
         for item in booking:
             # From UTC to profile timezone
-            print item
             begin_time = convert_datetime(item.date, pytz.utc, self.timezone)
 
             begin_min = difference_in_minutes(begin_time, begin) 
