@@ -402,7 +402,7 @@ class UserProfile(BaseModel):
             user_time += datetime.timedelta(minutes=MINIMUM_PERIOD)
             time = end_period
             size += 1
-            if now + datetime.timedelta(minutes=20) > end_period:
+            if now + datetime.timedelta(minutes=20) > convert_datetime(end_period, self.timezone, pytz.utc):
                 availability_index = size
 
         # inject total availability on array
