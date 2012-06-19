@@ -68,3 +68,9 @@ ul.errorlist li { color: red; }
 	position: absolute; top: 0; left: 0; padding: 3px 0; width: 100%; z-index: 2; 
 	font-size: 12px; line-height: 14px; height: 14px; color: #fff; text-align: center;
 }
+.text-red.no-hover:hover {
+	color: #df6332;
+}
+.no-hover:hover {
+	color: #78AA1A;
+}
