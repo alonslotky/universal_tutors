@@ -221,6 +221,7 @@
 		            <p>
 		            	<span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span><br/>
 		            	<span>{% if tutor_profile.webcam %}(with_camera)&nbsp;{% endif %}{% if tutor_profile.crb_checked %}(with_crb){% endif %}</span>
+		            	<a {% if tutor_profile.crb %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
 		            </p>
 		          </div>
 		          
@@ -271,7 +272,7 @@
 						            {% endif %}
 								</a>
 								{% if user_profile.type != user_profile.TYPES.TUTOR %}
-					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>				
+					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>				
 								{% endif %}
 							{% endif %}
 			            {% else %}
@@ -287,7 +288,7 @@
 					            {% endif %}
 			            	</a>
 			            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
-					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
+					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
 							{% endif %}
 						{% endif %}
 		            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
@@ -297,7 +298,7 @@
 			            {% endwith %}
 			            {% endwith %}
 			        {% else %}
-			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
+			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
 		            			        
 			        {% endif %}
 		          </div>

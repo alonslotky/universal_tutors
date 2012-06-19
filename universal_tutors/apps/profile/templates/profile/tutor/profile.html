@@ -42,6 +42,7 @@
     <div class="ten columns">
       <h2>{{person.get_full_name}}</h2>
       <h4>{{profile.date_of_birth|age}}, {{profile.get_gender_display}}</h4>
+      <a {% if profile.crb %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
       <p>&nbsp;</p>
       <div class="row">
         <div class="nine columns">
@@ -183,7 +184,7 @@
           {% endwith %}
           
           {% if user_profile.type != user_profile.TYPES.TUTOR %}
-          <a href="{% url book_class person.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
+          <a href="{% url book_class person.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
           <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i> {% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
           {% endif %}
           <a href="{% url report person.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
