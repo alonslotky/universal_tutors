@@ -366,3 +366,8 @@ def age(date):
 @register.filter
 def convert_datetime(dt, timezone):
     return convert_datetime_(dt, pytz.utc, timezone)
+
+
+@register.filter
+def sub(x, y):
+    return x-y
