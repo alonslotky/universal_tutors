@@ -47,7 +47,7 @@
 		var diff = timer_class - time_diff;
 		var positive = diff > 0 ? 1 : -1; 
 		
-		var total_seconds = positive * (diff / 1000);
+		var total_seconds = positive * diff;
 		
 		var seconds = parseInt(total_seconds % 60);
 		var minutes = parseInt((total_seconds / 60) % 60);

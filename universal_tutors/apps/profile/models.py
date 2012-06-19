@@ -124,6 +124,8 @@ class UserProfile(BaseModel):
         (3, 'INCOME', 'Credits income'),
         (4, 'ACTIVATED', 'Activated account'),
         (5, 'CLASS', 'Class is about to start'),
+        (6, 'ACCEPTED_BY_TUTOR', 'A class has been accepted by tutor'),
+        (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
     ))
     
     def get_upload_to(instance, filename):
@@ -359,13 +361,13 @@ class UserProfile(BaseModel):
         
         date = date if date else datetime.date.today()
         user_begin = datetime.datetime.combine(date, begin if begin else datetime.time(0,0))
-        user_end = datetime.datetime.combine(date, begin if begin else datetime.time(0,0))
+        user_end = datetime.datetime.combine(date, end if end else datetime.time(0,0))
         if user_end <= user_begin:
             user_end += datetime.timedelta(days=1)
         
         begin = convert_datetime(user_begin, gtz, self.timezone)
         end = convert_datetime(user_end, gtz, self.timezone)
-        
+        now = convert_datetime(datetime.datetime.now(), pytz.utc, self.timezone)
         
         all_slots_available = True
         
@@ -382,14 +384,14 @@ class UserProfile(BaseModel):
                 all_slots_available = False
                 
         # select booking from date
-        booking = user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED, date__in=[begin.date(), end.date()])
+        booking = user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.BOOKED,Class.STATUS_TYPES.WAITING], date__in=[begin.date(), end.date()])
 
         size = 0
         availability_by_time = []
         append = availability_by_time.append
         time = begin
         user_time = user_begin
-        
+        availability_index = 0
         
         # create empty available array
         while time < end:
@@ -398,6 +400,8 @@ class UserProfile(BaseModel):
             time += datetime.timedelta(minutes=MINIMUM_PERIOD)
             user_time = user_end_period
             size += 1
+            if now + datetime.timedelta(minutes=20) > user_end_period:
+                availability_index = size
 
         # inject total availability on array
         for period in availability:
@@ -423,7 +427,7 @@ class UserProfile(BaseModel):
             if end_index > size:    end_index = size
             
             for index in xrange(begin_index, end_index):
-                availability_by_time[index][1] = 1
+                availability_by_time[index][1] = 1 if index >= availability_index else 0 
 
         # inject booking on array
         for item in booking:
@@ -569,6 +573,12 @@ class UserProfile(BaseModel):
         if type == self.NOTIFICATIONS_TYPES.BOOKED:
             subject = 'A new class has been booked'
             html = render_to_string('emails/booked.html', context)
+        if type == self.NOTIFICATIONS_TYPES.ACCEPTED_BY_TUTOR:
+            subject = 'Your class has been accepted'
+            html = render_to_string('emails/accepted.html', context)
+        if type == self.NOTIFICATIONS_TYPES.REJECTED_BY_TUTOR:
+            subject = 'Your class has been rejected'
+            html = render_to_string('emails/rejected.html', context)
         if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_TUTOR:
             subject = 'Class canceled by tutor'
             html = render_to_string('emails/canceled_by_tutor.html', context)
@@ -600,13 +610,17 @@ class UserProfile(BaseModel):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
             self.credit += credits
             super(self.__class__, self).save()
-            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
+            currency = self.currency
+            value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits, value=value)
 
     def withdraw_account(self, credits):
         if self.type == self.TYPES.TUTOR:
             self.income -= credits
             super(self.__class__, self).save()
-            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.WITHDRAW, credits=credits)
+            currency = self.currency
+            value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.WITHDRAW, credits=credits, value=value)
 
 
     def get_completeness(self):
@@ -664,6 +678,25 @@ class UserProfile(BaseModel):
                 'receivers': receivers,
             })
 
+    def waiting_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.WAITING).order_by('date')
+        else:
+            return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.WAITING).order_by('date')           
+
+    def booked_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED).order_by('date')
+        else:
+            return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).order_by('date')         
+
+    def other_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.exclude(status__in=[Class.STATUS_TYPES.PRE_BOOKED, Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('-date')
+        else:
+            return self.user.classes_as_student.exclude(status__in=[Class.STATUS_TYPES.PRE_BOOKED, Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('-date')
+
+
 class UserCreditMovement(BaseModel):
     class Meta:
         ordering = ('-created',)
@@ -675,12 +708,15 @@ class UserCreditMovement(BaseModel):
         (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Refund)'),
         (4, 'STOPPED_BY_STUDENT', 'Stopped by student (Refund)'),
         (5, 'TOPUP', 'Top-up account'),
-        (6, 'WITHDRAW', 'Withdraw to PayPal Account')
+        (6, 'WITHDRAW', 'Withdraw to PayPal Account'),
+        (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor (Refund)'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')
     type = models.PositiveSmallIntegerField(choices = MOVEMENTS_TYPES.get_choices())
     credits = models.FloatField()
+    value = models.CharField(max_length=15, null=True, blank=True)
+    related_class = models.ForeignKey(Class, null=True, blank=True)
 
     def __unicode__(self):
         return '%s: %s' % (self.get_type_display(), self.credits)

@@ -91,6 +91,8 @@ class Class(BaseModel):
         (4, 'CANCELED_BY_TUTOR', 'Canceled by the tutor'),
         (5, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),
         (6, 'STOPPED_BY_STUDENT', 'Stopped by the student'),
+        (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor'),
+        (9, 'WAITING', 'Waiting for approve'),
     ))
     
     RESPONSE_TYPES = get_namedtuple_choices('STATUS_TYPES', (
@@ -149,7 +151,7 @@ class Class(BaseModel):
         is_new = not self.id
         
         if is_new:
-            if tutor_subject and tutor_profile.check_period(self.date, self.start.time(), (self.start + datetime.timedelta(minutes=self.duration)).time(), gtz=pytz.utc):
+            if tutor_subject and tutor_profile.check_period(self.date, self.date.time(), (self.date + datetime.timedelta(minutes=self.duration)).time(), gtz=pytz.utc):
                 self.credit_fee = tutor_subject.credits * (self.duration / 60.0)
                 self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
                 self.universal_fee = self.credit_fee * UNIVERSAL_FEE
@@ -222,7 +224,7 @@ class Class(BaseModel):
             student_profile = student.profile
             student_profile.credit += self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_TUTOR, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_TUTOR, credits=self.credit_fee, related_class=self)
             student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CANCELED_BY_TUTOR, {
                 'class': self,
                 'student': student,
@@ -240,7 +242,7 @@ class Class(BaseModel):
             student_profile = student.profile
             student_profile.credit += self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.STOPPED_BY_STUDENT, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.STOPPED_BY_STUDENT, credits=self.credit_fee, related_class=self)
 
     def canceled_by_student(self, reason):
         if self.status == self.STATUS_TYPES.BOOKED:
@@ -254,7 +256,7 @@ class Class(BaseModel):
             student_profile = student.profile
             student_profile.credit += self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_STUDENT, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_STUDENT, credits=self.credit_fee, related_class=self)
             tutor = self.tutor
             tutor_profile = tutor.profile
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count()
@@ -304,7 +306,7 @@ class Class(BaseModel):
             tutor_profile.income += self.earning_fee if not with_referral else self.credit_fee
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count() 
             tutor_profile.save()
-            tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee)
+            tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee, related_class=self)
             tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.INCOME, {
                 'class': self,
                 'student': self.student,
@@ -332,15 +334,52 @@ class Class(BaseModel):
         student = self.student
         student_profile = student.profile
         if self.status == self.STATUS_TYPES.PRE_BOOKED and student_profile.credit >= self.credit_fee:
-            self.status = self.STATUS_TYPES.BOOKED
+            self.status = self.STATUS_TYPES.WAITING
             super(self.__class__, self).save()
             self.create_scribblar_class()
             
             from apps.profile.models import UserCreditMovement
             student_profile.credit -= self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.PAYMENT, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.PAYMENT, credits=self.credit_fee, related_class=self)
             tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.BOOKED, {
+                'class': self,
+                'student': student,
+                'tutor': tutor,
+            })
+    
+    
+    def accept(self):
+        if self.status == self.STATUS_TYPES.WAITING:
+            tutor = self.tutor
+            student = self.student
+            student_profile = student.profile
+            self.status = self.STATUS_TYPES.BOOKED
+            super(self.__class__, self).save()
+
+            student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.ACCEPTED_BY_TUTOR, {
+                'class': self,
+                'student': student,
+                'tutor': tutor,
+            })
+
+    
+    def reject(self, reason):
+        if self.status == self.STATUS_TYPES.WAITING:
+            tutor = self.tutor
+            student = self.student
+            student_profile = student.profile
+            self.status = self.STATUS_TYPES.REJECTED_BY_TUTOR
+            self.cancelation_reason = reason
+            super(self.__class__, self).save()
+
+            from apps.profile.models import UserCreditMovement
+            student = self.student
+            student_profile = student.profile
+            student_profile.credit += self.credit_fee
+            student_profile.save()
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.REJECTED_BY_TUTOR, credits=self.credit_fee, related_class=self)
+            student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.REJECTED_BY_TUTOR, {
                 'class': self,
                 'student': student,
                 'tutor': tutor,

@@ -1,0 +1,57 @@
+<div id="modal-reject-class" class="reveal-modal notice">
+  <h3>Are you sure?</h3>
+  <p>If you reject this class, you may get a negative review.</p>
+  <a id="button-reject-class-step1" class="button" onclick="reject_class_step_1();"><span class="icon thumb-up">I understand, reject the class</span></a>
+
+	<div id="tutor-reject-class-form-container">
+	  <form id="tutor-reject-class-form" class="nice">
+	  	{% csrf_token %}
+	  	<input id="tutor_class_to_reject" name="class_id" type="hidden" value="0" />
+	    <div class="row">
+	        <input id="tutor_class_to_reject_text" name="reason" type="text" class="input-text" placeholder="Write a reason ...">
+	    </div>
+		<a id="button-reject-class-step2" class="button" onclick="reject_class_step_2();"><span class="icon thumb-up">Send</span></a>
+	  </form>		
+	</div>
+  
+  <a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	var tutor_class_to_reject;
+	
+	$(window).ready(function(){
+		$('#tutor-reject-class-form').submit(function(e){
+			e.preventDefault();
+			reject_class_step_2();
+		});
+	});
+	
+	var reject_class_step_2 = function(){
+		if(tutor_class_to_reject && $('#tutor_class_to_reject_text').val()) {
+			$('#tutor_class_to_reject').val(tutor_class_to_reject);
+			$.ajax({
+				type: 'post',
+				url: '{% url tutor_reject_class %}',
+				data: $('#tutor-reject-class-form').serialize(),
+				success: function() {
+					window.location.reload();
+				}
+			});
+		}
+	}
+	
+	var reject_class_step_1 = function() {
+		$('#button-reject-class-step1').fadeOut(function(){
+			$('#student_class_to_reject_text').val('');
+			$('#tutor-reject-class-form-container').fadeIn();
+		});
+	}
+	
+	var reject_class_step_0 = function(id) {
+		tutor_class_to_reject = id;
+		$('#button-reject-class-step1').show();
+		$('#tutor-reject-class-form-container').hide();
+	}
+</script>
+

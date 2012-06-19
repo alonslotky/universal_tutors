@@ -1,5 +1,6 @@
 {% load common_tags tutor_tags %}
 
+{% with profile|weekclasses:date as weekclasses %}
 <div style="min-width: 960px;" class="hide-on-phones">
 	<div class="shedule-box4 edit-space-calendar">
 		<div class="scroll-item-container">
@@ -10,7 +11,7 @@
 			</ul>
 		</div>
 		
-		{% for day, weekday, periods in profile|weekclasses:date %}
+		{% for day, weekday, periods in weekclasses %}
 			<div id="schedule-week-{{weekday}}-container" class="schedule-weekday shedule-row">
 				<div id="schedule-week-{{weekday}}" class="scroll-item-container">
 					<div id="schedule-week-{{weekday}}-periods-container" class="shedule5 scroll-item">
@@ -20,6 +21,23 @@
 						{% endfor %}
 					</div>
 				</div>
+				<div id="schedule-week-{{weekday}}-tooltip" class="slider-tooltip hidden">
+					<div class="book-not-selected">
+						<div class="slider-tooltip-head">
+							<strong class="title2">{{day|date:"l, F jS,1 Y"}}</strong>
+							<div id="schedule-week-{{day.weekday}}-tooltip-time" class="row">
+								<div id="schedule-week-{{weekday}}-tooltip-subject"></div>
+								<div id="schedule-week-{{weekday}}-tooltip-person"></div>
+								<div id="schedule-week-{{weekday}}-tooltip-status"></div>
+							</div>
+						</div>			
+					</div>
+				</div>
+				<script type="text/javascript">
+					$('#schedule-week-{{weekday}}-container').live('mouseenter', function(){
+						$('.slider-tooltip').addClass('hidden');
+					});
+				</script>
 			</div>
 		{% endfor %}
 	</div>
@@ -27,7 +45,7 @@
 
 <div class="show-on-phones">
 	<div class="list-week">
-		{% for day, weekday, periods in profile|weekclasses:date %}
+		{% for day, weekday, periods in weekclasses %}
 			<div class="list-week-day">{{day|date:"D, d M y"}}</div>
 			{% for begin, period in periods %}
 				<div id="list-week-classes-item-{{period.id}}" class="list-week-item">
@@ -43,4 +61,4 @@
 		{% endfor %}		
 	</div>
 </div>
-
+{% endwith %}

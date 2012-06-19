@@ -135,7 +135,7 @@ def tutor_cancel_class(request):
     reason = request.POST.get('reason')
     
     try:
-        class_ = Class.objects.get(id=class_id, tutor=user)
+        class_ = Class.objects.get(id=class_id, tutor=user, status=Class.STATUS_TYPES.BOOKED)
     except Class.DoesNotExist:
         raise http.Http404()
         
@@ -475,35 +475,44 @@ def delete_this_week_period(request, period_id):
 
 
 @login_required
-def book_class(request):
+def book_class(request, tutor_id):
     user = request.user
     profile = user.profile
     
     if request.method != 'POST' or (profile.type != profile.TYPES.STUDENT and profile.type != profile.TYPES.UNDER16):
         raise http.Http404()
     
-    tutor_id = request.POST.get('tutor', 0)
     subject_id = request.POST.get('subject', 0)
     date = request.POST.get('date', '')
-    begin = request.POST.get('begin', '')
+    start = request.POST.get('start', '')
     duration = int(request.POST.get('duration', 0))
 
-    tutor = get_object_or_404(User, id=tutor_id, type=UserProfile.TYPES.TUTOR)
-    subject = get_object_or_404(ClassSubject, id=subject_id)
+    if duration < 30 or duration > 120 or (duration % 30 != 0):
+        raise http.Http404()
+
+    try:
+        tutor = User.objects.select_related().get(id=tutor_id, profile__type=UserProfile.TYPES.TUTOR)
+    except User.DoesNotExist:
+        raise http.Http404()
+
+    try:
+        subject = tutor.subjects.get(id=subject_id)
+    except TutorSubject.DoesNotExist:
+        raise http.Http404()
 
     try:
         date_str = date.split('-')
         date = datetime.date(int(date_str[0]), int(date_str[1]), int(date_str[2]))
-        begin_array = begin.split('-')
-        begin_time = datetime.time(int(begin_array[0]), int(begin_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
+        start_array = start.split('-')
+        start_time = datetime.time(int(start_array[0]), int(start_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
+    except ValueError:
+        raise http.Http404()
     except IndexError:
         raise http.Http404()
 
-    if duration < 30 or duration > 120 or (duration % 30 != 0):
-        return http.HttpResponse("Please select a class between 30min, 60min, 90min or 120min.")
     
-    date = datetime.datetime.combine(date, begin_time)
-    utc_date = convert_datetime(date, profile.timezone, pytz.utc)
+    date = datetime.datetime.combine(date, start_time)
+    date = convert_datetime(date, profile.timezone, pytz.utc)
     
     class_ = Class(
         tutor = tutor,
@@ -642,3 +651,35 @@ def add_credits(request, username=None):
     
     return http.HttpResponse('done')
 
+
+@login_required
+def accept_class(request, class_id):
+    user = request.user
+    
+    try:
+        class_ = Class.objects.get(id=class_id, tutor=user, status=Class.STATUS_TYPES.WAITING)
+    except Class.DoesNotExist:
+        raise http.Http404()
+    
+    class_.accept()
+
+    return http.HttpResponse('done.')
+
+@login_required
+def reject_class(request):
+    user = request.user
+    
+    if request.method != 'POST':
+        raise http.Http404()
+        
+    class_id = request.POST.get('class_id')
+    reason = request.POST.get('reason')
+    
+    try:
+        class_ = Class.objects.get(id=class_id, tutor=user, status=Class.STATUS_TYPES.WAITING)
+    except Class.DoesNotExist:
+        raise http.Http404()
+        
+    class_.reject(reason)
+        
+    return http.HttpResponse('done.')

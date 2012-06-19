@@ -1,6 +1,8 @@
 :focus { border: none; outline: none; }
 .hidden { display: none; }
 
+body.classroom .container { height: 100%; }
+
 .auto-width { width: auto !important; max-width: none !important; }
 
 .sign-in { height: auto; }
@@ -48,7 +50,7 @@ label.margin-top { margin: 5px 0 0 0; }
 
 h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 
-.main.scribblar-container { padding: 0; margin 0; height: 90%; }
+.main.scribblar-container { padding: 0; margin 0; height: 95%; }
 .main.scribblar-container object { height: 90%; }
 
 .tutor-qualifications-list li { margin: 0; }

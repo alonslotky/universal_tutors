@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.conf import settings
 from django.db.models import Max
+from itertools import chain
 
 from allauth.facebook.models import FacebookAccount
 from allauth.twitter.models import TwitterAccount
@@ -190,9 +191,16 @@ def tutor_classes(request):
     user = request.user
     profile = user.profile
 
+    classes = chain(
+        profile.waiting_classes(),
+        profile.booked_classes(),
+        profile.other_classes(),
+    )
+    
     return {
-        'profile':profile,
-        'user': user
+        'profile': profile,
+        'person': user,
+        'classes': classes
     }
 
 
@@ -268,9 +276,16 @@ def student_classes(request, username=None):
 
     profile = person.profile
 
+    classes = chain(
+        profile.booked_classes(),
+        profile.waiting_classes(),
+        profile.other_classes(),
+    )
+    
     return {
-        'person': person,
-        'profile':profile,
+        'profile': profile,
+        'person': user,
+        'classes': classes
     }
 
 
