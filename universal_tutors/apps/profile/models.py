@@ -390,12 +390,12 @@ class UserProfile(BaseModel):
         availability_by_time = []
         append = availability_by_time.append
         time = begin
-        user_time = user_begin
+        user_time = begin
         availability_index = 0
         
         # create empty available array
         while time < end:
-            user_end_period = time + datetime.timedelta(minutes=MINIMUM_PERIOD)
+            user_end_period = user_time + datetime.timedelta(minutes=MINIMUM_PERIOD)
             append([[user_time.hour, user_time.minute, user_end_period.hour, user_end_period.minute], 0, 0])
             time += datetime.timedelta(minutes=MINIMUM_PERIOD)
             user_time = user_end_period
