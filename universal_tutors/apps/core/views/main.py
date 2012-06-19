@@ -69,10 +69,9 @@ def search(request):
             for word in words:
                 tutors = tutors.filter(Q(first_name__icontains=word) | Q(last_name__icontains=word) | Q(username__icontains=word))
         elif what == 'subject':
-            tutors = tutors.filter(subjects__subject__subject__icontains=query)
-        elif what == 'level':
-            tutors = tutors.filter(subjects__level__level__icontains=query)
-
+            words = query.split()
+            for word in words:
+                tutors = tutors.filter(Q(subjects__subject__subject__icontains=word) | Q(subjects__level__level__icontains=word))
 
     if system:
         tutors = tutors.filter(subjects__system__id = system)
