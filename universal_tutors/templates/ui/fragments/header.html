@@ -32,9 +32,9 @@
 			<a href="{% url search %}" class="search">Search</a>
 			<form method="get" action="{% url search %}" class="nice custom compact-search hide-on-phones">
   				<select name="what">
-    				<option value="tutors">Tutors</option>
-    				<option value="subjects">Subjects</option>
-    				<!-- <option value="level">Level</option> -->
+    				<option value="subject">Subject</option>
+    				<option value="level">Level</option>
+    				<option value="tutor">Tutor</option>
   				</select>
   				<input name="text" type="text" class="input-text" placeholder="Search" />
   				<input type="submit" class="search-icon" value="Search" />

@@ -859,7 +859,7 @@ class TutorSubject(models.Model):
     credits = models.FloatField()
     
     def save(self, *args, **kwargs):
-        if not TutorSubject.objects.filter(user=self.user, subject=self.subject, level=self.level).exclude(id=self.id):
+        if not TutorSubject.objects.filter(user=self.user, system=self.system, subject=self.subject, level=self.level).exclude(id=self.id):
             super(self.__class__, self).save(*args, **kwargs)
             user = self.user
             profile = user.profile 

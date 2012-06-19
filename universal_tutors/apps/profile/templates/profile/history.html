@@ -21,7 +21,18 @@
       <div class="row">
         <div class="twelve columns">
         
-          <a href="{% url profile %}" class="back">Back to Profile</a>
+          {% if user_profile.type == user_profile.TYPES.PARENT %}
+          <a href="{% url edit_parent_profile %}#children" class="back">Back to Profile</a>
+          {% endif %}
+
+          {% if user_profile.type == user_profile.TYPES.STUDENT or user_profile == user_profile.TYPES.UNDER16 %}
+          <a href="{% url edit_tutor_profile %}#credits" class="back">Back to Profile</a>
+          {% endif %}
+
+          {% if user_profile.type == user_profile.TYPES.TUTOR %}
+          <a href="{% url edit_tutor_profile %}#credits" class="back">Back to Profile</a>
+          {% endif %}
+
           <h2 class="clear">Transaction History</h2>
           
           <table class="stretch">
@@ -32,7 +43,7 @@
               <th>Credits</th>
               <th>Value</th>
               <th>Class</th>
-              <th>{% if user_profile == user.profile.TUTOR %}Student{% else %}Tutor{% endif %}</th>
+              <th>{% if user_profile.type == user_profile.TYPES.TUTOR %}Student{% else %}Tutor{% endif %}</th>
             </tr>
             {% for movement in person.movements.all %}
             {% with movement.related_class as class %}
@@ -43,7 +54,7 @@
               <td>{{movement.credits}} credit{{movement.credits|pluralize}}</td>
               <td>{% if movement.value %}{{movement.value}}{% endif %}</td>
               <td>{% if class %}{{class}}{% endif %}</td>
-              <td>{% if class %}{% if user_profile == user.profile.TUTOR %}{{class.student.get_full_name}}{% else %}{{class.tutor.get_full_name}}{% endif %}{% endif %}</td>
+              <td>{% if class %}{% if user_profile.type == user_profile.TYPES.TUTOR %}{{class.student.get_full_name}}{% else %}{{class.tutor.get_full_name}}{% endif %}{% endif %}</td>
             </tr>
             {% endwith %}
             {% endfor %}

@@ -26,13 +26,13 @@
 		              
 		                <div class="row space">
 		                  <div class="three columns">
-		                    <label>Subject</label>
+		                    <label>System</label>
 		                  </div>
 		                  <div class="nine columns">
-		                    <select id="id_subject" class="stretch" name="subject">
-		                      <option value="">Any Subject</option>
-		                      {% for subject in subjects %}
-		                      <option value="{{subject}}">{{subject}}</option>
+		                    <select  id="id_system" class="stretch" name="system">
+		                      <option value="">Any educational system</option>
+		                      {% for system in systems %}
+			                      <option value="{{system.id}}">{{system}}</option>	                      
 		                      {% endfor %}
 		                    </select>
 		                  </div>
@@ -60,11 +60,20 @@
 		                
 		                <div class="row space">
 		                  <div class="three columns">
-		                    <label>System</label>
+		                    <label>Subject</label>
 		                  </div>
 		                  <div class="nine columns">
-		                    <select  id="id_system" class="stretch" name="system">
-		                      <option value="">Any Educational System</option>
+		                    <select id="id_subject" class="stretch" name="subject">
+		                      <option value="">Any subject</option>
+		                      {% if selected_system %}
+			                      {% for subject in selected_system.subjects.all %}
+			                      	 <option value="{{subject.id}}">{{subject}}</option>
+			                      {% endfor %}
+		                      {% else %}
+			                      {% for subject in subjects %}
+			                      	 <option value="{{subject.id}}">{{subject}}</option>
+			                      {% endfor %}
+			                  {% endif %}
 		                    </select>
 		                  </div>
 		                </div>
@@ -75,10 +84,16 @@
 		                  </div>
 		                  <div class="nine columns">
 		                    <select id="id_level" class="stretch" name="level">
-		                      <option value="">Any Level</option>
-		                      {% for level in levels %}
-		                      <option value="{{level}}">{{level}}</option>
-		                      {% endfor %}
+		                      <option value="">Any level</option>
+		                      {% if selected_system %}
+			                      {% for level in selected_system.levels.all %}
+				                      <option value="{{level.id}}">{{level}}</option>
+			                      {% endfor %}
+		                      {% else %}
+			                      {% for level in levels %}
+				                      <option value="{{level.id}}">{{level}}</option>
+			                      {% endfor %}
+			                  {% endif %}
 		                    </select>
 		                  </div>
 		                </div>
@@ -139,12 +154,24 @@
 		                </div>
 		
 		                <div class="row">
-		                  <div class="three columns">
+		                  <div class="four columns">
 		                    <label>CRB checked</label>
 		                  </div>
-		                  <div class="nine columns">
-		                    <input id="id_crb" name="crb" type="checkbox" />
-		                  </div>
+		                  {% if user_profile.type == user_profile.TYPES.STUDENT or user_profile.type == user_profile.TYPES.UNDER16 %}
+			                  <div class="two columns">
+			                    <input id="id_crb" name="crb" type="checkbox" />
+			                  </div>
+			                  <div class="four columns">
+			                    <label>Favorite tutor</label>
+			                  </div>
+			                  <div class="two columns">
+			                    <input id="id_favorite" name="favorite" type="checkbox" />
+			                  </div>
+						  {% else %}
+			                  <div class="eight columns">
+			                    <input id="id_crb" name="crb" type="checkbox" />
+			                  </div>						  
+		                  {% endif %}
 		                </div>
 		                
 		              </div>
@@ -289,6 +316,17 @@
 		
 		<script>
 			$(document).ready(function(){
+			  	$('select#id_system').change(function(){
+			  		var value = $(this).val();
+			  		if(value) {
+			  			$('#id_level').load('{% url system_levels_options %}'+ value +'/1/');
+			  			$('#id_subject').load('{% url system_subjects_options %}'+ value +'/1/');
+			  		} else {
+			  			$('#id_level').load('{% url system_levels_options %}0/1/');
+			  			$('#id_subject').load('{% url system_subjects_options %}0/1/');
+			  		}
+			  	});
+
 				var sort = $.query.get('sort');
 				if (sort) {
 					$("select#search-filter option[value='" + sort +"']").attr("selected", true);
@@ -327,6 +365,11 @@
 				var crb = $.query.get('crb');
 				if (crb) {
 					$('#id_crb').attr('checked', 'checked');
+				}
+
+				var favorite = $.query.get('crb');
+				if (favorite) {
+					$('#id_favorite').attr('checked', 'checked');
 				}
 				
 				$("#search-filter").change(function(e){

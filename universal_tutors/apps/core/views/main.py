@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
 from apps.profile.models import UserProfile, WeekAvailability, Tutor
-from apps.classes.models import ClassSubject
+from apps.classes.models import *
 from apps.core.models import Video
 
 import datetime, random
@@ -41,22 +41,10 @@ def search(request):
     subjects = set()
     levels = set()
     
-    for sub in ClassSubject.objects.all():
-        splited_sub = sub.subject.split(',')
-        try:
-            subjects.add(splited_sub[0].strip())
-        except IndexError:
-            pass
-
-        try:
-            levels.add(splited_sub[1].strip())
-        except IndexError:
-            pass        
-
     query = request.GET.get('text', '')
     what = request.GET.get('what', None)
     
-    system = request.GET.get('system', None)
+    system = request.GET.get('system', '')
     subject = request.GET.get('subject', '')
     level = request.GET.get('level', '')
 
@@ -68,20 +56,32 @@ def search(request):
     
     tutors = Tutor.objects.select_related()    
     
+    today = datetime.date.today()
+    
     if crb:
-        tutors = tutors.filter(profile__crb_checked=True)
+        tutors = tutors.filter(profile__crb_expiry_date__gte=today)
     
     if query:
-        if what == 'tutors':
+        if what == 'tutor':
             tutors = tutors.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
-        else :
+        elif what == 'subject':
             tutors = tutors.filter(subjects__subject__subject__icontains=query)
+        elif what == 'level':
+            tutors = tutors.filter(subjects__level__level__icontains=query)
 
-    if price:
-        tutors = tutors.filter(Q(subjects__subject__subject__icontains=subject), Q(subjects__subject__subject__icontains=level), Q(subjects__credits__lte=price))
-    else:
-        tutors = tutors.filter(Q(subjects__subject__subject__icontains=subject), Q(subjects__subject__subject__icontains=level))
+
+    if system:
+        tutors = tutors.filter(subjects__system__id = system)
+
+    if subject:
+        tutors = tutors.filter(subjects__subject__id = subject)
+
+    if level:
+        tutors = tutors.filter(subjects__level__id = level)
+
     
+    if price:
+        tutors = tutors.filter(Q(subjects__credits__lte=price))
     
     if day >= 0 and time >=0:
         tutors = tutors.filter(week_availability__weekday=day, week_availability__begin__lte=datetime.time(time,0), week_availability__end__gte=datetime.time(time,0))
@@ -97,10 +97,17 @@ def search(request):
         tutors = tutors.distinct().order_by('-profile__avg_rate')
     elif sort == 'classes':
         tutors = tutors.distinct().order_by('-profile__classes_given')
-            
+    
+    try:
+        selected_system = EducationalSystem.objects.get(id = system)
+    except EducationalSystem.DoesNotExist:
+        selected_system = None
+          
     return { 
-        'subjects': sorted(subjects),
-        'levels': sorted(levels),
+        'systems': EducationalSystem.objects.all(),
+        'subjects': ClassSubject.objects.all(),
+        'levels': ClassLevel.objects.all(),
+        'selected_system': selected_system,
         'user': user,
         'tutors': tutors.distinct(),
     }

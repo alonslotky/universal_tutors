@@ -21,21 +21,10 @@ from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
 from apps.core.models import Currency
 
-
-
-class SubjectField(forms.CharField):
-    def to_python(self, value):
-        try:
-            return ClassSubject.objects.get(subject__iexact=value)
-        except ClassSubject.DoesNotExist:
-            return ClassSubject.objects.create(subject=value)
-
-
 class TutorSubjectForm(forms.ModelForm):
-    subject = SubjectField()
     class Meta:
         models = TutorSubject
-        fields = ('subject', 'credits')
+        fields = ('system', 'level', 'subject', 'credits')
 
 
 class ProfileForm(forms.ModelForm):

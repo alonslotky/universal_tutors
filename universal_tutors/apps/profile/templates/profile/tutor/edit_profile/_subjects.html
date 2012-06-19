@@ -107,7 +107,6 @@
       {% endif %}
     </table>
 	  {% if no_subjects < 11 %}
-		  <hr>
 		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
 	  {% endif %}
   </li>
@@ -122,8 +121,8 @@
   		var self_id = $(this).attr('id');
   		var item_id = self_id.split('-')[1];
   		if(self_value) {
-  			$('#id_subjects-'+ item_id +'-level').html('<option>1</option>');
-  			$('#id_subjects-'+ item_id +'-subject').html('<option>1</option>');
+  			$('#id_subjects-'+ item_id +'-level').load('{% url system_levels_options %}'+ self_value +'/0/');
+  			$('#id_subjects-'+ item_id +'-subject').load('{% url system_subjects_options %}'+ self_value +'/0/');
   		} else {
   			$('#id_subjects-'+ item_id +'-level').html('<option value="" selected="selected">-------</option>');
   			$('#id_subjects-'+ item_id +'-subject').html('<option value="" selected="selected">-------</option>');
@@ -132,6 +131,7 @@
   
   	$('#add-subject-link').click(function(){
   		if (parseInt($('#id_subjects-TOTAL_FORMS').val()) > 11) {
+  			$(this).remove();
   			return;
   		}
   		$('#subjects-table').append(
@@ -147,12 +147,12 @@
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-system" class="subjects-select-levels">'+
+			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-level" class="subjects-select-levels">'+
 			'			<option value="">-------</option>'+
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-system" class="subjects-select-subject">'+
+			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" class="subjects-select-subject">'+
 			'			<option value="">-------</option>'+
 			'   	</select>'+
 	  		'	</td>'+
@@ -160,7 +160,7 @@
 			'		<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text subject-credits" placeholder="Credits" />'+
 	  		'	</td>'+
 	  		'	<td>'+
-	  		'		<span id="id_subjects-'+ id_subject +'-price">{{curency.symbol}} 0.00</span>'+
+	  		'		<span id="id_subjects-'+ id_subject +'-price">{{currency.symbol}} 0.00</span>'+
 	  		'	</td>'+
 	  		'	<td>'+
 	  		'		<input id="id_subjects-'+ id_subject +'-DELETE" name="subjects-'+ id_subject +'-DELETE" type="checkbox">'+
@@ -175,7 +175,12 @@
   	$('.subject-credits').live('keyup blur', function(){
   		var id = $(this).attr('id').split('-')[1];
   		var value = parseFloat($(this).val());
-  		$('#id_subjects-'+ id +'-price').html(currency_symbol +' '+ (value * credit_value).toFixed(2));
+  		
+  		if(!isNaN(value)) {
+	  		$('#id_subjects-'+ id +'-price').html(currency_symbol +' '+ (value * credit_value).toFixed(2));
+  		} else {
+	  		$('#id_subjects-'+ id +'-price').html(currency_symbol +' 0.00');
+  		}
   	});
 
 	var add_autocomplete = function(id){ 

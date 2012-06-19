@@ -1,0 +1,4 @@
+{% if blank %}<option value="{{blank.value}}">{{blank.description}}</option>{% endif %}
+{% for item in items %}
+<option value="{{item.id}}">{{item}}</option>
+{% endfor %}
