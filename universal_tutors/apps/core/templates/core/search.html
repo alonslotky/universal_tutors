@@ -8,6 +8,7 @@
 	{% with user.is_authenticated as is_authenticated %}
 		{% with class.tutor as tutor %}
 		{% with class.student as student %}
+		{% with tutors.count as no_tutors %}
 		
 		      <section class="blue feature-box"><div class="inner">
 		        <h1>Search <span>Find the perfect tutor for your next class.</span></h1>
@@ -187,22 +188,30 @@
 		      
 		      <div class="row">
 		        <div class="twelve columns">
-		          
-		          <div class="right filter">
 		            <form>
-		              <select id="results-per-page">
-		                <option value="10">10 results per page</option>
-		                <option value="25">25 results per page</option>
-		                <option value="50">50 results per page</option>
-		                <option value="100">100 results per page</option>
-		              </select>
-		              <select id="search-filter">
-		                <option value="price">Sort by Price</option>
-		                <option value="rating">Sort by Rating</option>
-		                <option value="classes">Sort by Classes Given</option>
-		              </select>
+		              <div class="eight columns">{{no_tutors}} tutor{{no_tutors|pluralize}} ha{{no_tutors|pluralize:"s,ve"}} been found.</div>
+		              <div class="two columns">
+				          <div class="right filter">
+				              <select id="results-per-page" class="stretch">
+				                <option value="10">10 results per page</option>
+				                <option value="25">25 results per page</option>
+				                <option value="50">50 results per page</option>
+				                <option value="100">100 results per page</option>
+				              </select>
+				          </div>
+		              </div>
+		              <div class="twow columns">
+				          <div class="right filter">
+				              <select id="search-filter" class="stretch">
+				                <option value="price">Sort by Price</option>
+				                <option value="rating">Sort by Rating</option>
+				                <option value="classes">Sort by Classes Given</option>
+				              </select>
+				          </div>
+		              </div>
 		            </form>
 		          </div>
+		        </div>
 		        
 		          {% if query %}<h2>Tutors named 'John Doe'</h2>{% endif %}
 		        </div>
@@ -307,6 +316,7 @@
 		      {% endfor %}
 		      {% paginate %}
 		
+		{% endwith %}
 		{% endwith %}
 		{% endwith %}
 		
