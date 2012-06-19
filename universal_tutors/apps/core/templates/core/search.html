@@ -300,7 +300,7 @@
 							{% endif %}
 						{% endif %}
 		            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
-				            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i> {% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+				            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i>&nbsp;<span>{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
 						{% endif %}
 			            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 			            {% endwith %}
@@ -409,6 +409,12 @@
 					}
 				});
 
+				$('.favorite').click(function(){
+					var tutor_id = $(this).attr('id-tutor');
+					$.get('{% url favorite %}'+ tutor_id +'/', function(response){
+						$('.tutor-favorite-'+ tutor_id +' span').html(response);
+					});
+				});
 			});
 		</script>
 	{% endwith %}

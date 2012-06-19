@@ -53,6 +53,7 @@ def search(request):
     time = int(request.GET.get('time', -1))
     crb = request.GET.get('crb', False)
     sort = request.GET.get('sort', 'price')
+    favorite = request.GET.get('favorite', False)
     
     results_per_page = request.GET.get('results_per_page', 10)
     
@@ -82,6 +83,8 @@ def search(request):
     if level:
         tutors = tutors.filter(subjects__level__id = level)
 
+    if favorite and user.is_authenticated():
+        tutors = tutors.filter(profile__favorite = user)
     
     if price:
         tutors = tutors.filter(Q(subjects__credits__lte=price))
