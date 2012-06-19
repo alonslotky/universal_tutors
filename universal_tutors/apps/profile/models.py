@@ -367,7 +367,7 @@ class UserProfile(BaseModel):
         
         begin = convert_datetime(user_begin, gtz, self.timezone)
         end = convert_datetime(user_end, gtz, self.timezone)
-        now = convert_datetime(datetime.datetime.now(), pytz.utc, self.timezone)
+        now = convert_datetime(datetime.datetime.now(), pytz.timezone, self.timezone)
         
         all_slots_available = True
         
@@ -390,7 +390,7 @@ class UserProfile(BaseModel):
         availability_by_time = []
         append = availability_by_time.append
         time = begin
-        user_time = begin
+        user_time = user_begin
         availability_index = 0
         
         # create empty available array
