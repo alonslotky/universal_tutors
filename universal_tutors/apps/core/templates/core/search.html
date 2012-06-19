@@ -229,7 +229,10 @@
 		            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
 		            <p>
 		            	<span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span><br/>
-		            	<span>{% if tutor_profile.webcam %}(with_camera)&nbsp;{% endif %}<a {% if tutor_profile.crb_checked %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a></span>
+		            	<span>
+		            		<a {% if tutor_profile.webcam %}title="Webcam" class="no-hover"{% else %}title="No Webcam" class="no-hover text-red"{% endif %}><i class="icon-videocam"></i></a>
+		            		<a {% if tutor_profile.crb_checked %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
+	            		</span>
 		            </p>
 		          </div>
 		          
