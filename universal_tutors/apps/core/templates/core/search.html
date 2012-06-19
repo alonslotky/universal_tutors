@@ -229,7 +229,10 @@
 		            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
 		            <p>
 		            	<span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span><br/>
-		            	<span>{% if tutor_profile.webcam %}(with_camera)&nbsp;{% endif %}{% if tutor_profile.crb_checked %}(with_crb){% endif %}</span>
+		            	<span>
+		            		<a {% if tutor_profile.webcam %}title="Webcam" class="no-hover"{% else %}title="No Webcam" class="no-hover text-red"{% endif %}><i class="icon-videocam"></i></a>
+		            		<a {% if tutor_profile.crb_checked %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
+	            		</span>
 		            </p>
 		          </div>
 		          
@@ -280,7 +283,8 @@
 						            	{% endif %}
 						            {% endif %}
 								</a>
-					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>				
+
+					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>				
 								{% endif %}
 							{% endif %}
 			            {% else %}
@@ -296,7 +300,7 @@
 					            	{% endif %}
 					            {% endif %}
 			            	</a>
-					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
+				            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
 							{% endif %}
 						{% endif %}
 		            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
@@ -306,7 +310,7 @@
 			            {% endwith %}
 			            {% endwith %}
 			        {% else %}
-			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
+			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
 		            			        
 			        {% endif %}
 		          </div>
