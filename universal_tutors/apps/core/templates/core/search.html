@@ -189,7 +189,13 @@
 		        <div class="twelve columns">
 		          
 		          <div class="right filter">
-		            <form id="search-filter">
+		            <form>
+		              <select id="results-per-page">
+		                <option value="10">10 results per page</option>
+		                <option value="25">25 results per page</option>
+		                <option value="50">50 results per page</option>
+		                <option value="100">100 results per page</option>
+		              </select>
 		              <select id="search-filter">
 		                <option value="price">Sort by Price</option>
 		                <option value="rating">Sort by Rating</option>
@@ -201,7 +207,7 @@
 		          {% if query %}<h2>Tutors named 'John Doe'</h2>{% endif %}
 		        </div>
 		      </div>
-			  {% autopaginate tutors 10 %}
+			  {% autopaginate tutors results_per_page %}
 		      {% for tutor in tutors %}
 		      {% with tutor.profile as tutor_profile %}
 		      <article>
@@ -327,6 +333,11 @@
 			  		}
 			  	});
 
+				var results_per_page = $.query.get('results_per_page');
+				if (results_per_page) {
+					$("select#results-per-page option[value='" + results_per_page +"']").attr("selected", true);
+				}
+
 				var sort = $.query.get('sort');
 				if (sort) {
 					$("select#search-filter option[value='" + sort +"']").attr("selected", true);
@@ -367,18 +378,27 @@
 					$('#id_crb').attr('checked', 'checked');
 				}
 
-				var favorite = $.query.get('crb');
+				var favorite = $.query.get('favorite');
 				if (favorite) {
 					$('#id_favorite').attr('checked', 'checked');
 				}
 				
 				$("#search-filter").change(function(e){
-					var value = e.target.value;
+					var value = $(this).val();
 					if (value !== undefined || value !== ""){
 						var url = window.location.host;
 						window.location = $.query.set('sort', value);
 					}
 				});
+
+				$("#results-per-page").change(function(e){
+					var value = $(this).val();
+					if (value !== undefined || value !== ""){
+						var url = window.location.host;
+						window.location = $.query.set('results_per_page', value);
+					}
+				});
+
 			});
 		</script>
 	{% endwith %}

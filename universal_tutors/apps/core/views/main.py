@@ -54,6 +54,8 @@ def search(request):
     crb = request.GET.get('crb', False)
     sort = request.GET.get('sort', 'price')
     
+    results_per_page = request.GET.get('results_per_page', 10)
+    
     tutors = Tutor.objects.select_related()    
     
     today = datetime.date.today()
@@ -63,7 +65,9 @@ def search(request):
     
     if query:
         if what == 'tutor':
-            tutors = tutors.filter(Q(first_name__icontains=query) | Q(last_name__icontains=query) | Q(username__icontains=query))
+            words = query.split()
+            for word in words:
+                tutors = tutors.filter(Q(first_name__icontains=word) | Q(last_name__icontains=word) | Q(username__icontains=word))
         elif what == 'subject':
             tutors = tutors.filter(subjects__subject__subject__icontains=query)
         elif what == 'level':
@@ -98,9 +102,12 @@ def search(request):
     elif sort == 'classes':
         tutors = tutors.distinct().order_by('-profile__classes_given')
     
-    try:
-        selected_system = EducationalSystem.objects.get(id = system)
-    except EducationalSystem.DoesNotExist:
+    if system:
+        try:
+            selected_system = EducationalSystem.objects.get(id = system)
+        except EducationalSystem.DoesNotExist:
+            selected_system = None
+    else:
         selected_system = None
           
     return { 
@@ -108,6 +115,7 @@ def search(request):
         'subjects': ClassSubject.objects.all(),
         'levels': ClassLevel.objects.all(),
         'selected_system': selected_system,
+        'results_per_page': results_per_page,
         'user': user,
         'tutors': tutors.distinct(),
     }
