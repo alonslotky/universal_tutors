@@ -53,6 +53,7 @@ def search(request):
     time = int(request.GET.get('time', -1))
     crb = request.GET.get('crb', False)
     sort = request.GET.get('sort', 'price')
+    favorite = request.GET.get('favorite', False)
     
     results_per_page = request.GET.get('results_per_page', 10)
     
@@ -69,10 +70,9 @@ def search(request):
             for word in words:
                 tutors = tutors.filter(Q(first_name__icontains=word) | Q(last_name__icontains=word) | Q(username__icontains=word))
         elif what == 'subject':
-            tutors = tutors.filter(subjects__subject__subject__icontains=query)
-        elif what == 'level':
-            tutors = tutors.filter(subjects__level__level__icontains=query)
-
+            words = query.split()
+            for word in words:
+                tutors = tutors.filter(Q(subjects__subject__subject__icontains=word) | Q(subjects__level__level__icontains=word))
 
     if system:
         tutors = tutors.filter(subjects__system__id = system)
@@ -83,6 +83,8 @@ def search(request):
     if level:
         tutors = tutors.filter(subjects__level__id = level)
 
+    if favorite and user.is_authenticated():
+        tutors = tutors.filter(profile__favorite = user)
     
     if price:
         tutors = tutors.filter(Q(subjects__credits__lte=price))

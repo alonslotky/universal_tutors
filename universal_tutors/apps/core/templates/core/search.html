@@ -8,6 +8,7 @@
 	{% with user.is_authenticated as is_authenticated %}
 		{% with class.tutor as tutor %}
 		{% with class.student as student %}
+		{% with tutors.count as no_tutors %}
 		
 		      <section class="blue feature-box"><div class="inner">
 		        <h1>Search <span>Find the perfect tutor for your next class.</span></h1>
@@ -187,22 +188,30 @@
 		      
 		      <div class="row">
 		        <div class="twelve columns">
-		          
-		          <div class="right filter">
 		            <form>
-		              <select id="results-per-page">
-		                <option value="10">10 results per page</option>
-		                <option value="25">25 results per page</option>
-		                <option value="50">50 results per page</option>
-		                <option value="100">100 results per page</option>
-		              </select>
-		              <select id="search-filter">
-		                <option value="price">Sort by Price</option>
-		                <option value="rating">Sort by Rating</option>
-		                <option value="classes">Sort by Classes Given</option>
-		              </select>
+		              <div class="eight columns">{{no_tutors}} tutor{{no_tutors|pluralize}} ha{{no_tutors|pluralize:"s,ve"}} been found.</div>
+		              <div class="two columns">
+				          <div class="right filter">
+				              <select id="results-per-page" class="stretch">
+				                <option value="10">10 results per page</option>
+				                <option value="25">25 results per page</option>
+				                <option value="50">50 results per page</option>
+				                <option value="100">100 results per page</option>
+				              </select>
+				          </div>
+		              </div>
+		              <div class="twow columns">
+				          <div class="right filter">
+				              <select id="search-filter" class="stretch">
+				                <option value="price">Sort by Price</option>
+				                <option value="rating">Sort by Rating</option>
+				                <option value="classes">Sort by Classes Given</option>
+				              </select>
+				          </div>
+		              </div>
 		            </form>
 		          </div>
+		        </div>
 		        
 		          {% if query %}<h2>Tutors named 'John Doe'</h2>{% endif %}
 		        </div>
@@ -220,8 +229,7 @@
 		            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
 		            <p>
 		            	<span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span><br/>
-		            	<span>{% if tutor_profile.webcam %}(with_camera)&nbsp;{% endif %}{% if tutor_profile.crb_checked %}(with_crb){% endif %}</span>
-		            	<a {% if tutor_profile.crb %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
+		            	<span>{% if tutor_profile.webcam %}(with_camera)&nbsp;{% endif %}<a {% if tutor_profile.crb_checked %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a></span>
 		            </p>
 		          </div>
 		          
@@ -260,6 +268,7 @@
 					            
 					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-thumbs-up"></i> Book a Class</a>
 							{% else %}
+								{% if user_profile.type != user_profile.TYPES.TUTOR %}
 					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> 
 									{% if msgs|length == 0 %}
 						          		Send a Message
@@ -271,11 +280,12 @@
 						            	{% endif %}
 						            {% endif %}
 								</a>
-								{% if user_profile.type != user_profile.TYPES.TUTOR %}
+
 					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>				
 								{% endif %}
 							{% endif %}
 			            {% else %}
+			            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
 				            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  
 				            	{% if msgs|length == 0 %}
 					          		Send a Message
@@ -287,12 +297,11 @@
 					            	{% endif %}
 					            {% endif %}
 			            	</a>
-			            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
-					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
+				            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
 							{% endif %}
 						{% endif %}
 		            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
-				            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i> {% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+				            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i>&nbsp;<span>{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
 						{% endif %}
 			            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 			            {% endwith %}
@@ -308,6 +317,7 @@
 		      {% endfor %}
 		      {% paginate %}
 		
+		{% endwith %}
 		{% endwith %}
 		{% endwith %}
 		
@@ -400,6 +410,12 @@
 					}
 				});
 
+				$('.favorite').click(function(){
+					var tutor_id = $(this).attr('id-tutor');
+					$.get('{% url favorite %}'+ tutor_id +'/', function(response){
+						$('.tutor-favorite-'+ tutor_id +' span').html(response);
+					});
+				});
 			});
 		</script>
 	{% endwith %}

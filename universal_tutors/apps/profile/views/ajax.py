@@ -249,10 +249,10 @@ def favorite(request, person_id):
     
     if user in profile.favorite.all():
         profile.favorite.remove(user)
-        return http.HttpResponse('Add Favorite')
+        return http.HttpResponse('Add favorite')
     else:
         profile.favorite.add(user)
-        return http.HttpResponse('Remove Favorite')
+        return http.HttpResponse('Remove favorite')
 
 
 @login_required

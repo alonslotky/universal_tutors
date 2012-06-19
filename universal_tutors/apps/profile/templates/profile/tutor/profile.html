@@ -42,7 +42,7 @@
     <div class="ten columns">
       <h2>{{person.get_full_name}}</h2>
       <h4>{{profile.date_of_birth|age}}, {{profile.get_gender_display}}</h4>
-      <a {% if profile.crb %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
+      <a {% if profile.crb_checked %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
       <p>&nbsp;</p>
       <div class="row">
         <div class="nine columns">
@@ -93,7 +93,7 @@
                 </tr>
                 {% for item in subjects %}
                 <tr>
-                  <td>{{item.subject}}</td>
+                  <td>{{item.subject}}, {{item.level}}</td>
                   <td>{{item.credits|floatformat}} credit{{item.credits|pluralize}}</td>
                 </tr>
                 {% empty %}
@@ -148,25 +148,14 @@
 	      		No reviews at moment.
           {% endfor %}
           {% paginate %}
-          {% comment %}
-          <!-- ul class="pagination">
-            <li class="unavailable"><a href="">&laquo;</a></li>
-            <li class="current"><a href="">1</a></li>
-            <li><a href="">2</a></li>
-            <li><a href="">3</a></li>
-            <li><a href="">4</a></li>
-            <li class="unavailable"><a href="">&hellip;</a></li>
-            <li><a href="">12</a></li>
-            <li><a href="">13</a></li>
-            <li><a href="">&raquo;</a></li>
-          </ul -->
-          {% endcomment %}
           
         </div>
         <div class="three columns action">
 		  {% if owner %}
           <a href="{% url edit_tutor_profile %}" class="book-class">Edit profile</a>
 		  {% else %}
+          
+          {% if user_profile.type != user_profile.TYPES.TUTOR %}
 		  {% with person|get_messages:user as messages %}
 		  {% with messages.messages as msgs %}
           <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i>
@@ -182,16 +171,15 @@
       	  </a>
           {% endwith %}
           {% endwith %}
-          
-          {% if user_profile.type != user_profile.TYPES.TUTOR %}
+
           <a href="{% url book_class person.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
-          <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i> {% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</a>
+          <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i>&nbsp;<span>{% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
           {% endif %}
           <a href="{% url report person.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 			<script type="text/javascript">
 				$('#favorite-tutor').click(function(){
 					$.get('{% url favorite person.id %}', function(response){
-						$('#favorite-tutor').html(response);
+						$('#favorite-tutor span').html(response);
 					});
 				});
 			</script>
