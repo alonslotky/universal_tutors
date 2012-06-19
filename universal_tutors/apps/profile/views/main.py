@@ -19,6 +19,7 @@ from apps.common.utils.view_utils import main_render
 from apps.common.utils.decorators import over16_required
 from apps.profile.models import UserProfile, NewsletterSubscription
 from apps.profile.forms import *
+from apps.classes.models import *
 
 import pytz, datetime
 
@@ -132,6 +133,7 @@ def edit_tutor_profile(request):
         'qualifications_formset': qualifications_formset,
         'timezones': pytz.common_timezones,
         'date': datetime.date.today(),
+        'systems': EducationalSystem.objects.all(),
     }
 
 
@@ -393,7 +395,7 @@ def book_class(request, username):
         'person': tutor,
         'profile': tutor.profile,
         'date': datetime.date.today(),
-        'week': tutor.profile.get_week(gtz = (user.profile.timezone or pytz.utc)),
+        'week': tutor.profile.get_week(gtz = user.profile.timezone),
     }
     
     
