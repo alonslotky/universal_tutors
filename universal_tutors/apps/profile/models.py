@@ -336,7 +336,6 @@ class UserProfile(BaseModel):
         week_availability = []
         for dt in xrange(0,7):
             day = date + datetime.timedelta(days=dt)
-            
             if day < today:
                 week_availability.append((day, (False, [])))
             else:
@@ -384,7 +383,7 @@ class UserProfile(BaseModel):
                 all_slots_available = False
                 
         # select booking from date
-        booking = user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING], date__gte=begin.date(), date__lt=end.date())
+        booking = user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING], date__gte=user_begin.date(), date__lt=user_end.date())
 
         size = 0
         availability_by_time = []
@@ -442,13 +441,16 @@ class UserProfile(BaseModel):
         # inject booking on array
         for item in booking:
             # From UTC to profile timezone
-            begin_time = convert_datetime(item.date, pytz.utc, self.timezone)
+            user_begin_time = convert_datetime(item.date, pytz.utc, gtz)
 
-            begin_min = difference_in_minutes(begin_time, begin) 
+            begin_min = difference_in_minutes(user_begin_time, user_begin) 
             end_min = begin_min + item.duration
+
 
             begin_index = begin_min / MINIMUM_PERIOD
             end_index = end_min / MINIMUM_PERIOD
+
+            print user_begin_time, user_begin, begin_index, end_index
             
             # cut index outside the array
             if begin_index < 0:     begin_index = 0
