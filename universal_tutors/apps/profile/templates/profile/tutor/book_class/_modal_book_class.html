@@ -70,6 +70,7 @@
 		
 		book_start_date = new Date(year, month, day, start_hour, start_min);
 		book_end_date = new Date(year, month, day, end_hour, end_min);
+		book_end_date = book_end_date > book_start_date ? book_end_date : book_end_date.setDate(book_end_date.getDate()+1);
 		book_date = year +'-'+ (month<9?('0'+(month+1)):(month+1)) +'-'+ day;
 
 		$('#book-class-subject').val('0');
