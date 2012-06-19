@@ -599,8 +599,8 @@ def ajax_book_class(request, username, date):
 
     return {
         'person': tutor,
-        'profile': tutor.profile,
-        'week': profile.get_week(date, gtz = (user.profile.timezone or pytz.utc)),
+        'profile': profile,
+        'week': profile.get_week(date, gtz = user.profile.timezone),
         'date': date,
     }
 
