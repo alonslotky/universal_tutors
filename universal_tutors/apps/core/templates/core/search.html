@@ -268,6 +268,7 @@
 					            
 					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-thumbs-up"></i> Book a Class</a>
 							{% else %}
+								{% if user_profile.type != user_profile.TYPES.TUTOR %}
 					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> 
 									{% if msgs|length == 0 %}
 						          		Send a Message
@@ -279,11 +280,11 @@
 						            	{% endif %}
 						            {% endif %}
 								</a>
-								{% if user_profile.type != user_profile.TYPES.TUTOR %}
 					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>				
 								{% endif %}
 							{% endif %}
 			            {% else %}
+			            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
 				            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  
 				            	{% if msgs|length == 0 %}
 					          		Send a Message
@@ -295,7 +296,6 @@
 					            	{% endif %}
 					            {% endif %}
 			            	</a>
-			            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
 					            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-thumbs-up"></i> Book a Class</a>
 							{% endif %}
 						{% endif %}
