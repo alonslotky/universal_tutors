@@ -22,7 +22,7 @@ from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, convert_datetime, difference_in_minutes
 
-from apps.classes.models import Class, ClassSubject, ClassLevel
+from apps.classes.models import Class, ClassSubject, ClassLevel, EducationalSystem
 from apps.core.models import Currency
 from apps.classes.settings import *
 
@@ -395,7 +395,7 @@ class UserProfile(BaseModel):
         
         # create empty available array
         while time < end:
-            user_end_period = user_time + datetime.timedelta(minutes=MINIMUM_PERIOD)
+            user_end_period = time + datetime.timedelta(minutes=MINIMUM_PERIOD)
             append([[user_time.hour, user_time.minute, user_end_period.hour, user_end_period.minute], 0, 0])
             time += datetime.timedelta(minutes=MINIMUM_PERIOD)
             user_time = user_end_period
@@ -843,6 +843,7 @@ class WithdrawItem(BaseModel):
 ### TUTOR ###########
 class TutorSubject(models.Model):
     user = models.ForeignKey(User, related_name='subjects')
+    system = models.ForeignKey(EducationalSystem, related_name='tutors')
     subject = models.ForeignKey(ClassSubject, related_name='tutors')
     level = models.ForeignKey(ClassLevel, related_name='tutors')
     credits = models.FloatField()
