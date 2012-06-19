@@ -6,120 +6,167 @@
   <li id="subjectsTab">
     <h2 class="clear">Subjects</h2>
     
-    <table class="stretch">
+	  
+	<input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
+	<input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
+	<input id="id_subjects-MAX_NUM_FORMS" type="hidden" name="subjects-MAX_NUM_FORMS">
+	  
+    <table id="subjects-table" class="stretch">
       <tr>
-        <th>
-          <div class="row">
-            <div class="one columns phone-one">
-              System
-            </div>
-            <div class="one columns phone-one">
-              Subject
-            </div>
-            <div class="one columns phone-one">
-              Level
-            </div>
-            <div class="one columns phone-one">
-              Credits per hour
-            </div>
-            <div class="one columns phone-one">
-              Price in {{profile.currency}}
-            </div>
-            <div class="one columns phone-one">
-              Delete
-            </div>
-          </div>
-        </th>
+        <th>System</th>
+        <th>Level</th>
+        <th>Subject</th>
+        <th>Credits per hour</th>
+        <th>Price in {{profile.currency}}</th>
+        <th>Delete</th>
       </tr>
+      {% for item in subjects %}
+      {% with item.level as level %}
+      {% with item.system as system %}
+      {% with item.subject as subject %}
       <tr>
         <td>
-		  <input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
-		  <input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
-		  <input id="id_subjects-MAX_NUM_FORMS" type="hidden" name="subjects-MAX_NUM_FORMS">
-		  
-          {% for item in subjects %}
-	          <div class="row">
-	            <div class="one columns phone-one">
-				  <select id="id_system-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="systems">
-				  	{% for system in systems %}
-				  	<option value="{{system.id}}" {% if system == item.level.system %}selected="selected"{% endif %}>{{system}}</option>
-				  	{% endfor %}
-				  </select>
-	              <input id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" type="text" class="input-text edit-profile-subjects-list" value="{{item.subject}}" placeholder="Subject" />
-	            </div>
-	            <div class="one columns phone-one">
-				  <select id="id_system-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="levels">
-				  	{% for system in systems %}
-				  	<option value="{{system.id}}" {% if system == item.level.system %}selected="selected"{% endif %}>{{system}}</option>
-				  	{% endfor %}
-				  </select>
-	              <input id="id_subject-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text subject-credits" value="{{item.credits}}" placeholder="Credits" />
-	            </div>
-	            <div class="one columns phone-one">
-	              <span id="id_subject-{{forloop.counter0}}-price">{{currency.symbol}} {{item.credits|in_currency:currency|floatformat:2}}</span>
-	            </div>
-	            <div class="one columns phone-one">
-					<input id="id_subjects-{{forloop.counter0}}-DELETE" type="checkbox" name="subjects-{{forloop.counter0}}-DELETE" />
-	            </div>
-				<input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
-				<input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
-	          </div>
-	          <script type="text/javascript">$(window).ready(function(){ add_autocomplete('#id_subjects-{{forloop.counter0}}-subject'); });</script>
-	          <hr>
-          {% endfor %}
-          {% if user.subjects.all|length < 12 %}
-          <div class="row">
-            <div class="one columns phone-one">
-              <input id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" type="text" class="input-text edit-profile-subjects-list" placeholder="Subject" />
-            </div>
-            <div class="one olumns phone-one">
-              <input id="id_subjects-{{no_subjects}}-credits" name="subjects-{{no_subjects}}-credits" type="text" class="input-text subject-credits" placeholder="Credits" />
-            </div>
-            <div class="one olumns phone-one">
-              <span id="id_subjects-{{no_subjects}}-price">{{currency.symbol}} 0.00</span>
-            </div>
-            <div class="one columns phone-one">
-				<input id="id_subjects-{{no_subjects}}-DELETE" type="checkbox" name="subjects-{{no_subjects}}-DELETE" />
-            </div>
-			<input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
-			<input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
-          </div>
-          <script type="text/javascript">$(window).ready(function(){ add_autocomplete('#id_subjects-{{no_subjects}}-subject'); });</script>
-          <hr>
-		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
-		  {% endif %}
-        </td>
+		  <input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
+		  <input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
+		  <select id="id_subjects-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="subjects-select-systems">
+		  	<option value="">-------</option>
+		  	{% for sys in systems %}
+		  	<option value="{{sys.id}}" {% if sys == system %}selected="selected"{% endif %}>{{sys}}</option>
+		  	{% endfor %}
+		  </select>
+		</td>
+        <td>
+		  <select id="id_subjects-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="subjects-select-levels">
+		  	<option value="">-------</option>
+		  	{% for lvl in system.levels.all %}
+		  	<option value="{{lvl.id}}" {% if lvl == level %}selected="selected"{% endif %}>{{lvl}}</option>
+		  	{% endfor %}
+		  </select>
+		</td>
+        <td>
+		  <select id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" class="subjects-select-subject">
+		  	<option value="">-------</option>
+		  	{% for sys_sub in system.subjects.all %}
+		  	<option value="{{sys_sub.id}}" {% if sys_sub == subject %}selected="selected"{% endif %}>{{sys_sub}}</option>
+		  	{% endfor %}
+		  </select>
+		</td>
+		<td>
+		  <input id="id_subjects-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text subject-credits" value="{{item.credits}}" />
+		</td>
+        <td>
+          <span id="id_subjects-{{forloop.counter0}}-price">{{currency.symbol}} {{item.credits|in_currency:currency|floatformat:2}}</span>
+		</td>
+        <td>
+		  <input id="id_subjects-{{forloop.counter0}}-DELETE" type="checkbox" name="subjects-{{forloop.counter0}}-DELETE" />
+		</td>
+	  </tr>
+      {% endwith %}
+      {% endwith %}
+      {% endwith %}
+      {% endfor %}
+        
+      {% if no_subjects < 12 %}
+	  <tr>
+		<td>			
+		  <input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
+		  <input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
+		  <select id="id_subjects-{{no_subjects}}-system" name="subjects-{{no_subjects}}-system" class="subjects-select-systems">
+		  	<option value="" selected="selected">-------</option>
+		  	{% for sys in systems %}
+		  	<option value="{{sys.id}}">{{sys}}</option>
+		  	{% endfor %}
+		  </select>
+	    </td>
+		<td>
+		  <select id="id_subjects-{{no_subjects}}-level" name="subjects-{{no_subjects}}-level" class="subjects-select-levels">
+		  	<option value="" selected="selected">-------</option>
+		  	{% for lvl in system.levels.all %}
+		  	<option value="{{lvl.id}}">{{lvl}}</option>
+		  	{% endfor %}
+		  </select>
+	    </td>
+		<td>
+		  <select id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" class="subjects-select-subject">
+		  	<option value="" selected="selected">-------</option>
+		  	{% for sys_sub in system.subjects.all %}
+		  	<option value="{{sys_sub.id}}">{{sys_sub}}</option>
+		  	{% endfor %}
+		  </select>
+	    </td>
+		<td>
+		  <input id="id_subjects-{{no_subjects}}-credits" name="subjects-{{no_subjects}}-credits" type="text" class="input-text subject-credits" placeholder="Credits" />
+		</td>
+		<td>
+	       <span id="id_subjects-{{no_subjects}}-price">{{currency.symbol}} 0.00</span>
+	    </td>
+		<td>
+		   <input id="id_subjects-{{no_subjects}}-DELETE" type="checkbox" name="subjects-{{no_subjects}}-DELETE" />
+	    </td>
       </tr>
+      {% endif %}
     </table>
+	  {% if no_subjects < 11 %}
+		  <hr>
+		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
+	  {% endif %}
   </li>
   <script type="text/javascript">
   	var id_subject = {{no_subjects}} + 1;
   	var credit_value = {{currency.credit_value}};
   	var currency_symbol = '{{currency.symbol}}';
   
+  
+  	$('.subjects-select-systems').live('change', function(){
+  		var self_value = $(this).val();
+  		var self_id = $(this).attr('id');
+  		var item_id = self_id.split('-')[1];
+  		if(self_value) {
+  			$('#id_subjects-'+ item_id +'-level').html('<option>1</option>');
+  			$('#id_subjects-'+ item_id +'-subject').html('<option>1</option>');
+  		} else {
+  			$('#id_subjects-'+ item_id +'-level').html('<option value="" selected="selected">-------</option>');
+  			$('#id_subjects-'+ item_id +'-subject').html('<option value="" selected="selected">-------</option>');
+  		}
+  	});
+  
   	$('#add-subject-link').click(function(){
   		if (parseInt($('#id_subjects-TOTAL_FORMS').val()) > 11) {
   			return;
   		}
-  		$(
-	  		'<div class="row">'+
-	  		'	<div class="one columns phone-one">'+
-	  		'		<input id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" type="text" class="input-text edit-profile-subjects-list" placeholder="Subject" />'+
-	  		'	</div>'+
-	  		'	<div class="one columns phone-one">'+
-	  		'		<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text subject-credits" placeholder="Credits" />'+
-	  		'	</div>'+
-	  		'	<div class="one columns phone-one">'+
+  		$('#subjects-table').append(
+  			'<tr>'+
+	  		'	<td>'+
+			'		<input id="id_subjects-'+ id_subject +'-id" type="hidden" name="subjects-'+ id_subject +'-id">'+
+			'		<input id="id_subjects-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="subjects-'+ id_subject +'-user">'+
+			' 		<select id="id_subjects-'+ id_subject +'-system" name="subjects-'+ id_subject +'-system" class="subjects-select-systems">'+
+			'			<option value="">-------</option>'+
+			{% for sys in systems %}
+			'			<option value="{{sys.id}}">{{sys}}</option>'+
+			{% endfor %}
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-system" class="subjects-select-levels">'+
+			'			<option value="">-------</option>'+
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-system" class="subjects-select-subject">'+
+			'			<option value="">-------</option>'+
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+			'		<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text subject-credits" placeholder="Credits" />'+
+	  		'	</td>'+
+	  		'	<td>'+
 	  		'		<span id="id_subjects-'+ id_subject +'-price">{{curency.symbol}} 0.00</span>'+
-	  		'	</div>'+
-	  		'	<div class="one columns phone-one">'+
+	  		'	</td>'+
+	  		'	<td>'+
 	  		'		<input id="id_subjects-'+ id_subject +'-DELETE" name="subjects-'+ id_subject +'-DELETE" type="checkbox">'+
-	  		'	</div>'+
-			'	<input id="id_subjects-'+ id_subject +'-id" type="hidden" name="subjects-'+ id_subject +'-id">'+
-			'	<input id="id_subjects-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="subjects-'+ id_subject +'-user">'+
-	  		'</div>'+
-	  		'<hr>'
-  		).insertBefore(this);
+	  		'	</td>'+
+	  		'</tr>'
+  		);
   		$('#id_subjects-TOTAL_FORMS').val(parseInt($('#id_subjects-TOTAL_FORMS').val())+1);
   		add_autocomplete('#id_subjects-'+ id_subject +'-subject');
   		id_subject++;

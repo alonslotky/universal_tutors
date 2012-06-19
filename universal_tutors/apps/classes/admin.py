@@ -7,7 +7,7 @@ class ClassAdmin(admin.ModelAdmin):
 admin.site.register(Class, ClassAdmin)
 
 class ClassSubjectAdmin(admin.ModelAdmin):
-    list_display = ('subject',)
+    list_display = ('subject', )
 admin.site.register(ClassSubject, ClassSubjectAdmin)
 
 class ClassLevelAdmin(admin.ModelAdmin):
