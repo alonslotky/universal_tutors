@@ -31,16 +31,16 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal('classes', ['ClassLevel'])
 
-        # Adding model 'EducationalSystemSubject'
-        db.create_table('classes_educationalsystemsubject', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('system', self.gf('django.db.models.fields.related.ForeignKey')(related_name='subjects', to=orm['classes.EducationalSystem'])),
-            ('subject', self.gf('django.db.models.fields.related.ForeignKey')(related_name='educational_systems', to=orm['classes.ClassSubject'])),
+        # Adding M2M table for field systems on 'ClassSubject'
+        db.create_table('classes_classsubject_systems', (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('classsubject', models.ForeignKey(orm['classes.classsubject'], null=False)),
+            ('educationalsystem', models.ForeignKey(orm['classes.educationalsystem'], null=False))
         ))
-        db.send_create_signal('classes', ['EducationalSystemSubject'])
+        db.create_unique('classes_classsubject_systems', ['classsubject_id', 'educationalsystem_id'])
 
-        # Changing field 'Class.subject'
-        db.alter_column('classes_class', 'subject_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['profile.TutorSubject']))
+        # Deleting field 'Class.subject'
+        db.delete_column('classes_class', 'subject_id')
 
 
     def backwards(self, orm):
@@ -54,11 +54,11 @@ class Migration(SchemaMigration):
         # Deleting model 'ClassLevel'
         db.delete_table('classes_classlevel')
 
-        # Deleting model 'EducationalSystemSubject'
-        db.delete_table('classes_educationalsystemsubject')
+        # Removing M2M table for field systems on 'ClassSubject'
+        db.delete_table('classes_classsubject_systems')
 
-        # Changing field 'Class.subject'
-        db.alter_column('classes_class', 'subject_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['classes.ClassSubject']))
+        # User chose to not deal with backwards NULL issues for 'Class.subject'
+        raise RuntimeError("Cannot reverse this migration. 'Class.subject' and its values cannot be restored.")
 
 
     models = {
@@ -77,7 +77,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 15, 13, 4, 40, 831248)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 19, 10, 22, 9, 932898)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -85,7 +85,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 15, 13, 4, 40, 831147)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 19, 10, 22, 9, 932656)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -104,7 +104,6 @@ class Migration(SchemaMigration):
             'scribblar_id': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'student': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'classes_as_student'", 'to': "orm['auth.User']"}),
-            'subject': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'classes'", 'to': "orm['profile.TutorSubject']"}),
             'tutor': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'classes_as_tutor'", 'to': "orm['auth.User']"}),
             'universal_fee': ('django.db.models.fields.FloatField', [], {}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
@@ -118,7 +117,8 @@ class Migration(SchemaMigration):
         'classes.classsubject': {
             'Meta': {'object_name': 'ClassSubject'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '30'})
+            'subject': ('django.db.models.fields.CharField', [], {'max_length': '30'}),
+            'systems': ('django.db.models.fields.related.ManyToManyField', [], {'related_name': "'subjects'", 'symmetrical': 'False', 'to': "orm['classes.EducationalSystem']"})
         },
         'classes.classuserhistory': {
             'Meta': {'object_name': 'ClassUserHistory'},
@@ -139,26 +139,12 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'system': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'countries'", 'to': "orm['classes.EducationalSystem']"})
         },
-        'classes.educationalsystemsubject': {
-            'Meta': {'object_name': 'EducationalSystemSubject'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'subject': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'educational_systems'", 'to': "orm['classes.ClassSubject']"}),
-            'system': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'subjects'", 'to': "orm['classes.EducationalSystem']"})
-        },
         'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
             'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        'profile.tutorsubject': {
-            'Meta': {'object_name': 'TutorSubject'},
-            'credits': ('django.db.models.fields.FloatField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'level': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tutors'", 'to': "orm['classes.ClassLevel']"}),
-            'subject': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'tutors'", 'to': "orm['classes.ClassSubject']"}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'subjects'", 'to': "orm['auth.User']"})
         }
     }
 

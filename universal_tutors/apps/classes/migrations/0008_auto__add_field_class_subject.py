@@ -8,30 +8,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Deleting model 'EducationalSystemSubject'
-        db.delete_table('classes_educationalsystemsubject')
-
-        # Adding M2M table for field systems on 'ClassSubject'
-        db.create_table('classes_classsubject_systems', (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('classsubject', models.ForeignKey(orm['classes.classsubject'], null=False)),
-            ('educationalsystem', models.ForeignKey(orm['classes.educationalsystem'], null=False))
-        ))
-        db.create_unique('classes_classsubject_systems', ['classsubject_id', 'educationalsystem_id'])
+        # Adding field 'Class.subject'
+        db.add_column('classes_class', 'subject', self.gf('django.db.models.fields.related.ForeignKey')(default=1, related_name='classes', to=orm['profile.TutorSubject']), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # Adding model 'EducationalSystemSubject'
-        db.create_table('classes_educationalsystemsubject', (
-            ('system', self.gf('django.db.models.fields.related.ForeignKey')(related_name='subjects', to=orm['classes.EducationalSystem'])),
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('subject', self.gf('django.db.models.fields.related.ForeignKey')(related_name='educational_systems', to=orm['classes.ClassSubject'])),
-        ))
-        db.send_create_signal('classes', ['EducationalSystemSubject'])
-
-        # Removing M2M table for field systems on 'ClassSubject'
-        db.delete_table('classes_classsubject_systems')
+        # Deleting field 'Class.subject'
+        db.delete_column('classes_class', 'subject_id')
 
 
     models = {
@@ -50,7 +34,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 15, 14, 3, 29, 847115)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 19, 10, 22, 23, 867323)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -58,7 +42,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 15, 14, 3, 29, 847010)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2012, 6, 19, 10, 22, 23, 867150)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
