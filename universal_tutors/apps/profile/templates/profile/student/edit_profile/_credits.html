@@ -11,6 +11,8 @@
       </div>
     </div>
     
+    {% if profile.type != profile.TYPES.UNDER16 %}
     <a id="add-credits" class="button" href="javascript:;" data-reveal-id="modal-topup" onclick="topup_account('{% url topup_cart %}');"><span class="icon credits">Top Up Credits</span></a>
+	{% endif %}
     <a class="button" href="{% url history %}"><span class="icon history">View History</span></a>
   </li>

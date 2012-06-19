@@ -25,8 +25,8 @@
           <a href="{% url edit_parent_profile %}#children" class="back">Back to Profile</a>
           {% endif %}
 
-          {% if user_profile.type == user_profile.TYPES.STUDENT or user_profile == user_profile.TYPES.UNDER16 %}
-          <a href="{% url edit_tutor_profile %}#credits" class="back">Back to Profile</a>
+          {% if user_profile.type == user_profile.TYPES.STUDENT or user_profile.type == user_profile.TYPES.UNDER16 %}
+          <a href="{% url edit_student_profile %}#credits" class="back">Back to Profile</a>
           {% endif %}
 
           {% if user_profile.type == user_profile.TYPES.TUTOR %}
