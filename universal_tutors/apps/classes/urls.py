@@ -28,7 +28,13 @@ urlpatterns += patterns('apps.classes.views.ajax',
     url(r'^(?i)check_status/(?P<class_id>\d+)/$', 'check_status', {}, name = "check_status"),
     url(r'^(?i)stop_class/(?P<class_id>\d+)/$', 'stop_class', {}, name = "stop_class"),
     url(r'^(?i)material/(?P<class_id>\d+)/$', 'class_material', {}, name = "class_material"),
-    url(r'^autocomplete/subjects/$', SubjectsAutocomplete.as_view(), name='autocomplete_subjects'),
+    url(r'^(?i)autocomplete/subjects/$', SubjectsAutocomplete.as_view(), name='autocomplete_subjects'),
+    
+    url(r'(?i)system/levels/options/$', 'system_levels_options', name='system_levels_options'),
+    url(r'(?i)system/levels/options/(?P<system_id>\d+)/(?P<all_option>\d+)/$', 'system_levels_options', name='system_levels_options'),
+
+    url(r'(?i)system/subjects/options/$', 'system_subjects_options', name='system_subjects_options'),
+    url(r'(?i)system/subjects/options/(?P<system_id>\d+)/(?P<all_option>\d+)/$', 'system_subjects_options', name='system_subjects_options'),
 )
 
 

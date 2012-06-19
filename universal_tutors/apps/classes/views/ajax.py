@@ -4,7 +4,7 @@ from django import http
 from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
-from apps.classes.models import Class
+from apps.classes.models import *
 from apps.classes.settings import *
 import simplejson, datetime
 
@@ -92,4 +92,38 @@ def class_material(request, class_id):
     }
 
 
+@main_render('classes/fragments/_option_items.html')
+def system_levels_options(request, system_id, all_option):
+    all_option = int(all_option)
+    
+    try:
+        system = EducationalSystem.objects.get(id = system_id)
+        items = system.levels.all()
+    except EducationalSystem.DoesNotExist:
+        items = ClassLevel.objects.all()
+    
+    return {
+        'items': items,
+        'blank': {
+            'value': '',
+            'description': 'Any level' if all_option else '-------',
+        },
+    }
 
+@main_render('classes/fragments/_option_items.html')
+def system_subjects_options(request, system_id, all_option):
+    all_option = int(all_option)
+    
+    try:
+        system = EducationalSystem.objects.get(id = system_id)
+        items = system.subjects.all()
+    except EducationalSystem.DoesNotExist:
+        items = ClassSubject.objects.all()
+    
+    return {
+        'items': items,
+        'blank': {
+            'value': '',
+            'description': 'Any subject' if all_option else '-------',
+        },
+    }
