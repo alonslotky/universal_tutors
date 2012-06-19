@@ -389,30 +389,40 @@ class UserProfile(BaseModel):
         size = 0
         availability_by_time = []
         append = availability_by_time.append
+        user_time = user_begin
+        user_end_period = user_begin
         time = begin
-        user_time = begin
         availability_index = 0
         
         # create empty available array
-        while time < end:
+        while user_time < user_end:
+            end_period = time + datetime.timedelta(minutes=MINIMUM_PERIOD)
             user_end_period = user_time + datetime.timedelta(minutes=MINIMUM_PERIOD)
             append([[user_time.hour, user_time.minute, user_end_period.hour, user_end_period.minute], 0, 0])
-            time += datetime.timedelta(minutes=MINIMUM_PERIOD)
-            user_time = user_end_period
+            user_time += datetime.timedelta(minutes=MINIMUM_PERIOD)
+            time = end_period
             size += 1
-            if now + datetime.timedelta(minutes=20) > user_end_period:
+            if now + datetime.timedelta(minutes=20) > end_period:
                 availability_index = size
 
         # inject total availability on array
         for period in availability:
             if hasattr(period, 'weekday'):
-                begin_time = datetime.datetime.combine(begin.date(), period.begin) + datetime.timedelta(days = 1 if period.weekday != begin.weekday() else 0)
-                end_time = datetime.datetime.combine(begin.date(), period.end) + datetime.timedelta(days = 1 if period.weekday != begin.weekday() else 0)
+                begin_time = datetime.datetime.combine(begin.date(), period.begin) + datetime.timedelta(days=period.weekday-begin.weekday())
+                end_time = datetime.datetime.combine(begin.date(), period.end) + datetime.timedelta(days=period.weekday-begin.weekday())
+
+                if begin_time < begin:
+                    begin_time += datetime.timedelta(days = 7)
+                    end_time += datetime.timedelta(days = 7)
+                if begin_time >= end:
+                    begin_time -= datetime.timedelta(days = 7)
+                    end_time -= datetime.timedelta(days = 7)
                 if end_time <= begin_time:
                     end_time += datetime.timedelta(days=1)
+                    
             else:
-                begin_time = datetime.datetime.combine(period.date, period.begin)
-                end_time = datetime.datetime.combine(period.date, period.end)
+                begin_time = convert_datetime(datetime.datetime.combine(period.date, period.begin), self.timezone, gtz)
+                end_time = convert_datetime(datetime.datetime.combine(period.date, period.end), self.timezone, gtz)
                             
             begin_min = difference_in_minutes(begin_time, begin) 
             end_min = difference_in_minutes(end_time, begin)
