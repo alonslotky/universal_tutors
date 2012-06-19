@@ -23,15 +23,15 @@ def get_edit_period_calendar_size(period):
 
 
 @register.filter
-def get_class_period_calendar_size(class_):
+def get_class_period_calendar_size(begin, duration):
     HOUR_SIZE = 40
     OFFSET = 22
      
     # begin position
-    begin = class_.start.hour * HOUR_SIZE + class_.start.minute * HOUR_SIZE / 60
+    begin = begin.hour * HOUR_SIZE + begin.minute * HOUR_SIZE / 60
 
     # end position
-    end = (class_.end.hour if class_.end.hour > 0 or class_.end.minute > 0 else 24) * HOUR_SIZE + class_.end.minute * HOUR_SIZE / 60
+    end = begin + duration * HOUR_SIZE / 60
     
     # size
     size = end - begin - OFFSET
@@ -120,6 +120,34 @@ def get_messages(person, user):
         'messages': messages,
         'unread': messages.filter(read = False).count(),
      }
+    
+class ClassMessagesNode(template.Node):
+    def __init__(self, bits):
+        self.person = template.Variable(bits[1])
+        self.user = template.Variable(bits[2])
+        self.CLASS = template.Variable(bits[3])
+        
+    def render(self, context):
+        person = self.person.resolve(context)
+        user = self.user.resolve(context)
+        CLASS = self.CLASS.resolve(context)
+
+        messages = person.sent_messages.filter(to=user, related_class=CLASS)
+        sent_messages = user.sent_messages.filter(to=person, related_class=CLASS)
+
+        context['messages'] = messages.count()
+        context['sent_messages'] = sent_messages.count()
+        context['unread_messages'] = messages.filter(read=False).count()
+        return ''        
+    
+@register.tag
+def get_class_messages(parser, token):
+    """
+        gets the number of messages exchanged between 
+        a student and a tutor in a given class
+    """
+    bits = token.split_contents()
+    return ClassMessagesNode(bits)
     
 @register.filter
 def get_week(profile, date):

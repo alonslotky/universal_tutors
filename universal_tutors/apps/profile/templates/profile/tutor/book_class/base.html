@@ -84,28 +84,21 @@
 	    <div>(Please select from a blue period)</div>
     	</div>
     	<div class="row">&nbsp;</div>
-		<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">
-	    	<div class="row">
-	          <div class="eight columns">
-	          	<a href="javascript:;" onclick="prev_week();">&lsaquo; prev week</a>
-	          	<span> | </span>
-	          	<a href="javascript:;" onclick="next_week();">next week &rsaquo;</a>
-	          </div>
-	          <p>&nbsp;</p>
-	    	</div>
-			<div class="scroll-item-container">
-				<ul class="shedule4 scroll-item">
-					{% for hour in 0|range_to:24 %}
-					<li><span class="time">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}:00</span></li>
-					{% endfor %}
-				</ul>
-			</div>
-			
-			<div id="schedule-week-schedule-container">
-				{% include "profile/tutor/book_class/_weekday_calendar.html" %}
-			</div>
-		</div>
+    	<div class="row">
+          <div class="eight columns">
+          	<a href="javascript:;" onclick="prev_week();">&lsaquo; prev week</a>
+          	<span> | </span>
+          	<a href="javascript:;" onclick="next_week();">next week &rsaquo;</a>
+          </div>
+          <p>&nbsp;</p>
+    	</div>
+    	
+		<div id="schedule-week-schedule-container">
+			{% include "profile/tutor/book_class/_weekday_calendar.html" %}
+		</div>    	
   </div>
+  {% include "profile/tutor/book_class/_modal_book_class.html" %}
+  
   <script type="text/javascript">
   	var map_date = new Date();
   

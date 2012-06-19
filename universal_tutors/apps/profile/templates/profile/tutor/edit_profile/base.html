@@ -2,7 +2,7 @@
 
 {% load fb_versions common_tags %}
 
-{% block title %}Private Dashboard{% endblock %}
+{% block title %}Profile{% endblock %}
 {% block body_class %}app tutor{% endblock %}
 
 {% block extra_js %}
@@ -11,7 +11,7 @@
 
 {% block content %}
       <section class="blue feature-box"><div class="inner">
-        <h1>Private Dashboard <span>View and modify your profile details.</span></h1>
+        <h1>Profile <span>View and modify your profile details.</span></h1>
       </div></section>
       
       <div class="hide-on-phones">
@@ -54,5 +54,7 @@
         </ul>
         <div class="button"><input type="submit" class="icon thumb-up" value="Save Profile"></div>
       </form>
+      
       {% include "profile/tutor/edit_profile/fragments/_modal_withdraw.html" %}
+      {% include "profile/tutor/edit_profile/fragments/_modal_add_availability.html" %}
 {% endblock %}

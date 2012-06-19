@@ -1,18 +1,19 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags ut_tags %}
 
 {% block title %}Home{% endblock %}
 {% block body_class %}marketing students{% endblock %}
 
 {% block content %}
+	{% get_video student %}
       <section class="blue feature-box"><div class="inner">
         
-        <h1><span>The Universal Tutors </span>Student Tour</h1>
+        <h1>How it works <span>Student</span></h1>
         
         <div class="feature-black">
           <div class="feature-text">
-            <h3>Some text about generally how amazing this site is, and how it will change lives, etc.</h3>
+            <h3>Universal Tutors is revolutionising the way we learn, helping to give everyone the education they deserve.</h3>
           </div>
         </div>
       
@@ -50,6 +51,8 @@
           </div>
         </div>
       </section>
+      
+      <a class="squeezemein button" href="#" data-reveal-id="modal-video"><span>Get a Tour of the Classroom</span></a>
       
       <section class="blue"><div class="inner">
         <div class="row clear">
@@ -112,4 +115,13 @@
           </div>
         </div>
       </section>
+      
+      {% if video %}
+  		<script>
+  			$("a[data-reveal-id=modal-video]").click(function() {
+  				$("div#modal-video iframe").removeClass("hidden");
+  			})
+  		</script>
+  		{% include "core/fragments/_modal_video.html" %}
+	{% endif %}
 {% endblock %}

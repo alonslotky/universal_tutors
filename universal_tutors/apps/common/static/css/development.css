@@ -1,6 +1,8 @@
 :focus { border: none; outline: none; }
 .hidden { display: none; }
 
+body.classroom .container { height: 100%; }
+
 .auto-width { width: auto !important; max-width: none !important; }
 
 .sign-in { height: auto; }
@@ -48,7 +50,7 @@ label.margin-top { margin: 5px 0 0 0; }
 
 h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 
-.main.scribblar-container { padding: 0; margin 0; height: 90%; }
+.main.scribblar-container { padding: 0; margin 0; height: 95%; }
 .main.scribblar-container object { height: 90%; }
 
 .tutor-qualifications-list li { margin: 0; }
@@ -57,9 +59,6 @@ h1.left-align, h2.left-align, h3.left-align { text-align: left; }
 
 .modal-loading { height: 200px; background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; }
 .message .messages .inside.loading { background: url('../images/icons/messages-ajaxloader.gif') no-repeat center 60px; }
-.tabs-content li#availabilityTab { min-width: 1040px; }
-<<<<<<< HEAD
-=======
 
 ul.errorlist li { color: red; }
 
@@ -69,5 +68,3 @@ ul.errorlist li { color: red; }
 	position: absolute; top: 0; left: 0; padding: 3px 0; width: 100%; z-index: 2; 
 	font-size: 12px; line-height: 14px; height: 14px; color: #fff; text-align: center;
 }
-
->>>>>>> 8982b4bb1c642046fa3d250fd5c1042e626a75fd

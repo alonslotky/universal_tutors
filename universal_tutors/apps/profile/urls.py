@@ -44,6 +44,7 @@ urlpatterns += patterns('apps.profile.views.main',
 urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)edit_week_period/$', 'edit_week_period', {}, name = "user_edit_week_period"),
     url(r'^(?i)edit_week_period/(?P<period_id>\d+)/(?P<begin>[\d\-]+)/(?P<end>[\d\-]+)/(?P<weekday>\d)/$', 'edit_week_period', {}, name = "user_edit_week_period"),
+    url(r'^(?i)delete_week_period/$', 'delete_week_period', {}, name = "user_delete_week_period"),
     url(r'^(?i)delete_week_period/(?P<period_id>\d+)/$', 'delete_week_period', {}, name = "user_delete_week_period"),
     url(r'^(?i)view_week_period/$', 'view_week_period', {}, name = "user_edit_view_week_period"),
 
@@ -58,10 +59,15 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)tutor/favorite/$', 'favorite', {}, name = "favorite"),
     url(r'^(?i)tutor/favorite/(?P<person_id>\d+)/$', 'favorite', {}, name = "favorite"),
 
-    url(r'^(?i)confirm-book-class/$', 'book_class', {}, name = "confirm_book_class"),
+    url(r'^(?i)tutor/accept_class/$', 'accept_class', {}, name = "tutor_accept_class"),
+    url(r'^(?i)tutor/accept_class/(?P<class_id>\d+)/$', 'accept_class', {}, name = "tutor_accept_class"),
+    url(r'^(?i)tutor/reject_class/$', 'reject_class', {}, name = "tutor_reject_class"),
+
+    url(r'^(?i)confirm-book-class/(?P<tutor_id>\d+)/$', 'book_class', {}, name = "confirm_book_class"),
  
     url(r'^(?i)ajax-book-class/(?P<username>[\w\-\_]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
     url(r'^(?i)ajax-book-class/(?P<username>[\w\-\_]+)/(?P<date>[\d\-]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
+
 )
 
 # Students

@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import pre_delete, post_save, pre_save
 from django.dispatch import receiver
-from django.core.mail import EmailMessage
 from django.contrib.sites.models import Site
 from django.template import loader, Context
 from django.core.urlresolvers import reverse
@@ -21,9 +20,9 @@ from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
-from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time
+from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, convert_datetime, difference_in_minutes
 
-from apps.classes.models import Class, ClassSubject
+from apps.classes.models import Class, ClassSubject, ClassLevel
 from apps.core.models import Currency
 from apps.classes.settings import *
 
@@ -125,6 +124,8 @@ class UserProfile(BaseModel):
         (3, 'INCOME', 'Credits income'),
         (4, 'ACTIVATED', 'Activated account'),
         (5, 'CLASS', 'Class is about to start'),
+        (6, 'ACCEPTED_BY_TUTOR', 'A class has been accepted by tutor'),
+        (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
     ))
     
     def get_upload_to(instance, filename):
@@ -166,7 +167,7 @@ class UserProfile(BaseModel):
     
     crb = models.BooleanField(default=False)
     crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
-    crb_checked = models.BooleanField(default=False)
+    crb_expiry_date = models.DateField(null=True, blank=True)
     
     activated = models.BooleanField(default=False)
     activation_date = models.DateTimeField(null=True, blank=True, default=None)
@@ -181,6 +182,13 @@ class UserProfile(BaseModel):
     paypal_email = models.EmailField(null=True, blank=True)
     
     classes_given = models.PositiveIntegerField(default=0)
+
+    crb_checked = models.BooleanField(default=False)
+
+    @property
+    def crb_checked(self):
+        return self.crb_expiry_date >= datetime.date.today()
+
 
     @property
     def is_over16(self):
@@ -210,7 +218,7 @@ class UserProfile(BaseModel):
     @property
     def total_credits(self):
         return self.credit + self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).aggregate(credits_booked = models.Sum('credit_fee'))['credits_booked']
-        
+    
     def __unicode__(self):
         user = self.user
         if user.first_name:
@@ -301,21 +309,21 @@ class UserProfile(BaseModel):
         data = form.cleaned_data
         user = self.user        
 
-    def check_day(self, date=None):
-        available, list = self.get_day(date)
+    def check_day(self, date=None, gtz=None):
+        available, list = self.get_day(date, gtz=gtz)
         return available
 
-    def get_day(self, date=None):
+    def get_day(self, date=None, gtz=None):
         """
         Get availability from a day
         """        
-        return self.get_period(date)
+        return self.get_period(date, gtz=gtz)
 
-    def check_week(self, date=None, begin=None, end=None):
-        available, list = self.get_day(date, begin, end)
+    def check_week(self, date=None, begin=None, end=None, gtz=None):
+        available, list = self.get_day(date, begin, end, gtz=gtz)
         return available
 
-    def get_week(self, date=None):
+    def get_week(self, date=None, gtz=None):
         """
         Get availability from a week
         """
@@ -332,16 +340,16 @@ class UserProfile(BaseModel):
             if day < today:
                 week_availability.append((day, (False, [])))
             else:
-                week_availability.append((day, get_day(day)))
+                week_availability.append((day, get_day(day, gtz=gtz)))
                         
         return week_availability
         
 
-    def check_period(self, date=None, begin=None, end=None):
-        available, list = self.get_period(date, begin, end)
+    def check_period(self, date=None, begin=None, end=None, gtz=None):
+        available, list = self.get_period(date, begin, end, gtz=gtz)
         return all([slot[1]-slot[2] > 0 for slot in list])
 
-    def get_period(self, date=None, begin=None, end=None):
+    def get_period(self, date=None, begin=None, end=None, gtz=None):
         """
         Get availability from a period of time
         
@@ -349,75 +357,96 @@ class UserProfile(BaseModel):
         all_slots_available - True if all slots on this period are available
         """
         user = self.user
-
-        now = datetime.datetime.now()
-        date = date if date else now.date()
-        begin = begin if begin else datetime.time(0,0)
-        end = end if end else datetime.time(0,0)
+        gtz = gtz or self.timezone
+        
+        date = date if date else datetime.date.today()
+        user_begin = datetime.datetime.combine(date, begin if begin else datetime.time(0,0))
+        user_end = datetime.datetime.combine(date, end if end else datetime.time(0,0))
+        if user_end <= user_begin:
+            user_end += datetime.timedelta(days=1)
+        
+        begin = convert_datetime(user_begin, gtz, self.timezone)
+        end = convert_datetime(user_end, gtz, self.timezone)
+        now = convert_datetime(datetime.datetime.now(), pytz.utc, self.timezone)
+        
         all_slots_available = True
         
         weekday = date.weekday()
         begin_of_week = date - datetime.timedelta(days = weekday)
         
         
-        midnight = datetime.time(0,0)
-
         # select availability from date
-        availability = user.day_availability.filter(date=date)
+        availability = user.day_availability.filter(date__in=[begin.date(), end.date()])
         if not availability:
-
             # select availability from a default week
-            availability = user.week_availability.filter(weekday = weekday)
+            availability = user.week_availability.filter(weekday__in = [begin.weekday(), end.weekday()])
             if not availability:
                 all_slots_available = False
                 
         # select booking from date
-        booking = user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED, date=date)
+        booking = user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.BOOKED,Class.STATUS_TYPES.WAITING], date__in=[begin.date(), end.date()])
 
         size = 0
         availability_by_time = []
         append = availability_by_time.append
-        time = datetime.time(begin.hour, begin.minute)
+        time = begin
+        user_time = user_begin
+        availability_index = 0
         
         # create empty available array
-        while (end==midnight and time!=midnight) or (end!=midnight and time<end) or not size:
-            append([[time.hour, time.minute], 0, 0])
-            time = add_minutes_to_time(time, MINIMUM_PERIOD)
+        while time < end:
+            user_end_period = user_time + datetime.timedelta(minutes=MINIMUM_PERIOD)
+            append([[user_time.hour, user_time.minute, user_end_period.hour, user_end_period.minute], 0, 0])
+            time += datetime.timedelta(minutes=MINIMUM_PERIOD)
+            user_time = user_end_period
             size += 1
+            if now + datetime.timedelta(minutes=20) > user_end_period:
+                availability_index = size
 
         # inject total availability on array
         for period in availability:
-            start_index = (period.begin.hour - begin.hour) * PERIOD_STEPS + ((period.begin.minute - begin.minute) / MINIMUM_PERIOD)
-            if period.end.hour != 0:
-                end_index = (period.end.hour - begin.hour) * PERIOD_STEPS + ((period.end.minute - end.minute) / MINIMUM_PERIOD)
+            if hasattr(period, 'weekday'):
+                begin_time = datetime.datetime.combine(begin.date(), period.begin) + datetime.timedelta(days = 1 if period.weekday != begin.weekday() else 0)
+                end_time = datetime.datetime.combine(begin.date(), period.end) + datetime.timedelta(days = 1 if period.weekday != begin.weekday() else 0)
+                if end_time <= begin_time:
+                    end_time += datetime.timedelta(days=1)
             else:
-                end_index = size
+                begin_time = datetime.datetime.combine(period.date, period.begin)
+                end_time = datetime.datetime.combine(period.date, period.end)
+                            
+            begin_min = difference_in_minutes(begin_time, begin) 
+            end_min = difference_in_minutes(end_time, begin)
+
+            begin_index = begin_min / MINIMUM_PERIOD
+            end_index = end_min / MINIMUM_PERIOD
 
             # cut index outside the array
-            if start_index < 0:     start_index = 0
-            if start_index > size:  start_index = size
+            if begin_index < 0:     begin_index = 0
+            if begin_index > size:  begin_index = size
             if end_index < 0:       end_index = 0
             if end_index > size:    end_index = size
             
-            for index in xrange(start_index, end_index):
-                availability_by_time[index][1] = 0 if hasattr(period, 'day_off') and period.dayoff else 1
-                
+            for index in xrange(begin_index, end_index):
+                availability_by_time[index][1] = 1 if index >= availability_index else 0 
 
         # inject booking on array
         for item in booking:
-            start_index = (item.start.hour - begin.hour) * PERIOD_STEPS + ((item.start.minute - begin.minute) / MINIMUM_PERIOD)
-            if item.end.hour != 0:
-                end_index = (item.end.hour - begin.hour) * PERIOD_STEPS + ((item.end.minute - end.minute) / MINIMUM_PERIOD)
-            else:
-                end_index = size
+            # From UTC to profile timezone
+            begin_time = convert_datetime(item.date, pytz.utc, self.timezone)
+
+            begin_min = difference_in_minutes(item.date, begin) 
+            end_min = begin_min + item.duration
+
+            begin_index = begin_min / MINIMUM_PERIOD
+            end_index = end_min / MINIMUM_PERIOD
             
             # cut index outside the array
-            if start_index < 0:     start_index = 0
-            if start_index > size:  start_index = size
+            if begin_index < 0:     begin_index = 0
+            if begin_index > size:  begin_index = size
             if end_index < 0:       end_index = 0
             if end_index > size:    end_index = size
 
-            for index in xrange(start_index, end_index):
+            for index in xrange(begin_index, end_index):
                 availability_by_time[index][2] = 1
                 if availability_by_time[index][1] <= availability_by_time[index][2]:
                     all_slots_available = False
@@ -437,15 +466,20 @@ class UserProfile(BaseModel):
         user = self.user
         today = datetime.date.today()
         date = date if date else datetime.date.today()
-        start_date = date - datetime.timedelta(days=date.weekday())
-        end_date = date + datetime.timedelta(days=7)
-                
-        booked = Class.objects.filter(Q(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE], date__gte=start_date, date__lte=end_date), Q(tutor=user) | Q(student=user))
-        week = [(start_date+datetime.timedelta(days=weekday), weekday, []) for weekday in range(7)]
+
+        user_begin = datetime.datetime.combine(date, datetime.time(0,0)) - datetime.timedelta(days=date.weekday()) 
+        user_end = user_begin + datetime.timedelta(days=7)
+        
+        begin = convert_datetime(user_begin, self.timezone, pytz.utc)
+        end = convert_datetime(user_end, self.timezone, pytz.utc)
+
+        booked = Class.objects.filter(Q(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE], date__gte=begin, date__lt=end), Q(tutor=user) | Q(student=user))
+        week = [(user_begin+datetime.timedelta(days=weekday), weekday, []) for weekday in range(7)]
 
         for b in booked:
-            week[b.date.weekday()][2].append(b)
-    
+            date = convert_datetime(b.date, pytz.utc, self.timezone)
+            week[b.date.weekday()][2].append((date, b))
+            
         return week
         
 
@@ -492,15 +526,15 @@ class UserProfile(BaseModel):
         return self.user.classes_as_tutor.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 
     def get_classes_as_student(self):
-        classes = list(self.get_current_classes_as_tutor())
-        classes.extend(list(self.get_past_classes_as_tutor()))
+        classes = list(self.get_current_classes_as_student())
+        classes.extend(list(self.get_past_classes_as_student()))
         return classes
     
-    def get_current_classes_as_tutor(self):
+    def get_current_classes_as_student(self):
         from apps.classes.models import Class
         return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED)
     
-    def get_past_classes_as_tutor(self):
+    def get_past_classes_as_student(self):
         from apps.classes.models import Class
         return self.user.classes_as_student.exclude(Q(status=Class.STATUS_TYPES.BOOKED)|Q(status=Class.STATUS_TYPES.PRE_BOOKED)).order_by('-created')
 
@@ -513,7 +547,18 @@ class UserProfile(BaseModel):
         time = now.time()
         
         try:
-            return Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED), Q(tutor=user) | Q(student=user)).filter(Q(date__gt=today) | Q(date=today, end__gte=time))[0]
+            return Class.objects.raw(
+                    """
+                    SELECT *
+                    FROM classes_class
+                    WHERE status = %(booked)s AND (tutor_id = %(tutor_id)s OR student_id = %(student_id)s)
+                      AND date + (duration || ' minutes')::interval >= CURRENT_TIMESTAMP
+                    ORDER BY date ASC
+                    """ % {
+                        'booked': Class.STATUS_TYPES.BOOKED,
+                        'tutor_id': user.id,
+                        'student_id': user.id,
+                    })[0]
         except IndexError:
             return 0
 
@@ -528,6 +573,12 @@ class UserProfile(BaseModel):
         if type == self.NOTIFICATIONS_TYPES.BOOKED:
             subject = 'A new class has been booked'
             html = render_to_string('emails/booked.html', context)
+        if type == self.NOTIFICATIONS_TYPES.ACCEPTED_BY_TUTOR:
+            subject = 'Your class has been accepted'
+            html = render_to_string('emails/accepted.html', context)
+        if type == self.NOTIFICATIONS_TYPES.REJECTED_BY_TUTOR:
+            subject = 'Your class has been rejected'
+            html = render_to_string('emails/rejected.html', context)
         if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_TUTOR:
             subject = 'Class canceled by tutor'
             html = render_to_string('emails/canceled_by_tutor.html', context)
@@ -559,13 +610,17 @@ class UserProfile(BaseModel):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
             self.credit += credits
             super(self.__class__, self).save()
-            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits)
+            currency = self.currency
+            value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits, value=value)
 
     def withdraw_account(self, credits):
         if self.type == self.TYPES.TUTOR:
             self.income -= credits
             super(self.__class__, self).save()
-            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.WITHDRAW, credits=credits)
+            currency = self.currency
+            value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.WITHDRAW, credits=credits, value=value)
 
 
     def get_completeness(self):
@@ -623,6 +678,25 @@ class UserProfile(BaseModel):
                 'receivers': receivers,
             })
 
+    def waiting_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.WAITING).order_by('date')
+        else:
+            return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.WAITING).order_by('date')           
+
+    def booked_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.BOOKED).order_by('date')
+        else:
+            return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).order_by('date')         
+
+    def other_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.exclude(status__in=[Class.STATUS_TYPES.PRE_BOOKED, Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('-date')
+        else:
+            return self.user.classes_as_student.exclude(status__in=[Class.STATUS_TYPES.PRE_BOOKED, Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('-date')
+
+
 class UserCreditMovement(BaseModel):
     class Meta:
         ordering = ('-created',)
@@ -634,12 +708,15 @@ class UserCreditMovement(BaseModel):
         (3, 'CANCELED_BY_STUDENT', 'Class canceled by student (Refund)'),
         (4, 'STOPPED_BY_STUDENT', 'Stopped by student (Refund)'),
         (5, 'TOPUP', 'Top-up account'),
-        (6, 'WITHDRAW', 'Withdraw to PayPal Account')
+        (6, 'WITHDRAW', 'Withdraw to PayPal Account'),
+        (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor (Refund)'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')
     type = models.PositiveSmallIntegerField(choices = MOVEMENTS_TYPES.get_choices())
     credits = models.FloatField()
+    value = models.CharField(max_length=15, null=True, blank=True)
+    related_class = models.ForeignKey(Class, null=True, blank=True)
 
     def __unicode__(self):
         return '%s: %s' % (self.get_type_display(), self.credits)
@@ -767,10 +844,11 @@ class WithdrawItem(BaseModel):
 class TutorSubject(models.Model):
     user = models.ForeignKey(User, related_name='subjects')
     subject = models.ForeignKey(ClassSubject, related_name='tutors')
+    level = models.ForeignKey(ClassLevel, related_name='tutors')
     credits = models.FloatField()
     
     def save(self, *args, **kwargs):
-        if not TutorSubject.objects.filter(user=self.user, subject=self.subject).exclude(id=self.id):
+        if not TutorSubject.objects.filter(user=self.user, subject=self.subject, level=self.level).exclude(id=self.id):
             super(self.__class__, self).save(*args, **kwargs)
             user = self.user
             profile = user.profile 
@@ -780,7 +858,7 @@ class TutorSubject(models.Model):
             profile.save()
     
     def __unicode__(self):
-        return '%s' % self.subject
+        return '%s (%s)' % (self.subject, self.level)
 
 
 class TutorQualification(models.Model):
@@ -960,8 +1038,7 @@ class Report(BaseModel):
     
             if subject and html:
                 sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-                # to = [settings.CONTACT_EMAIL]
-                to = ['vitor@rawjam.co.uk']
+                to = [settings.CONTACT_EMAIL]
                         
                 email_message = EmailMessage(subject, html, sender, to)
                 email_message.content_subtype = 'html'
@@ -1163,7 +1240,7 @@ def paypal_error(type='topup_invalid', email=None):
         html = 'An error occurred during a payment (withdraw) from email <%s>. Please check if email is from a valid PayPal account.' % email
     
     sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-    to = [settings.DEFAULT_FROM_EMAIL]
+    to = [settings.CONTACT_EMAIL]
             
     email_message = EmailMessage(subject, html, sender, to)
     email_message.content_subtype = 'html'

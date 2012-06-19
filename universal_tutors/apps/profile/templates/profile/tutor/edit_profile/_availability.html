@@ -1,8 +1,43 @@
   <li id="availabilityTab">
     <h2 class="clear">Availability</h2>
 
-	<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">
-		{% include "profile/tutor/edit_profile/availability/default_weekday_calendar.html" %}
+	{% with profile.get_default_week as default_week %}
+	<div style="min-width: 960px;" class="hide-on-phones">
+		<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">
+			{% include "profile/tutor/edit_profile/availability/default_weekday_calendar.html" %}
+		</div>
+		<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a>
 	</div>
 
+	<div class="show-on-phones">
+		<div class="list-week">
+			{% for day, weekday, periods in default_week %}
+				<div class="list-week-day">{{day}}</div>
+				{% for period in periods %}
+					<div id="list-week-availability-item-{{period.id}}" class="list-week-item">
+						<div class="text">from {{period.begin|time:"H:i"}} to {{period.end|time:"H:i"}}</div>
+						<div class="actions">
+							<a id="availability-delete-{{period.id}}" href="javascript:;" onclick="delete_list_availability_item({{period.id}});">delete</a>
+						</div>
+					</div>
+				{% endfor %}
+				<div class="list-week-item">
+					<div class="actions">
+						<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear({{weekday}});">+ add availability</a>
+					</div>
+				</div>
+			{% endfor %}		
+		</div>
+	</div>
+	<script type="text/javascript">
+		var delete_list_availability_item = function(id) {
+			$('#schedule-week-period-dropbox-'+ id).remove();
+			$('#schedule-week-period_'+ id).remove();
+			$('#list-week-availability-item-'+ id).fadeOut(function(){
+				$(this).remove();
+			});
+			$.get('{% url user_delete_week_period %}'+ id +'/');
+		}
+	</script>
+	{% endwith %}
   </li>

@@ -1,4 +1,4 @@
-import datetime
+import datetime, pytz
 
 def first_day_of_week(date):
     return date - datetime.timedelta(days=date.weekday())
@@ -98,3 +98,26 @@ def minutes_to_time(minutes, format='%sh %sm'):
     minutes = minutes % 60
     
     return format % (hour, minutes)
+
+def convert_datetime(dt, tz_from, tz_to):
+    try:
+        tz_from = pytz.timezone(tz_from)
+    except:
+        pass
+
+    try:
+        tz_to = pytz.timezone(tz_to)
+    except:
+        pass
+    
+    return dt + (dt.replace(tzinfo=tz_from) - dt.replace(tzinfo=tz_to))
+
+def difference_in_minutes(d1, d2):
+    tdays = d1 - d2 
+    min, sec = divmod(tdays.days*86400 + tdays.seconds, 60)
+    return min
+
+def difference_in_seconds(d1, d2):
+    tdays = d1 - d2 
+    min, sec = divmod(tdays.days*86400 + tdays.seconds, 60)
+    return min*60 + sec

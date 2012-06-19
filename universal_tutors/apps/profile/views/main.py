@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.contrib import messages
 from django.conf import settings
 from django.db.models import Max
+from itertools import chain
 
 from allauth.facebook.models import FacebookAccount
 from allauth.twitter.models import TwitterAccount
@@ -58,7 +59,9 @@ def profile(request, username=None):
         'profile': profile,
         'TEMPLATE': template,
         'parent': parent,
-        'reviews': reviews
+        'reviews': reviews,
+        'user': user,
+        'can_send_message': can_send_message
     }
 
 
@@ -188,8 +191,16 @@ def tutor_classes(request):
     user = request.user
     profile = user.profile
 
+    classes = chain(
+        profile.waiting_classes(),
+        profile.booked_classes(),
+        profile.other_classes(),
+    )
+    
     return {
-        'profile':profile,
+        'profile': profile,
+        'person': user,
+        'classes': classes
     }
 
 
@@ -265,9 +276,16 @@ def student_classes(request, username=None):
 
     profile = person.profile
 
+    classes = chain(
+        profile.booked_classes(),
+        profile.waiting_classes(),
+        profile.other_classes(),
+    )
+    
     return {
-        'person': person,
-        'profile':profile,
+        'profile': profile,
+        'person': user,
+        'classes': classes
     }
 
 
@@ -310,8 +328,8 @@ def tutors(request):
     tutor_groups = []
 
     favorite_and_used = User.objects.select_related().filter(profile__favorite=user, classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).distinct()
-    favorite = User.objects.select_related().exclude(profile__favorite=user, classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).filter(profile__favorite=user).distinct()
-    used = User.objects.select_related().exclude(profile__favorite=user, classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).filter(classes_as_tutor__student=user, classes_as_tutor__status = Class.STATUS_TYPES.DONE).distinct()
+    favorite = User.objects.select_related().filter(profile__favorite=user).distinct()
+    used = User.objects.select_related().filter(classes_as_tutor__student=user, classes_as_tutor__status__in = [Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.DONE]).distinct()
 
     if favorite_and_used:
         tutor_groups.append({
@@ -332,7 +350,8 @@ def tutors(request):
         })
 
     return {
-        'tutor_groups': tutor_groups
+        'tutor_groups': tutor_groups,
+        'user': user
     }
 
 
@@ -368,12 +387,13 @@ def book_class(request, username):
     view my recent activity
     """
     user = request.user
-    tutor = get_object_or_404(User, username = username)
+    tutor = get_object_or_404(User, username = username, profile__type = UserProfile.TYPES.TUTOR)
     
     return {
         'person': tutor,
         'profile': tutor.profile,
         'date': datetime.date.today(),
+        'week': tutor.profile.get_week(gtz = (user.profile.timezone or pytz.utc)),
     }
     
     

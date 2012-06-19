@@ -35,6 +35,7 @@ def home(request):
 
 @main_render(template='core/search.html')
 def search(request):
+    user = request.user
     tutors = None
     
     subjects = set()
@@ -100,6 +101,6 @@ def search(request):
     return { 
         'subjects': sorted(subjects),
         'levels': sorted(levels),
-        
+        'user': user,
         'tutors': tutors.distinct(),
     }

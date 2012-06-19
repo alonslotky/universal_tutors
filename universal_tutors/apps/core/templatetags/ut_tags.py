@@ -29,13 +29,21 @@ def is_today(date):
     
 
 class TutorVideoNode(template.Node):
+    
+    def __init__(self, type):
+        if type == 'student':
+            self.type = Video.VIDEO_TYPES.STUDENTGUIDE
+        elif type == 'tutor':
+            self.type = Video.VIDEO_TYPES.TUTORGUIDE
+    
     def render(self, context):
         try:
-            context['video'] = Video.objects.filter(active=True, type=Video.VIDEO_TYPES.TUTORGUIDE).latest('id')
+            context['video'] = Video.objects.filter(active=True, type=self.type).latest('id')
         except Video.DoesNotExist:
             context['video'] = None
         return ''
              
 @register.tag
-def get_tutor_video(parser, token):
-    return TutorVideoNode()
+def get_video(parser, token):
+    bits = token.split_contents()
+    return TutorVideoNode(bits[1])

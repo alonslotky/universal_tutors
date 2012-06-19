@@ -422,22 +422,18 @@
 	width:717px;
 	position:relative;
 }
-.week-number2,
 .week-number{
 	position:absolute;
-	top:-3px;
-	left:-15px;
-	background: #7493AE;
-	color: #ffffff;
-	font:30px/34px Arial,Helvetica,sans-serif;
-	height:54px;
-	padding-top:19px;
-	text-align:center;
-	width:64px;
-}
-.week-number2{
-	background-position:0 -415px;
-	color:#9e9d9d;
+	top: 0;
+	left: 0;
+	color: #96B5CF;
+	text-shadow: -1px -1px #aaaaaa;
+	width: 960px;
+	height: 71px;
+	font-size: 40px;
+	line-height: 71px;
+	vertical-align: middle;
+	text-align: center; 
 }
 .place-box{
 	float:left;
@@ -685,7 +681,7 @@
 }
 .shedule-box4{
 	position:relative;
-	margin-left: 80px; 
+	width: 960px;
 }
 .shedule-box4:after{
 	display:block;
@@ -721,11 +717,6 @@
 	margin-bottom:11px;
 }
 .shedule-row-style02{margin-bottom:0;}
-.shedule-row .week-number{
-	left:-64px;
-	top: 0px;
-	font-size:21px;
-}
 .shedule5{
 	position:relative;
 	background: #F9F9F9 url(../images/availability/bg-shedule4.gif) -3px 0;
@@ -737,19 +728,19 @@
 .drop{
 	float:right;
 	position:relative;
-	z-index:100;
+	z-index:2;
 	width:37px;
 	margin:-2px -10px 0 0;
 }
 .drop-link{
 	display:block;
 	position:relative;
-	z-index:10;
 	overflow:hidden;
 	height:18px;
 	font-weight: bold;
 	color: #fff;
 	text-align: center;
+	z-index: 3;
 }
 .drop.open .drop-link{ background: #fff; color: #78AA1A; }
 .drop-box{
@@ -814,12 +805,7 @@
 	position:relative;
 	height:71px;
 	text-align:center;
-}
-.rest-day-box .week-number{
-	left: -64px;
-	top: 0px;
-	font-size: 21px;
-	background: #d0c8bb;
+	width: 960px;
 }
 .txt2{
 	display:block;
@@ -958,3 +944,11 @@
 	border-bottom: none;
 	text-decoration: none;
 }
+
+
+.list-week { overflow: auto; }
+.list-week-day { padding: 5px 10px; background: #7493ae; color: #fff; margin-bottom: 1px; }
+.list-week-item { padding: 3px 10px; background: #eee; overflow: auto; margin-bottom: 1px; }
+.list-week-item .actions { float: right; }
+.list-week-item .text { float: left; }
+

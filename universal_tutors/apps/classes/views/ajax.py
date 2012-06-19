@@ -21,11 +21,10 @@ def check_status(request, class_id):
     if class_.tutor != user and class_.student != user:
         raise http.Http404()
 
-    start_class = datetime.datetime.combine(class_.date, class_.start)
-    end_class = datetime.datetime.combine(class_.date, class_.end)
-    minutes = (end_class - start_class).seconds / 60.0
+    start_class = class_.date
+    end_class = class_.date + datetime.timedelta(minutes=class_.duration)
     
-    alert_time = 5 if minutes < 60 else 10 
+    alert_time = 5 if class_.duration < 60 else 10 
     start_alert = start_class + datetime.timedelta(minutes=alert_time)
         
     now = datetime.datetime.now()
@@ -54,11 +53,10 @@ def stop_class(request, class_id):
     if class_.student != user:
         raise http.Http404()
 
-    start_class = datetime.datetime.combine(class_.date, class_.start)
-    end_class = datetime.datetime.combine(class_.date, class_.end)
-    minutes = (end_class - start_class).seconds / 60.0
+    start_class = class_.date
+    end_class = class_.date + datetime.timedelta(minutes=class_.duration)
     
-    alert_time = 5 if minutes < 60 else 10 
+    alert_time = 5 if class_.duration < 60 else 10 
     start_alert = start_class + datetime.timedelta(minutes=alert_time)
         
     now = datetime.datetime.now()

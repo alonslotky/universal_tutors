@@ -19,23 +19,61 @@ from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.geo import geocode_location
 from apps.common.utils.model_utils import get_namedtuple_choices
-from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time
+from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, difference_in_seconds
 from apps.classes.settings import *
+
+
+class EducationalSystem(models.Model):
+    """
+    A system education
+    """
+    class Meta:
+        verbose_name = 'Educational system'
+        verbose_name_plural = 'Educational systems'
+
+    system = models.CharField(max_length = 30)
+
+    def __unicode__(self):
+        return self.system
+
+class EducationalSystemCountry(models.Model):
+    system = models.ForeignKey(EducationalSystem, related_name='countries')
+    country = CountryField()
+    
+    def __unicode__(self):
+        return self.get_country_display()
+
+
+class ClassLevel(models.Model):
+    """
+    A class type
+    """
+    class Meta:
+        verbose_name = 'Level'
+        verbose_name_plural = 'Levels'
+    
+    system = models.ForeignKey(EducationalSystem, related_name='levels')
+    level = models.CharField(max_length = 30)
+    
+    def __unicode__(self):
+        return self.level
+
 
 class ClassSubject(models.Model):
     """
     A class type
     """
     class Meta:
-        verbose_name_plural = 'Subject'
+        verbose_name = 'Subject'
         verbose_name_plural = 'Subjects'
     
     subject = models.CharField(max_length = 30)
+    systems = models.ManyToManyField(EducationalSystem, related_name='subjects')
     
     def __unicode__(self):
         return self.subject
-    
-    
+
+
 class ClassError(Exception): pass
 class Class(BaseModel):
     """
@@ -43,16 +81,18 @@ class Class(BaseModel):
     """
     class Meta:
         verbose_name_plural = 'Classes'
-        ordering = ('status', 'date', 'start')
+        ordering = ('status', 'date')
 
     STATUS_TYPES = get_namedtuple_choices('STATUS_TYPES', (
         (0, 'PRE_BOOKED', 'Pre-booked'),
         (1, 'BOOKED', 'BOOKED'),
-        (2, 'DONE', 'Done'),
+        (2, 'DONE', 'Completed'),
         (3, 'CANCELED_BY_STUDENT', 'Canceled by the student'),
         (4, 'CANCELED_BY_TUTOR', 'Canceled by the tutor'),
         (5, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),
         (6, 'STOPPED_BY_STUDENT', 'Stopped by the student'),
+        (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor'),
+        (9, 'WAITING', 'Waiting for approve'),
     ))
     
     RESPONSE_TYPES = get_namedtuple_choices('STATUS_TYPES', (
@@ -65,10 +105,9 @@ class Class(BaseModel):
     
     tutor = models.ForeignKey(User, related_name='classes_as_tutor')
     student = models.ForeignKey(User, related_name='classes_as_student')
-    subject = models.ForeignKey(ClassSubject, related_name='classes')
-    date = models.DateField()
-    start = models.TimeField()
-    end = models.TimeField()
+    subject = models.ForeignKey('profile.TutorSubject', related_name='classes')
+    date = models.DateTimeField()
+    duration = models.PositiveSmallIntegerField()
     credit_fee = models.FloatField()
     earning_fee = models.FloatField()
     universal_fee = models.FloatField()
@@ -77,19 +116,30 @@ class Class(BaseModel):
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
     alert_sent = models.BooleanField(False)
+
+    @property
+    def end_date(self):
+        return self.date + datetime.timedelta(minutes=self.duration)
+    
+    def get_minutes_to_start(self):
+        now = datetime.datetime.now()
+        return difference_in_seconds(self.date, now) if self.date > now else -difference_in_seconds(now, self.date)
+    
+    def get_minutes_to_end(self):
+        now = datetime.datetime.now()
+        end = self.date + datetime.timedelta(minutes=self.duration)
+        return difference_in_seconds(end, now) if self.date > now else -difference_in_seconds(now, end)
     
     def get_updated_credit_fee(self, commit=True):
         tutor = self.tutor
         tutor_profile = tutor.profile
-        tutor_subject = tutor.subjects.filter(subject=self.subject)
-        is_new = not self.id
+        tutor_subject = tutor.subjects.get(id=self.subject.id)
         
-        if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
-            self.credit_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
-            self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
-            self.universal_fee = self.credit_fee * UNIVERSAL_FEE
-            if commit:
-                super(self.__class__, self).save(*args, **kwargs)
+        self.credit_fee = tutor_subject.credits * (self.duration / 60.0)
+        self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
+        self.universal_fee = self.credit_fee * UNIVERSAL_FEE
+        if commit:
+            super(self.__class__, self).save(*args, **kwargs)
 
         return self.credit_fee
     
@@ -97,12 +147,12 @@ class Class(BaseModel):
     def save(self, *args, **kwargs):
         tutor = self.tutor
         tutor_profile = tutor.profile
-        tutor_subject = tutor.subjects.filter(subject=self.subject)
+        tutor_subject = tutor.subjects.get(id=self.subject.id)
         is_new = not self.id
         
         if is_new:
-            if tutor_subject and tutor_profile.check_period(self.date, self.start, self.end):
-                self.credit_fee = tutor_subject[0].credits * (minutes_difference(self.end, self.start) / 60.0)
+            if tutor_subject and tutor_profile.check_period(self.date, self.date.time(), (self.date + datetime.timedelta(minutes=self.duration)).time(), gtz=pytz.utc):
+                self.credit_fee = tutor_subject.credits * (self.duration / 60.0)
                 self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
                 self.universal_fee = self.credit_fee * UNIVERSAL_FEE
     
@@ -174,7 +224,7 @@ class Class(BaseModel):
             student_profile = student.profile
             student_profile.credit += self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_TUTOR, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_TUTOR, credits=self.credit_fee, related_class=self)
             student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CANCELED_BY_TUTOR, {
                 'class': self,
                 'student': student,
@@ -192,7 +242,7 @@ class Class(BaseModel):
             student_profile = student.profile
             student_profile.credit += self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.STOPPED_BY_STUDENT, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.STOPPED_BY_STUDENT, credits=self.credit_fee, related_class=self)
 
     def canceled_by_student(self, reason):
         if self.status == self.STATUS_TYPES.BOOKED:
@@ -206,7 +256,7 @@ class Class(BaseModel):
             student_profile = student.profile
             student_profile.credit += self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_STUDENT, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_STUDENT, credits=self.credit_fee, related_class=self)
             tutor = self.tutor
             tutor_profile = tutor.profile
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count()
@@ -256,7 +306,7 @@ class Class(BaseModel):
             tutor_profile.income += self.earning_fee if not with_referral else self.credit_fee
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count() 
             tutor_profile.save()
-            tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee)
+            tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee, related_class=self)
             tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.INCOME, {
                 'class': self,
                 'student': self.student,
@@ -284,15 +334,52 @@ class Class(BaseModel):
         student = self.student
         student_profile = student.profile
         if self.status == self.STATUS_TYPES.PRE_BOOKED and student_profile.credit >= self.credit_fee:
-            self.status = self.STATUS_TYPES.BOOKED
+            self.status = self.STATUS_TYPES.WAITING
             super(self.__class__, self).save()
             self.create_scribblar_class()
             
             from apps.profile.models import UserCreditMovement
             student_profile.credit -= self.credit_fee
             student_profile.save()
-            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.PAYMENT, credits=self.credit_fee)
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.PAYMENT, credits=self.credit_fee, related_class=self)
             tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.BOOKED, {
+                'class': self,
+                'student': student,
+                'tutor': tutor,
+            })
+    
+    
+    def accept(self):
+        if self.status == self.STATUS_TYPES.WAITING:
+            tutor = self.tutor
+            student = self.student
+            student_profile = student.profile
+            self.status = self.STATUS_TYPES.BOOKED
+            super(self.__class__, self).save()
+
+            student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.ACCEPTED_BY_TUTOR, {
+                'class': self,
+                'student': student,
+                'tutor': tutor,
+            })
+
+    
+    def reject(self, reason):
+        if self.status == self.STATUS_TYPES.WAITING:
+            tutor = self.tutor
+            student = self.student
+            student_profile = student.profile
+            self.status = self.STATUS_TYPES.REJECTED_BY_TUTOR
+            self.cancelation_reason = reason
+            super(self.__class__, self).save()
+
+            from apps.profile.models import UserCreditMovement
+            student = self.student
+            student_profile = student.profile
+            student_profile.credit += self.credit_fee
+            student_profile.save()
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.REJECTED_BY_TUTOR, credits=self.credit_fee, related_class=self)
+            student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.REJECTED_BY_TUTOR, {
                 'class': self,
                 'student': student,
                 'tutor': tutor,

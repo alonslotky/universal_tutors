@@ -1,40 +1,55 @@
 <script type="text/javascript">
-	var index = 0;
-	var availability = {{availability.1}};
-	var size = availability.length;
-	while (index < size) {
-		if (availability[index][1] - availability[index][2] > 0) {
-			var begin = availability[index][0];
-			var end = null;
-			while (index < size && availability[index][1]-availability[index][2] > 0 ) {
-				end = availability[index][0];
+	$(window).ready(function(){
+		var index = 0;
+		var availability = {{availability.1}};
+		var size = availability.length;
+		while (index < size) {
+			if (availability[index][1] - availability[index][2] > 0) {
+				var begin = availability[index][0];
+				var end = null;
+				while (index < size && availability[index][1]-availability[index][2] > 0 ) {
+					end = availability[index][0];
+					index++;
+				}
+				
+				var HOUR_SIZE = 40; /* width of a hour in CSS */
+				var OFFSET = 22; /* width of the bar offset */
+				var begin_point = parseInt(begin[0] * HOUR_SIZE + begin[1] * HOUR_SIZE / 60);
+				var end_point = parseInt((end[2]>0 || end[3]>0 ? end[2] : 24) * HOUR_SIZE + end[3] * HOUR_SIZE / 60);
+				var width = end_point - begin_point - OFFSET;
+				
+				var begin_hour = begin[0];
+				var begin_min = begin[1] < 10 ? '0'+ begin[1] : begin[1];
+				var end_hour = end[2];
+				var end_min =  end[3] < 10 ? '0'+ end[3] : end[3];
+				$('#schedule-week-{{day.weekday}}-periods-container').append(
+					'<a id="schedule-week-{{day.weekday}}-period-'+ begin_point +'"'+
+					' 		style="top:27px;left:'+ begin_point +'px;width:'+ width +'px;"'+
+					'       data-reveal-id="modal-book-class"'+
+					'		class="slider-box"'+
+					'		title="Available from '+begin_hour+':'+begin_min+' to '+end_hour+':'+end_min+'"'+
+					' 		onclick="set_booking_selection({{day.year}},{{day.month|add:-1}},{{day.day}},'+begin_hour+','+begin_min+','+end_hour+','+end_min+');">'+
+					'</a>'
+				);
+				$('#list-week-day-{{day.weekday}}-empty').remove();
+				$('#list-week-day-{{day.weekday}}-list').append(
+					'<div class="list-week-item">'+
+					'	<div class="text">Available from '+begin_hour+':'+begin_min+' to '+end_hour+':'+end_min+'</div>'+
+					'	<div class="actions"><a href="javascript:;" data-reveal-id="modal-book-class" onclick="set_booking_selection({{day.year}},{{day.month|add:-1}},{{day.day}},'+begin_hour+','+begin_min+','+end_hour+','+end_min+');">book</a></div>'+
+					'</div>'
+				);
+				$('#schedule-week-{{day.weekday}}-period-'+ begin_point).mouseenter(function(){
+					var self_id = $(this).attr('id');
+					$('#schedule-week-{{day.weekday}}-tooltip').css({'left': $('#'+self_id).position().left+17+'px', 'top': '47px'});
+					$('#schedule-week-{{day.weekday}}-tooltip').removeClass('hidden');
+				});
+				$('#schedule-week-{{day.weekday}}-container').mouseleave(function(){
+					$('#schedule-week-{{day.weekday}}-tooltip').addClass('hidden');
+				});
+			} else {
 				index++;
 			}
-			
-			var HOUR_SIZE = 40; /* width of a hour in CSS */
-			var OFFSET = 22; /* width of the bar offset */
-			var begin_point = parseInt(begin[0] * HOUR_SIZE + begin[1] * HOUR_SIZE / 60);
-			var end_point = parseInt((end[0]>0 || end[1]>0 ? end[0] : 24) * HOUR_SIZE + end[1] * HOUR_SIZE / 60);
-			var width = end_point - begin_point - OFFSET;
-			
-			var begin_hour = begin[0];
-			var begin_min = begin[1] < 10 ? '0'+ begin[1] : begin[1];
-			var end_hour = end[0];
-			var end_min =  end[1] < 10 ? '0'+ end[1] : end[1];
-			$('#schedule-week-{{day.weekday}}-periods-container').append(
-				'<div id="schedule-week-{{day.weekday}}-period-'+ begin_point +'" style="top:27px;left:'+ begin_point +'px;width:'+ width +'px;" class="slider-box" title="Available from '+begin_hour+':'+begin_min+' to '+end_hour+':'+end_min+'">'+
-				'</div>'
-			);
-			$('#schedule-week-{{day.weekday}}-period-'+ begin_point).mouseenter(function(){
-				var self_id = $(this).attr('id');
-				$('#schedule-week-{{day.weekday}}-tooltip').css({'left': $('#'+self_id).position().left+17+'px', 'top': '47px'});
-				$('#schedule-week-{{day.weekday}}-tooltip').removeClass('hidden');
-			});
-			$('#schedule-week-{{day.weekday}}-container').mouseleave(function(){
-				$('#schedule-week-{{day.weekday}}-tooltip').addClass('hidden');
-			});
-		} else {
-			index++;
 		}
-	}
+		
+	});
 </script>

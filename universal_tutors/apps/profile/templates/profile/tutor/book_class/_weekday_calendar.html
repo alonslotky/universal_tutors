@@ -1,306 +1,49 @@
 {% load common_tags tutor_tags %}
 
-{% for day, availability in profile|get_week:date %}
-	<div id="schedule-week-{{day.weekday}}-container" class="schedule-weekday shedule-row">
-		<span class="week-number with-date">
-			<span class="weekday">{{day|date:"D"}}</span></br>
-			<span class="day">{{day|date:"d"}}</span></br>
-			<span class="date">{{day|date:"M y"}}</span>
-		</span>
-		<div id="schedule-week-{{day.weekday}}" class="scroll-item-container">
-			<div id="schedule-week-{{day.weekday}}-periods-container" class="shedule5 scroll-item">
-				{% include "profile/tutor/book_class/_week_period.html" %}
-			</div>
+<div style="min-width: 960px;" class="hide-on-phones">
+	<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">
+		<div class="scroll-item-container">
+			<ul class="shedule4 scroll-item">
+				{% for hour in 0|range_to:24 %}
+				<li><span class="time">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}:00</span></li>
+				{% endfor %}
+			</ul>
 		</div>
-		<div id="schedule-week-{{day.weekday}}-tooltip" class="slider-tooltip hidden">
-			<div class="book-container hidden">
-				<div class="slider-tooltip-head">
-					<strong class="title2">{{day|date:"l, F jS \o\f Y"}}</strong>
-					<div id="schedule-week-{{day.weekday}}-tooltip-time" class="row">
-						<div>Begin: <span id="schedule-week-{{day.weekday}}-tooltip-begin"></span></div>
-						<div>End: <span id="schedule-week-{{day.weekday}}-tooltip-end"></span></div>
-					</div>
-				</div>			
-				<div class="slider-tooltip-content">
-					<div>&nbsp;</div>
-					<form id="schedule-week-{{day.weekday}}-form" method="post" class="nice custom">
-						{% csrf_token %}
-						<input type="hidden" name="tutor" value="{{person.id}}" />
-						<input type="hidden" name="date" value="{{day|date:"Y-m-d"}}" />
-						<input type="hidden" name="begin" value="0" id="schedule-week-{{day.weekday}}-begin" />
-						<input type="hidden" name="end" value="0" id="schedule-week-{{day.weekday}}-end" />
-						<input type="hidden" name="minutes" value="0" id="schedule-week-{{day.weekday}}-minutes" />
-						<input type="hidden" name="credits" value="0" id="schedule-week-{{day.weekday}}-credits" />
-						<select id="schedule-week-{{day.weekday}}-subject" name="subject" class="stretch" style="width: 120px;">
-							<option value="">Choose subject</option>
-							{% for item in person.subjects.all %}
-							{% with item.subject as subject %}
-								<option value="{{subject.id}}">{{subject.subject}}</option>
-							{% endwith %}
-							{% endfor %}
-						</select>
-
-						<div id="schedule-week-{{day.weekday}}-error" class="schedule-week-error formError hidden"></div>
-
-						<div class="book-total"><strong>Total: </strong><span id="schedule-week-{{day.weekday}}-total">0</span> credit(s)</div>
-						
-						<div class="row">
-							<div class="two column phone-two">
-						        <div id="schedule-week-{{day.weekday}}-book" class="button schedule-week-book"><input type="button" class="icon thumb-up" value="Book"></div>
-						        <div id="schedule-week-{{day.weekday}}-confirm-booking" class="button schedule-week-confirm-booking"><input type="submit" class="icon thumb-up" value="Confirm Booking"></div>
-							</div>
-							<div class="two column phone-two" style="text-align: right;">
-								<div class="schedule-week-cancel button"><input type="button" class="icon" value="Cancel"></div>
-							</div>
+		
+		<div>
+			{% for day, availability in week %}
+				<div id="schedule-week-{{day.weekday}}-container" class="schedule-weekday shedule-row">
+					<div id="schedule-week-{{day.weekday}}" class="scroll-item-container">
+						<div id="schedule-week-{{day.weekday}}-periods-container" class="shedule5 scroll-item">
+							<div class="week-number">{{day|date:"[D] d M Y"}}</div>
+							{% include "profile/tutor/book_class/_week_period.html" %}
 						</div>
-					</form>
-					<script type="text/javascript">
-						$('#schedule-week-{{day.weekday}}-confirm-booking').hide();
-						$('#schedule-week-{{day.weekday}}-book').click(function(){
-							$(this).fadeOut(function(){
-								$('#schedule-week-{{day.weekday}}-confirm-booking').fadeIn();
-							});
-						});
-						$('#schedule-week-{{day.weekday}}-form').submit(function(e){
-							e.preventDefault();
-							
-							var begin = $('#schedule-week-{{day.weekday}}-begin').val();
-							var end = $('#schedule-week-{{day.weekday}}-end').val();
-							var subject = $('#schedule-week-{{day.weekday}}-subject').val();
-							var minutes = parseInt($('#schedule-week-{{day.weekday}}-minutes').val());
-							
-							if(begin && end && subject && minutes) {
-								if(minutes>=30 && minutes<=120 && (minutes % 30)==0) {
-									$('#schedule-week-{{day.weekday}}-confirm-booking input').val('Loading...');
-									$.ajax({
-										type: 'post',
-										data: $(this).serialize(),
-										url: '{% url confirm_book_class %}',
-										complete: function() {
-											$('#schedule-week-{{day.weekday}}-confirm-booking input').val('Confirm booking');
-											$('#schedule-week-{{day.weekday}}-error').removeClass('hidden');
-											$('#schedule-week-{{day.weekday}}-book').show();
-											$('#schedule-week-{{day.weekday}}-confirm-booking').hide();
-										},								
-										success: function(response){
-											if(response=='Done.') {
-												window.location.href = '{% url student_classes %}';
-											} else {
-												$('#schedule-week-{{day.weekday}}-error').html(response);
-											}
-										}
-									});
-									return;								
-								} else {
-									$('#schedule-week-{{day.weekday}}-error').html('Please select a class length of either 30min, 60min, 90min or 120min.');
-									$('#schedule-week-{{day.weekday}}-error').removeClass('hidden');								
-								}
-							} else {
-								$('#schedule-week-{{day.weekday}}-error').html('Time or subject are missing.');
-								$('#schedule-week-{{day.weekday}}-error').removeClass('hidden');								
-							}
-							
-							$('#schedule-week-{{day.weekday}}-confirm-booking').hide();
-							$('#schedule-week-{{day.weekday}}-book').show();
-						});
-						
-						$(window).ready(function(){
-							$('#schedule-week-{{day.weekday}}-subject').change(function(){
-								var subject = $(this).val();
-								var credits = parseFloat(get_subject_credits(subject));
-								var minutes = parseInt($('#schedule-week-{{day.weekday}}-minutes').val());
-								var total = credits * (minutes/60.0);
-								$('#schedule-week-{{day.weekday}}-credits').val(credits);
-								$('#schedule-week-{{day.weekday}}-subject').val(subject);
-								$('#schedule-week-{{day.weekday}}-total').html(total);
-							});
-						});
-					</script>
-				</div>
-			</div>
-			<div class="book-not-selected">
-				<div class="slider-tooltip-head">
-					<strong class="title2">{{day|date:"l, F jS,1 Y"}}</strong>
-					<div id="schedule-week-{{day.weekday}}-tooltip-time" class="row">
-						Please drag over the bar to select your time.
 					</div>
-				</div>			
-			</div>
+					<div id="schedule-week-{{day.weekday}}-tooltip" class="slider-tooltip hidden">
+						<div class="book-not-selected">
+							<div class="slider-tooltip-head">
+								<strong class="title2">{{day|date:"l, F jS,1 Y"}}</strong>
+								<div id="schedule-week-{{day.weekday}}-tooltip-time" class="row">
+									Click on this period to book a class.
+								</div>
+							</div>			
+						</div>
+					</div>
+				</div>
+			{% endfor %}
 		</div>
 	</div>
-{% endfor %}
+</div>
 
-<script type="text/javascript">
-	var MIN15_WIDTH = 10;
+<div class="show-on-phones">
+	<div class="list-week">
+		{% for day, availability in week %}
+			<div class="list-week-day">{{day|date:"D, d M y"}}</div>
+			<div id="list-week-day-{{day.weekday}}-list">
+				<div id="list-week-day-{{day.weekday}}-empty" class="list-week-item">No availability for this day</div>
+			</div>
+			{% empty %}
+		{% endfor %}		
+	</div>
+</div>
 
-	var schedule_slider_bar_mousedown = false;
-	var schedule_slider_bar_mousedown_x = null;
-	var schedule_slider_bar_mousedown_left = null;
-	var schedule_slider_bar_mousedown_parent_id = null;
-	var schedule_slider_bar_mousedown_id = null;
-	var schedule_slider_bar_mousedown_begin = null;
-	var schedule_slider_bar_mousedown_end = null;
-	var schedule_slider_bar_mousedown_outerwidth = null;
-	var schedule_slider_bar_mousedown_width = null;
-	
-	$(document).ready(function(){
-		
-		$('.drop-link').mousedown(function(e){ e.preventDefault(); });
-		
-		$('.slider-box').mousedown(function(e){
-			e.preventDefault();
-			var self_id = $(this).attr('id');
-			schedule_slider_bar_mousedown_parent_id = self_id;
-			if(!$('#'+self_id+' .slider-box-selector').length){
-				e.preventDefault();
-				
-				$('.slider-box-selector').remove();
-				$('.slider-tooltip .book-container').addClass('hidden');
-				$('.slider-tooltip .book-not-selected').removeClass('hidden');
-				$('.schedule-week-confirm-booking').hide();
-				$('.schedule-week-book').show();
-				$('.schedule-week-error').addClass('hidden');
-				
-				schedule_slider_bar_mousedown = true;
-				schedule_slider_bar_mousedown_x = e.pageX;
-				
-				schedule_slider_bar_mousedown_id = self_id + '-selector';
-				schedule_slider_bar_mousedown_left = e.pageX - $(this).offset().left;
-				schedule_slider_bar_mousedown_left = parseInt(schedule_slider_bar_mousedown_left / MIN15_WIDTH) * MIN15_WIDTH;
-				
-			}
-		});
-		
-		$(window).mousemove(function(e){
-			if(schedule_slider_bar_mousedown) {
-				e.preventDefault();
-				var max_position = $('#'+schedule_slider_bar_mousedown_id).parent().outerWidth() - schedule_slider_bar_mousedown_left;
-				
-				if(schedule_slider_bar_mousedown_begin) {
-					e.preventDefault();
-					var position = schedule_slider_bar_mousedown_left + (e.pageX - schedule_slider_bar_mousedown_x);
-					var width = schedule_slider_bar_mousedown_width - (e.pageX - schedule_slider_bar_mousedown_x);
-					var outer_width = schedule_slider_bar_mousedown_outerwidth - (e.pageX - schedule_slider_bar_mousedown_x);
-		
-					position = parseInt(position / MIN15_WIDTH) * MIN15_WIDTH;
-					position = position > 0 ? position : 0;
-					width = schedule_slider_bar_mousedown_width - (position - schedule_slider_bar_mousedown_left);
-					outer_width = schedule_slider_bar_mousedown_outerwidth - (position - schedule_slider_bar_mousedown_left);
-		
-					if (width > MIN15_WIDTH) {
-						width = width > 20 ? width : 20;
-						$('#'+schedule_slider_bar_mousedown_id).css({'left': position +'px', 'width': width});
-					}
-					
-				} else if(schedule_slider_bar_mousedown_end) {
-					e.preventDefault();
-					var position = schedule_slider_bar_mousedown_left;
-					var outer_width = schedule_slider_bar_mousedown_outerwidth + (e.pageX - schedule_slider_bar_mousedown_x);
-					
-					outer_width = outer_width < max_position ? outer_width : max_position;
-					
-					position = parseInt(position / MIN15_WIDTH) * MIN15_WIDTH;
-					outer_width = parseInt(outer_width / MIN15_WIDTH) * MIN15_WIDTH;
-					width = outer_width - ($('#'+schedule_slider_bar_mousedown_id).outerWidth() - $('#'+schedule_slider_bar_mousedown_id).width());
-					
-					if (width > MIN15_WIDTH) {
-						width = width > 20 ? width : 20;
-						$('#'+schedule_slider_bar_mousedown_id).css({'left': position +'px', 'width': width});
-					}
-				} else {
-					e.preventDefault();
-					var width = e.pageX - schedule_slider_bar_mousedown_x;
-					if(width > MIN15_WIDTH) {
-						$('#'+ schedule_slider_bar_mousedown_parent_id).append(
-							'<div id="'+ schedule_slider_bar_mousedown_id +'" class="slider-box-selector" style="left:'+ schedule_slider_bar_mousedown_left +'px">'+
-							'</div>'
-						);
-						
-						$('#'+ schedule_slider_bar_mousedown_id).mousedown(function(e){
-							var BORDER_SIZE = 25;
-							var position = e.pageX - $(this).offset().left;
-							
-							
-							if(position < BORDER_SIZE) {
-								schedule_slider_bar_mousedown_begin = true;		
-							}
-							if(position > $(this).outerWidth() - BORDER_SIZE) {
-								schedule_slider_bar_mousedown_end = true;		
-							}
-							
-							schedule_slider_bar_mousedown = true;
-							schedule_slider_bar_mousedown_id = $(this).attr('id');
-							schedule_slider_bar_mousedown_x = e.pageX;
-							schedule_slider_bar_mousedown_left = $(this).position().left;
-							schedule_slider_bar_mousedown_width = $(this).width();
-							schedule_slider_bar_mousedown_outerwidth = $(this).outerWidth();							
-						});
-						
-						schedule_slider_bar_mousedown_end = true;		
-						schedule_slider_bar_mousedown_x = e.pageX;
-						schedule_slider_bar_mousedown_width = width;
-						schedule_slider_bar_mousedown_outerwidth = width;
-					} 
-				}
-			}
-		});
-		
-		$(window).mouseup(function(){
-			if(schedule_slider_bar_mousedown && $('#'+schedule_slider_bar_mousedown_id).length) {
-				var parent_left = $('#'+schedule_slider_bar_mousedown_parent_id).position().left;
-				var left = $('#'+schedule_slider_bar_mousedown_id).position().left + parent_left;
-				var right = left + $('#'+schedule_slider_bar_mousedown_id).outerWidth();
-	
-				var begin_hour = parseInt(left / 40);
-				var begin_minute = parseInt((left % 40) / 10 * 15);
-				var end_hour = parseInt(right / 40);
-				var end_minute = parseInt((right % 40) / 10 * 15);
-				
-				var begin = begin_hour +'-'+ begin_minute;
-				var end = end_hour +'-'+ end_minute;
-				
-				var display_begin = (begin_hour>0?begin_hour:'0'+begin_hour) +':'+ (begin_minute>0?begin_minute:'0'+begin_minute);
-				var display_end = (end_hour>0?end_hour:'0'+end_hour) +':'+ (end_minute>0?end_minute:'0'+end_minute);
-				
-				var time_begin = new Date(2012,1,1,begin_hour,begin_minute);
-				var time_end = new Date(2012,1,1,end_hour,end_minute);
-				var minutes = (time_end-time_begin) / 60000;
-				
-				if (begin != end) {
-					var weekday = parseInt(schedule_slider_bar_mousedown_id.split('-')[2]);
-					var credits = $('#schedule-week-'+ weekday +'-credits').val();
-					var total = credits * (minutes/60.0);
-
-					$('#schedule-week-'+ weekday +'-begin').val(begin);
-					$('#schedule-week-'+ weekday +'-end').val(end);
-					$('#schedule-week-'+ weekday +'-minutes').val(minutes);
-					$('#schedule-week-'+ weekday +'-tooltip-begin').html(display_begin);
-					$('#schedule-week-'+ weekday +'-tooltip-end').html(display_end);
-					$('#schedule-week-'+ weekday +'-tooltip .book-container').removeClass('hidden');
-					$('#schedule-week-'+ weekday +'-tooltip .book-not-selected').addClass('hidden');
-					$('#schedule-week-'+ weekday +'-total').html(total);
-				}
-			}
-			
-			schedule_slider_bar_mousedown = false;
-			schedule_slider_bar_mousedown_x = null;
-			schedule_slider_bar_mousedown_left = null;
-			schedule_slider_bar_mousedown_parent_id = null;
-			schedule_slider_bar_mousedown_id = null;
-			schedule_slider_bar_mousedown_begin = null;
-			schedule_slider_bar_mousedown_end = null;
-			schedule_slider_bar_mousedown_outerwidth = null;
-			schedule_slider_bar_mousedown_width = null;
-		});
-
-		$('.schedule-week-cancel').click(function(){
-			$('.slider-box-selector').remove();
-			$('.slider-tooltip .book-container').addClass('hidden');
-			$('.slider-tooltip .book-not-selected').removeClass('hidden');
-			$('.schedule-week-confirm-booking').hide();
-			$('.schedule-week-book').show();		
-			$('.schedule-week-error').addClass('hidden');
-		});
-
-	});
-</script>

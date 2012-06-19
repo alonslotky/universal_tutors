@@ -1,0 +1,156 @@
+{% load classes_tags %}
+
+<div id="modal-book-class" class="reveal-modal message">
+	<h4>Book a class</h4>
+    <div id="modal-book-class-loading" class="modal-loading"></div>
+    <div id="modal-book-class-container">
+	  <form id="modal-book-class-form" class="nice">
+	  	{% csrf_token %}
+		<div class="row">&nbsp;</div>
+		<div id="book-class-errors" class="formError"></div>
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Date</label>
+		  </div>
+		  <div class="eight columns phone-three">
+			<select id="book-class-date" name="date" class="stretch">
+			</select>
+		  </div>	  
+		</div>
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Subject</label>
+		  </div>
+		  <div class="eight columns phone-three">
+			<select id="book-class-subject" name="subject" class="stretch">
+				<option value="0">---------</option>
+				{% for subject in person.subjects.all %}
+					<option value="{{subject.id}}">{{subject}}</option>
+				{% endfor %}
+			</select>
+		  </div>	  
+		</div>
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Time</label>
+		  </div>
+		  <div class="eight columns phone-three">
+		  	<select id="book-class-start" name="start" class="stretch"></select>
+		  </div>	  
+		</div>
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Duration</label>
+		  </div>
+		  <div class="eight columns phone-three">
+		  	<select id="book-class-duration" name="duration" class="stretch">
+		  		<option value="0">--</option>
+		  		<option value="30">30 min</option>
+		  		<option value="60">60 min</option>
+		  		<option value="90">90 min</option>
+		  		<option value="120">120 min</option>
+		  	</select>		  		
+		  </div>	  
+		</div>
+
+		<div class="row">&nbsp;</div>
+	  	<div class="row">
+		    <input type="submit" class="small button" value="Book class">
+		</div>
+	  </form>
+      	
+    </div>
+  	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	var book_start_date, book_end_date;
+	var set_booking_selection = function(year, month, day, start_hour, start_min, end_hour, end_min) {
+		var book_time = new Date(year, month, day, start_hour, start_min);
+		
+		book_start_date = new Date(year, month, day, start_hour, start_min);
+		book_end_date = new Date(year, month, day, end_hour, end_min);
+		book_date = year +'-'+ (month<9?('0'+(month+1)):(month+1)) +'-'+ day;
+
+		$('#book-class-subject').val('0');
+		$('#book-class-duration').val('0');
+		$('#book-class-date').html('<option value="'+ book_date +'" selected="selected">'+ book_date +'</div>');
+		
+		$('#book-class-start').html('');
+		while(book_time < book_end_date){
+			$('#book-class-start').append(
+				'<option value="'+ book_time.getHours() +'-'+ book_time.getMinutes() +'">'+
+				 	(book_time.getHours() < 10 ? '0'+book_time.getHours() : book_time.getHours()) +
+				 	'h'+
+				 	(book_time.getMinutes() < 10 ? '0'+book_time.getMinutes() : book_time.getMinutes()) +
+				'</option>'
+			);
+		 	book_time.setMinutes(book_time.getMinutes()+15);
+		}	
+	}
+
+	$('#modal-book-class-loading').hide();
+	
+	$('#modal-book-class-form').submit(function(e){
+		e.preventDefault();
+		
+		var date = $('#book-class-date').val();
+		var start = $('#book-class-start').val();
+		var start_str = start.split('-');
+		var start_hour = start_str[0];
+		var start_min = start_str[1];
+		var duration = parseInt($('#book-class-duration').val());
+		var subject = parseInt($('#book-class-subject').val());
+		
+		if(subject && duration) {
+			var book_time = new Date(book_start_date.getTime());
+			book_time.setHours(start_hour);
+			book_time.setMinutes(start_min);
+			book_time.setMinutes(book_time.getMinutes()+duration);
+			
+			if(book_time <= book_end_date) {
+				$('#book-class-errors').addClass('hidden');			
+				$('#modal-book-class-container').fadeOut(function(){
+					$('#modal-book-class-loading').fadeIn(function(){
+						$.ajax({
+							type: 'post',
+							url: '{% url confirm_book_class person.id %}',
+							data: $('#modal-book-class-form').serialize(),
+							complete: function(response) {
+								$('#modal-book-class-loading').fadeOut(function(){
+									$('#modal-book-class-container').fadeIn();
+								});
+							},								
+							success: function(response){
+								if(response=='Done.') {
+									window.location.href = '{% url student_classes %}';
+								} else {
+									$('#book-class-errors').html(response);
+									$('#book-class-errors').removeClass('hidden');
+								}
+							},
+							error: function(){
+								$('#book-class-errors').html("It's not possible to book a "+ duration +" minutes class starting at "+ start_hour +'h'+ start_min +'.');
+								$('#book-class-errors').removeClass('hidden');			
+							}
+						});
+					});
+				});	
+			} else {				
+				$('#book-class-errors').html("It's not possible to book a "+ duration +" minutes class starting at "+ start_hour +'h'+ start_min +'.');
+				$('#book-class-errors').removeClass('hidden');			
+			}
+		} else {
+			$('#book-class-errors').html('All the fields below are required.');
+			$('#book-class-errors').removeClass('hidden');			
+		}
+		
+	});
+	
+	var add_book_class_clear = function(weekday){
+		$('select').val('-1');
+		$('#book-class-weekday').val((!isNaN(weekday))?weekday:'');
+		$('#book-class-errors').html('');
+		$('#book-class-errors').addClass('hidden');
+	}
+</script>

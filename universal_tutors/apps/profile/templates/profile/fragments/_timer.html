@@ -29,14 +29,25 @@
   </div>
 </section>
 <script type="text/javascript">
-	var timer_class = new Date({{next_class.date.year}},{{next_class.date.month|add:-1}},{{next_class.date.day}},{{next_class.start.hour}},{{next_class.start.minute}});
+	var timer_class = {{next_class.get_minutes_to_start}};
+	var timer_end_class = {{next_class.get_minutes_to_end}};
+	var timer_date = new Date();
+	var timer_class_started = false;
 	
 	setInterval(function(){
 		var timer_now = new Date();
-		var diff = timer_class - timer_now;
+
+		var time_diff = (timer_now - timer_date) / 1000;
+
+		if (timer_class <= time_diff) {
+			timer_class = timer_end_class;
+			timer_class_started = true;
+		}
+
+		var diff = timer_class - time_diff;
 		var positive = diff > 0 ? 1 : -1; 
 		
-		var total_seconds = positive * (diff / 1000);
+		var total_seconds = positive * diff;
 		
 		var seconds = parseInt(total_seconds % 60);
 		var minutes = parseInt((total_seconds / 60) % 60);
@@ -55,12 +66,17 @@
 		var seconds_d = parseInt(seconds / 10);
 		var seconds_u = parseInt(seconds % 10);
 		
-		if(positive > 0) {
+		if(!timer_class_started) {
 			$('#timer-text').html("Your next class starts in");
 			$('.timer-ago').addClass('hidden');
 		} else {
-			$('#timer-text').html("Your class started");
-			$('.timer-ago').removeClass('hidden');
+			if( diff > 0) {
+				$('#timer-text').html("Your class finish in");
+				$('.timer-ago').addClass('hidden');
+			} else {
+				$('#timer-text').html("Your class finished");
+				$('.timer-ago').removeClass('hidden');				
+			}
 		}
 
 
@@ -105,7 +121,7 @@
 
 		total_seconds = (total_seconds * positive)
 		
-		if(total_seconds < 300) {
+		if(total_seconds < 300 || timer_class_started) {
 			$('#enter-next-class-button').removeClass('hidden');
 		} else {
 			$('#enter-next-class-button').addClass('hidden');

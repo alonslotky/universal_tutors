@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags tutor_tags %}
 
 {% block title %}Classes{% endblock %}
 {% block body_class %}app tutor{% endblock %}
@@ -65,7 +65,21 @@
             {% if owner %}
           	  <a href="{% url edit_parent_profile %}" class="book-class">Edit profile</a>            
             {% else %}
-              <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});">Send a Message</a>
+              {% with user|get_messages:person as messages %}
+		 	  {% with messages.messages as msgs %}
+              <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"> 
+              	{% if msgs|length == 0 %} 
+	          		Send a Message
+	          	{% else %}
+	          	{% if messages.unread %} 
+	            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
+	            	{% else %}
+	            		View Messages
+	            	{% endif %}
+	            {% endif %}
+          	  </a>
+              {% endwith %}
+              {% endwith %}
 			{% endif %}
             </div>
           </div>

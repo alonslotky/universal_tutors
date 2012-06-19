@@ -15,22 +15,31 @@
 	var targetID = "scribblar";
 	
 	var flashvars = {
-		userid: "{{user.profile.scribblar_id}}",
-		roomid: "{{class.scribblar_id}}",
-		preferredLocales: "en_US",
-		username: "{{user.get_full_name}}"
+		'userid': "{{user.profile.scribblar_id}}",
+		'roomid': "{{class.scribblar_id}}",
+		'preferredLocales': "en_US",
+		'username': "{{user.get_full_name}}"
 	};
 
 	var params = {
-		allowscriptaccess: "always"
+		'allowscriptaccess': "always"
 	};
 	
 	var attributes = {
-		id: "scribblar",
-		name: "scribblar"
+		'id': "scribblar",
+		'name': "scribblar"
 	};
 
-	swfobject.embedSWF("http://media.muchosmedia.com/scribblar/v2/main.swf", "alternate", "100%", "100%", "10.2.0", "http://media.muchosmedia.com/swfobject/expressInstall.swf", flashvars, params, attributes);
+	swfobject.embedSWF(
+		"http://media.muchosmedia.com/scribblar/v2/main.swf", 
+		"alternate", 
+		"100%", 
+		"100%", 
+		"10", 
+		"http://media.muchosmedia.com/swfobject/expressInstall.swf", 
+		flashvars, 
+		params, 
+		attributes);
 
 	var ask_to_continue = false;
 	var alert_to_close = false;
@@ -107,9 +116,6 @@
 {% endblock %}
 
 {% block full_content %}
-
-	<div class="container hide-on-phones">
-	
 	  <header>
 	    <div class="logo alt ir left"><a>Universal Tutors</a></div>
 	    {% if user == class.student %}
@@ -123,7 +129,6 @@
 	  <div id="alternate-container" class="main scribblar-container">
 	  	<div id="alternate"></div>
 	  </div>
-	</div>
 	
 	<div class="container show-on-phones end">
 	  <p>Please get to a Flash-enabled desktop computer to access the classroom.</p>
