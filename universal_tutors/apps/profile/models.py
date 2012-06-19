@@ -450,8 +450,6 @@ class UserProfile(BaseModel):
             begin_index = begin_min / MINIMUM_PERIOD
             end_index = end_min / MINIMUM_PERIOD
 
-            print user_begin_time, user_begin, begin_index, end_index
-            
             # cut index outside the array
             if begin_index < 0:     begin_index = 0
             if begin_index > size:  begin_index = size
