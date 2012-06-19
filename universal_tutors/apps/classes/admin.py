@@ -22,11 +22,7 @@ class ChildLevels(admin.TabularInline):
     model = ClassLevel
     extra = 2
 
-class ChildSubject(admin.TabularInline):
-    model = ClassSubject
-    extra = 2
-
 class EducationalSystemAdmin(admin.ModelAdmin):
     list_display = ('system',)
-    inlines = [ChildCountries, ChildLevels, ChildSubject]    
+    inlines = [ChildCountries, ChildLevels]    
 admin.site.register(EducationalSystem, EducationalSystemAdmin)
