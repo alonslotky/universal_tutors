@@ -384,7 +384,7 @@ class UserProfile(BaseModel):
                 all_slots_available = False
                 
         # select booking from date
-        booking = user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.BOOKED,Class.STATUS_TYPES.WAITING], date__in=[begin.date(), end.date()])
+        booking = user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING], date__gte=begin.date(), date__lt=end.date())
 
         size = 0
         availability_by_time = []
@@ -421,8 +421,8 @@ class UserProfile(BaseModel):
                     end_time += datetime.timedelta(days=1)
                     
             else:
-                begin_time = convert_datetime(datetime.datetime.combine(period.date, period.begin), self.timezone, gtz)
-                end_time = convert_datetime(datetime.datetime.combine(period.date, period.end), self.timezone, gtz)
+                begin_time = datetime.datetime.combine(period.date, period.begin)
+                end_time = datetime.datetime.combine(period.date, period.end)
                             
             begin_min = difference_in_minutes(begin_time, begin) 
             end_min = difference_in_minutes(end_time, begin)
@@ -442,9 +442,10 @@ class UserProfile(BaseModel):
         # inject booking on array
         for item in booking:
             # From UTC to profile timezone
+            print item
             begin_time = convert_datetime(item.date, pytz.utc, self.timezone)
 
-            begin_min = difference_in_minutes(item.date, begin) 
+            begin_min = difference_in_minutes(begin_time, begin) 
             end_min = begin_min + item.duration
 
             begin_index = begin_min / MINIMUM_PERIOD
