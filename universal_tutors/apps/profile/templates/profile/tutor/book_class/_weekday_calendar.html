@@ -1,5 +1,17 @@
 {% load common_tags tutor_tags %}
 
+<div class="show-on-phones">
+	<div class="list-week">
+		{% for day, availability in week %}
+			<div class="list-week-day">{{day|date:"D, d M y"}}</div>
+			<div id="list-week-day-{{day.weekday}}-list">
+				<div id="list-week-day-{{day.weekday}}-empty" class="list-week-item">No availability for this day</div>
+			</div>
+			{% empty %}
+		{% endfor %}		
+	</div>
+</div>
+
 <div style="min-width: 960px;" class="hide-on-phones">
 	<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">
 		<div class="scroll-item-container">
@@ -35,15 +47,4 @@
 	</div>
 </div>
 
-<div class="show-on-phones">
-	<div class="list-week">
-		{% for day, availability in week %}
-			<div class="list-week-day">{{day|date:"D, d M y"}}</div>
-			<div id="list-week-day-{{day.weekday}}-list">
-				<div id="list-week-day-{{day.weekday}}-empty" class="list-week-item">No availability for this day</div>
-			</div>
-			{% empty %}
-		{% endfor %}		
-	</div>
-</div>
 
