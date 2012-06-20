@@ -928,19 +928,45 @@ class TutorQualification(models.Model):
     
     def __unicode__(self):
         return self.qualification
+    
 
 class TutorReview(BaseModel):
     user = models.ForeignKey(User, related_name='reviews_as_tutor')
     rate = models.PositiveSmallIntegerField(default = 0)
     related_class = models.ForeignKey(Class, related_name='tutor_reviews')
+    is_active= models.BooleanField(default=True)
     text = models.TextField()
     
     def save(self, *args, **kwargs):
         user = self.user
-        super(self.__class__, self).save(*args, **kwargs)
+        sanctioned = False
+        if not self.id and self.rate <= 1:
+            self.is_active = False
+            
+            sanctioned = True
+            
+        super(TutorReview, self).save(*args, **kwargs)
+
+        if sanctioned:            
+            html = render_to_string('emails/bad_review_tutor.html', {
+                'link': 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, '/admin/profile/badreview/%s/'% self.id ),
+                'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+            })
+            
+            subject = 'Bad Tutor Review'
+            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+            to = [settings.CONTACT_EMAIL]
+                    
+            email_message = EmailMessage(subject, html, sender, to)
+            email_message.content_subtype = 'html'
+            
+            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
+            t.setDaemon(True)
+            t.start()
+
         profile = user.profile
-        profile.avg_rate = user.reviews_as_tutor.aggregate(avg_rate = models.Avg('rate'))['avg_rate']
-        profile.no_reviews = user.reviews_as_tutor.count()
+        profile.avg_rate = user.reviews_as_tutor.filter(is_active=True).aggregate(avg_rate = models.Avg('rate'))['avg_rate']
+        profile.no_reviews = user.reviews_as_tutor.filter(is_active=True).count()
         profile.save()
     
     def delete(self):
@@ -954,6 +980,20 @@ class TutorReview(BaseModel):
 
     def __unicode__(self):
         return '%s (%s)' % (self.text, self.rate)
+    
+    
+class TutorInactiveReviewsManager(models.Manager):
+    def get_query_set(self):
+        return super(TutorInactiveReviewsManager, self).get_query_set().filter(is_active=False)
+
+class BadReview(TutorReview):
+    objects = TutorInactiveReviewsManager()
+
+    class Meta:
+        verbose_name = 'Bad Review'
+        proxy = True
+        
+
 
 class TutorFavorite(BaseModel):
     class Meta:

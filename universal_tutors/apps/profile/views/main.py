@@ -42,7 +42,7 @@ def profile(request, username=None):
     reviews = None
     can_send_message = True
     if profile.type == profile.TYPES.TUTOR:
-        reviews = person.reviews_as_tutor.all
+        reviews = person.reviews_as_tutor.filter(is_active=True)
         template = 'profile/tutor/profile.html'
     elif profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
         if not Message.objects.filter(Q(user=person, to=user) | Q(user=user, to=person)) and \
