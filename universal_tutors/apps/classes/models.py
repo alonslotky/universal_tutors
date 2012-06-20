@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -313,7 +314,7 @@ class Class(BaseModel):
                 'tutor': tutor,
             })
             
-            for referral in Referral.objects.select_related().filter(Q(key=tutor_profile.key) | Q(key=self.user.profile.key), Q(used=False)):
+            for referral in Referral.objects.select_related().filter(Q(key=tutor_profile.referral_key) | Q(key=self.student.profile.referral_key), Q(used=False)):
                 user = referral.user
                 profile = user.profile
                 count = user.referrals.filter(user=user, done=True).count()

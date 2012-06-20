@@ -3,15 +3,15 @@ from django.db.models import Q
 from apps.classes.models import Class
 
 def close_classes():
-    dt = datetime.datetime.now() - datetime.timedelta(minutes=5)
-    date = dt.date()
-    time = dt.time()
+    dt30 = datetime.datetime.now() - datetime.timedelta(minutes=35)
+    dt60 = datetime.datetime.now() - datetime.timedelta(minutes=65)
+    dt90 = datetime.datetime.now() - datetime.timedelta(minutes=95)
+    dt120 = datetime.datetime.now() - datetime.timedelta(minutes=125)
     
-    [class_.done() for class_ in Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED), Q(date__lt=date) | Q(date=date, end__lte=time))]
+    [class_.done() for class_ in Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED), Q(date__lte=dt30, duration=30) | Q(date__lte=dt60, duration=60) | Q(date__lte=dt90, duration=90) | Q(date__lte=dt120, duration=120))]
+    
     
 def alert_classes():
     dt = datetime.datetime.now() + datetime.timedelta(minutes=30)
-    date = dt.date()
-    time = dt.time()
     
-    [class_.alert() for class_ in Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED, alert_sent=False), Q(date__lt=date) | Q(date=date, start__lte=time))]
+    [class_.alert() for class_ in Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED, alert_sent=False), Q(date__lte=dt))]

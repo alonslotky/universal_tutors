@@ -8,7 +8,7 @@
 {% block content %}
   <section class="blue feature-box"><div class="inner">
   	{% if owner %}
-    <h1>Your Profile <span>You are seen your own profile.</span></h1>	
+    <h1>Your Profile <span>You are seeing your own profile.</span></h1>	
 	{% else %}
     <h1>Tutor Profile <span>Details on a specific tutor.</span></h1>
 	{% endif %}
@@ -97,11 +97,13 @@
               <table class="stretch">
                 <tr>
                   <th>Subject</th>
+                  <th>Level</th>
                   <th>Credits</th>
                 </tr>
                 {% for item in subjects %}
                 <tr>
-                  <td>{{item.subject}}, {{item.level}}</td>
+                  <td>{{item.subject}}</td>
+                  <td>{{item.level}}</td>
                   <td>{{item.credits|floatformat}} credit{{item.credits|pluralize}}</td>
                 </tr>
                 {% empty %}
