@@ -42,8 +42,8 @@
     <div class="ten columns">
       <h2>{{person.get_full_name}}</h2>
       <h4>{{profile.date_of_birth|age}}, {{profile.get_gender_display}}</h4>
-      <a {% if profile.webcam %}title="Webcam" class="no-hover"{% else %}title="No Webcam" class="no-hover text-red"{% endif %}><i class="icon-videocam"></i></a>
-      <a {% if profile.crb_checked %}title="CRB Checked" class="no-hover"{% else %}title="Not CRB Checked" class="no-hover text-red"{% endif %}><i class="icon-thumbs-up"></i></a>
+      {% if profile.webcam %}<a title="Webcam" class="no-hover"><i class="icon-videocam"></i></a>{% endif %}
+      {% if profile.crb_checked %}<a title="CRB Checked" class="no-hover"><i class="icon-thumbs-up"></i></a>{% endif %}
       <p>&nbsp;</p>
       <div class="row">
         <div class="nine columns">
