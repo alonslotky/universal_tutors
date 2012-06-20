@@ -272,6 +272,12 @@ CMS_TEMPLATES = (
 #    },
 #}
 
+## CRB
+CRB_REFERENCE = 'mine1'
+CRB_ACCESSCODE = 'mineone'
+
+
+
 CMS_SOFTROOT = True
 CMS_MODERATOR = False
 CMS_PERMISSION = False

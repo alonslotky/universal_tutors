@@ -1,0 +1,16 @@
+<html>
+	<head>
+		<script type="text/javascript">
+			function load() {
+				window.document.crb_form.submit();
+			}
+		</script>
+	</head>
+	<body onload="load();">
+		<form name="crb_form" method="post" action="https://disclosure.capitarvs.co.uk/mgcare/applicantLogin.do">
+			<input type="hidden" name="event" value="save">
+			<input type="hidden" name="reference" value="{{settings.CRB_REFERENCE}}">
+			<input type="hidden" name="accessCode" value="{{settings.CRB_ACCESSCODE}}">
+		</form>
+	</body>
+</html>

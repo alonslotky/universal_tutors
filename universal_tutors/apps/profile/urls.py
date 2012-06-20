@@ -35,6 +35,7 @@ urlpatterns += patterns('apps.profile.views.main',
 urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutor/classes/$', 'tutor_classes', {}, name = "tutor_classes"),
     url(r'^(?i)tutor/messages/$', 'tutor_messages', {}, name = "tutor_messages"),
+    url(r'^(?i)tutor/crb_form/$', 'crb_form', {}, name = "crb_form"),
     url(r'^(?i)tutors/$', 'tutors', {}, name = "tutors"),
 
     url(r'^(?i)book-class/(?P<username>[\w\-\_]+)/$', 'book_class', {}, name = "book_class"),

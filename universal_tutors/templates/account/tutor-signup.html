@@ -169,7 +169,7 @@
             </div>
             <div class="nine columns phone-three">
               	<div class="">{{form.crb}}</div>
-              	<div id="id_crb_apply" class="{% if form.crb.value %}hidden{% endif %}">To apply for a CRB <a href="">click here</a>.</div>
+              	<div id="id_crb_apply" class="{% if form.crb.value %}hidden{% endif %}">To apply for a CRB <a href="{% url crb_form %}" target="_blank">click here</a>.</div>
 		        <div id="id_div_crb_document" class="{% if not form.crb.value %}hidden{% endif %}">You need to upload your CRB Document after you Sign Up.</div>
             </div> 
           </div>

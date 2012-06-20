@@ -126,7 +126,8 @@
               <label>I have a CRB</label>
             </div>
             <div class="nine columns phone-three">
-              {{ form.crb }}
+              <div class="row">{{ form.crb }}</div>
+              <div class="row">To apply for a CRB <a href="{% url crb_form %}" target="_blank">click here</a>.</div>
             </div>  
           </div>
           
