@@ -75,4 +75,5 @@ ul.errorlist li { color: red; }
 	color: #78AA1A;
 }
 
-.link-messages { padding: 10px !important; height: 22px !important; margin-top: 1px !important;}
+.link-messages,
+.link-classes { padding: 10px !important; height: 22px !important; margin-top: 1px !important;}

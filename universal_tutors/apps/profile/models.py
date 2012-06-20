@@ -745,6 +745,11 @@ class UserProfile(BaseModel):
 
     def no_messages(self):
         return Message.objects.filter(to=self.user, read = False).count()
+    
+    def new_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status = Class.STATUS_TYPES.WAITING).count()
+        return None
 
 class UserCreditMovement(BaseModel):
     class Meta:
