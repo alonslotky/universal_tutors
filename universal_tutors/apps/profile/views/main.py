@@ -399,18 +399,11 @@ def book_class(request, username):
     }
 
 
-@login_required
-@over16_required()
 @main_render(template='profile/tutor/crb_form.html')
 def crb_form(request):
     """
     redirect for CRB form
     """
-    user = request.user
-    profile = user.profile
-    if profile.type != profile.TYPES.TUTOR:
-        raise http.Http404()
-    
     return {}
 
     
