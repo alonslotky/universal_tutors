@@ -1,16 +1,24 @@
-<html>
-	<head>
-		<script type="text/javascript">
-			function load() {
-				window.document.crb_form.submit();
-			}
-		</script>
-	</head>
-	<body onload="load();">
-		<form name="crb_form" method="post" action="https://disclosure.capitarvs.co.uk/mgcare/applicantLogin.do">
+{% extends "ui/layouts/base.html" %}
+
+{% block title %}Apply to CRB{% endblock %}
+
+{% block content %}
+  <section class="blue feature-box"><div class="inner">
+    <h1>Apply to CRB</h1>
+  </div></section>
+  
+  <section>
+		<iframe src="https://disclosure.capitarvs.co.uk/mgcare/applicantLogin.do?applicationType=crb" style="display:none;"></iframe>
+		<form id="form-crb-submition" name="crb_form" method="post" action="https://disclosure.capitarvs.co.uk/mgcare/applicantLogin.do">
 			<input type="hidden" name="event" value="save">
 			<input type="hidden" name="reference" value="{{settings.CRB_REFERENCE}}">
 			<input type="hidden" name="accessCode" value="{{settings.CRB_ACCESSCODE}}">
 		</form>
-	</body>
-</html>
+		<script type="text/javascript">
+			setTimeout(function(){
+				$('#form-crb-submition').submit();
+			}, 5000);
+		</script>
+		<div class="row">You will be redirected in 5 seconds...</div>
+  </section>
+{% endblock %}
