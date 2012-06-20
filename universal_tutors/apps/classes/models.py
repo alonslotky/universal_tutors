@@ -314,7 +314,7 @@ class Class(BaseModel):
                 'tutor': tutor,
             })
             
-            for referral in Referral.objects.select_related().filter(Q(key=tutor_profile.referral_key) | Q(key=self.user.profile.referral_key), Q(used=False)):
+            for referral in Referral.objects.select_related().filter(Q(key=tutor_profile.referral_key) | Q(key=self.student.profile.referral_key), Q(used=False)):
                 user = referral.user
                 profile = user.profile
                 count = user.referrals.filter(user=user, done=True).count()
