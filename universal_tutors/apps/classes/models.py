@@ -384,6 +384,10 @@ class Class(BaseModel):
                 'student': student,
                 'tutor': tutor,
             })
+            
+            from apps.profile.models import Message
+            message = '%s class rejected: %s' % (self, reason)
+            Message.objects.create(user= tutor, to = student, message=message, read=False, email_sent=True)
     
     def tutor_rating(self):
         try:
