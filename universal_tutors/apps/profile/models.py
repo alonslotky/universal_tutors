@@ -127,7 +127,8 @@ class UserProfile(BaseModel):
         (6, 'ACCEPTED_BY_TUTOR', 'A class has been accepted by tutor'),
         (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
         (8, 'CRB_EXPIRED', 'The CRB is expired'),
-        (8, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 60 days'),
+        (9, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 60 days'),
+        (10, 'MESSAGE', 'The CRB is going to expire in less than 60 days'),
     ))
     
     UPLOAD_IMAGES_PATH = 'uploads/profiles/profile_images'
@@ -634,9 +635,12 @@ class UserProfile(BaseModel):
         if type == self.NOTIFICATIONS_TYPES.CRB_EXPIRED:
             subject = 'CRB expired'
             html = render_to_string('emails/crb_expired.html', context)
-        if type == self.NOTIFICATIONS_TYPES.CLASS:
+        if type == self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE:
             subject = 'CRB is about to expire'
             html = render_to_string('emails/crb_expire_date.html', context)
+        if type == self.NOTIFICATIONS_TYPES.MESSAGE:
+            subject = 'New message'
+            html = render_to_string('emails/message.html', context)
         
         if subject and html:            
             sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
@@ -739,6 +743,8 @@ class UserProfile(BaseModel):
         else:
             return self.user.classes_as_student.exclude(status__in=[Class.STATUS_TYPES.PRE_BOOKED, Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('-date')
 
+    def no_messages(self):
+        return Message.objects.filter(to=self.user, read = False).count()
 
 class UserCreditMovement(BaseModel):
     class Meta:
@@ -1052,9 +1058,18 @@ class Message(BaseModel):
     message = models.CharField(max_length=500)
     related_class = models.ForeignKey(Class, null=True, blank=True, related_name='messages')
     read = models.BooleanField(default=False)
+    email_sent = models.BooleanField(default=False)
     
     def __unicode__(self):
         return self.message
+
+    def sent_email(self):
+        if not self.read and not email_set:
+            user = self.to
+            profile = user.profile
+            profile.send_notification(profile.NOTIFICATIONS_TYPES.MESSAGE, {'message': self})
+            self.email_sent = True
+            super(self.__class__, self).save()
 
 
 class Report(BaseModel):

@@ -1,5 +1,6 @@
 {% with user.profile as profile %}
 {% with user.is_authenticated as authenticated %}
+{% with profile.no_messages as no_messages %}
 <header>
 	<nav class="row hide-on-phones">
       	<div>
@@ -8,12 +9,12 @@
 	      		{% if authenticated %}
 					{% if profile.type == profile.TYPES.TUTOR %}
 				          <li><a class="link-classes" href="{% url tutor_classes %}">Classes</a></li>
-				          <li><a class="link-messages" href="{% url tutor_messages %}">Messages</a></li>
+				          <li><a class="link-messages" href="{% url tutor_messages %}" style="position:relative;">Messages{% if no_messages %}<div class="unread">{{no_messages}}<span> Unread Message</span></div>{% endif %}</a></li>
 					{% endif %}
 					{% if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16 %}
 				          <li><a class="link-classes" href="{% url student_classes %}">Classes</a></li>
 				          <li><a class="link-tutors" href="{% url tutors %}">Tutors</a></li>
-				          <li><a class="link-messages" href="{% url student_messages %}">Messages</a></li>
+				          <li><a class="link-messages" href="{% url student_messages %}" style="position:relative;">Messages{% if no_messages %}<div class="unread">{{no_messages}}<span> Unread Message</span></div>{% endif %}</a></li>
 					{% endif %}
 				{% else %}
 		  				<li><a class="link-students" href="/student-guide/">Student Guide</a></li>
@@ -47,5 +48,6 @@
 		<a class="right" href="#navi">Navigation</a>
 	</nav>
 </header>
+{% endwith %}
 {% endwith %}
 {% endwith %}

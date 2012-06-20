@@ -1,0 +1,8 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+{% with message.user as user_sent %}
+You received a new message from <a style="color:#78AA1A;text-decoration:none;" href="http://{{PROJECT_SITE_DOMAIN}}{% url profile user_sent.username %}">{{user_sent.get_full_name}}</a>: "{{message.message}}" 
+{% endwith %}
+{% endblock %}
+
