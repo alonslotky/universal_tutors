@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from apps.core.models import Currency
-from apps.profile.models import Tutor, WithdrawItem
+from apps.profile.models import Tutor, WithdrawItem, Message
 from paypal2.standart.ap import pay
 
 def mass_payments():
@@ -50,4 +50,9 @@ def mass_payments():
 def check_crb():
     for tutor in Tutor.objects.select_related().filter(profile__crb_expiry_date__isnull = False):
         tutor.profile.check_crb()
-        
+
+
+def send_message_email():
+    now = datetime.datetime.now() - datetime.timedelta(minutes=1)
+    for message in Message.objects.select_related().filter(created__lte=now, read=False, email_sent=False):
+        message.send_email()

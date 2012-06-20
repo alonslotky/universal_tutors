@@ -1063,8 +1063,8 @@ class Message(BaseModel):
     def __unicode__(self):
         return self.message
 
-    def sent_email(self):
-        if not self.read and not email_set:
+    def send_email(self):
+        if not self.read and not self.email_sent:
             user = self.to
             profile = user.profile
             profile.send_notification(profile.NOTIFICATIONS_TYPES.MESSAGE, {'message': self})
