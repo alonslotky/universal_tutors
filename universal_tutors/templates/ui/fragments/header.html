@@ -8,7 +8,9 @@
 	          	<li class="logo ir"><a href="/">Universal Tutors</a></li>
 	      		{% if authenticated %}
 					{% if profile.type == profile.TYPES.TUTOR %}
-				          <li><a class="link-classes" href="{% url tutor_classes %}">Classes</a></li>
+						  {% with profile.new_classes as new_classes %}
+				          <li><a class="link-classes" href="{% url tutor_classes %}" style="position:relative;">Classes{% if new_classes %}<div class="unread">{{new_classes}}<span> New Classes</span></div>{% endif %}</a></li>
+				          {% endwith %}
 				          <li><a class="link-messages" href="{% url tutor_messages %}" style="position:relative;">Messages{% if no_messages %}<div class="unread">{{no_messages}}<span> Unread Message</span></div>{% endif %}</a></li>
 					{% endif %}
 					{% if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16 %}

@@ -414,7 +414,7 @@ class UserProfile(BaseModel):
             user_time += datetime.timedelta(minutes=MINIMUM_PERIOD)
             time = end_period
             size += 1
-            if now + datetime.timedelta(minutes=20) > convert_datetime(end_period, self.timezone, pytz.utc):
+            if now + datetime.timedelta(minutes=30) > convert_datetime(end_period, self.timezone, pytz.utc):
                 availability_index = size
 
         # inject total availability on array
@@ -745,6 +745,11 @@ class UserProfile(BaseModel):
 
     def no_messages(self):
         return Message.objects.filter(to=self.user, read = False).count()
+    
+    def new_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status = Class.STATUS_TYPES.WAITING).count()
+        return None
 
 class UserCreditMovement(BaseModel):
     class Meta:
