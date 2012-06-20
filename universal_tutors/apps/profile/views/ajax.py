@@ -672,8 +672,8 @@ def reject_class(request):
     if request.method != 'POST':
         raise http.Http404()
         
-    class_id = request.POST.get('class_id')
-    reason = request.POST.get('reason')
+    class_id = request.POST.get('class_id', 0)
+    reason = request.POST.get('reason', '')
     
     try:
         class_ = Class.objects.get(id=class_id, tutor=user, status=Class.STATUS_TYPES.WAITING)

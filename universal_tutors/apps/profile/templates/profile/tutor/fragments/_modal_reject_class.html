@@ -34,7 +34,7 @@
 				type: 'post',
 				url: '{% url tutor_reject_class %}',
 				data: $('#tutor-reject-class-form').serialize(),
-				success: function() {
+				success: function(response) {
 					window.location.reload();
 				}
 			});
