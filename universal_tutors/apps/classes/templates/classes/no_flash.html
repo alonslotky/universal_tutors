@@ -1,0 +1,16 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags %}
+
+{% block title %}{{class}}{% endblock %}
+{% block body_class %}app tutor{% endblock %}
+
+{% block content %}
+  <section class="blue feature-box"><div class="inner">
+    <h1>Class room <span>{{class.subject}}</span></h1>
+  </div></section>
+  
+  <div class="row">
+	  <p>Please get to a flash-enabled desktop computer to access the classroom. <a href="http://get.adobe.com/flashplayer/" target="_blank">Click here</a> to install or get more info.</p>
+  </div>
+{% endblock %}
