@@ -72,6 +72,13 @@
               <ul class="tutor-qualifications-list">
 				{% if profile.crb_checked %}Yes{% else %}No{% endif %}
               </ul>
+              
+              {% if profile.crb_checked %}
+              <label>CRB Expire Date</label>
+              <ul class="tutor-qualifications-list">
+				{{ profile.crb_expiry_date|date:"M d, Y" }}
+              </ul>
+              {% endif %}
 
               <label>Webcam</label>
               <ul class="tutor-qualifications-list">
