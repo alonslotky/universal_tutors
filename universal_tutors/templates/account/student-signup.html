@@ -20,6 +20,8 @@
         </div>
       </div>
     
+     {% if form.password1 and form.first_name.errors %}<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>{% endif %}
+     {% if form.password1 and form.last_name.errors %}<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>{% endif %}
       <div class="row">
         <div class="eight columns">
         
@@ -27,8 +29,6 @@
           {# if signup is from twitter or facebook #}
           <label>Name*</label>
           
-         {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
-         {% if form.last_name.errors %}<div class="formError">Last name is required</div>{% endif %}
           <div class="row space">
             <div class="six columns">
               <input name="first_name" type="text" class="input-text" placeholder="First Name" value="{{form.first_name.value}}">

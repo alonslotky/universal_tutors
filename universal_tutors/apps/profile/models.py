@@ -126,6 +126,8 @@ class UserProfile(BaseModel):
         (5, 'CLASS', 'Class is about to start'),
         (6, 'ACCEPTED_BY_TUTOR', 'A class has been accepted by tutor'),
         (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
+        (8, 'CRB_EXPIRED', 'The CRB is expired'),
+        (8, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 60 days'),
     ))
     
     def get_upload_to(instance, filename):
@@ -168,6 +170,8 @@ class UserProfile(BaseModel):
     crb = models.BooleanField(default=False)
     crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
     crb_expiry_date = models.DateField(null=True, blank=True)
+    crb_alert_expire_date = models.BooleanField(default = False)
+    crb_alert_expired = models.BooleanField(default = False)
     
     activated = models.BooleanField(default=False)
     activation_date = models.DateTimeField(null=True, blank=True, default=None)
@@ -183,7 +187,6 @@ class UserProfile(BaseModel):
     
     classes_given = models.PositiveIntegerField(default=0)
 
-    crb_checked = models.BooleanField(default=False)
 
     @property
     def crb_checked(self):
@@ -240,15 +243,22 @@ class UserProfile(BaseModel):
         if self.type != self.TYPES.NONE and not self.is_over16:
             self.type = self.TYPES.UNDER16
 
-        if self.type == self.TYPES.TUTOR and \
-           self.profile_image and \
-           self.profile_image != settings.DEFAULT_PROFILE_IMAGE and \
-           self.about and \
-           self.video:
-            self.activated = True
-                
-        else:
-            self.activated = False
+        if self.type == self.TYPES.TUTOR:
+            if self.profile_image and \
+               self.profile_image != settings.DEFAULT_PROFILE_IMAGE and \
+               self.about and \
+               self.video:
+                self.activated = True
+                    
+            else:
+                self.activated = False
+            
+            if self.id:
+                previous = UserProfile.objects.get(id=self.id)
+                if previous.crb_expiry_date != self.crb_expiry_date:
+                    self.crb_alert_expire_date = False
+                    self.crb_alert_expired = False
+        
         super(self.__class__, self).save(*args, **kwargs)
 
         user = self.user
@@ -572,6 +582,21 @@ class UserProfile(BaseModel):
         except IndexError:
             return 0
 
+    def check_crb(self):
+        if self.crb_expiry_date:
+            today = datetime.date.today()
+            if self.crb_expiry_date < today and not self.crb_alert_expired:
+                self.send_notification(self.NOTIFICATIONS_TYPES .CRB_EXPIRED, {'tutor': self.user})
+                self.crb_alert_expired = True 
+                self.crb_alert_expire_date = True
+                super(self.__class__, self).save()
+            
+            if self.crb_expiry_date < today + datetime.timedelta(days=60) and not self.crb_alert_expire_date:
+                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user})
+                self.crb_alert_expire_date = True
+                super(self.__class__, self).save()
+
+
     def send_notification(self, type, context):
         subject = None
         html = None
@@ -604,6 +629,12 @@ class UserProfile(BaseModel):
         if type == self.NOTIFICATIONS_TYPES.CLASS:
             subject = 'Your class is about to start'
             html = render_to_string('emails/class.html', context)
+        if type == self.NOTIFICATIONS_TYPES.CRB_EXPIRED:
+            subject = 'CRB expired'
+            html = render_to_string('emails/crb_expired.html', context)
+        if type == self.NOTIFICATIONS_TYPES.CLASS:
+            subject = 'CRB is about to expire'
+            html = render_to_string('emails/crb_expire_date.html', context)
         
         if subject and html:            
             sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL

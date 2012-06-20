@@ -1,13 +1,12 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tz tutor_tags ut_tags humanize %}
+{% load fb_versions common_tags tutor_tags ut_tags humanize %}
 
 {% block title %}Messages{% endblock %}
 {% block body_class %}student messages app{% endblock %}
 
 {% block content %}
 
-{% timezone user.profile.timezone %}
 	  <section class="blue feature-box"><div class="inner">
       <h1>{% if user != person %}{{person.get_full_name}}'s {% endif %}Messages <span>Conversations with tutors.</span></h1>
       </div></section>
@@ -36,8 +35,8 @@
           </div>
           
           <div class="two columns timestamp">
-            <p>Received on <br><strong>
-            	{% if last_message.created|is_today %}{{last_message.created|naturaltime}}{% else %}{{last_message.created|naturalday}}{% endif %}
+            <p>Received {% if not last_message.created|is_today %}on{% endif %} <br><strong>
+            	{% if last_message.created|is_today %}{{last_message.created|customnaturaltime}}{% else %}{{last_message.created|date:"D, d M Y"}}{% endif %}
             </strong></p>
           </div>
           
@@ -60,5 +59,4 @@
 	  {% endfor %}
 		
 	{% include 'profile/fragments/_modal_messages.html' %}
-{% endtimezone %}
 {% endblock %}

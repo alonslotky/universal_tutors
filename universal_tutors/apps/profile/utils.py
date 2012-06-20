@@ -46,3 +46,8 @@ def mass_payments():
                 'receivers': receivers,
             })
 
+
+def check_crb():
+    for tutor in Tutor.objects.select_related().filter(profile__crb_expiry_date__isnull = False):
+        tutor.profile.check_crb()
+        

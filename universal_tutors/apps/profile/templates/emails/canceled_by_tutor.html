@@ -1,10 +1,7 @@
 {% extends "emails/base.html" %}
-{% load tz %}
 
 {% block content %}
-{% timezone student.profile.timezone %}
 A <a style="color:#78AA1A;text-decoration:none;" href="http://{{PROJECT_SITE_DOMAIN}}{% url student_classes %}">{{class.subject}} class</a> booked on {{class.start}}
 has been canceled by the tutor <a style="color:#78AA1A;text-decoration:none;" href="http://{{PROJECT_SITE_DOMAIN}}{% url profile tutor.username %}">{{tutor.get_full_name}}</a> to the follow reason: "{{class.cancelation_reason}}".
-{% endtimezone %}
 {% endblock %}
 
