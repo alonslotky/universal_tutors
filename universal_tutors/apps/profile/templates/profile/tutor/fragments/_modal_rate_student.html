@@ -1,3 +1,11 @@
+{% load ut_tags %}
+{% get_project_url %}
+
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "dd9ea648-d1dc-414a-b987-5b70d81ab56e"}); </script>
+
+
 <div id="modal-review" class="reveal-modal message review">
   <h4>Feedback for: <strong id="modal-review-student-name">John Doe</strong></h4>
     
@@ -8,6 +16,10 @@
     <textarea id="tutor-rate-student-text"  name="text">Feedback for this student ...</textarea>
     <input type="submit" class="small button" value="Send">
   </form>
+  
+  <span id="button_1"></span>
+  <span id="button_2"></span>
+  <span id="button_3"></span>
 
   <a class="close-reveal-modal">&#215;</a>
 </div>
@@ -50,5 +62,75 @@
 		$('#tutor-rate-student-id').val(user_id);
 		$('#tutor-rate-student-class').val(class_id);
 		$('#tutor-rate-student-text').val(text ? text : 'Feedback for this student ...');
+		
+		$("#button_1").empty();
+		$("#button_2").empty();
+		$("#button_3").empty();
+				
+		stWidget.addEntry({
+			"service":"facebook",
+			"element":document.getElementById('button_1'),
+			"url":"{{project_url}}",
+			"title":"{{ user.get_full_name }} rated student " + user_name,
+			"type":"large",
+			"text":"ShareThis" ,
+			//"summary":"{{ user.get_full_name }} rated tutor " + user_name
+		});
+		
+		stWidget.addEntry({
+			"service":"twitter",
+			"element":document.getElementById('button_2'),
+			"url":"{{project_url}}",
+			"title":"{{ user.get_full_name }} rated student " + user_name,
+			"type":"large",
+			"text":"ShareThis" ,
+			//"summary":"{{ user.get_full_name }} rated tutor " + user_name
+		});
+		
+		stWidget.addEntry({
+			"service":"email",
+			"element":document.getElementById('button_3'),
+			"url":"{{project_url}}",
+			"title":"Student Review from {{ user.get_full_name }}",
+			"type":"large",
+			"text":"ShareThis" ,
+			"summary":"{{ user.get_full_name }} rated student " + user_name
+		});
+		
+	$("#tutor-rate-student-text").keyup(function(){
+		$("#button_1").empty();
+		$("#button_2").empty();
+		$("#button_3").empty();
+				
+		stWidget.addEntry({
+			"service":"facebook",
+			"element":document.getElementById('button_1'),
+			"url":"{{project_url}}",
+			"title":$("#tutor-rate-student-text").val(),
+			"type":"large",
+			"text":"ShareThis" ,
+			//"summary":$("#tutor-rate-student-text").val()
+		});
+		
+		stWidget.addEntry({
+			"service":"twitter",
+			"element":document.getElementById('button_2'),
+			"url":"{{project_url}}",
+			"title":$("#tutor-rate-student-text").val(),
+			"type":"large",
+			"text":"ShareThis" ,
+			// "summary":$("#tutor-rate-student-text").val()
+		});
+		
+		stWidget.addEntry({
+			"service":"email",
+			"element":document.getElementById('button_3'),
+			"url":"{{project_url}}",
+			"title":"Student Review from {{ user.get_full_name }}",
+			"type":"large",
+			"text":"ShareThis" ,
+			"summary":$("#tutor-rate-student-text").val()
+		});
+	});
 	}
 </script>
