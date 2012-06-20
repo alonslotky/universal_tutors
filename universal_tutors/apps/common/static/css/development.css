@@ -74,3 +74,5 @@ ul.errorlist li { color: red; }
 .no-hover:hover {
 	color: #78AA1A;
 }
+
+.link-messages { padding: 10px !important; height: 22px !important; margin-top: 1px !important;}
