@@ -47,3 +47,15 @@ class TutorVideoNode(template.Node):
 def get_video(parser, token):
     bits = token.split_contents()
     return TutorVideoNode(bits[1])
+
+
+class ScribblarSpeedValues(template.Node):
+    def render(self, context):
+        context['scribblar_speed'] = settings.SCRIBBLAR_SPEED
+        context['speed_test_link'] = settings.SPEED_TEST_LINK
+        return ''
+
+
+@register.tag
+def get_scribblar_speed_test(parser, token):
+    return ScribblarSpeedValues()

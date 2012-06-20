@@ -357,10 +357,13 @@ PAYPAL_API_SIGNATURE = "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AvPh38EgPokDBXH1F0pyh46RydCh
 PAYPAL_TEST = True
 
 
+#SCRIBBLAR SPEED TEST
+SCRIBBLAR_SPEED = '1.77 Mbps'
+SPEED_TEST_LINK = 'http://www.speedtest.net/'
+
+
 # Allow for local (per-user) override
 try:
     from local_settings import *
 except ImportError:
     pass
-
-
