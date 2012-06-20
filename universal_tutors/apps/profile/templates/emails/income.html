@@ -1,10 +1,7 @@
 {% extends "emails/base.html" %}
-{% load tz %}
 
 {% block content %}
-{% timezone tutor.profile.timezone %}
 You has received {{class.earning_fee}} credit{{class.earning_fee|pluralize}} from <a style="color:#78AA1A;text-decoration:none;" href="http://{{PROJECT_SITE_DOMAIN}}{% url tutor_classes %}">{{class.subject}} class</a> given on {{class.start}}
 to student "<a style="color:#78AA1A;text-decoration:none;" href="http://{{PROJECT_SITE_DOMAIN}}{% url profile student.username %}">{{student.get_full_name}}</a>".
-{% endtimezone %}
 {% endblock %}
 

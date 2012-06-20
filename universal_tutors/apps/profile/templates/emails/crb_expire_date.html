@@ -1,0 +1,5 @@
+{% extends "emails/base.html" %}
+
+{% block content %}
+Your crb is going to expire on {{tutor.profile.crb_expiry_date|date:"D, d M Y"}}.
+{% endblock %}

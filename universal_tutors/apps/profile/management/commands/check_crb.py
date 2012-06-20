@@ -1,10 +1,10 @@
 from django.core.management.base import NoArgsCommand
 
 class Command(NoArgsCommand):
-    help = """Mass payment of tutors"""
+    help = """Check if is valid the tutors crb"""
     
     def handle_noargs(self, **options):
-        from apps.profile.utils import mass_payments        
-        mass_payments()
+        from apps.profile.utils import check_crb        
+        check_crb()
         
         

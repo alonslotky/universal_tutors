@@ -1,10 +1,7 @@
 {% extends "emails/base.html" %}
-{% load tz %}
 
 {% block content %}
-{% timezone tutor.profile.timezone %}
 A <a style="color:#78AA1A;text-decoration:none;" href="http://{{PROJECT_SITE_DOMAIN}}{% url student_classes %}">{{class.subject}} class</a> 
 has been rejected. Reason: "{{class.cancelation_reason}}".
-{% endtimezone %}
 {% endblock %}
 

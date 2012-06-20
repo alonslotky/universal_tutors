@@ -371,3 +371,123 @@ def convert_datetime(dt, timezone):
 @register.filter
 def sub(x, y):
     return x-y
+
+@register.filter
+def customnaturalday(value):
+    """
+    For date and time values shows how many seconds, minutes or hours ago
+    compared to current timestamp returns representing string.
+    """
+    try:
+        now = datetime.datetime.now()
+        value = datetime.date(value.year, value.month, value.day)
+    except AttributeError:
+        return value
+    except ValueError:
+        return value
+
+    today = datetime.date.today()
+    time = ''
+
+    if value == today:
+        return 'Today'
+
+    elif value < today:
+        delta = today - value
+        if delta.days == 1:
+            return 'Yesterday'
+        if delta.days < 8:
+            return "%s days ago" % delta.days
+        if delta.days < 30:
+            value = delta.days // 7
+            return "%s %s ago" % (value, 'weeks' if value != 1 else 'week')
+        if delta.days < 355:
+            value = delta.days // 30
+            return "%s %s ago" % (value, 'months' if value != 1 else 'month')
+        
+        value = delta.days // 355
+        return "%s %s ago" (value, 'years' if value != 1 else 'year')
+
+    else:
+        delta = value - today
+        if delta.days == 1:
+            return 'Tomorrow'
+        if delta.days < 8:
+            return "%s days from today" % delta.days
+        if delta.days < 30:
+            value = delta.days // 7
+            return "%s %s from today" % (value, 'weeks' if value != 1 else 'week')
+        if delta.days < 355:
+            value = delta.days // 30
+            return "%s %s from now" % (value, 'months' if value != 1 else 'month')
+
+        value = delta.days // 355
+        return "%s %s from now" (value, 'years' if value != 1 else 'year')
+
+@register.filter
+def customnaturaltime(value):
+    """
+    For date and time values shows how many seconds, minutes or hours ago
+    compared to current timestamp returns representing string.
+    """
+    try:
+        value = datetime.datetime(value.year, value.month, value.day, value.hour, value.minute, value.second)
+    except AttributeError:
+        return value
+    except ValueError:
+        return value
+
+    if getattr(value, 'tzinfo', None):
+        now = datetime.datetime.now(LocalTimezone(value))
+    else:
+        now = datetime.datetime.now()
+    now = now - datetime.timedelta(0, 0, now.microsecond)
+
+    time = ''
+
+    if value < now:
+        delta = now - value
+        #if delta.days != 0:
+        #    return "%s ago" % defaultfilters.timesince(value)
+        years = delta.days / 365
+        weeks = delta.days / 7
+        months = weeks / 4
+        if years != 0:
+            return '%d years ago' % years if years > 1 else 'a year ago'
+        elif months != 0:
+            return '%d months ago' % months if months > 1 else 'a month ago'
+        elif delta.days != 0:
+            return '%s days ago' % delta.days if delta.days > 1 else 'a day ago'
+        elif delta.seconds == 0:
+            return 'now'
+        elif delta.seconds < 60:
+            return '%s seconds ago' % delta.seconds if delta.seconds > 1 else 'a second ago'
+        elif delta.seconds / 60 < 60:
+            count = delta.seconds / 60
+            return '%s minutes ago' % count if count > 1 else 'a minute ago'
+        else:
+            count = delta.seconds / 60 / 60
+            return '%s hours ago' % count if count > 1 else 'an hour ago'
+    else:
+        delta = value - now
+        #if delta.days != 0:
+        #    return '%s from now' % defaultfilters.timeuntil(value)
+        years = delta.days / 365
+        weeks = delta.days / 7
+        months = weeks / 4
+        if years != 0:
+            return '%d years ago' % years if years > 1 else 'a year from now'
+        elif months != 0:
+            return '%d months ago' % months if months > 1 else 'a month from now'
+        elif delta.days != 0:
+            return '%s days ago' % delta.days if delta.days > 1 else 'a day from now'
+        elif delta.seconds == 0:
+            return 'now'
+        elif delta.seconds < 60:
+            return '%s seconds from now' % delta.seconds if delta.seconds > 1 else 'a second from now'
+        elif delta.seconds / 60 < 60:
+            count = delta.seconds / 60
+            return '%(count)s minutes from now' % count if count > 1 else 'a minute from now'
+        else:
+            count = delta.seconds / 60 / 60
+            return '%(count)s hours from now' % count if count > 1 else 'a hour from now'
