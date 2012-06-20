@@ -24,8 +24,12 @@ class UTUserAdmin(UserAdmin):
     list_display = ('username','email','first_name','last_name','date_joined','last_login',)
     list_editable = []
     inlines = [ UserProfileInline ]
+    
+class BadReviewAdmin(admin.ModelAdmin):
+    list_display = ('user', 'rate', 'related_class', 'text')
+    
 
-
+admin.site.register(BadReview, BadReviewAdmin)
 admin.site.unregister(User)
 admin.site.register(User, AdminUserAdmin)
 admin.site.register(Tutor, TutorAdmin)

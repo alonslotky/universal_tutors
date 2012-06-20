@@ -1,5 +1,6 @@
 {% with user_profile.get_next_class as next_class %}
 {% if next_class %}
+
 <section class="timer">
   <div id="timer-container" class="wrapper">
     <div class="one">
@@ -23,8 +24,7 @@
     </div>
     
     <div class="three">
-      <a id="enter-next-class-button" href="{% url class_detail next_class.id %}" class="button hide-on-phones hidden"><span class="rocket icon">Enter Classroom</span></a>
-      <p class="show-on-phones">Get to a desktop computer with Flash enabled to enter classroom.</p>
+      <a id="enter-next-class-button" href="{% url class_detail next_class.id %}" class="button hidden"><span class="rocket icon">Enter Classroom</span></a>
     </div>
   </div>
 </section>
@@ -127,7 +127,6 @@
 			$('#enter-next-class-button').addClass('hidden');
 		}
 		
-		var timer_size = 10;
 		$('#timer-container').children().each(function() {
 		    timer_size += $(this).outerWidth( true );
 		});

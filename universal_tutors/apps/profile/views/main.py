@@ -42,7 +42,7 @@ def profile(request, username=None):
     reviews = None
     can_send_message = True
     if profile.type == profile.TYPES.TUTOR:
-        reviews = person.reviews_as_tutor.all
+        reviews = person.reviews_as_tutor.filter(is_active=True)
         template = 'profile/tutor/profile.html'
     elif profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
         if not Message.objects.filter(Q(user=person, to=user) | Q(user=user, to=person)) and \
@@ -397,6 +397,22 @@ def book_class(request, username):
         'date': datetime.date.today(),
         'week': tutor.profile.get_week(gtz = user.profile.timezone),
     }
+
+
+@login_required
+@over16_required()
+@main_render(template='profile/tutor/crb_form.html')
+def crb_form(request):
+    """
+    redirect for CRB form
+    """
+    user = request.user
+    profile = user.profile
+    if profile.type != profile.TYPES.TUTOR:
+        raise http.Http404()
+    
+    return {}
+
     
     
 ### PARENT #####################################################
