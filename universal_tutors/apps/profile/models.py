@@ -128,11 +128,13 @@ class UserProfile(BaseModel):
         (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
     ))
     
+    UPLOAD_IMAGES_PATH = 'uploads/profiles/profile_images'
+    
     def get_upload_to(instance, filename):
         name, ext = os.path.splitext(filename)
         name = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
         new_filename = '%s%s' % (name, ext.lower())
-        return os.path.join('uploads/profiles/profile_images', new_filename)
+        return os.path.join(UserProfile.UPLOAD_IMAGES_PATH, new_filename)
 
     user = AutoOneToOneField(User, related_name="profile")
     
