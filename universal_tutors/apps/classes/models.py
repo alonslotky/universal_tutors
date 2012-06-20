@@ -245,7 +245,7 @@ class Class(BaseModel):
             student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.STOPPED_BY_STUDENT, credits=self.credit_fee, related_class=self)
 
     def canceled_by_student(self, reason):
-        if self.status == self.STATUS_TYPES.BOOKED:
+        if self.status == self.STATUS_TYPES.BOOKED or self.status == self.STATUS_TYPES.WAITING:
             self.status = self.STATUS_TYPES.CANCELED_BY_STUDENT
             self.cancelation_reason = reason
             super(self.__class__, self).save()
