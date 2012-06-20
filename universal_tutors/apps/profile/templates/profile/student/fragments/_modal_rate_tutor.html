@@ -1,3 +1,10 @@
+{% load ut_tags %}
+{% get_project_url %}
+
+<script type="text/javascript">var switchTo5x=true;</script>
+<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript">stLight.options({publisher: "dd9ea648-d1dc-414a-b987-5b70d81ab56e"}); </script>
+
 <div id="modal-review" class="reveal-modal message review">
   <h4>Review for: <strong id="modal-review-tutor-name" class="rate-tutor-name">John Doe</strong></h4>
     
@@ -28,6 +35,10 @@
 	</div>
 
   </form>
+
+  <span id="button_1"></span>
+  <span id="button_2"></span>
+  <span id="button_3"></span>
 
   <a class="close-reveal-modal">&#215;</a>
 </div>
@@ -63,6 +74,7 @@
 			}
 		});
 		
+		
 	});
 	
 	var student_rate_tutor = function(user_id, user_name, class_id, text, rate) {
@@ -71,6 +83,40 @@
 		$('#student-rate-tutor-class').val(class_id);
 		$('#student-rate-tutor-text').val(text ? text : 'Review this guy ...');
 		$('#student-rate-tutor-rate').val(rate ? rate : 0);
+		
+		$("#button_1").empty();
+		$("#button_2").empty();
+		$("#button_3").empty();
+
+		stWidget.addEntry({
+			"service":"facebook",
+			"element":document.getElementById('button_1'),
+			"url":"{{project_url}}",
+			"title":"{{ user.get_full_name }} rated tutor " + user_name,
+			"type":"large",
+			"text":"ShareThis" ,
+			//"summary":"{{ user.get_full_name }} rated tutor " + user_name
+		});
+		
+		stWidget.addEntry({
+			"service":"twitter",
+			"element":document.getElementById('button_2'),
+			"url":"{{project_url}}",
+			"title":"{{ user.get_full_name }} rated tutor " + user_name,
+			"type":"large",
+			"text":"ShareThis" ,
+			//"summary":"{{ user.get_full_name }} rated tutor " + user_name
+		});
+		
+		stWidget.addEntry({
+			"service":"email",
+			"element":document.getElementById('button_3'),
+			"url":"{{project_url}}",
+			"title":"Tutor Review from {{ user.get_full_name }}",
+			"type":"large",
+			"text":"ShareThis" ,
+			"summary":"{{ user.get_full_name }} rated tutor " + user_name
+		});
 		
 		rate_tutor(rate);
 	}
@@ -84,5 +130,41 @@
 			$('#student-rate-tutor-star-'+ i).addClass('on');				
 		}		
 	}
+	
+	$("#student-rate-tutor-text").keyup(function(){
+		$("#button_1").empty();
+		$("#button_2").empty();
+		$("#button_3").empty();
+		
+	    stWidget.addEntry({
+	 		"service":"facebook",
+			"element":document.getElementById('button_1'),
+			"url":"{{project_url}}",
+			"title":$("#student-rate-tutor-text").val(),
+			"type":"large",
+			"text":"ShareThis" ,
+			//"summary":$("#student-rate-tutor-text").val()
+		});
+		
+		stWidget.addEntry({
+			"service":"twitter",
+			"element":document.getElementById('button_2'),
+			"url":"{{project_url}}",
+			"title":"Tutor Review from {{ user.get_full_name }}",
+			"type":"large",
+			"text":"ShareThis" ,
+			"summary":$("#student-rate-tutor-text").val()
+		});
+		
+		stWidget.addEntry({
+			"service":"email",
+			"element":document.getElementById('button_3'),
+			"url":"{{project_url}}",
+			"title":$("#student-rate-tutor-text").val(),
+			"type":"large",
+			"text":"ShareThis" ,
+			//"summary":$("#student-rate-tutor-text").val()
+		});
+	});
 	
 </script>

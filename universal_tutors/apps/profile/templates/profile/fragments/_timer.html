@@ -3,30 +3,35 @@
 
 <section class="timer">
   <div id="timer-container" class="wrapper">
-    <div class="one">
-      <p id="timer-text">Your next class starts in</p>
-    </div>
-    
-    <div class="two auto-width">
-      <span id="days_d" class="days-numbers number hidden"></span>
-      <span id="days_u" class="days-numbers number hidden"></span>
-      <span class="days-numbers">days&nbsp;</span>
-      <span id="hours_d" class="hours-numbers number hidden"></span>
-      <span id="hours_u" class="hours-numbers number"></span>
-      <span class="hours-numbers">h&nbsp;</span>
-      <span id="minutes_d" class="number"></span>
-      <span id="minutes_u" class="number"></span>
-      <span>m&nbsp;</span>
-      <span id="seconds_d" class="number timer-seconds hidden"></span>
-      <span id="seconds_u" class="number timer-seconds hidden"></span>
-      <span class="timer-seconds hidden">s</span>
-      <span class="timer-ago hidden">&nbsp;&nbsp;&nbsp;ago</span>
-    </div>
-    
-    <div class="three">
-      <a id="enter-next-class-button" href="{% url class_detail next_class.id %}" class="button hidden"><span class="rocket icon">Enter Classroom</span></a>
-    </div>
+  	<div id="timer-overflow" style="float: left;">
+	    <div class="one to_calc">
+	      <p id="timer-text">Your next class starts in</p>
+	    </div>
+	    
+	    <div class="two auto-width to_calc">
+	      <span id="days_d" class="days-numbers number hidden"></span>
+	      <span id="days_u" class="days-numbers number hidden"></span>
+	      <span class="days-numbers">days&nbsp;</span>
+	      <span id="hours_d" class="hours-numbers number hidden"></span>
+	      <span id="hours_u" class="hours-numbers number"></span>
+	      <span class="hours-numbers">h&nbsp;</span>
+	      <span id="minutes_d" class="number"></span>
+	      <span id="minutes_u" class="number"></span>
+	      <span>m&nbsp;</span>
+	      <span id="seconds_d" class="number timer-seconds hidden"></span>
+	      <span id="seconds_u" class="number timer-seconds hidden"></span>
+	      <span class="timer-seconds hidden">s</span>
+	      <span class="timer-ago hidden">&nbsp;&nbsp;&nbsp;ago</span>
+	    </div>
+	    
+	    <div id="timer-enter-next-class-container" class="three to_calc">
+	      <a id="enter-next-class-button" href="{% url class_detail next_class.id %}" class="button hidden"><span class="rocket icon">Enter Classroom</span></a>
+	    </div>
+  	</div>
   </div>
+</section>
+<section id="timer-no-flash" class="timer hidden">
+	<div class="row" style="text-align: center;">Please get to a flash-enabled desktop computer to access the classroom. <a href="http://get.adobe.com/flashplayer/" target="_blank">Click here</a> to install or get more info.</div>
 </section>
 <script type="text/javascript">
 	var timer_class = {{next_class.get_minutes_to_start}};
@@ -127,13 +132,17 @@
 			$('#enter-next-class-button').addClass('hidden');
 		}
 		
-		var timer_size = 10;
-		$('#timer-container').children().each(function() {
-		    timer_size += $(this).outerWidth( true );
-		});
 		
-		$('#timer-container').width(timer_size);
+		$('#timer-container').css('width', 'auto');
+		$('#timer-container').css('width', $('#timer-overflow').outerWidth()+'px');
 	}, 500);
+	
+	$(window).ready(function(){
+		if(!swfobject.hasFlashPlayerVersion("10")) {
+		   $('#timer-no-flash').removeClass('hidden');
+		   $('#timer-enter-next-class-container').addClass('hidden');
+		}
+	});
 </script>
 {% endif %}
 {% endwith %}

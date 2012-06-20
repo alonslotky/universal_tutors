@@ -6,116 +6,119 @@
 {% block body_class %}app classroom{% endblock %}
 
 {% block thirdparty_js_header %}
-<script type="text/javascript" src="http://media.muchosmedia.com/scribblar/scripts/includes.js"></script>
 <link href="http://media.muchosmedia.com/brainwave/style.css" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block extra_head %}
 <script type="text/javascript">
+	$(window).ready(function(){
 	var targetID = "scribblar";
+		
+		var flashvars = {
+			'userid': "{{user.profile.scribblar_id}}",
+			'roomid': "{{class.scribblar_id}}",
+			'preferredLocales': "en_US",
+			'username': "{{user.get_full_name}}"
+		};
 	
-	var flashvars = {
-		'userid': "{{user.profile.scribblar_id}}",
-		'roomid': "{{class.scribblar_id}}",
-		'preferredLocales': "en_US",
-		'username': "{{user.get_full_name}}"
-	};
-
-	var params = {
-		'allowscriptaccess': "always"
-	};
+		var params = {
+			'allowscriptaccess': "always"
+		};
+		
+		var attributes = {
+			'id': "scribblar",
+			'name': "scribblar"
+		};
 	
-	var attributes = {
-		'id': "scribblar",
-		'name': "scribblar"
-	};
-
-	swfobject.embedSWF(
-		"http://media.muchosmedia.com/scribblar/v2/main.swf", 
-		"alternate", 
-		"100%", 
-		"100%", 
-		"10", 
-		"http://media.muchosmedia.com/swfobject/expressInstall.swf", 
-		flashvars, 
-		params, 
-		attributes);
-
-	var ask_to_continue = false;
-	var alert_to_close = false;
+		swfobject.embedSWF(
+			"http://media.muchosmedia.com/scribblar/v2/main.swf", 
+			"alternate", 
+			"100%", 
+			"100%", 
+			"10", 
+			"http://media.muchosmedia.com/swfobject/expressInstall.swf", 
+			flashvars, 
+			params, 
+			attributes);
 	
-	var checkStatus = function() {
-		setTimeout(function(){
-			$.ajax({
-				type: 'get',
-				url: '{% url check_status class.id %}',
-				complete: function() {
-					checkStatus();
-				},
-				success: function(response) {
-					if (response == '{{class.RESPONSE_TYPES.CLOSE}}') {
-						$('#alternate-container').remove();
-						$('#exit-class-button').click();
-					}
-					
-					{% if user == class.student %}
-					else if (response == '{{class.RESPONSE_TYPES.ASK_TO_CONTINUE}}') {
-						if(!ask_to_continue) {
-							ask_to_continue = true;						
-							$('#ask-continue-button').click();
-							setTimeout(function(){
-								$('#close-ask-to-continue').click();
-							}, 15000);
+		var ask_to_continue = false;
+		var alert_to_close = false;
+		
+		var checkStatus = function() {
+			setTimeout(function(){
+				$.ajax({
+					type: 'get',
+					url: '{% url check_status class.id %}',
+					complete: function() {
+						checkStatus();
+					},
+					success: function(response) {
+						if (response == '{{class.RESPONSE_TYPES.CLOSE}}') {
+							$('#alternate-container').remove();
+							$('#exit-class-button').click();
 						}
-					}
-					{% endif %}
-
-					else if (response == '{{class.RESPONSE_TYPES.CLOSE_ALERT}}') {
-						if(!alert_to_close) {
-							alert_to_close = true;
-						}
-					} else {
 						
-					}			
-				}
-			});				
-		}, 30000);
-	};
-
-	checkStatus();
+						{% if user == class.student %}
+						else if (response == '{{class.RESPONSE_TYPES.ASK_TO_CONTINUE}}') {
+							if(!ask_to_continue) {
+								ask_to_continue = true;						
+								$('#ask-continue-button').click();
+								setTimeout(function(){
+									$('#close-ask-to-continue').click();
+								}, 15000);
+							}
+						}
+						{% endif %}
 	
-	var checkPopups = function() {
-		setTimeout(function(){
-			var all_closed = true;
-			$('.reveal-modal').each(function(){
-				if( $(this).css("display") != "none" && $(this).css("visibility") != "hidden" ) {
-					all_closed = false;
+						else if (response == '{{class.RESPONSE_TYPES.CLOSE_ALERT}}') {
+							if(!alert_to_close) {
+								alert_to_close = true;
+							}
+						} else {
+							
+						}			
+					}
+				});				
+			}, 30000);
+		};
+	
+		checkStatus();
+		
+		var checkPopups = function() {
+			setTimeout(function(){
+				var all_closed = true;
+				$('.reveal-modal').each(function(){
+					if( $(this).css("display") != "none" && $(this).css("visibility") != "hidden" ) {
+						all_closed = false;
+					}
+				});
+				
+				if(all_closed) {
+					$('#alternate-container').removeClass('hidden')
+				} else {
+					$('#alternate-container').addClass('hidden');
 				}
-			});
-			
-			if(all_closed) {
-				$('#alternate-container').removeClass('hidden')
-			} else {
-				$('#alternate-container').addClass('hidden');
+				checkPopups();
+			}, 500);
+		};
+		
+		var checkFlash = function() {
+			if(!swfobject.hasFlashPlayerVersion("10")) {
+			   window.location.href="{% url class_no_flash class.id %}";
 			}
-			checkPopups();
-		}, 500);
-	};
+		};
 	
-	var checkFlash = function() {
-		if(!swfobject.hasFlashPlayerVersion("1")) {
-		    alert("You don't have flash player installed! Please install it to be able to see this class.");
-		}
-	};
-
-	checkStatus();
-	checkPopups();
-	checkFlash();
+		checkStatus();
+		checkPopups();
+		checkFlash();
 	
+		
+	});
 </script>
 {% endblock %}
 
 {% block full_content %}
+	<div id="with-flash">
 	  <header>
 	    <div class="logo alt ir left"><a>Universal Tutors</a></div>
 	    {% if user == class.student %}
@@ -129,9 +132,6 @@
 	  <div id="alternate-container" class="main scribblar-container">
 	  	<div id="alternate"></div>
 	  </div>
-	
-	<div class="container show-on-phones end">
-	  <p>Please get to a Flash-enabled desktop computer to access the classroom.</p>
 	</div>
 	
 	{% include "classes/fragments/_modal_ask_to_continue.html" %}
