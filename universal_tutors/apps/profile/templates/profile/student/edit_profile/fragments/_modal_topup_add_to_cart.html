@@ -25,7 +25,7 @@
 	    		{% for bundle in bundles %}
 	    		<option value="{{bundle.credits|floatformat}}">{{bundle.credits|floatformat}} credits  - {{currency.symbol}} {{bundle.credits|in_currency:currency|discount:bundle.discount|floatformat:2}} {% if bundle.discount %}({{bundle.get_discount_percentage|floatformat}}% discount){% endif %}</option>
 	    		{% endfor %}
-	    		<option value="-1">Other number or credits</option>
+	    		<option value="-1">Other number of credits</option>
 	    	</select>
       	</div>
       	<div id="id_credits_container" class="row hidden">
