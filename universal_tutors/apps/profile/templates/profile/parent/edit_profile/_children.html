@@ -5,46 +5,40 @@
     
     <table class="stretch">
       <tr>
-        <th>
-          <div class="row">
-            <div class="eight columns phone-one">
-              Name
-            </div>
-            <div class="three columns phone-one">
-              Credits
-            </div>
-            <div class="one columns phone-two">
-              Actions
-            </div>
-          </div>
-        </th>
+	      <th>
+	      	Name
+	      </th>
+	      <th>
+	      	Classes
+	      </th>
+	      <th>
+	      	Messages
+	      </th>
+	      <th>
+	      	Credits
+	      </th>
+	      <th>
+	      	Actions
+	      </th>
       </tr>
-      <tr>
-        <td>	            
           {% for item in user.children.all %}
           {% with item.child as child %}
           {% with child.profile as child_profile %}
-	          <div class="row">
-	            <div class="eight columns phone-one">
-	            	<a href="{% url profile child.username %}">{{child.get_full_name}}</a>
-	            </div>
-	            <div class="three columns phone-one">
-	            	{{child_profile.credit}} credit{{child_profile.credit|pluralize}}
-	            </div>
-	            <div class="one columns phone-two">
-				    <a class="button" href="javascript:;" data-reveal-id="modal-topup" onclick="topup_account('{% url topup_cart child.username %}');"><span class="icon credits">Top Up Credits</span></a>
-				    <a class="button" href="{% url history child.username %}"><span class="icon history">View History</span></a>
-	            </div>
-	          </div>
-	          <hr>
+		  <tr>
+	        <td><a href="{% url profile child.username %}">{{child.get_full_name}}</a></td>
+	        <td><a href="{% url student_classes child.username %}">view classes</a></td>
+	        <td><a href="{% url student_messages child.username %}">view messages</a></td>
+	        <td>{{child_profile.credit}} credit{{child_profile.credit|pluralize}}</td>
+	        <td>
+			    <a class="button" href="javascript:;" data-reveal-id="modal-topup" onclick="topup_account('{% url topup_cart child.username %}');"><span class="icon credits">Top Up Credits</span></a>
+			    <a class="button" href="{% url history child.username %}"><span class="icon history">View History</span></a>
+	        </td>
+	      </tr>
 	      {% endwith %}
 	      {% endwith %}
           {% endfor %}
-          <hr>
-		  <a id="add-subject-link" href="{% url add_child %}">+ add child</a>
-        </td>
-      </tr>
     </table>
+  	<a id="add-subject-link" href="{% url add_child %}">+ add child</a>
   </li>
 {% endwith %}
 {% endwith %}
