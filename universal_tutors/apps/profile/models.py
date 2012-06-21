@@ -129,6 +129,7 @@ class UserProfile(BaseModel):
         (8, 'CRB_EXPIRED', 'The CRB is expired'),
         (9, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 60 days'),
         (10, 'MESSAGE', 'The CRB is going to expire in less than 60 days'),
+        (11, 'CANCELED_BY_SYSTEM', 'Class canceled by the system')
     ))
     
     UPLOAD_IMAGES_PATH = 'uploads/profiles/profile_images'
@@ -623,6 +624,9 @@ class UserProfile(BaseModel):
         if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_STUDENT:
             subject = 'Class canceled by student'
             html = render_to_string('emails/canceled_by_student.html', context)
+        if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_SYSTEM:
+            subject = 'Class canceled by the system'
+            html = render_to_string('emails/canceled_by_system.html', context)
         if type == self.NOTIFICATIONS_TYPES.INCOME:
             subject = 'Income credits received'
             html = render_to_string('emails/income.html', context)
