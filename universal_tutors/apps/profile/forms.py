@@ -135,7 +135,7 @@ class SignupForm(forms.ModelForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', )
         
-    username = forms.CharField(label=_('Username'), min_length=5, max_length=25, initial='')
+    username = forms.SlugField(label=_('Username'), min_length=5, max_length=25, initial='')
     first_name = forms.CharField(label=_('First name'), max_length = 25, initial='')
     last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='')
     email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
