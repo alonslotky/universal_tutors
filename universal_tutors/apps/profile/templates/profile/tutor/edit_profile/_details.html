@@ -184,16 +184,18 @@
 	});
 	
 	$("#profile-form").submit(function(e){
+		e.preventDefault();
 		var videoId = $("#id_video").val().split("v=")[1];
 		var url = "http://gdata.youtube.com/feeds/api/videos/" + videoId + "?v=2&alt=json";
 		$("#id_video").parent().prev("div.formError").remove();
-
+		var success = true;
 		$.get(url, function(data){
-			var duration = data['entry']['media$group']['yt$duration']['seconds']
+			var duration = parseInt(data['entry']['media$group']['yt$duration']['seconds']);
 			if (duration > 60){
 				$("#id_video").parent().before('<div class="formError">Your video has exceeded the 60 seconds limit.</div>');
-				e.preventDefault();
+				return false;
 			}
+			$("#profile-form").submit();
 		}, 'jsonp');
 		
 	});
