@@ -941,23 +941,10 @@ class TutorQualification(models.Model):
     
 class StudentInterest(models.Model):
     user = models.ForeignKey(User, related_name='interests')
-    system = models.ForeignKey(EducationalSystem, related_name='students')
     subject = models.ForeignKey(ClassSubject, related_name='students')
-    level = models.ForeignKey(ClassLevel, related_name='students')
-    # credits = models.FloatField()
-    
-#    def save(self, *args, **kwargs):
-#        if not StudentInterest.objects.filter(user=self.user, system=self.system, subject=self.subject, level=self.level).exclude(id=self.id):
-#            super(self.__class__, self).save(*args, **kwargs)
-#            user = self.user
-#             profile = user.profile 
-#             results = user.subjects.aggregate(min_credits = models.Min('credits'), max_credits = models.Max('credits'))   
-#             profile.min_credits = results['min_credits']
-#             profile.max_credits = results['max_credits']
-#             profile.save()
     
     def __unicode__(self):
-        return '%s (%s)' % (self.subject, self.level)
+        return '%s' % (self.subject)
 
 
 class TutorReview(BaseModel):
