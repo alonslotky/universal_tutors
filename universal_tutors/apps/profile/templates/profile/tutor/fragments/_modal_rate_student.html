@@ -1,5 +1,3 @@
-{% load ut_tags %}
-{% get_project_url %}
 
 <script type="text/javascript">var switchTo5x=true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
@@ -57,6 +55,45 @@
 		
 	});
 	
+	var setup_share_buttons = function() {
+		$("#button_1").empty();
+		$("#button_2").empty();
+		$("#button_3").empty();
+		
+		stWidget.addEntry({
+			"service":"facebook",
+			"element":document.getElementById('button_1'),
+			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
+			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+			"type":"large",
+			"text": $('#tutor-rate-student-text').val(),
+			"summary": $('#tutor-rate-student-text').val(),
+			"image": tutor_rated_image
+		});
+		
+		stWidget.addEntry({
+			"service":"twitter",
+			"element":document.getElementById('button_2'),
+			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
+			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+			"type":"large",
+			"text": $('#tutor-rate-student-text').val(),
+			"summary": $('#tutor-rate-student-text').val(),
+			"image": tutor_rated_image
+		});
+		
+		stWidget.addEntry({
+			"service":"email",
+			"element":document.getElementById('button_3'),
+			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
+			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+			"type":"large",
+			"text": $('#tutor-rate-student-text').val(),
+			"summary": $('#tutor-rate-student-text').val(),
+			"image": tutor_rated_image
+		});		
+	}
+
 	var tutor_rate_student = function(user_id, user_name, class_id, text) {
 		$('#modal-review-student-name').text(user_name);
 		$('#tutor-rate-student-id').val(user_id);
@@ -67,70 +104,10 @@
 		$("#button_2").empty();
 		$("#button_3").empty();
 				
-		stWidget.addEntry({
-			"service":"facebook",
-			"element":document.getElementById('button_1'),
-			"url":"{{project_url}}",
-			"title":"{{ user.get_full_name }} rated student " + user_name,
-			"type":"large",
-			"text":"ShareThis" ,
-			//"summary":"{{ user.get_full_name }} rated tutor " + user_name
-		});
-		
-		stWidget.addEntry({
-			"service":"twitter",
-			"element":document.getElementById('button_2'),
-			"url":"{{project_url}}",
-			"title":"{{ user.get_full_name }} rated student " + user_name,
-			"type":"large",
-			"text":"ShareThis" ,
-			//"summary":"{{ user.get_full_name }} rated tutor " + user_name
-		});
-		
-		stWidget.addEntry({
-			"service":"email",
-			"element":document.getElementById('button_3'),
-			"url":"{{project_url}}",
-			"title":"Student Review from {{ user.get_full_name }}",
-			"type":"large",
-			"text":"ShareThis" ,
-			"summary":"{{ user.get_full_name }} rated student " + user_name
-		});
-		
-	$("#tutor-rate-student-text").keyup(function(){
-		$("#button_1").empty();
-		$("#button_2").empty();
-		$("#button_3").empty();
-				
-		stWidget.addEntry({
-			"service":"facebook",
-			"element":document.getElementById('button_1'),
-			"url":"{{project_url}}",
-			"title":$("#tutor-rate-student-text").val(),
-			"type":"large",
-			"text":"ShareThis" ,
-			//"summary":$("#tutor-rate-student-text").val()
-		});
-		
-		stWidget.addEntry({
-			"service":"twitter",
-			"element":document.getElementById('button_2'),
-			"url":"{{project_url}}",
-			"title":$("#tutor-rate-student-text").val(),
-			"type":"large",
-			"text":"ShareThis" ,
-			// "summary":$("#tutor-rate-student-text").val()
-		});
-		
-		stWidget.addEntry({
-			"service":"email",
-			"element":document.getElementById('button_3'),
-			"url":"{{project_url}}",
-			"title":"Student Review from {{ user.get_full_name }}",
-			"type":"large",
-			"text":"ShareThis" ,
-			"summary":$("#tutor-rate-student-text").val()
-		});
-	});
+		setup_share_buttons();		
 	}
+
+	$("#tutor-rate-student-text").keyup(function(){
+		setup_share_buttons();		
+	});
 </script>
