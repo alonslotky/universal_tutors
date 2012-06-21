@@ -24,7 +24,7 @@
 	<div class="nine columns">
 		{% for item in recordings %}
 			<div class="row">
-				&raquo; <a target="_blank" href="{{class|rec_url:item.recid}}" target="_blank">Record {{forloop.counter}} (download)</a>
+				&raquo; <a target="_blank" href="{{class|rec_url:item.recid}}" target="_blank">Record {{forloop.counter}} (view)</a>
 			</div>
 		{% empty %}
 			<div class="row">No recordings where found to download</div>      		
