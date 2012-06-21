@@ -648,16 +648,18 @@ class UserProfile(BaseModel):
         
         
         if subject and html:            
-            try:
-                print subject
-                print html
-            except:
-                pass
             sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
             to = ['%s <%s>' % (user.get_full_name(), user.email)]
                     
             email_message = EmailMessage(subject, html, sender, to)
             email_message.content_subtype = 'html'
+            try:
+                print subject
+                print html[:10]
+                print sender
+                print to
+            except:
+                pass
             
             t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
             t.setDaemon(True)
