@@ -221,6 +221,25 @@ def tutor_messages(request):
         'usermessages':usermessages,
     }
 
+@login_required
+@main_render('profile/tutor/test_class.html')
+def test_class(request):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+    profile = user.profile
+
+    if profile.type != profile.TYPES.TUTOR:
+        raise http.Http404()
+    
+    if not profile.test_class_minutes:
+        return http.HttpResponseRedirect(reverse('edit_tutor_profile'))
+    
+    return {
+        'profile': profile,
+    }
+
 
 ### STUDENTS #####################################################
 @login_required
