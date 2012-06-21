@@ -32,4 +32,5 @@ def close_classes():
 def alert_classes():
     dt = datetime.datetime.now() + datetime.timedelta(minutes=30)
     
-    [class_.alert() for class_ in Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED, alert_sent=False), Q(date__lte=dt))]
+    for class_ in Class.objects.filter(Q(status=Class.STATUS_TYPES.BOOKED, alert_sent=False), Q(date__lte=dt)):
+        class_.alert()
