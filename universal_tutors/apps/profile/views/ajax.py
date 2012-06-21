@@ -700,4 +700,12 @@ def check_tutor_class_status(request):
             return http.HttpResponse('ok')
         else:
             return http.HttpResponse('close')
-        
+
+
+def get_user_image(request, user_id):
+    try:
+        user = User.objects.select_related().get(id=user_id)
+    except User.DoesNotExist:
+        raise http.Http404()
+    
+    return http.HttpResponse('http://%s%s' % (settings.PROJECT_SITE_DOMAIN, user.profile.profile_image.url))

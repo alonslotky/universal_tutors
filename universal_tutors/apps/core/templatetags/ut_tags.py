@@ -59,14 +59,3 @@ class ScribblarSpeedValues(template.Node):
 @register.tag
 def get_scribblar_speed_test(parser, token):
     return ScribblarSpeedValues()
-
-
-class ProjectUrlValue(template.Node):
-    def render(self, context):
-        context['project_url'] = 'http://%s' % settings.PROJECT_SITE_DOMAIN
-        return ''
-
-
-@register.tag
-def get_project_url(parser, token):
-    return ProjectUrlValue()
