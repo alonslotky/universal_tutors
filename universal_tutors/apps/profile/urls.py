@@ -117,8 +117,10 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)send_modal_message/(?P<to>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
     url(r'^(?i)send_modal_message/(?P<to>\d+)/(?P<class_id>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
 
-
     url(r'^(?i)referral-friend/$', 'referral_friend', {}, name = "referral_friend"),
+
+    url(r'^(?i)get_user_image/$', 'get_user_image', {}, name = "get_user_image"),
+    url(r'^(?i)get_user_image/(?P<user_id>\d+)/$', 'get_user_image', {}, name = "get_user_image"),
 )
 
 urlpatterns += patterns('apps.profile.views.topup',
