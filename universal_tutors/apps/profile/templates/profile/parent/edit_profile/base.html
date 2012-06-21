@@ -30,7 +30,7 @@
         <dd><a href="#account">Account</a></dd>
       </dl>
       
-      <form id="profile-form" method="post" enctype="multipart/form-data" class="nice custom">
+      <form id="profile-form" method="post" enctype="multipart/form-data" class="nice">
 	      {% csrf_token %}
 	      <ul class="nice tabs-content contained">
 			{% include "profile/parent/edit_profile/_details.html" %}
