@@ -768,6 +768,7 @@ class UserCreditMovement(BaseModel):
         (5, 'TOPUP', 'Top-up account'),
         (6, 'WITHDRAW', 'Withdraw to PayPal Account'),
         (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor (Refund)'),
+        (8, 'CANCELED_BY_SYSTEM', 'Class canceled by system (Refund)'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')
