@@ -117,7 +117,7 @@ class Class(BaseModel):
     tutor_appeared = models.BooleanField(default=False)
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
-    alert_sent = models.BooleanField(False)
+    alert_sent = models.BooleanField(default=False)
 
     @property
     def end_date(self):
