@@ -646,7 +646,13 @@ class UserProfile(BaseModel):
             subject = 'New message'
             html = render_to_string('emails/message.html', context)
         
+        
         if subject and html:            
+            try:
+                print subject
+                print html
+            except:
+                pass
             sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
             to = ['%s <%s>' % (user.get_full_name(), user.email)]
                     
