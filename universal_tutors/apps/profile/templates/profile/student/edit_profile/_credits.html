@@ -5,7 +5,7 @@
         <label>Credits</label>
       </div>
       <div class="eight columns">
-      	{% with profile.total_credits as total_credits %}
+      	{% with user_profile.total_credits as total_credits %}
         <p>You have {{total_credits}} credit{{total_credits|pluralize}} {% if total_credits != profile.credit %}(available {{profile.credit}} credit{{profile.credit|pluralize}}){% endif %}</p>
         {% endwith %}
       </div>

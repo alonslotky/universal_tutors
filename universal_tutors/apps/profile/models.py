@@ -23,7 +23,7 @@ from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, convert_datetime, difference_in_minutes
 
 from apps.classes.models import Class, ClassSubject, ClassLevel, EducationalSystem
-from apps.core.models import Currency
+from apps.core.models import Currency, Bundle
 from apps.classes.settings import *
 
 from paypal2.standart.ap import pay

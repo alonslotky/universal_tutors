@@ -68,3 +68,19 @@ class Video(models.Model):
                 video_id = self.url.replace('http://youtu.be/', '')
         return video_id
 
+
+class Bundle(models.Model):
+    """
+    Package with discounts
+    """
+    class Meta:
+        ordering = ('credits', )
+    
+    credits = models.FloatField()
+    discount = models.FloatField(help_text='Type 0.05 to 5% of discount')
+    
+    def __unicode__(self):
+        return '%s' % self.credits
+    
+    def get_discount_percentage(self):
+        return '%s' % (self.discount * 100)

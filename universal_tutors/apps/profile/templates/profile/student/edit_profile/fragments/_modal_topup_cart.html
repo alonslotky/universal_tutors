@@ -22,9 +22,7 @@
     <label>Value</label>
   </div>
   <div class="eight columns">
-  	{% with topup.currency as currency %}
-	<strong>{{currency.symbol}} {{topup.credits|in_currency:currency|floatformat:2}}</strong>
-	{% endwith %}
+	<strong>{{currency.symbol}} {{topup.value|floatformat:2}}</strong>
   </div>	  
 </div>
 <div class="row">&nbsp;</div>
