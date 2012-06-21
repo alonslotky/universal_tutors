@@ -268,6 +268,25 @@ class Class(BaseModel):
                 'tutor': tutor,
             })
 
+    def canceled_by_system(self, reason):
+        if self.status == self.STATUS_TYPES.WAITING:
+            self.status = self.STATUS_TYPES.CANCELED_BY_SYSTEM
+            self.cancelation_reason = 'Tutor did not accept or reject the class in a valid time'
+            super(self.__class__, self).save()
+            rooms.delete(roomid=self.scribblar_id)
+            
+            from apps.profile.models import UserCreditMovement
+            student = self.student
+            student_profile = student.profile
+            student_profile.credit += self.credit_fee
+            student_profile.save()
+            student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_SYSTEM, credits=self.credit_fee, related_class=self)
+            student_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CANCELED_BY_SYSTEM, {
+                'class': self,
+                'student': student,
+                'tutor': tutor,
+            })
+    
     def alert(self):
         student = self.student
         tutor = self.tutor
@@ -317,7 +336,7 @@ class Class(BaseModel):
             for referral in Referral.objects.select_related().filter(Q(key=tutor_profile.referral_key) | Q(key=self.student.profile.referral_key), Q(used=False)):
                 user = referral.user
                 profile = user.profile
-                count = user.referrals.filter(user=user, done=True).count()
+                count = user.referrals.filter(user=user, used=True).count()
                 if count < 3:
                     if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
                         profile.credit += 5
