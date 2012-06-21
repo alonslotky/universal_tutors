@@ -20,8 +20,8 @@
         </div>
       </div>
     
-     {% if and form.first_name.errors %}<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>{% endif %}
-     {% if and form.last_name.errors %}<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>{% endif %}
+     {% if form.first_name.errors %}<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>{% endif %}
+     {% if form.last_name.errors %}<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>{% endif %}
       <div class="row">
         <div class="eight columns">
           <label>Name*</label>
