@@ -124,7 +124,7 @@
 	    <a id="ask-continue-button" class="right button hidden" data-reveal-id="modal-ask-continue"><span class="icon rocketdown">Exit Classroom</span></a>
 	    <a id="exit-class-button" class="right button" data-reveal-id="modal-review" onclick='student_rate_tutor({{class.tutor.id}}, "{{class.tutor.get_full_name}}", {{class.id}});'><span class="icon rocketdown">Exit Classroom</span></a>	  	
 	  	{% else %}
-	    <a id="exit-class-button" class="right button" data-reveal-id="modal-review" onclick='student_rate_tutor({{class.student.id}}, "{{class.student.get_full_name}}", {{class.id}});'><span class="icon rocketdown">Exit Classroom</span></a>	  	
+	    <a id="exit-class-button" class="right button" data-reveal-id="modal-review" onclick='tutor_rate_student({{class.student.id}}, "{{class.student.get_full_name}}", {{class.id}});'><span class="icon rocketdown">Exit Classroom</span></a>	  	
 	  	{% endif %}
 	  </header>
 	  
