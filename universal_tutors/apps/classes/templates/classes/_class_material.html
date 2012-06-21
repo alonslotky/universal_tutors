@@ -1,4 +1,4 @@
-{% load fb_versions common_tags %}
+{% load fb_versions common_tags classes_tags %}
 
 <div class="row">
 	<div class="three columns">
@@ -8,7 +8,7 @@
 		{% for item in material %}
 		{% if item.allowdownload == '1' %}
 			<div class="row">
-				&rsaquo; <a href="{% url class_download class.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}}</a>
+				&raquo; <a href="{% url class_download class.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}} (download)</a>
 			</div>
 		{% endif %}		
 		{% empty %}
@@ -16,6 +16,7 @@
 		{% endfor %}
 	</div>
 </div>
+<div class="row">&nbsp;</div>
 <div class="row">
 	<div class="three columns">
 		<label>Recordings</label>
@@ -23,7 +24,7 @@
 	<div class="nine columns">
 		{% for item in recordings %}
 			<div class="row">
-				&rsaquo; <a target="_blank" class="{{class|rec_id:item.recid}}">Record {{forloop.counter}}</a>
+				&raquo; <a target="_blank" href="{{class|rec_url:item.recid}}" target="_blank">Record {{forloop.counter}} (download)</a>
 			</div>
 		{% empty %}
 			<div class="row">No recordings where found to download</div>      		
