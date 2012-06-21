@@ -47,7 +47,8 @@
               <span>Youtube video link</span>
             </div>
             <div class="nine columns phone-three">
-              <input id="id_video" name="video" type="text" class="input-text clear" {% if form.video.value %}value{% else %}placeholder{% endif %}="{{form.video.value}}">
+              <input id="id_video" name="video" type="text" class="input-text" {% if form.video.value %}value{% else %}placeholder{% endif %}="{{form.video.value}}">
+	            <div class="row"><span>Your video must not exceed 60 seconds.</span></div>
             </div>
           </div>
 
@@ -180,6 +181,23 @@
 
             reader.readAsDataURL(input.files[0]);
         }		
+	});
+	
+	$("#profile-form").submit(function(e){
+		e.preventDefault();
+		var videoId = $("#id_video").val().split("v=")[1];
+		var url = "http://gdata.youtube.com/feeds/api/videos/" + videoId + "?v=2&alt=json";
+		$("#id_video").parent().prev("div.formError").remove();
+		var success = true;
+		$.get(url, function(data){
+			var duration = parseInt(data['entry']['media$group']['yt$duration']['seconds']);
+			if (duration > 60){
+				$("#id_video").parent().before('<div class="formError">Your video has exceeded the 60 seconds limit.</div>');
+				return false;
+			}
+			$("#profile-form").submit();
+		}, 'jsonp');
+		
 	});
 	
 </script>
