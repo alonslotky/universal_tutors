@@ -21,6 +21,10 @@ from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
 from apps.core.models import Currency
 
+import urllib2
+import urlparse
+import simplejson
+
 class TutorSubjectForm(forms.ModelForm):
     class Meta:
         models = TutorSubject
@@ -59,13 +63,40 @@ class ProfileForm(forms.ModelForm):
         passwd  = cleaned_data.get('password', '')
         passwd1 = cleaned_data.get('password1', None)
         passwd2 = cleaned_data.get('password2', None)
+        
+        video = cleaned_data.get('video', None)
+        
+        if video:
+            video_id = None
+            try:
+                parsed = urlparse.urlparse(video)
+                video_id = urlparse.parse_qs(parsed.query)['v'][0]
+            except IndexError:
+                if video.find('http://youtu.be/') > 0:
+                    video_id = video.replace('http://youtu.be/', '')
+            except KeyError:
+                if video.find('http://youtu.be/') > 0:
+                    video_id = video.replace('http://youtu.be/', '')                
+                
+            if not video_id:
+                self._errors['video'] = self.error_class([_(u'Please provide a valid video url.')])
+                
+            else:                    
+                response = urllib2.urlopen('http://gdata.youtube.com/feeds/api/videos/%s?v=2&alt=json' % video_id)
+                response = response.read()
+                data = simplejson.loads(response)
+                
+                duration = int(data['entry']['media$group']['yt$duration']['seconds'])
+    
+                if duration > 60:
+                    self._errors['video'] = self.error_class([_(u'Your video has exceeded the 60 seconds limit.')])
 
         if passwd1 or passwd2:
             user = self.instance.user
             if not user.check_password(passwd):
-                self._errors['password'] = self.error_class(_(u'Password is invalid'))
+                self._errors['password'] = self.error_class([_(u'Password is invalid')])
             elif passwd1 != passwd2:
-                self._errors['password1'] = self.error_class(_(u'Passwords should match'))
+                self._errors['password1'] = self.error_class([_(u'Passwords should match')])
             else:
                 user.set_password(passwd1)
 
