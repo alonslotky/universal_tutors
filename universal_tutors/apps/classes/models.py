@@ -300,12 +300,12 @@ class Class(BaseModel):
         student = self.student
         tutor = self.tutor
         tutor_profile = tutor.profile
-        tutor_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CLASS, {
+        tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CLASS, {
             'class': self,
             'student': student,
             'tutor': tutor,
         })
-        student_profile = tutor.profile
+        student_profile = student.profile
         student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CLASS, {
             'class': self,
             'student': student,
