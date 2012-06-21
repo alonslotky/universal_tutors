@@ -27,7 +27,7 @@ from apps.core.models import Currency, Bundle
 from apps.classes.settings import *
 
 from paypal2.standart.ap import pay
-from scribblar import users
+from scribblar import users, rooms
 
 
 class StudentManager(models.Manager):
@@ -766,6 +766,42 @@ class UserProfile(BaseModel):
         if self.type == self.TYPES.TUTOR:
             return self.user.classes_as_tutor.filter(status = Class.STATUS_TYPES.WAITING).count()
         return None
+
+    def create_test_class(self):
+        scribblar_room = rooms.add(
+            roomname = 'Test class for %s' % self,
+            roomowner = self.get_scribblar_id(),
+            promoteguests = '0',
+            allowguests = '0',
+            clearassets = '0',
+            enablehistory = '1',
+            whitelabel = '1',
+            roomaudio = '1',
+            roomvideo = '1',
+            roomchat = '1',
+            roomwolfram = '1',
+            hideheader = '1',
+            hideflickr = '1',
+            hidestamp = '0',
+            autostartcam = '1',
+            autostartaudio = '1',
+            allowrecord = '1',
+            map = '0',
+            locked = '0',
+            allowlock = '0',
+        )
+            
+        self.test_class_id = scribblar_room['roomid']
+        super(self.__class__, self).save()
+    
+    def get_test_class_id(self):
+        if not self.test_class_minutes:
+            return None
+        
+        if not self.test_class_id:
+            self.create_test_class()
+        return self.test_class_id
+
 
 class UserCreditMovement(BaseModel):
     class Meta:
