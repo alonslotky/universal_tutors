@@ -62,6 +62,26 @@ def detail(request, class_id):
         'material': material,
     }
 
+@login_required
+@main_render('classes/no_flash.html')
+def no_flash(request, class_id):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+    profile = user.profile
+
+    try:
+        class_ = Class.objects.select_related().get(id = class_id)
+    except Class.DoesNotExist:
+        raise http.Http404()
+
+    if class_.tutor != user and class_.student != user:
+        raise http.Http404()
+
+    return {
+        'class': class_,
+    }
 
 @login_required
 @main_render()
