@@ -16,7 +16,7 @@
   	{% csrf_token %}
     <div class="row">
       <div class="nine columns">
-        <input id="modal-message-text" name="modal-message-text" type="text" class="input-text" placeholder="Write a Message ...">
+        <textarea id="modal-message-text" name="modal-message-text" type="text" class="text-area" placeholder="Write a Message ..."></textarea>
       </div>
       
       <div class="three columns">
@@ -87,6 +87,8 @@
 				},
 				success: function(response) {
 					$('#modal-message-text').val('');
+					$('#modal-message-text').css('height', '30px');
+					$('#modal-message-text').height($('#modal-message-text').get(0).scrollHeight + 15);
 					load_modal_messages(response);
 				}
 			});
@@ -112,5 +114,23 @@
 		
 		$('#modal-messages-container').scrollTop(9999999);
 	};
+	
+	$('#modal-message-text').val('');
+	$('#modal-message-text').css({
+		'height': '30px',
+		'min-height': '30px',
+		'overflow': 'hidden',
+		'resize': 'none'
+	});
+	$('#modal-message-text').keyup(function(e){
+		$('#modal-message-text').css('height', '30px');
+		$('#modal-message-text').height($(this).get(0).scrollHeight + 15);
+	});
+	$('#modal-message-text').keypress(function(e){
+		var code = (e.keyCode ? e.keyCode : e.which);
+		if(code == 13) {
+			$('#modal-message-form').submit();
+		}
+	});
 	
 </script>
