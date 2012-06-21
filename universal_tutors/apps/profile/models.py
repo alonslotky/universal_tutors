@@ -23,7 +23,7 @@ from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, convert_datetime, difference_in_minutes
 
 from apps.classes.models import Class, ClassSubject, ClassLevel, EducationalSystem
-from apps.core.models import Currency
+from apps.core.models import Currency, Bundle
 from apps.classes.settings import *
 
 from paypal2.standart.ap import pay
@@ -187,6 +187,9 @@ class UserProfile(BaseModel):
     min_credits = models.PositiveIntegerField(default=0)
     max_credits = models.PositiveIntegerField(default=0)
     
+    test_class_minutes = models.PositiveSmallIntegerField(default=60)
+    test_class_id = models.CharField(max_length = 100, null=True, blank=True)
+    
     paypal_email = models.EmailField(null=True, blank=True)
     
     classes_given = models.PositiveIntegerField(default=0)
@@ -224,7 +227,11 @@ class UserProfile(BaseModel):
 
     @property
     def total_credits(self):
-        return self.credit + self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).aggregate(credits_booked = models.Sum('credit_fee'))['credits_booked']
+        classes = self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED)
+        if classes:
+            return self.credit + self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).aggregate(credits_booked = models.Sum('credit_fee'))['credits_booked']
+        else:
+            return self.credit
     
     def __unicode__(self):
         user = self.user

@@ -1044,7 +1044,7 @@
     background: url("../images/shared/sprite.png") no-repeat right -500px;
     padding-right: 25px;
     color: #000;
-    font: 2.3rem 'MyriadProCondensed';
+    /* font: 2.3rem 'MyriadProCondensed'; ** from original */
   }
   
   .tutor.credits .withdraw p {

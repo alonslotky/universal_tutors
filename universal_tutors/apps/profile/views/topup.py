@@ -16,6 +16,7 @@ from django.conf import settings
 from paypal.standard.forms import PayPalPaymentsForm
 from apps.common.utils.view_utils import main_render, handle_uploaded_file
 from apps.profile.models import TopUpItem
+from apps.core.models import Bundle
 
 try:
     import simplejson
@@ -55,8 +56,14 @@ def topup_cart(request, username=None):
     topup = None
     if request.method == "POST":
         credits = int(request.POST.get('credits', 0))
+        try:
+            bundle = Bundle.objects.filter(credits__gte = credits).order_by('credits')[0]
+            value = credits * currency.credit_value() * (1 - bundle.discount)
+        except IndexError:
+            value = credits * currency.credit_value()
+
         if credits:
-            topup = TopUpItem(user=person, credits=credits, value=credits * currency.credit_value(), currency=currency)
+            topup = TopUpItem(user=person, credits=credits, value=value, currency=currency)
             topup.save()
     else:
         try:
@@ -73,8 +80,7 @@ def topup_cart(request, username=None):
             "notify_url": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')), 
             "return_url": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('topup_successful', args=[person.username])),
             "cancel_return": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('topup_cancel', args=[person.username])),
-            "amount": topup.currency.credit_value(),
-            "quantity": topup.credits,
+            "amount": topup.value,
             "currency_code": topup.currency.acronym,
         })
         template = 'profile/student/edit_profile/fragments/_modal_topup_cart.html'
@@ -88,6 +94,7 @@ def topup_cart(request, username=None):
         'profile': profile,
         'currency': currency,
         'topup': topup,
+        'bundles': Bundle.objects.all(),
     }
 
 @login_required
@@ -114,6 +121,7 @@ def topup_cancel(request, username, ajax=0):
         return {
             'person': person,
             'currency': profile.currency,
+            'bundles': Bundle.objects.all(),
         }
     else:
         if profile.type == profile.TYPES.STUDENT:

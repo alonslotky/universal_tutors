@@ -38,3 +38,7 @@ class VideoAdmin(admin.ModelAdmin):
     list_filter = ('type',)
 admin.site.register(Video, VideoAdmin)
 admin.site.register(Quote)
+
+class BundleAdmin(admin.ModelAdmin):
+    list_display = ('credits', 'discount')
+admin.site.register(Bundle, BundleAdmin)
