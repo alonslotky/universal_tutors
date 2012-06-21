@@ -29,9 +29,10 @@
 	    </div>
   	</div>
   </div>
+  <div style="clear:both; heigth:0;"></div>
 </section>
 <section id="timer-no-flash" class="timer hidden">
-	<div class="row" style="text-align: center;">Please get to a flash-enabled desktop computer to access the classroom. <a href="http://get.adobe.com/flashplayer/" target="_blank">Click here</a> to install or get more info.</div>
+	<div id="timer-no-flash-text" class="row" style="text-align: center;">Please get to a flash-enabled desktop computer to access the classroom. <a href="http://get.adobe.com/flashplayer/" target="_blank">Click here</a> to install or get more info.</div>
 </section>
 <script type="text/javascript">
 	var timer_class = {{next_class.get_minutes_to_start}};
@@ -138,9 +139,15 @@
 	}, 500);
 	
 	$(window).ready(function(){
-		if(!swfobject.hasFlashPlayerVersion("10")) {
+		if(DetectMobileQuick() || DetectMobileLong() || DetectTierTablet()){
+		   $('#timer-no-flash-text').html('You cannot take or give a class on a mobile device.')
 		   $('#timer-no-flash').removeClass('hidden');
 		   $('#timer-enter-next-class-container').addClass('hidden');
+		} else {
+			if(!swfobject.hasFlashPlayerVersion("10")) {
+			   $('#timer-no-flash').removeClass('hidden');
+			   $('#timer-enter-next-class-container').addClass('hidden');
+			}
 		}
 	});
 </script>
