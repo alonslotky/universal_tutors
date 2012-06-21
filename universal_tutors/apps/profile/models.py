@@ -601,7 +601,7 @@ class UserProfile(BaseModel):
                 super(self.__class__, self).save()
 
 
-    def send_notification(self, type, context):
+    def send_notification(self, type, context, use_thread=True):
         subject = None
         html = None
         user = self.user
@@ -646,6 +646,7 @@ class UserProfile(BaseModel):
             subject = 'New message'
             html = render_to_string('emails/message.html', context)
         
+        
         if subject and html:            
             sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
             to = ['%s <%s>' % (user.get_full_name(), user.email)]
@@ -653,9 +654,12 @@ class UserProfile(BaseModel):
             email_message = EmailMessage(subject, html, sender, to)
             email_message.content_subtype = 'html'
             
-            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
-            t.setDaemon(True)
-            t.start()
+            if use_thread:
+                t = threading.Thread(target=email_message.send, kwargs={'fail_silently': False})
+                t.setDaemon(True)
+                t.start()
+            else:
+                email_message.send()
     
     def topup_account(self, credits):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
@@ -769,6 +773,7 @@ class UserCreditMovement(BaseModel):
         (5, 'TOPUP', 'Top-up account'),
         (6, 'WITHDRAW', 'Withdraw to PayPal Account'),
         (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor (Refund)'),
+        (8, 'CANCELED_BY_SYSTEM', 'Class canceled by system (Refund)'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')
@@ -1120,11 +1125,11 @@ class Message(BaseModel):
     def __unicode__(self):
         return self.message
 
-    def send_email(self):
+    def send_email(self, use_thread=True):
         if not self.read and not self.email_sent:
             user = self.to
             profile = user.profile
-            profile.send_notification(profile.NOTIFICATIONS_TYPES.MESSAGE, {'message': self})
+            profile.send_notification(profile.NOTIFICATIONS_TYPES.MESSAGE, {'message': self}, use_thread=use_thread)
             self.email_sent = True
             super(self.__class__, self).save()
 

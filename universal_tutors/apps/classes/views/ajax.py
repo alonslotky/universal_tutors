@@ -26,7 +26,11 @@ def check_status(request, class_id):
     
     alert_time = 5 if class_.duration < 60 else 10 
     start_alert = start_class + datetime.timedelta(minutes=alert_time)
-        
+    
+    if class_.tutor == user and not class_.tutor_appeared:
+        class_.tutor_appeared = True
+        super(Class, class_).save()
+    
     now = datetime.datetime.now()
     
     if class_.status != class_.STATUS_TYPES.BOOKED or start_class - datetime.timedelta(minutes=5) > now or end_class + datetime.timedelta(minutes=5) < now:
