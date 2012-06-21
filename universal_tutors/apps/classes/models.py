@@ -185,6 +185,7 @@ class Class(BaseModel):
             hidestamp = '0',
             autostartcam = '1',
             autostartaudio = '1',
+            autorecord = '1',
             allowrecord = '1',
             map = '0',
             locked = '0',
