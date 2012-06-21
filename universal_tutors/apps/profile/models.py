@@ -661,9 +661,15 @@ class UserProfile(BaseModel):
             except:
                 pass
             
-            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
+            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': False})
             t.setDaemon(True)
             t.start()
+
+            try:
+                print 'Started'
+            except:
+                pass
+
     
     def topup_account(self, credits):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
