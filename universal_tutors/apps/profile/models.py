@@ -156,7 +156,7 @@ class UserProfile(BaseModel):
     gender = models.PositiveSmallIntegerField(verbose_name=_('Gender'), choices=GENDER_TYPES.get_choices(), default=GENDER_TYPES.MALE)
     timezone = models.CharField(verbose_name=_('Phone Timezone'), max_length=50, default=pytz.tz)
     favorite = models.ManyToManyField(User, verbose_name=_('Favorite'), related_name='favorites', null=True, blank=True)
-    interests = models.ManyToManyField(ClassSubject, related_name='students', null=True, blank=True)
+    # interests = models.ManyToManyField(ClassSubject, related_name='students', null=True, blank=True)
     
     video = models.CharField(verbose_name=_('Video'), max_length=200, null=True, blank=True)
     webcam = models.BooleanField(default=False)
@@ -684,7 +684,8 @@ class UserProfile(BaseModel):
             completeness = int(no_items / 10.0 * 100)
 
         elif self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
-            no_items += 1 if self.interests.count() else 0
+            # no_items += 1 if self.interests.count() else 0
+            no_items += 1 if user.subjects.count() else 0
             no_items += 1 if self.profile_image and self.profile_image != settings.DEFAULT_PROFILE_IMAGE else 0
         
             completeness = int(no_items / 6.0 * 100)
@@ -934,6 +935,26 @@ class TutorQualification(models.Model):
     def __unicode__(self):
         return self.qualification
     
+class StudentInterest(models.Model):
+    user = models.ForeignKey(User, related_name='interests')
+    system = models.ForeignKey(EducationalSystem, related_name='students')
+    subject = models.ForeignKey(ClassSubject, related_name='students')
+    level = models.ForeignKey(ClassLevel, related_name='students')
+    # credits = models.FloatField()
+    
+#    def save(self, *args, **kwargs):
+#        if not StudentInterest.objects.filter(user=self.user, system=self.system, subject=self.subject, level=self.level).exclude(id=self.id):
+#            super(self.__class__, self).save(*args, **kwargs)
+#            user = self.user
+#             profile = user.profile 
+#             results = user.subjects.aggregate(min_credits = models.Min('credits'), max_credits = models.Max('credits'))   
+#             profile.min_credits = results['min_credits']
+#             profile.max_credits = results['max_credits']
+#             profile.save()
+    
+    def __unicode__(self):
+        return '%s (%s)' % (self.subject, self.level)
+
 
 class TutorReview(BaseModel):
     user = models.ForeignKey(User, related_name='reviews_as_tutor')
