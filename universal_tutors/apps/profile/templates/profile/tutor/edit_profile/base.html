@@ -12,11 +12,20 @@
 {% block content %}
       <section class="blue feature-box"><div class="inner">
         <h1>Profile <span>View and modify your profile details.</span></h1>
+        {% if user_profile.test_class_minutes %}
+	    <div class="feature-black">
+	      <div class="feature-text">
+	        <h3>You have {{user_profile.test_class_minutes}} minute{{user_profile.test_class_minutes|pluralize}} left in your test class</h3>
+	        <a href="{% url tutor_test_class %}" class="video button" style="margin-top: -60px;"><i class="icon-play-circle2 block text-center full-width text-large"></i>Open test class</a>
+	      </div>
+	    </div>
+	    {% endif %}
       </div></section>
       
       <div class="hide-on-phones">
       {% include 'profile/fragments/_timer.html' %}
       </div>
+
       
       <dl class="nice contained tabs hide-on-phones">
         <dd><a href="#details" class="active">Details</a></dd>

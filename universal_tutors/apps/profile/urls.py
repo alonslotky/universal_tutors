@@ -40,6 +40,8 @@ urlpatterns += patterns('apps.profile.views.main',
 
     url(r'^(?i)book-class/(?P<username>[\w\-\_]+)/$', 'book_class', {}, name = "book_class"),
     url(r'^(?i)report/(?P<username>[\w\-\_]+)/$', 'report', {}, name = "report"),
+    
+    url(r'^(?i)tutor/test/class/$', 'test_class', {}, name = "tutor_test_class"),
 )
 
 urlpatterns += patterns('apps.profile.views.ajax',
@@ -69,6 +71,7 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)ajax-book-class/(?P<username>[\w\-\_]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
     url(r'^(?i)ajax-book-class/(?P<username>[\w\-\_]+)/(?P<date>[\d\-]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
 
+    url(r'^(?i)test_class/status/$', 'check_tutor_class_status', {}, name = "check_tutor_class_status"),
 )
 
 # Students

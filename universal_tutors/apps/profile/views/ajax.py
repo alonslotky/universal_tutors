@@ -683,3 +683,21 @@ def reject_class(request):
     class_.reject(reason)
         
     return http.HttpResponse('done.')
+
+@login_required
+def check_tutor_class_status(request):
+    user = request.user
+    profile = user.profile
+    
+    if profile.type != profile.TYPES.TUTOR:
+        raise http.Http404()
+
+    if profile.test_class_minutes:
+        profile.test_class_minutes -= 1
+        super(UserProfile, profile).save()
+        
+        if profile.test_class_minutes:
+            return http.HttpResponse('ok')
+        else:
+            return http.HttpResponse('close')
+        

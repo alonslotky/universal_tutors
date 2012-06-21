@@ -1,0 +1,73 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Classroom {{class.name}}{% endblock %}
+{% block body_class %}app classroom{% endblock %}
+
+{% block thirdparty_js_header %}
+<link href="http://media.muchosmedia.com/brainwave/style.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript">
+	$(window).ready(function(){
+		var targetID = "scribblar";
+		
+		var flashvars = {
+			'userid': "{{user.profile.scribblar_id}}",
+			'roomid': "{{user.profile.get_test_class_id}}",
+			'preferredLocales': "en_US",
+			'username': "{{user.get_full_name}}"
+		};
+	
+		var params = {
+			'allowscriptaccess': "always"
+		};
+		
+		var attributes = {
+			'id': "scribblar",
+			'name': "scribblar"
+		};
+	
+		swfobject.embedSWF(
+			"http://media.muchosmedia.com/scribblar/v2/main.swf", 
+			"alternate", 
+			"100%", 
+			"100%", 
+			"10", 
+			"http://media.muchosmedia.com/swfobject/expressInstall.swf", 
+			flashvars, 
+			params, 
+			attributes);
+	
+		if(!swfobject.hasFlashPlayerVersion("10")) {
+		  	alert('You need a computer with flash-enabled to test a class');
+			window.location.href = '{% url edit_tutor_profile %}';		  	
+		}
+
+		setInterval(function(){
+			$.ajax({
+				type: 'get',
+				url: '{% url check_tutor_class_status %}',
+				success: function(response) {
+					if (response == 'close') {
+						window.location.href = '{% url edit_tutor_profile %}';
+					}
+				}
+			});				
+		}, 60 * 1000);
+	});
+</script>
+{% endblock %}
+
+{% block full_content %}
+  <header>
+    <div class="logo alt ir left"><a>Universal Tutors</a></div>
+    <a id="exit-class-button" class="right button" href="{% url edit_tutor_profile %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
+  </header>
+  
+  <div id="alternate-container" class="main scribblar-container">
+  	<div id="alternate"></div>
+  </div>
+{% endblock %}
