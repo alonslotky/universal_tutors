@@ -296,7 +296,7 @@ class Class(BaseModel):
             })
 
     
-    def alert(self):
+    def alert(self, use_thread=True):
         self.alert_sent = True
         super(self.__class__, self).save()
         student = self.student
@@ -306,13 +306,13 @@ class Class(BaseModel):
             'class': self,
             'student': student,
             'tutor': tutor,
-        })
+        }, use_thread=use_thread)
         student_profile = student.profile
         student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CLASS, {
             'class': self,
             'student': student,
             'tutor': tutor,
-        })
+        }, use_thread=use_thread)
 
     def done(self):
         if self.status == self.STATUS_TYPES.BOOKED:

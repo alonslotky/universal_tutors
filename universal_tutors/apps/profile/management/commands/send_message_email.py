@@ -5,6 +5,6 @@ class Command(NoArgsCommand):
     
     def handle_noargs(self, **options):
         from apps.profile.utils import send_message_email        
-        send_message_email()
+        send_message_email(use_thread=False)
         
         
