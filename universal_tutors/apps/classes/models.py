@@ -297,6 +297,8 @@ class Class(BaseModel):
 
     
     def alert(self):
+        self.alert_sent = True
+        super(self.__class__, self).save()
         student = self.student
         tutor = self.tutor
         tutor_profile = tutor.profile
@@ -311,8 +313,6 @@ class Class(BaseModel):
             'student': student,
             'tutor': tutor,
         })
-        self.alert_sent = True
-        super(self.__class__, self).save()
 
     def done(self):
         if self.status == self.STATUS_TYPES.BOOKED:
