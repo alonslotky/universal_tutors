@@ -6,12 +6,12 @@
       </div>
       <div class="eight columns">
       	{% with user_profile.total_credits as total_credits %}
-        <p>You have {{total_credits}} credit{{total_credits|pluralize}} {% if total_credits != profile.credit %}(available {{profile.credit}} credit{{profile.credit|pluralize}}){% endif %}</p>
+        <p>You have {{total_credits}} credit{{total_credits|pluralize}} {% if total_credits != user_profile.credit %}(available {{profile.credit}} credit{{profile.credit|pluralize}}){% else %} available{% endif %}</p>
         {% endwith %}
       </div>
     </div>
     
-    {% if profile.type != profile.TYPES.UNDER16 %}
+    {% if user_profile.type != profile.TYPES.UNDER16 %}
     <a id="add-credits" class="button" href="javascript:;" data-reveal-id="modal-topup" onclick="topup_account('{% url topup_cart %}');"><span class="icon credits">Top Up Credits</span></a>
 	{% endif %}
     <a class="button" href="{% url history %}"><span class="icon history">View History</span></a>
