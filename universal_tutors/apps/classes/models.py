@@ -114,6 +114,7 @@ class Class(BaseModel):
     universal_fee = models.FloatField()
     scribblar_id = models.CharField(max_length = 100, null=True, blank=True)
     cancelation_reason = models.CharField(max_length = 500, null=True, blank=True)
+    tutor_appeared = models.BooleanField(default=False)
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
     alert_sent = models.BooleanField(False)
@@ -269,9 +270,9 @@ class Class(BaseModel):
             })
 
     def canceled_by_system(self, reason):
-        if self.status == self.STATUS_TYPES.WAITING:
+        if self.status == self.STATUS_TYPES.WAITING or self.status == self.STATUS_TYPES.BOOKED:
             self.status = self.STATUS_TYPES.CANCELED_BY_SYSTEM
-            self.cancelation_reason = 'Tutor did not accept or reject the class in a valid time'
+            self.cancelation_reason = reason
             super(self.__class__, self).save()
             rooms.delete(roomid=self.scribblar_id)
             
@@ -280,24 +281,32 @@ class Class(BaseModel):
             student_profile = student.profile
             student_profile.credit += self.credit_fee
             student_profile.save()
+            tutor = self.tutor
+            tutor_profile = tutor.profile
             student.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.CANCELED_BY_SYSTEM, credits=self.credit_fee, related_class=self)
-            student_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CANCELED_BY_SYSTEM, {
+            student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CANCELED_BY_SYSTEM, {
                 'class': self,
                 'student': student,
                 'tutor': tutor,
             })
+            tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CANCELED_BY_SYSTEM, {
+                'class': self,
+                'student': student,
+                'tutor': tutor,
+            })
+
     
     def alert(self):
         student = self.student
         tutor = self.tutor
         tutor_profile = tutor.profile
-        tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CLASS, {
+        tutor_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CLASS, {
             'class': self,
             'student': student,
             'tutor': tutor,
         })
-        tutor_profile = tutor.profile
-        tutor_profile.send_notification(tutor_profile.NOTIFICATIONS_TYPES.CLASS, {
+        student_profile = tutor.profile
+        student_profile.send_notification(student_profile.NOTIFICATIONS_TYPES.CLASS, {
             'class': self,
             'student': student,
             'tutor': tutor,
