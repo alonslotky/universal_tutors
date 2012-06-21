@@ -241,19 +241,31 @@ def edit_student_profile(request):
     }
     
     form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
+    interest_formset = StudentInterestFormSet(request.POST or None, request.FILES or None, instance=user)
     if request.POST:
+        success = True
         if form.is_valid():
             form.save()
             profile.update_tutor_information(form)
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
-
+        else:
+            success = False
+            
+        if interest_formset.is_valid():
+            interest_formset.save()
+        else:
+            success = False
+        
+        if success:
             return http.HttpResponseRedirect(reverse('edit_profile'))
 
     return {
         'profile':profile,
         'form': form,
         'timezones': pytz.common_timezones,
+        'interest_formset': interest_formset,
         'date': datetime.date.today(),
+        'subjects': ClassSubject.objects.all(),
     }
 
 

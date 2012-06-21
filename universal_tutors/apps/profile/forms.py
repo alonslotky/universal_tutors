@@ -25,6 +25,12 @@ class TutorSubjectForm(forms.ModelForm):
     class Meta:
         models = TutorSubject
         fields = ('system', 'level', 'subject', 'credits')
+        
+        
+class StudentInterestForm(forms.ModelForm):
+    class Meta:
+        models = StudentInterest
+        fields = ('subject',)
 
 
 class ProfileForm(forms.ModelForm):
@@ -67,6 +73,8 @@ class ProfileForm(forms.ModelForm):
     
 TutorSubjectFormSet = inlineformset_factory(User, TutorSubject, form=TutorSubjectForm)
 TutorQualificationFormSet = inlineformset_factory(User, TutorQualification)
+
+StudentInterestFormSet = inlineformset_factory(User, StudentInterest, form=StudentInterestForm)
     
 
 

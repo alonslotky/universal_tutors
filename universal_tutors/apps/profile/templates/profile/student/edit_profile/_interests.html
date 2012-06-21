@@ -1,47 +1,63 @@
-{% with user.subjects.all as subjects %}
-{% with subjects.count as no_subjects %}
+{% load classes_tags %}
+
+{% with user.interests.all as interests %}
+{% with interests.count as no_interests %}
+
 <li id="interestsTab">
+
   <h2 class="clear">Interests</h2>
-  <label>Type an Interest and press "Enter" to add</label>
-  <div class="row">
-    <div class="six columns">
-      <input id="add-interest" type="text" class="input-text" name="add-interest" placeholder="Subject">
-      <label id="maximum-interests" class="hidden">Maximum of 12 interests allowed</label>
-    </div>
-    <div class="six columns">
-      <div id="interests-list" class="tags clear">
-      	{% for interest in profile.interests.all %}
-        <a id="interest-{{interest.id}}" class="tag" href="javascript:;" onclick="remove_interest({{interest.id}});">{{interest.subject}} (click to remove)</a>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
+  
+  <input id="id_interests-TOTAL_FORMS" type="hidden" value="{{interests.count|add:1}}" name="interests-TOTAL_FORMS">
+  <input id="id_interests-INITIAL_FORMS" type="hidden" value="{{interests.count}}" name="interests-INITIAL_FORMS">
+  <input id="id_interests-MAX_NUM_FORMS" type="hidden" name="interests-MAX_NUM_FORMS">
+	
+	<table id="interests-table" class="stretch">
+      <tr>
+        <th>Subject</th>
+        <th>Delete</th>
+      </tr>
+      {% for item in interests %}
+      {% with item.subject as subject %}
+
+      <tr>
+        <td>
+		  <input id="id_interests-{{forloop.counter0}}-id" type="hidden" name="interests-{{forloop.counter0}}-id" value="{{item.id}}">
+		  <input id="id_interests-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="interests-{{forloop.counter0}}-user">
+		  <select id="id_interests-{{forloop.counter0}}-subject" name="interests-{{forloop.counter0}}-subject" class="interests-select-subject">
+		  	<option value="">-------</option>
+		  	{% for sub in subjects %}
+		  	<option value="{{sub.id}}" {% if sub == subject %}selected="selected"{% endif %}>{{sub}}</option>
+		  	{% endfor %}
+		  </select>
+		</td>
+		<td>
+		   <input id="id_interests-{{no_interests}}-DELETE" type="checkbox" name="interests-{{forloop.counter0}}-DELETE" />
+	    </td>
+	  </tr>
+      {% endwith %}
+      {% endfor %}
+        
+	  <tr>
+		<td>			
+		  <input id="id_interests-{{no_interests}}-id" type="hidden" name="interests-{{no_interests}}-id">
+		  <input id="id_interests-{{no_interests}}-user" type="hidden" value="{{user.id}}" name="interests-{{no_interests}}-user">
+		  <select id="id_interests-{{no_interests}}-subject" name="interests-{{no_interests}}-subject" class="interests-select-subject">
+		  	<option value="" selected="selected">-------</option>
+		  	{% for sub in subjects %}
+		  	<option value="{{sub.id}}">{{sub}}</option>
+		  	{% endfor %}
+		  </select>
+	    </td>
+	    <td>
+		   <input id="id_interests-{{no_interests}}-DELETE" type="checkbox" name="interests-{{no_interests}}-DELETE" />
+	    </td>
+      </tr>
+    </table>
+    <a id="add-subject-link" href="javascript:;">+ add subject</a>
+	
 </li>
 
 <script type="text/javascript">
-	$('#add-interest').keypress(function(e){
-		var interest = $(this).val();
-		var total = $("#interests-list a.tag").length;
-		if(e.keyCode == 13) {
-			e.preventDefault();
-			if (interest && total < 12) {
-				$.get('{% url add_interest %}?interest='+ interest, function(response) {
-					$('#add-interest').val('');
-					if (!$('#interest-'+ response).length) {
-						$('#interests-list').append(
-							'<a id="interest-'+ response +'" class="tag" href="javascript:;" onclick="remove_interest('+ response +');">'+ interest +' (click to remove)</a>'
-						);
-					}
-				});
-			}
-			if (interest && total === 12) {
-				$("#maximum-interests").removeClass('hidden').show();
-				setTimeout(function(){
-					$("#maximum-interests").fadeOut(1000, function(){$("#maximum-interests").addClass('hidden')});
-				}, 3000);
-			}
-		}
-	});
 	
 	var remove_interest = function(id) {
 		$('#interest-'+id).fadeOut(function(){
@@ -49,6 +65,36 @@
 			$(this).remove();
 		});	
 	}
+	
+	var id_subject = {{no_interests}} + 1;
+  
+  	$('#add-subject-link').click(function(){
+  		// if (parseInt($('#id_interests-TOTAL_FORMS').val()) > 11) {
+  			// $(this).remove();
+  			// return;
+  		// }
+  		$('#interests-table').append(
+  			'<tr>'+
+	  		'	<td>'+
+			'		<input id="id_interests-'+ id_subject +'-id" type="hidden" name="interests-'+ id_subject +'-id">'+
+			'		<input id="id_interests-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="interests-'+ id_subject +'-user">'+
+			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="interests-select-subject">'+
+			'			<option value="">-------</option>'+
+			{% for sub in subjects %}
+			'			<option value="{{sub.id}}">{{sub}}</option>'+
+			{% endfor %}
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+	  		'		<input id="id_interests-'+ id_subject +'-DELETE" name="interests-'+ id_subject +'-DELETE" type="checkbox">'+
+	  		'	</td>'+
+	  		'</tr>'
+  		);
+  		$('#id_interests-TOTAL_FORMS').val(parseInt($('#id_interests-TOTAL_FORMS').val())+1);
+  		add_autocomplete('#id_interests-'+ id_subject +'-subject');
+  		id_subject++;
+  	});
+	
 </script>
 {% endwith %}
 {% endwith %}

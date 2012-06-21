@@ -157,7 +157,7 @@ class UserProfile(BaseModel):
     gender = models.PositiveSmallIntegerField(verbose_name=_('Gender'), choices=GENDER_TYPES.get_choices(), default=GENDER_TYPES.MALE)
     timezone = models.CharField(verbose_name=_('Phone Timezone'), max_length=50, default=pytz.tz)
     favorite = models.ManyToManyField(User, verbose_name=_('Favorite'), related_name='favorites', null=True, blank=True)
-    interests = models.ManyToManyField(ClassSubject, related_name='students', null=True, blank=True)
+    # interests = models.ManyToManyField(ClassSubject, related_name='students', null=True, blank=True)
     
     video = models.CharField(verbose_name=_('Video'), max_length=200, null=True, blank=True)
     webcam = models.BooleanField(default=False)
@@ -692,7 +692,8 @@ class UserProfile(BaseModel):
             completeness = int(no_items / 10.0 * 100)
 
         elif self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
-            no_items += 1 if self.interests.count() else 0
+            # no_items += 1 if self.interests.count() else 0
+            no_items += 1 if user.subjects.count() else 0
             no_items += 1 if self.profile_image and self.profile_image != settings.DEFAULT_PROFILE_IMAGE else 0
         
             completeness = int(no_items / 6.0 * 100)
@@ -943,6 +944,13 @@ class TutorQualification(models.Model):
     def __unicode__(self):
         return self.qualification
     
+class StudentInterest(models.Model):
+    user = models.ForeignKey(User, related_name='interests')
+    subject = models.ForeignKey(ClassSubject, related_name='students')
+    
+    def __unicode__(self):
+        return '%s' % (self.subject)
+
 
 class TutorReview(BaseModel):
     user = models.ForeignKey(User, related_name='reviews_as_tutor')
