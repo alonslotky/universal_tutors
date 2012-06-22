@@ -15,9 +15,7 @@
     <input type="submit" class="small button" value="Send">
   </form>
   
-  <span id="button_1"></span>
-  <span id="button_2"></span>
-  <span id="button_3"></span>
+  <div id="sharethis_buttons"></div>
 
   <a class="close-reveal-modal">&#215;</a>
 </div>
@@ -27,6 +25,8 @@
 	var student_rated_user_id;
 	var student_rated_class_id;
 	var student_rated_text;
+	var student_rated_image;
+	var student_rated_url;
 	
 	$(window).ready(function(){
 		$('#tutor-rate-student-form').submit(function(e){
@@ -56,41 +56,46 @@
 	});
 	
 	var setup_share_buttons = function() {
-		$("#button_1").empty();
-		$("#button_2").empty();
-		$("#button_3").empty();
+		$("#sharethis_facebook").remove();
+		$("#sharethis_twitter").remove();
+		$("#sharethis_email").remove();
+		$("#sharethis_buttons").append(
+			'<span id="sharethis_facebook"></span>'+
+			'<span id="sharethis_twitter"></span>'+
+			'<span id="sharethis_email"></span>'
+		);
 		
 		stWidget.addEntry({
 			"service":"facebook",
-			"element":document.getElementById('button_1'),
-			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
-			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+			"element":document.getElementById('sharethis_facebook'),
+			"url": student_rated_url,
+			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#tutor-rate-student-text').val(),
 			"summary": $('#tutor-rate-student-text').val(),
-			"image": tutor_rated_image
+			"image": student_rated_image
 		});
 		
 		stWidget.addEntry({
 			"service":"twitter",
-			"element":document.getElementById('button_2'),
-			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
-			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+			"element":document.getElementById('sharethis_twitter'),
+			"url": student_rated_url,
+			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#tutor-rate-student-text').val(),
 			"summary": $('#tutor-rate-student-text').val(),
-			"image": tutor_rated_image
+			"image": student_rated_image
 		});
 		
 		stWidget.addEntry({
 			"service":"email",
-			"element":document.getElementById('button_3'),
-			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
-			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+			"element":document.getElementById('sharethis_email'),
+			"url": student_rated_url,
+			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#tutor-rate-student-text').val(),
 			"summary": $('#tutor-rate-student-text').val(),
-			"image": tutor_rated_image
+			"image": student_rated_image
 		});		
 	}
 
@@ -99,12 +104,13 @@
 		$('#tutor-rate-student-id').val(user_id);
 		$('#tutor-rate-student-class').val(class_id);
 		$('#tutor-rate-student-text').val(text ? text : 'Feedback for this student ...');
-		
-		$("#button_1").empty();
-		$("#button_2").empty();
-		$("#button_3").empty();
 				
-		setup_share_buttons();		
+		$.get('{% url get_user_data %}'+ user_id +'/', function(response){
+			var response_splited = response.split(',');
+			student_rated_image = response_splited[0];
+			student_rated_url = response_splited[1];
+			setup_share_buttons();		
+		});
 	}
 
 	$("#tutor-rate-student-text").keyup(function(){

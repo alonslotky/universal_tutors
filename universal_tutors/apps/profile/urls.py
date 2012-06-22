@@ -119,8 +119,8 @@ urlpatterns += patterns('apps.profile.views.ajax',
 
     url(r'^(?i)referral-friend/$', 'referral_friend', {}, name = "referral_friend"),
 
-    url(r'^(?i)get_user_image/$', 'get_user_image', {}, name = "get_user_image"),
-    url(r'^(?i)get_user_image/(?P<user_id>\d+)/$', 'get_user_image', {}, name = "get_user_image"),
+    url(r'^(?i)get_user_image/$', 'get_user_data', {}, name = "get_user_data"),
+    url(r'^(?i)get_user_image/(?P<user_id>\d+)/$', 'get_user_data', {}, name = "get_user_data"),
 )
 
 urlpatterns += patterns('apps.profile.views.topup',

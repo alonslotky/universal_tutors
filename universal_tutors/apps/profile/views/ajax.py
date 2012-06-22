@@ -702,10 +702,14 @@ def check_tutor_class_status(request):
             return http.HttpResponse('close')
 
 
-def get_user_image(request, user_id):
+def get_user_data(request, user_id):
     try:
         user = User.objects.select_related().get(id=user_id)
     except User.DoesNotExist:
         raise http.Http404()
     
-    return http.HttpResponse('http://%s%s' % (settings.PROJECT_SITE_DOMAIN, user.profile.profile_image.url))
+    image = 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, user.profile.profile_image.url)
+    url = 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('profile', args=[user.username]))
+    
+    return http.HttpResponse('%s,%s' % (image, url))
+
