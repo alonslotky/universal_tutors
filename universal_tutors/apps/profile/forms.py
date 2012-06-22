@@ -278,7 +278,6 @@ class SignupForm(forms.ModelForm):
 
 class StudentSignupForm(SignupForm):
     subjects = ListField(required = False)
-    new_subjects = ListField(required = False)
 
     def __init__(self, *args, **kwargs):
         super(StudentSignupForm, self).__init__(*args, **kwargs)
@@ -288,23 +287,22 @@ class StudentSignupForm(SignupForm):
         profile = user.profile
 
         list_subjects = self.cleaned_data['subjects']
-        list_new_subjects = self.cleaned_data['new_subjects']
 
-        profile.interests.clear()
+        user.interests.all().delete()
         for id in list_subjects:
             try:
                 subject = ClassSubject.objects.get(id = id)
-                profile.interests.add(subject)
+                user.interests.create(subject=subject)
             except ClassSubject.DoesNotExist:
                 pass
-                    
-        for title in list_new_subjects:
-            try:
-                subject = ClassSubject.objects.get(subject__iexact = title)
-            except ClassSubject.DoesNotExist:
-                subject = ClassSubject(subject = title)
-            subject.save()
-            profile.interests.add(subject)
+#                    
+#        for title in list_new_subjects:
+#            try:
+#                subject = ClassSubject.objects.get(subject__iexact = title)
+#            except ClassSubject.DoesNotExist:
+#                subject = ClassSubject(subject = title)
+#            subject.save()
+#            profile.interests.add(subject)
             
         profile.type = profile.TYPES.STUDENT
         profile.save()
@@ -509,30 +507,28 @@ class TutorSocialSignupForm(GenericSocialSignupForm):
 
 class StudentSocialSignupForm(GenericSocialSignupForm):
     subjects = ListField(required = False)
-    new_subjects = ListField(required = False)
 
     def save(self, request=None):
         user = super(StudentSocialSignupForm, self).save(request)
         profile = user.profile
 
         list_subjects = self.cleaned_data['subjects']
-        list_new_subjects = self.cleaned_data['new_subjects']
 
-        profile.interests.clear()
+        user.interests.all().delete()
         for id in list_subjects:
             try:
                 subject = ClassSubject.objects.get(id = id)
-                profile.interests.add(subject)
+                user.interests.create(subject=subject)
             except ClassSubject.DoesNotExist:
                 pass
-                    
-        for title in list_new_subjects:
-            try:
-                subject = ClassSubject.objects.get(subject__iexact = title)
-            except ClassSubject.DoesNotExist:
-                subject = ClassSubject(subject = title)
-            subject.save()
-            profile.interests.add(subject)
+#                    
+#        for title in list_new_subjects:
+#            try:
+#                subject = ClassSubject.objects.get(subject__iexact = title)
+#            except ClassSubject.DoesNotExist:
+#                subject = ClassSubject(subject = title)
+#            subject.save()
+#            profile.interests.add(subject)
             
         profile.type = profile.TYPES.STUDENT
         profile.save()
