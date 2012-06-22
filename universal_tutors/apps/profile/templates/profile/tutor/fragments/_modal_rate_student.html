@@ -1,7 +1,6 @@
 
 <script type="text/javascript">var switchTo5x=true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-<script type="text/javascript">stLight.options({publisher: "dd9ea648-d1dc-414a-b987-5b70d81ab56e"}); </script>
 
 
 <div id="modal-review" class="reveal-modal message review">
@@ -69,9 +68,10 @@
 			"service":"facebook",
 			"element":document.getElementById('sharethis_facebook'),
 			"url": student_rated_url,
-			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
+			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#tutor-rate-student-text').val(),
+			"caption": $('#tutor-rate-student-text').val(),
 			"summary": $('#tutor-rate-student-text').val(),
 			"image": student_rated_image
 		});
@@ -80,7 +80,7 @@
 			"service":"twitter",
 			"element":document.getElementById('sharethis_twitter'),
 			"url": student_rated_url,
-			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
+			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#tutor-rate-student-text').val(),
 			"summary": $('#tutor-rate-student-text').val(),
@@ -91,7 +91,7 @@
 			"service":"email",
 			"element":document.getElementById('sharethis_email'),
 			"url": student_rated_url,
-			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
+			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#tutor-rate-student-text').val(),
 			"summary": $('#tutor-rate-student-text').val(),
