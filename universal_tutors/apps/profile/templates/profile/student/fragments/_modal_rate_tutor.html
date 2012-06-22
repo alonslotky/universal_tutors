@@ -33,9 +33,7 @@
 
   </form>
 
-  <span id="button_1"></span>
-  <span id="button_2"></span>
-  <span id="button_3"></span>
+  <div id="sharethis_buttons"></div>
 
   <a class="close-reveal-modal">&#215;</a>
 </div>
@@ -46,6 +44,7 @@
 	var tutor_rated_class_id;
 	var tutor_rated_text;
 	var tutor_rated_image;
+	var tutor_rated_url;
 	
 	$(window).ready(function(){
 		$('#student-rate-tutor-form').submit(function(e){
@@ -76,14 +75,20 @@
 	});
 	
 	var setup_share_buttons = function() {
-		$("#button_1").empty();
-		$("#button_2").empty();
-		$("#button_3").empty();
+		$("#sharethis_facebook").remove();
+		$("#sharethis_twitter").remove();
+		$("#sharethis_email").remove();
+		$("#sharethis_buttons").append(
+			'<span id="sharethis_facebook"></span>'+
+			'<span id="sharethis_twitter"></span>'+
+			'<span id="sharethis_email"></span>'
+		);
+		
 		
 		stWidget.addEntry({
 			"service":"facebook",
-			"element":document.getElementById('button_1'),
-			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
+			"element":document.getElementById('sharethis_facebook'),
+			"url": tutor_rated_url,
 			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#student-rate-tutor-text').val(),
@@ -93,8 +98,8 @@
 		
 		stWidget.addEntry({
 			"service":"twitter",
-			"element":document.getElementById('button_2'),
-			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
+			"element":document.getElementById('sharethis_twitter'),
+			"url": tutor_rated_url,
 			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#student-rate-tutor-text').val(),
@@ -104,8 +109,8 @@
 		
 		stWidget.addEntry({
 			"service":"email",
-			"element":document.getElementById('button_3'),
-			"url":"http://{{settings.PROJECT_SITE_DOMAIN}}/",
+			"element": document.getElementById('sharethis_email'),
+			"url": tutor_rated_url,
 			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#student-rate-tutor-text').val(),
@@ -121,11 +126,13 @@
 		$('#student-rate-tutor-text').val(text ? text : 'Review this guy ...');
 		$('#student-rate-tutor-rate').val(rate ? rate : 0);
 		
-		$.get('{% url get_user_image %}'+ user_id +'/', function(response){
-			tutor_rated_image = response;
+		$.get('{% url get_user_data %}'+ user_id +'/', function(response){
+			var response_splited = response.split(',');
+			tutor_rated_image = response_splited[0];
+			tutor_rated_url = response_splited[1];
+			setup_share_buttons();
 		});
 		
-		setup_share_buttons();
 		rate_tutor(rate);
 	}
 	
