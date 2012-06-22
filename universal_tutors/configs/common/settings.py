@@ -364,7 +364,7 @@ PAYPAL_TEST = True
 
 
 #SCRIBBLAR SPEED TEST
-SCRIBBLAR_SPEED = '500 kbps'
+SCRIBBLAR_SPEED = '512 kbps'
 SPEED_TEST_LINK = 'http://www.speedtest.net/'
 
 
