@@ -1,6 +1,5 @@
 <script type="text/javascript">var switchTo5x=true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-<script type="text/javascript">stLight.options({publisher: "dd9ea648-d1dc-414a-b987-5b70d81ab56e"}); </script>
 
 <div id="modal-review" class="reveal-modal message review">
   <h4>Review for: <strong id="modal-review-tutor-name" class="rate-tutor-name">John Doe</strong></h4>
@@ -92,6 +91,7 @@
 			"title":"{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 			"type":"large",
 			"text": $('#student-rate-tutor-text').val(),
+			"caption": $('#student-rate-tutor-text').val(),
 			"summary": $('#student-rate-tutor-text').val(),
 			"image": tutor_rated_image
 		});
