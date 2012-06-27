@@ -40,8 +40,10 @@
 		{% comment %}
 		var url = '{% if person %}{% url view_modal_messages person.username %}{% else %}{% url view_modal_messages user.username %}{% endif %}'+ to +'/';
 		{% endcomment %}
+		{% if user.is_authenticated %}
 		var url = '{% url view_modal_messages user.username %}'+ to +'/';
 		url += class_ ? class_+'/' : '';
+		{% endif %}
 		
 		if(!force_stay) {
 			$('#modal-messages-container').hide();
