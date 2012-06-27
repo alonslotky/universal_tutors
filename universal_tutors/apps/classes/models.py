@@ -328,12 +328,15 @@ class Class(BaseModel):
                 referral = Referral.objects.filter(user = tutor, used=False, activated=True).latest('id')
                 referral.used = True
                 referral.save()
-                with_referral = True
+                
+                self.earning_fee = self.credit_fee
+                self.universal_fee = 0
+                super(self.__class__, self).save()                
             except Referral.DoesNotExist:
-                with_referral = False
                 pass
+            
             tutor_profile = tutor.profile
-            tutor_profile.income += self.earning_fee if not with_referral else self.credit_fee
+            tutor_profile.income += self.earning_fee
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count() 
             tutor_profile.save()
             tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee, related_class=self)

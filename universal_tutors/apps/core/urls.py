@@ -13,6 +13,12 @@ import views
 urlpatterns = patterns('apps.core.views.main',
     url(r'^$', 'home', name='home'),
     url(r'^(?i)search/$', 'search', name='search'),
+
+    url(r'^(?i)reports/$', 'reports', name='reports'),
+    url(r'^(?i)reports/students/$', 'reports_students', name='reports_students'),
+    url(r'^(?i)reports/tutors/$', 'reports_tutors', name='reports_tutors'),
+    url(r'^(?i)reports/classes/$', 'reports_classes', name='reports_classes'),
+    url(r'^(?i)reports/financial/$', 'reports_financial', name='reports_financial'),
 )
 
 # Ajax

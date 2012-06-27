@@ -8,7 +8,11 @@
 {% block content %}
 
       <section class="blue feature-box"><div class="inner">
+	  	{% if person == user %}
+	    <h1>You are seeing your own profile</h1>	
+		{% else %}
         <h1>Student Profile <span>Details on a specific student</span></h1>
+		{% endif %}
       </div></section>
       
       <div class="hide-on-phones">

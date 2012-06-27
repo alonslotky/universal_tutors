@@ -1,0 +1,26 @@
+{% load ut_tags %}
+<div id="{{id}}" class="report-chart"></div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		google.setOnLoadCallback(drawChart);
+		function drawChart() {
+			// Create the data table.
+			var data = new google.visualization.arrayToDataTable([
+				['', 'Topup', 'Withdraw'],
+				['{{currency.name}}', {{currency.topup}}, {{currency.withdraw}}]
+		      ]);
+
+			// Set chart options
+			var options = {
+				title:'{{title}}',
+				colors: ['#999933', '#993333', ],
+				legend: {position: 'bottom'}
+			};
+			
+			// Instantiate and draw our chart, passing in some options.
+			var chart = new google.visualization.ColumnChart(document.getElementById('{{id}}'));
+			chart.draw(data, options);
+		}
+	});
+</script>

@@ -1,0 +1,170 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load common_tags report_tags %}
+
+{% block title %}Financial reports{% endblock %}
+{% block body_class %}app tutor{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#report-year-filter').change(function(){
+			$('#report-month-filter').val('');
+			if( $(this).val() ) {
+				$('#report-month-filter').removeClass('hidden');
+			} else {
+				$('#report-month-filter').addClass('hidden');				
+			}
+			$('#report-day-filter').val('');
+			$('#report-day-filter').addClass('hidden');
+		});
+		
+		$('#report-month-filter').change(function(){
+			$('#report-day-filter').val('');
+			if( $(this).val() ) {
+				$('#report-day-filter').removeClass('hidden');
+			} else {
+				$('#report-day-filter').addClass('hidden');
+			}
+		});
+	});
+
+	var google_no_charts = 0;
+	google.load('visualization', '1.0', {'packages':['corechart']});	
+</script>
+{% endblock %}
+
+{% block thirdparty_js %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	var google_no_charts = 0;
+	google.load('visualization', '1.0', {'packages':['corechart']});	
+</script>
+{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+			<h1>Class reports <span>Data tracked</span></h1>
+		</div>
+	</section>
+	
+	<div class="row" style="text-align: right;"><a href="{% url reports %}">Back to reports page</a></div>
+	<div class="row">
+		<h2>General</h2>
+	</div>
+
+	<div class="row">
+		<div class="four columns">
+		{% render_credit_movements topup_credits withdraw_credits profit_credits "Distribution by status" %}
+		</div>
+		<div class="three columns">&nbsp;</div>
+		<div class="three columns">
+			<form method="get" action="{% url reports_financial %}">
+			  <div class="row">
+		          <select id="report-year-filter" name="year" class="stretch">
+		          	<option value="">Any year</option>
+		          	{% for value, description in years %}
+		          	<option value="{{value}}" {% if value == year %}selected="selected"{% endif %}>{{description}}</option>
+		          	{% endfor %}
+		          </select>
+			  </div>
+			  <div class="row">
+		          <select id="report-month-filter" name="month" class="stretch {% if not year %}hidden{% endif %}">
+		          	<option value="">Any month</option>
+		          	{% for value, description in months %}
+		          	<option value="{{value}}" {% if value == month %}selected="selected"{% endif %}>{{description}}</option>
+		          	{% endfor %}
+		          </select>
+			  </div>
+			  <div class="row">
+		          <select id="report-day-filter" name="day" class="stretch {% if not month %}hidden{% endif %}">
+		          	<option value="">Any day</option>
+		          	{% for value, description in days %}
+		          	<option value="{{value}}" {% if value == day %}selected="selected"{% endif %}>{{description}}</option>
+		          	{% endfor %}
+		          </select>
+			  </div>
+			  <div class="row">
+			      <input type="submit" class="button stretch" value="Load data" />
+			  </div>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		{% for key, currency in currencies.iteritems %}
+		<div class="four columns">
+		{% render_value_movements currency "Number of classes that signed up in this period" %}
+		</div>
+		{% endfor %}
+	</div>
+
+	<div class="row">&nbsp;</div>
+	<div class="row">
+		<h2>Financial Timeline</h2>
+	</div>
+	<div class="row">
+		<div class="nine columns"></div>
+		<div class="three columns">
+			<div class="row">
+				<div class="six columns">
+					<strong>Unused: </strong>
+				</div>
+				<div class="six columns">
+					{{unused_credits}} credit{{unused_credits|pluralize}}
+				</div>
+			</div>
+			<div class="row">
+				<div class="six columns">
+					<strong>To withdraw: </strong>
+				</div>
+				<div class="six columns">
+					<div class="row">
+						{{credits_to_withdraw}} credit{{credits_to_withdraw|pluralize}}
+					</div>
+					{% for key, currency in currencies.iteritems %}
+					<div class="row">{{key}} {{currency.withdraw}}</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	{% comment %}
+	<div class="row">
+		<h2>Educational system, subjects and level</h2>
+	</div>
+
+	<div class="row">
+		<div class="six columns">
+		{% render_user_per_classes_status system "Number of classes by educational system" 1 %}
+		</div>
+		<div class="six columns">
+			{% render_user_per_classes_status level "Number of classes by level" 1 %}
+		</div>
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status subject "Number of classes by subject" 1 %}
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status subject_level "Number of classes by subject and level" 1 "" %}			
+	</div>
+
+	<div class="row">
+		<h2>Price and time</h2>
+	</div>
+
+	<div class="row">
+		<div class="six columns">
+			{% render_user_per_classes_status class_time "Number of classes by class time" 0 "" %}
+		</div>
+		<div class="six columns">
+			{% render_user_per_classes_status price_per_hour "Number of classes by price per hour" 0 "" %}
+		</div>
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status total_price "Number of classes by class price" 0 "" %}
+	</div>
+	{% endcomment %}
+{% endblock %}
