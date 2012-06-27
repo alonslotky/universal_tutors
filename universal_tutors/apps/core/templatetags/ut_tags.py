@@ -2,6 +2,7 @@ from django import template
 from django.conf import settings
 
 from apps.core.models import Quote, Video
+from apps.classes.models import Class
 
 import datetime, random
 
@@ -59,3 +60,12 @@ class ScribblarSpeedValues(template.Node):
 @register.tag
 def get_scribblar_speed_test(parser, token):
     return ScribblarSpeedValues()
+
+
+@register.filter
+def get_total_users(item, position):
+    if(type(item[position]) == int):
+        return item[position]
+    else:
+        return len(item[position])
+

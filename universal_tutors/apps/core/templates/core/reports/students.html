@@ -1,0 +1,131 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load common_tags report_tags %}
+
+{% block title %}Student reports{% endblock %}
+{% block body_class %}app tutor{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#report-year-filter').change(function(){
+			$('#report-month-filter').val('');
+			if( $(this).val() ) {
+				$('#report-month-filter').removeClass('hidden');
+			} else {
+				$('#report-month-filter').addClass('hidden');				
+			}
+			$('#report-day-filter').val('');
+			$('#report-day-filter').addClass('hidden');
+		});
+		
+		$('#report-month-filter').change(function(){
+			$('#report-day-filter').val('');
+			if( $(this).val() ) {
+				$('#report-day-filter').removeClass('hidden');
+			} else {
+				$('#report-day-filter').addClass('hidden');
+			}
+		});
+	});
+
+	var google_no_charts = 0;
+	google.load('visualization', '1.0', {'packages':['corechart']});	
+</script>
+{% endblock %}
+
+{% block thirdparty_js %}
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+	var google_no_charts = 0;
+	google.load('visualization', '1.0', {'packages':['corechart']});	
+</script>
+{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+			<h1>Student reports <span>Data tracked</span></h1>
+		</div>
+	</section>
+	
+	<div class="row" style="text-align: right;"><a href="{% url reports %}">Back to reports page</a></div>
+	<div class="row">
+		<h2>Demographics</h2>
+	</div>
+
+	<div class="row">
+		<div class="five columns">
+		{% render_user_classes total_students students_taking_classes "Number of students taking classes" "students" %}
+		</div>
+		<div class="five columns">
+		{% render_user_signup total_students students_signed_up "Number of students that signed up in this period" "students" %}
+		</div>
+		<div class="two columns">
+			<form method="get" action="{% url reports_students %}">
+			  <div class="row">
+		          <select id="report-year-filter" name="year" class="stretch">
+		          	<option value="">Any year</option>
+		          	{% for value, description in years %}
+		          	<option value="{{value}}" {% if value == year %}selected="selected"{% endif %}>{{description}}</option>
+		          	{% endfor %}
+		          </select>
+			  </div>
+			  <div class="row">
+		          <select id="report-month-filter" name="month" class="stretch {% if not year %}hidden{% endif %}">
+		          	<option value="">Any month</option>
+		          	{% for value, description in months %}
+		          	<option value="{{value}}" {% if value == month %}selected="selected"{% endif %}>{{description}}</option>
+		          	{% endfor %}
+		          </select>
+			  </div>
+			  <div class="row">
+		          <select id="report-day-filter" name="day" class="stretch {% if not month %}hidden{% endif %}">
+		          	<option value="">Any day</option>
+		          	{% for value, description in days %}
+		          	<option value="{{value}}" {% if value == day %}selected="selected"{% endif %}>{{description}}</option>
+		          	{% endfor %}
+		          </select>
+			  </div>
+			  <div class="row">
+			      <input type="submit" class="button stretch" value="Load data" />
+			  </div>
+			</form>
+		</div>
+	</div>
+
+	<div class="row">
+		<h2>Educational system, subjects and level</h2>
+	</div>
+
+	<div class="row">
+		<div class="six columns">
+		{% render_user_per_classes_status system "Number of students by educational system" 1 %}
+		</div>
+		<div class="six columns">
+			{% render_user_per_classes_status level "Number of students by level" 1 %}
+		</div>
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status subject "Number of students by subject" 1 %}
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status subject_level "Number of students by subject and level" 1 "" %}			
+	</div>
+
+	<div class="row">
+		<h2>Price and time</h2>
+	</div>
+
+	<div class="row">
+		<div class="six columns">
+			{% render_user_per_classes_status class_time "Number of students by class time" 0 "" %}
+		</div>
+		<div class="six columns">
+			{% render_user_per_classes_status price_per_hour "Number of students by price per hour" 0 "" %}
+		</div>
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status total_price "Number of students by class price" 0 "" %}
+	</div>
+{% endblock %}

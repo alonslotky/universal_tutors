@@ -1,0 +1,39 @@
+{% load ut_tags %}
+<div id="{{id}}" class="report-chart"></div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		google.setOnLoadCallback(drawChart);
+		function drawChart() {
+			// Create the data table.
+			var data = new google.visualization.arrayToDataTable([
+				['{{title}}', 'Complete', 'Canceled by student', 'Canceled by tutor', 'Canceled by system', 'Rejected by tutor', 'Dropped by student'],
+				{% for key, item in items %}
+				['{{key|safe}}',
+					{{item|get_total_users:STATUS.DONE }},
+					{{item|get_total_users:STATUS.CANCELED_BY_STUDENT }},
+					{{item|get_total_users:STATUS.CANCELED_BY_TUTOR }},
+					{{item|get_total_users:STATUS.CANCELED_BY_SYSTEM }},
+					{{item|get_total_users:STATUS.REJECTED_BY_TUTOR }},
+					{{item|get_total_users:STATUS.STOPPED_BY_STUDENT }}
+				]{% if not forloop.last %},{% endif %}
+				{% empty %}
+				['No data', 0, 0, 0, 0, 0, 0]
+				{% endfor %}
+		      ]);
+
+			// Set chart options
+			var options = {
+				title:'{{title}}',
+				colors: ['#9fe123', '#993333', '#996633', '#999933', '#777777', '#ee2222'],
+				vAxis: {
+					
+				}
+			};
+			
+			// Instantiate and draw our chart, passing in some options.
+			var chart = new google.visualization.ColumnChart(document.getElementById('{{id}}'));
+			chart.draw(data, options);
+		}
+	});
+</script>

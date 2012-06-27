@@ -1,0 +1,43 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags %}
+
+{% block title %}Reports{% endblock %}
+{% block body_class %}app tutor{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+			<h1>Reports <span>Data tracked</span></h1>
+		</div>
+	</section>
+      
+	<div class="row">
+		<div class="three columns"></div>
+		<div class="six columns">
+			<table class="stretch">
+				<tr>
+					<th>Target</th>
+					<th>&nbsp;</th>
+				</tr>
+				<tr>
+					<td><a href="{% url reports_students %}">Students</a></td>
+					<td><a href="{% url reports_students %}">view</a></td>
+				</tr>
+				<tr>
+					<td><a href="{% url reports_tutors %}">Tutors</a></td>
+					<td><a href="{% url reports_tutors %}">view</a></td>
+				</tr>
+				<tr>
+					<td><a href="{% url reports_classes %}">Classes</a></td>
+					<td><a href="{% url reports_classes %}">view</a></td>
+				</tr>
+				<tr>
+					<td><a href="{% url reports_financial %}">Financial</a></td>
+					<td><a href="{% url reports_financial %}">view</a></td>
+				</tr>
+			</table>
+		</div>
+		<div class="three columns"></div>
+	</div>
+{% endblock %}
