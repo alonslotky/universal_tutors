@@ -8,19 +8,20 @@
 			var data = new google.visualization.arrayToDataTable([
 				['', 'Topup', 'Withdraw', 'Profit'],
 				{% for key, item in credits_evolution.iteritems %}
-				['Credits', {{item.topup}}, {{item.withdraw}}, {{item.profit}}]{% if not forloop.last %},{% endif %}
-		      	{% endfor %}
+				['{{key}}', {{item.topup}}, {{item.withdraw}}, {{item.profit}}]{% if not forloop.last %},{% endif %}
+				{% endfor %}
 		      ]);
 
 			// Set chart options
 			var options = {
 				title:'{{title}}',
 				colors: ['#999933', '#993333', '#339933',],
-				legend: {position: 'bottom'}
+				legend: {position: 'bottom'},
+				hAxis: {position: 'none'}
 			};
 			
 			// Instantiate and draw our chart, passing in some options.
-			var chart = new google.visualization.ColumnChart(document.getElementById('{{id}}'));
+			var chart = new google.visualization.LineChart(document.getElementById('{{id}}'));
 			chart.draw(data, options);
 		}
 	});

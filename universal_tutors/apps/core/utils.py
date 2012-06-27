@@ -112,5 +112,6 @@ def init_credits_evolution(items, classes):
     d = OrderedDict()
     while time <= today:
         d[time.strftime('%b %Y')] = {'topup': 0, 'withdraw': 0, 'profit': 0}
+        time = time.replace(year=time+1, month=1) if time.month == 12 else time.replace(month=time.month+1)
 
     return d

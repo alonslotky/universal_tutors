@@ -10,7 +10,6 @@ register = template.Library()
 
 @register.inclusion_tag('core/reports/_render_user_per_classes_status.html')
 def render_user_per_classes_status(dtc, title, ordering=0, verbose=None):
-    print dtc
     if ordering:
         items = sorted([(key, value) for key, value in dtc.items()], key=lambda x: x[0])
     else:
@@ -66,6 +65,13 @@ def render_credit_movements(topup, withdraw, profit, title=None):
 def render_value_movements(currency, title=None, verbose=None):
     return {
         'currency': currency,
+        'id': datetime.datetime.now().strftime("%S%f"),
+    }
+
+@register.inclusion_tag('core/reports/_render_credit_evolution.html')
+def render_credit_evolution(credits_evolution, title=None):
+    return {
+        'credits_evolution': credits_evolution,
         'id': datetime.datetime.now().strftime("%S%f"),
     }
 

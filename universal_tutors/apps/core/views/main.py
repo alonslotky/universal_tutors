@@ -394,14 +394,14 @@ def reports_financial(request):
   
     elif year and month:
         items = UserCreditMovement.objects.filter(type__in = [TYPES.WITHDRAW, TYPES.TOPUP]) \
-                        .filter(date__year = year, date__month = month) \
+                        .filter(created__year = year, created__month = month) \
                         .order_by('created')
         classes = Class.objects.select_related() \
                         .filter(status = Class.STATUS_TYPES.DONE, date__year = year, date__month = month).order_by('date')
     
     elif year:
         items = UserCreditMovement.objects.filter(type__in = [TYPES.WITHDRAW, TYPES.TOPUP]) \
-                        .filter(date__year = year) \
+                        .filter(created__year = year) \
                         .order_by('created')
         classes = Class.objects.select_related() \
                         .filter(status = Class.STATUS_TYPES.DONE, date__year = year).order_by('date')
@@ -426,11 +426,11 @@ def reports_financial(request):
         value = float(value)
         if item.type == TYPES.TOPUP:
             currencies[symbol]['topup'] += value
-            credits_evolution[class_.date.strftime('%b %Y')]['topup'] += value
+            credits_evolution[item.created.strftime('%b %Y')]['topup'] += value
             topup_credits += item.credits
         if item.type == TYPES.WITHDRAW:
             currencies[symbol]['withdraw'] += value
-            credits_evolution[class_.date.strftime('%b %Y')]['withdraw'] += value
+            credits_evolution[item.created.strftime('%b %Y')]['withdraw'] += value
             withdraw_credits += item.credits      
 
     for class_ in classes:
