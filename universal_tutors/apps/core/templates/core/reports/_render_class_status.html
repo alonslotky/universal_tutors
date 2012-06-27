@@ -1,26 +1,29 @@
 {% load ut_tags %}
 <div id="{{id}}" class="report-chart"></div>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		google.setOnLoadCallback(drawChart);
 		function drawChart() {
 			// Create the data table.
 			var data = new google.visualization.arrayToDataTable([
-				['', 'Topup', 'Withdraw', 'Profit'],
-				{% for key, item in credits_evolution.iteritems %}
-				['Credits', {{item.topup}}, {{item.withdraw}}, {{item.profit}}]{% if not forloop.last %},{% endif %}
-		      	{% endfor %}
+				['', 'Classes'],
+				['Completed', {{data|get_total_users:STATUS.DONE}}],
+				['Canceled by student', {{data|get_total_users:STATUS.CANCELED_BY_STUDENT}}],
+				['Canceled by tutor', {{data|get_total_users:STATUS.CANCELED_BY_TUTOR}}],
+				['Canceled by system', {{data|get_total_users:STATUS.CANCELED_BY_SYSTEM}}],
+				['Rejected by tutor', {{data|get_total_users:STATUS.REJECTED_BY_TUTOR}}],
+				['Dropped by student', {{data|get_total_users:STATUS.STOPPED_BY_STUDENT}}]
 		      ]);
 
 			// Set chart options
 			var options = {
 				title:'{{title}}',
-				colors: ['#999933', '#993333', '#339933',],
-				legend: {position: 'bottom'}
+				colors: ['#9fe123', '#993333', '#996633', '#999933', '#777777', '#ee2222']
 			};
 			
 			// Instantiate and draw our chart, passing in some options.
-			var chart = new google.visualization.ColumnChart(document.getElementById('{{id}}'));
+			var chart = new google.visualization.PieChart(document.getElementById('{{id}}'));
 			chart.draw(data, options);
 		}
 	});
