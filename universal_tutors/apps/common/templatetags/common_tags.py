@@ -8,6 +8,8 @@ from django.conf import settings
 from django.utils.encoding import force_unicode
 from apps.common.utils.date_utils import convert_datetime as convert_datetime_
 
+from allauth.facebook.models import FacebookApp
+
 import datetime
 import pytz
 
@@ -491,3 +493,11 @@ def customnaturaltime(value):
         else:
             count = delta.seconds / 60 / 60
             return '%(count)s hours from now' % count if count > 1 else 'a hour from now'
+
+
+@register.simple_tag
+def get_facebook_api_id():
+    try:
+        return FacebookApp.objects.latest('id').api_key
+    except FacebookApp.DoesNotExit:
+        return ''

@@ -1,4 +1,4 @@
-{% load django_static %}
+{% load django_static common_tags %}
 <!DOCTYPE html>
 
 <!--[if lt IE 7]>      <html class="lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
@@ -119,6 +119,29 @@
  	<script src="{{STATIC_URL}}js/app.js"></script>
  	{# endslimall #}
  	
+ 	 <div id="fb-root"></div>
+	 <script>
+	  window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '{% get_facebook_api_id %}',
+	      status     : true, 
+	      cookie     : true, 
+	      xfbml      : true
+	    });
+	
+	    // Additional initialization code here
+	  };
+	
+	  // Load the SDK Asynchronously
+	  (function(d){
+	     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+	     if (d.getElementById(id)) {return;}
+	     js = d.createElement('script'); js.id = id; js.async = true;
+	     js.src = "//connect.facebook.net/en_US/all.js";
+	     ref.parentNode.insertBefore(js, ref);
+	   }(document));
+	</script>
+
  	<script type="text/javascript" src="http://media.muchosmedia.com/scribblar/scripts/includes.js"></script>
  	{% block thirdparty_js %}{% endblock %}
 </body>
