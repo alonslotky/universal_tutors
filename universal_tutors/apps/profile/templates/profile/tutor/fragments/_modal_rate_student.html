@@ -14,7 +14,13 @@
     <input type="submit" class="small button" value="Send">
   </form>
   
-  <div id="sharethis_buttons"></div>
+  <span id="share-facebook" class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;">
+  	<span class="stLarge" style="background-image: url('http://w.sharethis.com/images/facebook_32.png');"></span>
+  </span>
+	
+  <span id="share-twitter" class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;">
+  	<span class="stLarge" style="background-image: url('http://w.sharethis.com/images/twitter_32.png');"></span>
+  </span>
 
   <a class="close-reveal-modal">&#215;</a>
 </div>
@@ -54,48 +60,39 @@
 		
 	});
 	
-	var setup_share_buttons = function() {
-		$("#sharethis_facebook").remove();
-		$("#sharethis_twitter").remove();
-		$("#sharethis_email").remove();
-		$("#sharethis_buttons").append(
-			'<span id="sharethis_facebook"></span>'+
-			'<span id="sharethis_twitter"></span>'+
-			'<span id="sharethis_email"></span>'
+	$("#share-twitter").click(function(e){
+		e.preventDefault();
+		window.open('https://twitter.com/share?url='+ student_rated_url +'&via=UniversalTutors&text={{ user.get_full_name }} rated student '+ $('#modal-review-student-name').html() );	
+	});
+	
+	$("#share-facebook").click(function(e){
+		e.preventDefault();
+		FB.ui(
+		  {
+		    method: 'feed',
+		    name: "{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+		    link: student_rated_url,
+		    picture: student_rated_url,
+		    description: $('#tutor-rate-student-text').val()
+		  },
+		  function(response) {
+
+		  }
 		);
-				
-		stWidget.addEntry({
-			"service":"facebook",
-			"element":document.getElementById('sharethis_facebook'),
-			"url": student_rated_url,
-			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-tutor-name').html(),
-			"type":"large",
-			"text": $('#tutor-rate-student-text').val(),
-			"caption": $('#tutor-rate-student-text').val(),
-			"summary": $('#tutor-rate-student-text').val(),
-			"image": student_rated_image
-		});
+	});
+
+	var setup_share_buttons = function() {
+		$("#share-email").remove();
+		$('<span id="share-email"></span>').insertBefore("#modal-review-close-button");
 		
 		stWidget.addEntry({
-			"service":"twitter",
-			"element":document.getElementById('sharethis_twitter'),
+			"service": "email",
+			"element": document.getElementById('share-email'),
 			"url": student_rated_url,
-			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-tutor-name').html(),
-			"type":"large",
-			"text": $('#tutor-rate-student-text').val(),
+			"title": "{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
+			"type": "large",
 			"summary": $('#tutor-rate-student-text').val(),
-			"image": student_rated_image
-		});
-		
-		stWidget.addEntry({
-			"service":"email",
-			"element":document.getElementById('sharethis_email'),
-			"url": student_rated_url,
-			"title":"{{ user.get_full_name }} rated student " + $('#modal-review-tutor-name').html(),
-			"type":"large",
-			"text": $('#tutor-rate-student-text').val(),
-			"summary": $('#tutor-rate-student-text').val(),
-			"image": student_rated_image
+			"image": student_rated_url
 		});		
 	}
 
