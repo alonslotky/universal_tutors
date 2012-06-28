@@ -58,9 +58,9 @@ def topup_cart(request, username=None):
         credits = int(request.POST.get('credits', 0))
         try:
             bundle = Bundle.objects.filter(credits__gte = credits).order_by('credits')[0]
-            value = credits * currency.credit_value() * (1 - bundle.discount)
+            value = round(credits * currency.credit_value() * (1 - bundle.discount), 2)
         except IndexError:
-            value = credits * currency.credit_value()
+            value = round(credits * currency.credit_value(), 2)
 
         if credits:
             topup = TopUpItem(user=person, credits=credits, value=value, currency=currency)
