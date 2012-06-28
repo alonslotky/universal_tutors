@@ -3,12 +3,14 @@
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
+from django.core.mail import EmailMessage
+from django.template import Template, Context
 
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.model_utils import get_namedtuple_choices
 
 from apps.classes.settings import CREDIT_VALUE
-import urlparse
+import urlparse, threading
 
 class Currency(BaseModel):
     class Meta:
@@ -83,3 +85,33 @@ class Bundle(models.Model):
     
     def get_discount_percentage(self):
         return '%s' % (self.discount * 100)
+    
+
+from apps.profile.models import UserProfile as _UserProfile
+
+class EmailTemplate(models.Model):
+    type = models.PositiveSmallIntegerField(choices=_UserProfile.NOTIFICATIONS_TYPES.get_choices(), unique=True, db_index=True)
+    subject = models.CharField(max_length=255)
+    body = models.TextField()
+    
+    
+    def __unicode__(self):
+        return self.get_type_display()
+    
+    
+    def send_email(self, context, to_email, use_thread=True):
+        template = Template(self.body)
+        c = Context(context) 
+        html = template.render(c)
+        
+        sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+                    
+        email_message = EmailMessage(self.subject, html, sender, to_email)
+        email_message.content_subtype = 'html'
+            
+        if use_thread:
+            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': False})
+            t.setDaemon(True)
+            t.start()
+        else:
+            email_message.send()
