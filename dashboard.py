@@ -129,6 +129,34 @@ class CustomIndexDashboard(Dashboard):
             ]
         ))
 
+        # append another link list module for "support".
+        self.children.append(modules.LinkList(
+            _('Reports'),
+            column=2,
+            children=[
+                {
+                    'title': _('Students'),
+                    'url': reverse('reports_students'),
+                    'external': True,
+                },
+                {
+                    'title': _('Tutors'),
+                    'url': reverse('reports_tutors'),
+                    'external': True,
+                },
+                {
+                    'title': _('Classes'),
+                    'url': reverse('reports_classes'),
+                    'external': True,
+                },
+                {
+                    'title': _('Financial'),
+                    'url': reverse('reports_financial'),
+                    'external': True,
+                },
+            ]
+        ))
+
         # append a feed module
         self.children.append(modules.Feed(
             _('Latest Raw Jam News'),
