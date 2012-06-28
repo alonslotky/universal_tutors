@@ -1,5 +1,6 @@
 {% load ut_tags %}
 <div id="{{id}}" class="report-chart"></div>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		google.setOnLoadCallback(drawChart);
@@ -7,21 +8,18 @@
 			// Create the data table.
 			var data = new google.visualization.arrayToDataTable([
 				['', 'Topup', 'Withdraw', 'Profit'],
-				{% for key, item in credits_evolution.iteritems %}
-				['{{key}}', {{item.topup}}, {{item.withdraw}}, {{item.profit}}]{% if not forloop.last %},{% endif %}
-				{% endfor %}
+				['Credits', {{topup}}, {{withdraw}}, {{profit}}]
 		      ]);
 
 			// Set chart options
 			var options = {
 				title:'{{title}}',
 				colors: ['#999933', '#993333', '#339933',],
-				legend: {position: 'bottom'},
-				hAxis: {position: 'none'}
+				legend: {position: 'bottom'}
 			};
 			
 			// Instantiate and draw our chart, passing in some options.
-			var chart = new google.visualization.LineChart(document.getElementById('{{id}}'));
+			var chart = new google.visualization.ColumnChart(document.getElementById('{{id}}'));
 			chart.draw(data, options);
 		}
 	});
