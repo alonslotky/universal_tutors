@@ -42,3 +42,9 @@ admin.site.register(Quote)
 class BundleAdmin(admin.ModelAdmin):
     list_display = ('credits', 'discount')
 admin.site.register(Bundle, BundleAdmin)
+
+
+class EmailTemplateAdmin(admin.ModelAdmin):
+    pass
+        
+admin.site.register(EmailTemplate, EmailTemplateAdmin)

@@ -10,6 +10,7 @@ from django.template import loader, Context
 from django.core.urlresolvers import reverse
 from django.core.mail import EmailMessage, get_connection
 from django.template.loader import render_to_string
+from django.template import Template, Context
 
 
 import re, unicodedata, random, string, datetime, os, pytz, threading, urlparse
@@ -128,8 +129,9 @@ class UserProfile(BaseModel):
         (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
         (8, 'CRB_EXPIRED', 'The CRB is expired'),
         (9, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 60 days'),
-        (10, 'MESSAGE', 'The CRB is going to expire in less than 60 days'),
-        (11, 'CANCELED_BY_SYSTEM', 'Class canceled by the system')
+        (10, 'MESSAGE', 'New message'),
+        (11, 'CANCELED_BY_SYSTEM', 'Class canceled by the system'),
+        (12, 'REFERRAL', 'User referral'),
     ))
     
     UPLOAD_IMAGES_PATH = 'uploads/profiles/profile_images'
@@ -597,18 +599,20 @@ class UserProfile(BaseModel):
         if self.crb_expiry_date:
             today = datetime.date.today()
             if self.crb_expiry_date < today and not self.crb_alert_expired:
-                self.send_notification(self.NOTIFICATIONS_TYPES .CRB_EXPIRED, {'tutor': self.user})
+                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRED, {'tutor': self.user}, use_thread=False)
                 self.crb_alert_expired = True 
                 self.crb_alert_expire_date = True
                 super(self.__class__, self).save()
-            
+
             if self.crb_expiry_date < today + datetime.timedelta(days=60) and not self.crb_alert_expire_date:
-                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user})
+                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user}, use_thread=False)
                 self.crb_alert_expire_date = True
                 super(self.__class__, self).save()
 
 
     def send_notification(self, type, context, use_thread=True):
+        from apps.core.models import EmailTemplate
+
         subject = None
         html = None
         user = self.user
@@ -616,58 +620,14 @@ class UserProfile(BaseModel):
         context['user'] = user
         context['PROJECT_SITE_DOMAIN'] = settings.PROJECT_SITE_DOMAIN
 
-        if type == self.NOTIFICATIONS_TYPES.BOOKED:
-            subject = 'A new class has been booked'
-            html = render_to_string('emails/booked.html', context)
-        if type == self.NOTIFICATIONS_TYPES.ACCEPTED_BY_TUTOR:
-            subject = 'Your class has been accepted'
-            html = render_to_string('emails/accepted.html', context)
-        if type == self.NOTIFICATIONS_TYPES.REJECTED_BY_TUTOR:
-            subject = 'Your class has been rejected'
-            html = render_to_string('emails/rejected.html', context)
-        if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_TUTOR:
-            subject = 'Class canceled by tutor'
-            html = render_to_string('emails/canceled_by_tutor.html', context)
-        if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_STUDENT:
-            subject = 'Class canceled by student'
-            html = render_to_string('emails/canceled_by_student.html', context)
-        if type == self.NOTIFICATIONS_TYPES.CANCELED_BY_SYSTEM:
-            subject = 'Class canceled by the system'
-            html = render_to_string('emails/canceled_by_system.html', context)
-        if type == self.NOTIFICATIONS_TYPES.INCOME:
-            subject = 'Income credits received'
-            html = render_to_string('emails/income.html', context)
-        if type == self.NOTIFICATIONS_TYPES.ACTIVATED:
-            subject = 'Account activated'
-            html = render_to_string('emails/activated.html', context)
-        if type == self.NOTIFICATIONS_TYPES.CLASS:
-            subject = 'Your class is about to start'
-            html = render_to_string('emails/class.html', context)
-        if type == self.NOTIFICATIONS_TYPES.CRB_EXPIRED:
-            subject = 'CRB expired'
-            html = render_to_string('emails/crb_expired.html', context)
-        if type == self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE:
-            subject = 'CRB is about to expire'
-            html = render_to_string('emails/crb_expire_date.html', context)
-        if type == self.NOTIFICATIONS_TYPES.MESSAGE:
-            subject = 'New message'
-            html = render_to_string('emails/message.html', context)
-        
-        
-        if subject and html:            
-            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-            to = ['%s <%s>' % (user.get_full_name(), user.email)]
-                    
-            email_message = EmailMessage(subject, html, sender, to)
-            email_message.content_subtype = 'html'
-            
-            if use_thread:
-                t = threading.Thread(target=email_message.send, kwargs={'fail_silently': False})
-                t.setDaemon(True)
-                t.start()
-            else:
-                email_message.send()
-    
+        try:
+            email_template = EmailTemplate.objects.get(type=type)
+        except EmailTemplate.DoesNotExist:
+            return
+        to = ['%s <%s>' % (user.get_full_name(), user.email)]
+        email_template.send_email(context, to, use_thread)
+
+
     def topup_account(self, credits):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
             self.credit += credits
@@ -999,7 +959,7 @@ class TutorReview(BaseModel):
     user = models.ForeignKey(User, related_name='reviews_as_tutor')
     rate = models.PositiveSmallIntegerField(default = 0)
     related_class = models.ForeignKey(Class, related_name='tutor_reviews')
-    is_active= models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     text = models.TextField()
     
     def save(self, *args, **kwargs):
@@ -1295,28 +1255,20 @@ class Referral(BaseModel):
         
         super(self.__class__, self).save(*args, **kwargs)
         if is_new:
-            self.send_notification()
-
-    def send_notification(self):
-        subject = '%s referral Universal Tutors to you' % self.user.get_full_name()
-        html = render_to_string('emails/referral.html', {
-            'sender': self.user,
-            'name': self.name,
-            'key': self.key,
-            'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
-        })
-
-        if subject and html:            
-            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
-            to = ['%s <%s>' % (self.name, self.email)]
-                    
-            email_message = EmailMessage(subject, html, sender, to)
-            email_message.content_subtype = 'html'
+            from apps.core.models import EmailTemplate
             
-            t = threading.Thread(target=email_message.send, kwargs={'fail_silently': True})
-            t.setDaemon(True)
-            t.start()
-
+            profile = self.user.profile
+            email_template = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.REFERRAL)
+            
+            context = {
+               'sender': self.user,
+               'name': self.name,
+               'key': self.key,
+               'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+            }
+            
+            to = ['%s <%s>' % (self.name, self.email)]
+            email_template.send_email(context, to)
 
 #### TOPUP CREDITS #######################################################
 def topup_successful(sender, **kwargs):
