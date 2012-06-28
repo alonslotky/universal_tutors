@@ -22,7 +22,7 @@ def mass_payments():
         for user in tutors:
             profile = user.profile
             credits = profile.income
-            amount = credits * credit_value
+            amount = round(credits * credit_value, 2)
             email = profile.paypal_email
             withdraw = WithdrawItem(
                 user = user,
