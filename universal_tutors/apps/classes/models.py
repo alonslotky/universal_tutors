@@ -93,7 +93,7 @@ class Class(BaseModel):
         (5, 'CANCELED_BY_SYSTEM', 'Canceled by the system'),
         (6, 'STOPPED_BY_STUDENT', 'Stopped by the student'),
         (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor'),
-        (9, 'WAITING', 'Waiting for approve'),
+        (9, 'WAITING', 'Waiting for approval'),
     ))
     
     RESPONSE_TYPES = get_namedtuple_choices('STATUS_TYPES', (
