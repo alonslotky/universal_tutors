@@ -523,20 +523,13 @@ class UserProfile(BaseModel):
         if not self.scribblar_id:
             user = self.user
             username = user.username
-            try:
-                scribblar_user = users.add(
-                    username = user.username,
-                    firstname = user.first_name,
-                    lastname = user.last_name,
-                    email = user.email,
-                    roleid = 50 if self.type == self.TYPES.TUTOR else 10,
-                )
-            except:
-                scribblar_user = None
-                for s_user in users.list():
-                    if s_user.get('username', None) == username:
-                        scribblar_user = s_user
-                        break
+            scribblar_user = users.add(
+                username = user.username,
+                firstname = user.first_name,
+                lastname = user.last_name,
+                email = user.email,
+                roleid = 50 if self.type == self.TYPES.TUTOR else 10,
+            )
                 
             if scribblar_user:
                 self.scribblar_id = scribblar_user['userid']
