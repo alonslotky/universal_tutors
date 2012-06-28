@@ -51,6 +51,7 @@ TEMPLATE_LOADERS = (
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+    'apps.common.utils.backends.CaseInsensitiveModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
