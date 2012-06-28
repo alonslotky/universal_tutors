@@ -534,7 +534,7 @@ class UserProfile(BaseModel):
             except:
                 scribblar_user = None
                 for s_user in users.list():
-                    if s_user['username'] == username:
+                    if s_user.get('username', '') == username:
                         scribblar_user = s_user
                         break
                 
