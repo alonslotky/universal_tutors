@@ -66,14 +66,14 @@
 		});
 		
 		$('#student-rate-tutor-text').focusin(function(){
-			if ($(this).val() === "Review this guy ...") {
+			if ($(this).val() === "Review this tutor ...") {
 				$(this).val("");
 			}
 		});
 		
 		$('#student-rate-tutor-text').focusout(function(){
 			if ($(this).val() === "") {
-				$(this).val("Review this guy ...");
+				$(this).val("Review this tutor ...");
 			}
 		});
 		
@@ -120,7 +120,7 @@
 		$('.rate-tutor-name').html(user_name);
 		$('#student-rate-tutor-id').val(user_id);
 		$('#student-rate-tutor-class').val(class_id);
-		$('#student-rate-tutor-text').val(text ? text : 'Review this guy ...');
+		$('#student-rate-tutor-text').val(text ? text : 'Review this tutor ...');
 		$('#student-rate-tutor-rate').val(rate ? rate : 0);
 		
 		$.get('{% url get_user_data %}'+ user_id +'/', function(response){
