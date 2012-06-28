@@ -29,6 +29,10 @@ MANAGERS = (
     ('Benjamin Dell', 'ben@rawjam.co.uk'),
 )
 
+# GOOGLE
+GOOGLE_ANALYTICS_CODE = None
+
+
 # logging
 import logging.config
 LOG_FILENAME = os.path.join(os.path.dirname(__file__), 'logging.conf')
