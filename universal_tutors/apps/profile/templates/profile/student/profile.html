@@ -61,7 +61,7 @@
               {% if can_send_message %}
               {% with person|get_messages:user as messages %}
 		  	  {% with messages.messages as msgs %}
-              <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"> 
+              <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> 
               	{% if msgs|length == 0 %} 
 	          		Send a Message
 	          	{% else %}
@@ -75,7 +75,7 @@
               {% endwith %}
          	  {% endwith %}
 	          {% endif %}
-	          <a href="{% url report person.username %}" class="report">Report</a>
+	          <a href="{% url report person.username %}" class="report"><i class="icon-flag"></i> Report</a>
 			{% endif %}
             </div>
           </div>

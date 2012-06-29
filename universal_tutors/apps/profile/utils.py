@@ -52,7 +52,7 @@ def check_crb():
         tutor.profile.check_crb()
 
 
-def send_message_email():
+def send_message_email(use_thread=True):
     now = datetime.datetime.now() - datetime.timedelta(minutes=1)
     for message in Message.objects.select_related().filter(created__lte=now, read=False, email_sent=False):
-        message.send_email(use_thread=False)
+        message.send_email(use_thread)
