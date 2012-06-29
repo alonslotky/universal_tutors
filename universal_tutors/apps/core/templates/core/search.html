@@ -230,7 +230,7 @@
 		            	<span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span><br/>
 		            	<span>
 		            		{% if tutor_profile.webcam %}<a title="Webcam" class="no-hover"><i class="icon-videocam"></i></a>{% endif %}
-		            		{% if tutor_profile.crb_checked %}<a title="CRB Checked" class="no-hover"><i class="icon-thumbs-up"></i></a>{% endif %}
+		            		{% if tutor_profile.crb_checked %}<a title="CRB Checked" class="no-hover"><i class="icon-ok"></i></a>{% endif %}
 	            		</span>
 		            </p>
 		          </div>
@@ -268,7 +268,7 @@
 						            {% endif %}
 					            </a>
 					            
-					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-thumbs-up"></i> Book a Class</a>
+					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-ok"></i> Book a Class</a>
 							{% else %}
 								{% if user_profile.type != user_profile.TYPES.TUTOR %}
 					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> 
