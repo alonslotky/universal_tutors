@@ -115,6 +115,7 @@ class Class(BaseModel):
     scribblar_id = models.CharField(max_length = 100, null=True, blank=True)
     cancelation_reason = models.CharField(max_length = 500, null=True, blank=True)
     tutor_appeared = models.BooleanField(default=False)
+    cover = models.TextField(null=True, blank=True)
     
     status = models.PositiveSmallIntegerField(choices=STATUS_TYPES.get_choices(), default=STATUS_TYPES.PRE_BOOKED)
     alert_sent = models.BooleanField(default=False)
@@ -295,7 +296,6 @@ class Class(BaseModel):
                 'student': student,
                 'tutor': tutor,
             })
-
     
     def alert(self, use_thread=True):
         self.alert_sent = True
@@ -445,6 +445,13 @@ class Class(BaseModel):
     
     def get_rec_url(self, id):
         return recordings.url(recid=id)
+
+    def get_description(self):
+        if self.cancelation_reason:
+            return 'Reason: %s' % self.cancelation_reason
+        else:
+            return self.cover if self.cover else ''
+
 
 class ClassUserHistory(models.Model):
     """

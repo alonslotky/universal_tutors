@@ -8,18 +8,20 @@
 	  	{% csrf_token %}
 		<div class="row">&nbsp;</div>
 		<div id="book-class-errors" class="formError"></div>
+		
 		<div class="row">
 		  <div class="four columns phone-one">        
-		    <label>Date</label>
+		    <label>Date*</label>
 		  </div>
 		  <div class="eight columns phone-three">
 			<select id="book-class-date" name="date" class="stretch">
 			</select>
 		  </div>	  
 		</div>
+		
 		<div class="row">
 		  <div class="four columns phone-one">        
-		    <label>Subject</label>
+		    <label>Subject*</label>
 		  </div>
 		  <div class="eight columns phone-three">
 			<select id="book-class-subject" name="subject" class="stretch">
@@ -30,17 +32,19 @@
 			</select>
 		  </div>	  
 		</div>
+		
 		<div class="row">
 		  <div class="four columns phone-one">        
-		    <label>Time</label>
+		    <label>Time*</label>
 		  </div>
 		  <div class="eight columns phone-three">
 		  	<select id="book-class-start" name="start" class="stretch"></select>
 		  </div>	  
 		</div>
+		
 		<div class="row">
 		  <div class="four columns phone-one">        
-		    <label>Duration</label>
+		    <label>Duration*</label>
 		  </div>
 		  <div class="eight columns phone-three">
 		  	<select id="book-class-duration" name="duration" class="stretch">
@@ -50,6 +54,24 @@
 		  		<option value="90">90 min</option>
 		  		<option value="120">120 min</option>
 		  	</select>		  		
+		  </div>	  
+		</div>
+
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Topics</label>
+		  </div>
+		  <div class="eight columns phone-three">
+		  	<textarea name="cover" placeholder="Topics you would like to cover (optional)"></textarea>		  		
+		  </div>	  
+		</div>
+
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Message</label>
+		  </div>
+		  <div class="eight columns phone-three">
+		  	<textarea name="message" placeholder="Write a message to tutor (optional)"></textarea>		  		
 		  </div>	  
 		</div>
 

@@ -12,7 +12,7 @@
 			</div>
 		{% endif %}		
 		{% empty %}
-			<div class="row">No assets where found to download</div>      		
+			<div class="row">No assets available for this class</div>      		
 		{% endfor %}
 	</div>
 </div>
@@ -27,7 +27,7 @@
 				&raquo; <a target="_blank" href="{{class|rec_url:item.recid}}" target="_blank">Record {{forloop.counter}} (view)</a>
 			</div>
 		{% empty %}
-			<div class="row">No recordings where found to download</div>      		
+			<div class="row">No recordings available for this class</div>      		
 		{% endfor %}
 	</div>
 </div>

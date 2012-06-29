@@ -1,6 +1,6 @@
 {% extends "ui/layouts/base.html" %}
 
-{% load fb_versions common_tags tutor_tags %}
+{% load fb_versions common_tags tutor_tags classes_tags %}
 
 {% block title %}{{class}}{% endblock %}
 {% block body_class %}app tutor{% endblock %}
@@ -20,7 +20,7 @@
       
       <div class="row">
           <h2>{{class}}</h2>
-          <h4>{{class.date|date:"M d, Y"}} - from {{class.start|time:"H:i"}} to {{class.end|time:"H:i"}}</h4>
+          <h4>{{class.date|date:"M d, Y \a\t H:i"}} ({{class.duration}} minutes)</h4>
           {% if tutor == user %}
           	{% get_class_messages student tutor class %}
           {% else %}
@@ -40,6 +40,22 @@
           
       </div>
       
+      {% if class.cover %}
+      <div class="row">&nbsp;</div>
+	  <div class="row">
+	  	<h4>Topics to cover</h4>
+	  	<p>{{class.cover}}</p>
+	  </div>
+	  {% endif %}
+	  
+	  {% if class.cancelation_reason %}
+      <div class="row">&nbsp;</div>
+	  <div class="row">
+	  	<h4>Reason</h4>
+	  	<p>{{class.cancelation_reason}}</p>
+	  </div>
+	  {% endif %}
+	  
       <div class="row">&nbsp;</div>
       
       {% if before %}
@@ -47,14 +63,39 @@
       {% endif %}
       
       {% if after %}
-      <div class="row"><strong>Class Material</strong></div>      
-      	{% for item in material %}
-      	{% if item.allowdownload == '1' %}
-      		<div class="row">&rsaquo; <a href="{% url class_download class.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}}</a></div>
-      	{% endif %}
-      	{% empty %}
-      		<div class="row">No material found to download</div>      		
-      	{% endfor %}
+		<div class="row"><h4>Class material and recordings</h4></div>
+		<div class="row">
+			<div class="six columns">
+				<table class="stretch">
+					<tr>
+						<th>Assets</th>
+					</tr>
+					{% for item in material %}
+					{% if item.allowdownload == '1' %}
+					<tr>
+						<td><a href="{% url class_download class.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}}</a></td>
+					</tr>
+					{% endif %}		
+					{% empty %}
+					<tr><td>No assets available for this class</td></tr>
+					{% endfor %}
+				</table>
+			</div>
+			<div class="six columns">
+				<table class="stretch">
+					<tr>
+						<th>Recordings</th>
+					</tr>
+					{% for item in recordings %}
+					<tr>
+						<td><a target="_blank" href="{{class|rec_url:item.recid}}" target="_blank">Record {{forloop.counter}}</a></td>
+					</tr>
+					{% empty %}
+					<tr><td>No recordings available for this class</td></tr>
+					{% endfor %}
+				</table>
+			</div>
+		</div>
       {% endif %}
 
   	{% include 'profile/fragments/_modal_messages.html' %}
