@@ -23,7 +23,8 @@ class FAQItemAdmin(admin.ModelAdmin):
             'http://%s/static/grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js' % settings.PROJECT_SITE_DOMAIN,
             'http://%s/static/grappelli/tinymce_setup/tinymce_setup.js' % settings.PROJECT_SITE_DOMAIN,
         ]
-    list_display = ('question','section','position',)
+    list_display = ('id','question','section','position',)
+    list_display_links = ('id', 'question')
     list_editable = ['section', 'position']
 admin.site.register(FAQItem, FAQItemAdmin)
 
