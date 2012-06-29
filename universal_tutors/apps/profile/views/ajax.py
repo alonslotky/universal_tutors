@@ -486,6 +486,8 @@ def book_class(request, tutor_id):
     date = request.POST.get('date', '')
     start = request.POST.get('start', '')
     duration = int(request.POST.get('duration', 0))
+    cover = request.POST.get('cover', None)
+    message = request.POST.get('message', None)
 
     if duration < 30 or duration > 120 or (duration % 30 != 0):
         raise http.Http404()
@@ -520,6 +522,7 @@ def book_class(request, tutor_id):
         subject = subject,
         date = date,
         duration = duration,
+        cover = cover,
     )
 
     credit_fee = class_.get_updated_credit_fee(commit=False)
@@ -530,7 +533,16 @@ def book_class(request, tutor_id):
     if not class_.id:
         return http.HttpResponse("This class can't be created right now. Please try again later.")    
     class_.book()
-    
+
+    if message:
+        user.sent_messages.create(
+            to = tutor,
+            message = message,
+            related_class = class_,
+            read = False,
+            email_sent = False,
+        )
+
     return http.HttpResponse("Done.")
 
 @csrf_exempt
