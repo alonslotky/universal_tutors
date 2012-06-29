@@ -22,7 +22,8 @@ urlpatterns = patterns('',
     url(r'^', include('apps.common.urls')),
     url(r'^', include('apps.core.urls')),
     url(r'^', include('apps.profile.urls')),
-    url(r'^classes/', include('apps.classes.urls')),
+    url(r'^(?i)faq/', include('apps.faq.urls')),
+    url(r'^(?i)classes/', include('apps.classes.urls')),
 )
 
 # Admin patterns
