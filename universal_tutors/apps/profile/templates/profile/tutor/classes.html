@@ -55,7 +55,7 @@
 						{% else %}
 							{% with class.tutor_rating as rating %}
 								{% if rating %}
-					            <a href="javascript:;" class="view-rating text-gray" data-reveal-id="modal-view-review-received-{{rating.id}}"><i class="icon-doc-text"></i> View Your Rating</a>
+					            <a href="javascript:;" class="view-rating text-gray" data-reveal-id="modal-view-review-received-{{rating.id}}"><i class="icon-doc-text"></i> View Your Review</a>
 								{% with student.get_full_name as rating_sender %}
 									{% include 'profile/fragments/_modal_review_view_received.html' %}
 								{% endwith %}
@@ -67,7 +67,7 @@
 				            {% if class.status == class.STATUS_TYPES.DONE %}
 								{% with class.student_rating as student_rating %}
 									{% if student_rating %}
-						            <a href="javascript:;" class="view-feedback text-gray" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}", {{class.id}},"{{student_rating.text}}");'><i class="icon-doc-text"></i> View Student Rating</a>
+						            <a href="javascript:;" class="view-feedback text-gray" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}", {{class.id}},"{{student_rating.text}}");'><i class="icon-doc-text"></i> View Feedback</a>
 									{% else %}
 						            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='tutor_rate_student({{student.id}},"{{student.get_full_name}}",{{class.id}});'><i class="icon-doc-text"></i> Provide Feedback</a>
 						            {% endif %}
