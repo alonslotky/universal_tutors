@@ -173,12 +173,12 @@
 		  
       	  {% if no_msgs == 0 %}
 	      	  {% if profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
-	          <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> Send message</a>
+	          <a href="javascript:;" class="send-message message-user-{{person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> Send message</a>
 			  {% else %}
-              <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{person.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> Send message</a>		  
+              <a href="javascript:;" class="send-message message-user-{{person.id}}-link" onclick="setup_alert_box(function(){ view_modal_messages({{person.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> Send message</a>		  
 			  {% endif %}
           {% else %}
-          <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i>
+          <a href="javascript:;" class="send-message message-user-{{person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i>
       		{% if messages.unread %} 
         		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
         	{% else %}

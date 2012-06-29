@@ -23,7 +23,7 @@
         <div class="row">
           <div class="one columns hide-on-phones">
             <img src="{% version user_profile.profile_image.path 'class_list_profile_image' %}" alt="{{message_person.get_full_name}}">
-            {% if messages.unread %}<div class="unread">{{messages.unread}}<span> Unread Message{{messages.unread|pluralize}}</span></div>{% endif %}
+            <div class="unread message-user-{{message_person.id}}-value {% if not messages.unread %}hidden{% endif %}">{{messages.unread}}<span> Unread Message{{messages.unread|pluralize}}</span></div>
           </div>
           
           <div class="three columns title">
@@ -41,7 +41,7 @@
           </div>
           
           <div class="two columns action">
-            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{message_person.id}});"><i class="icon-comment"></i>
+            <a href="javascript:;" class="send-message message-user-{{message_person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{message_person.id}});"><i class="icon-comment"></i>
             	{% if messages.unread %} 
             		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
             	{% else %}
