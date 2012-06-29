@@ -1,0 +1,50 @@
+{% extends "ui/layouts/base.html" %}
+{% load common_tags uni_form_tags %}
+
+{% block title %}FAQs{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript">
+	var goto_faq = function(id){
+		var destination = $('#faq-'+id).offset().top;
+		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 1000);
+	}
+</script>
+{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+	    	<h1>FAQs</h1>	
+	  	</div>
+	</section>
+	
+	<div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+     </div>	
+     
+	 {% for faq in faqs %}
+	 	{% ifchanged faq.section %}
+	 	{% if faq.section %}
+	 		<div class="row">&nbsp;</div>
+	 		<div class="row"><h4>{{faq.section}}</h4></div>
+	 	{% endif %}
+	 	{% endifchanged %} 
+	 	<div class="row"><a href="javascript:;" onclick="goto_faq({{faq.id}});">{{forloop.counter}}. {{faq}}</a></div>
+	 {% endfor %}
+	 
+	 <hr/>
+	 
+	 {% for faq in faqs %}
+	 	{% ifchanged faq.section %}
+	 	{% if faq.section %}
+	 		<div class="row">&nbsp;</div>
+	 		<div class="row"><h3>{{faq.section}}</h3></div>
+	 	{% endif %}
+	 	{% endifchanged %} 
+	 	<div class="row"><h4 id="faq-{{faq.id}}">{{forloop.counter}}. {{faq}}</h4></div>
+	 	<div class="row">{{faq.answers|safe}}</div>
+	 {% endfor %}
+{% endblock %}

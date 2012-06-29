@@ -69,6 +69,11 @@ class CustomIndexDashboard(Dashboard):
                     css_classes=('collapse',),
                     models=('paypal.*', 'apps.profile.models.TopUpItem', 'apps.profile.models.WithdrawItem', ),
                 ),
+                modules.ModelList(
+                    _('FAQ'),
+                    css_classes=('collapse',),
+                    models=('apps.faq.models.*', ),
+                ),
 #                modules.ModelList(
 #                    _('Blog'),
 #                    css_classes=('collapse',),

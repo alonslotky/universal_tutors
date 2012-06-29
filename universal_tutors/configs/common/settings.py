@@ -144,6 +144,7 @@ INSTALLED_APPS = (
     # Internal Apps
     'apps.common',
     'apps.core',
+    'apps.faq',
     'apps.profile',
     'apps.classes',
     
