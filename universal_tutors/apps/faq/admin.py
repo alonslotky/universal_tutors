@@ -8,8 +8,6 @@ class ChildFAQItem(admin.TabularInline):
             'http://%s/static/grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js' % settings.PROJECT_SITE_DOMAIN,
             'http://%s/static/grappelli/tinymce_setup/tinymce_setup.js' % settings.PROJECT_SITE_DOMAIN,
         ]
-    list_display = ('question','section','position',)
-    list_editable = ['position']
     model = FAQItem
     extra = 2
 
@@ -22,11 +20,11 @@ admin.site.register(FAQSection, FAQSectionAdmin)
 class FAQItemAdmin(admin.ModelAdmin):
     class Media:
         js = [
-            '/static/grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js',
-            '/static/grappelli/tinymce_setup/tinymce_setup.js',
+            'http://%s/static/grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js' % settings.PROJECT_SITE_DOMAIN,
+            'http://%s/static/grappelli/tinymce_setup/tinymce_setup.js' % settings.PROJECT_SITE_DOMAIN,
         ]
     list_display = ('question','section','position',)
-    list_editable = ['position']
+    list_editable = ['section', 'position']
 admin.site.register(FAQItem, FAQItemAdmin)
 
 
