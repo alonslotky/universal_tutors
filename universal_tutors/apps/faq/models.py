@@ -21,7 +21,7 @@ class FAQItem(models.Model):
     """
     class Meta:
         verbose_name = 'FAQ Item'
-        ordering = ['section__position', 'position']
+        ordering = ['section__position', 'position', 'id']
     
     section = models.ForeignKey(FAQSection, related_name='items', null=True, blank=True)
     question = models.CharField(max_length=255)
