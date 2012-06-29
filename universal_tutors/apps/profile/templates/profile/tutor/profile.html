@@ -172,7 +172,7 @@
 		  {% with msgs|length as no_msgs %}
 		  
       	  {% if no_msgs == 0 %}
-	      	  {% if profile.crb_checked %}
+	      	  {% if profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
 	          <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> Send message</a>
 			  {% else %}
               <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{person.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> Send message</a>		  
@@ -190,7 +190,7 @@
           {% endwith %}
           {% endwith %}
 
-          {% if profile.crb_checked %}
+          {% if profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
           <a href="{% url book_class person.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
 		  {% else %}
           <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class person.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-calendar-inv"></i> Book a Class</a>
