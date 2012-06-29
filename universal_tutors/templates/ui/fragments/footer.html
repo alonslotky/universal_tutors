@@ -15,8 +15,8 @@
 	        {% if not is_authenticated %}
 	        <li><a data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();" href="javascript:;">Sign Up</a></li>
 	        {% endif %}
-	        <li><a href="/terms/">Terms</a>
-	        <li><a href="/privacy/">Privacy</a>
+	        <li><a href="/terms-of-use/">Terms of use</a>
+	        <li><a href="/privacy-police/">Privacy policy</a>
 	        <li><a href="{% url faq %}">FAQs</a>
 	        <li><a href="/contact-us/">Contact Us</a>
 	      </ul>
@@ -35,8 +35,8 @@
             <li><a data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();" href="javascript:;">Sign Up</a></li>
 	        {% endif %}
             <li><a href="{% url search %}">Search</a></li>
-            <li><a href="/terms/">Terms</a>
-            <li><a href="/privacy/">Privacy</a>
+	        <li><a href="/terms-of-use/">Terms of use</a>
+	        <li><a href="/privacy-police/">Privacy policy</a>
             <li><a href="/faq/">FAQs</a>
             <li><a href="/contact-us/">Contact Us</a>
             <li><a href="#">Back to Top</a></li>
