@@ -1,11 +1,12 @@
 from django.contrib import admin
+from django.conf import settings
 from models import *
 
 class ChildFAQItem(admin.TabularInline):
     class Media:
         js = [
-            '/static/grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js',
-            '/static/grappelli/tinymce_setup/tinymce_setup.js',
+            'http://%s/static/grappelli/tinymce/jscripts/tiny_mce/tiny_mce.js' % settings.PROJECT_SITE_DOMAIN,
+            'http://%s/static/grappelli/tinymce_setup/tinymce_setup.js' % settings.PROJECT_SITE_DOMAIN,
         ]
     list_display = ('question','section','position',)
     list_editable = ['position']
