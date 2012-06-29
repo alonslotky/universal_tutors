@@ -10,7 +10,7 @@
   	{% csrf_token %}
   	<input id="tutor-rate-student-id" name="user_id" type="hidden" value="0" />
   	<input id="tutor-rate-student-class" name="class_id" type="hidden" value="0" />
-    <textarea id="tutor-rate-student-text"  name="text">Feedback for this student ...</textarea>
+    <textarea id="tutor-rate-student-text"  name="text">Feedback on this student ...</textarea>
     <input type="submit" class="small button" value="Send">
   </form>
   
@@ -47,14 +47,14 @@
 		});
 		
 		$('#tutor-rate-student-text').focusin(function(){
-			if ($(this).val() === "Feedback for this student ...") {
+			if ($(this).val() === "Feedback on this student ...") {
 				$(this).val("");
 			}
 		});
 		
 		$('#tutor-rate-student-text').focusout(function(){
 			if ($(this).val() === "") {
-				$(this).val("Feedback for this student ...");
+				$(this).val("Feedback on this student ...");
 			}
 		});
 		
@@ -100,7 +100,7 @@
 		$('#modal-review-student-name').text(user_name);
 		$('#tutor-rate-student-id').val(user_id);
 		$('#tutor-rate-student-class').val(class_id);
-		$('#tutor-rate-student-text').val(text ? text : 'Feedback for this student ...');
+		$('#tutor-rate-student-text').val(text ? text : 'Feedback on this student ...');
 				
 		$.get('{% url get_user_data %}'+ user_id +'/', function(response){
 			var response_splited = response.split(',');
