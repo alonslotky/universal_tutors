@@ -9,14 +9,14 @@
 	      		{% if authenticated %}
 					{% if profile.type == profile.TYPES.TUTOR %}
 						  {% with profile.new_classes as new_classes %}
-				          <li><a class="link-classes" href="{% url tutor_classes %}" style="position:relative;">Classes{% if new_classes %}<div class="unread">{{new_classes}}<span> New Classes</span></div>{% endif %}</a></li>
+				          <li><a class="link-classes" href="{% url tutor_classes %}" style="position:relative;">Classes<div id="header-no-new-classes" class="unread {% if not new_classes %}hidden{% endif %}">{{new_classes}}<span> New Classes</span></div></a></li>
 				          {% endwith %}
-				          <li><a class="link-messages" href="{% url tutor_messages %}" style="position:relative;">Messages{% if no_messages %}<div class="unread">{{no_messages}}<span> Unread Message</span></div>{% endif %}</a></li>
+				          <li><a class="link-messages" href="{% url tutor_messages %}" style="position:relative;">Messages<div id="header-no-new-messages" class="unread {% if not no_messages %}hidden{% endif %}">{{no_messages}}<span> Unread Message</span></div></a></li>
 					{% endif %}
 					{% if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16 %}
 				          <li><a class="link-classes" href="{% url student_classes %}">Classes</a></li>
 				          <li><a class="link-tutors" href="{% url tutors %}">Tutors</a></li>
-				          <li><a class="link-messages" href="{% url student_messages %}" style="position:relative;">Messages{% if no_messages %}<div class="unread">{{no_messages}}<span> Unread Message</span></div>{% endif %}</a></li>
+				          <li><a class="link-messages" href="{% url student_messages %}" style="position:relative;">Messages<div class="unread {% if not no_messages %}hidden{% endif %}">{{no_messages}}<span> Unread Message</span></div></a></li>
 					{% endif %}
 				{% else %}
 		  				<li><a class="link-students" href="/student-guide/">Student Guide</a></li>
@@ -49,6 +49,29 @@
 		<div class="logo"><a class="left ir" href="/">Universal Tutors</a></div>
 		<a class="right" href="#navi">Navigation</a>
 	</nav>
+	
+	<script type="text/javascript">
+		setInterval(function(){
+			$.get('{% url update_header %}', function(data){
+				var no_messages = parseInt(data['no_messages']);
+				var no_classes = parseInt(data['new_classes']);
+				
+				$('#header-no-new-messages').html(no_messages);
+				if (no_messages) {
+					$('#header-no-new-messages').removeClass('hidden');
+				} else {
+					$('#header-no-new-messages').addClass('hidden');
+				}
+
+				$('#header-no-new-classes').html(no_classes);
+				if (no_classes) {
+					$('#header-no-new-classes').removeClass('hidden');
+				} else {
+					$('#header-no-new-classes').addClass('hidden');
+				}
+			});
+		}, 15000)
+	</script>
 </header>
 {% endwith %}
 {% endwith %}

@@ -725,3 +725,14 @@ def get_user_data(request, user_id):
     
     return http.HttpResponse('%s,%s' % (image, url))
 
+
+@login_required
+def update_header(request):
+    profile = UserProfile.objects.select_related().get(user = request.user)
+    
+    data = json.dumps({
+        'new_classes': profile.new_classes() if profile.type == profile.TYPES.TUTOR else 0,
+        'no_messages': profile.no_messages(), 
+    })
+    
+    return http.HttpResponse(data, mimetype='application/json')

@@ -57,7 +57,7 @@
 	          
 	          <div class="two columns action">
 	          	{% with user|get_messages:tutor as messages %}
-	            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>
+	            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-value" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>
 	            	{% if messages|length == 0 %} 
 	            		Send a Message
             		{% else %}

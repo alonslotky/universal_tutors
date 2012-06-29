@@ -256,7 +256,7 @@
 						{% if not tutor_profile.crb_checked %}
 							{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
 								
-					            <a href="javascript:;" class="send-message" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> 
+					            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> 
 					            	{% if msgs|length == 0 %}
 						          		Send a Message
 						          	{% else %}
@@ -271,7 +271,7 @@
 					            <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-ok"></i> Book a Class</a>
 							{% else %}
 								{% if user_profile.type != user_profile.TYPES.TUTOR %}
-					            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> 
+					            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> 
 									{% if msgs|length == 0 %}
 						          		Send a Message
 						          	{% else %}
@@ -288,7 +288,7 @@
 							{% endif %}
 			            {% else %}
 			            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
-				            <a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  
+				            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  
 				            	{% if msgs|length == 0 %}
 					          		Send a Message
 					          	{% else %}

@@ -37,9 +37,11 @@
 		clearTimeout(modal_message_timeout);
 		modal_message_to = to;
 		modal_message_class = class_;
-		{% comment %}
-		var url = '{% if person %}{% url view_modal_messages person.username %}{% else %}{% url view_modal_messages user.username %}{% endif %}'+ to +'/';
-		{% endcomment %}
+		
+		console.log($('.message-user-'+ modal_message_to +'-link').length);
+		$('.message-user-'+ modal_message_to +'-link').html('View Messages');
+		$('.message-user-'+ modal_message_to +'-value').addClass('hidden');
+	
 		{% if user.is_authenticated %}
 		var url = '{% url view_modal_messages user.username %}'+ to +'/';
 		url += class_ ? class_+'/' : '';
