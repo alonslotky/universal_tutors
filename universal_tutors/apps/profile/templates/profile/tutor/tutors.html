@@ -57,7 +57,7 @@
 	          
 	          <div class="two columns action">
 	          	{% with user|get_messages:tutor as messages %}
-	            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-value" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>
+	            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>
 	            	{% if messages|length == 0 %} 
 	            		Send a Message
             		{% else %}
@@ -83,7 +83,8 @@
       	</div>
       {% endfor %}
       
-  	{% include 'profile/fragments/_modal_messages.html' %}
+      
+  	{% with 'True' as can_send_message %}{% include 'profile/fragments/_modal_messages.html' %}{% endwith %}
 	
 	<script type="text/javascript">
 		$('.favorite').click(function(){
