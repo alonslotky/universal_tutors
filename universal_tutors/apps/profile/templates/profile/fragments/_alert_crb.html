@@ -5,7 +5,7 @@
   <div class="row">This tutor is not CRB certified yet. Are you sure you would like to continue?</div>
   <div class="row">
   	  <div class="eight columns">
-		  <div class="button"><a id="alert-crb-action-button" href="javascript:;" class="icon" onclick="alert_crb_start_action();" data="">I understand, please continue</a></div>
+		  <div class="button"><a id="alert-crb-action-button" href="javascript:;" class="icon" onclick="alert_crb_start_action();">I understand, please continue</a></div>
   	  </div>
   </div>
   <a id="alert-link-close" class="close-reveal-modal">&#215;</a>
@@ -13,12 +13,23 @@
 
 <script type="text/javascript">
 	var alert_crb_action = null;
+	var alert_crb_modal = null;
 	var setup_alert_box = function(action, window) {
 		alert_crb_action = action;
-		$('#alert-crb-action-button').attr('data-reveal-id', window);
+		alert_crb_modal = window;
 	}
 	var alert_crb_start_action = function() {
-		alert_crb_action();
+		$('#modal-alert-crb').bind('reveal:closed.reveal', function(){
+			if(alert_crb_modal) {
+				$('#' + alert_crb_modal).reveal($(this).data());
+			}
+			if(alert_crb_action) {
+				alert_crb_action();
+			}
+			alert_crb_action = null;
+			alert_crb_modal = null;
+		});
+
 		$('#alert-link-close').click();
 	}
 </script>
