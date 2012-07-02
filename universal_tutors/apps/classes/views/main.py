@@ -28,6 +28,7 @@ def detail(request, class_id):
     before = False
     after = False
     material = None
+    recordings = None
     template = 'classes/detail.html'
     
     try:
@@ -49,6 +50,7 @@ def detail(request, class_id):
     elif class_.date < end:
         after = True
         material = class_.get_material()
+        recordings = class_.get_recordings()
         
     if not before and not after:
         template = 'classes/class.html'
@@ -60,6 +62,7 @@ def detail(request, class_id):
         'before': before,
         'after': after,
         'material': material,
+        'recordings': recordings,
     }
 
 @login_required
