@@ -7,6 +7,10 @@
 
 {% block extra_head %}
 <script type="text/javascript">
+	var goto_top = function(id){
+		var destination = 0;
+		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 1000);
+	}
 	var goto_faq = function(id){
 		var destination = $('#faq-'+id).offset().top;
 		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 1000);
@@ -46,5 +50,7 @@
 	 	{% endifchanged %} 
 	 	<div class="row"><h4 id="faq-{{faq.id}}">{{forloop.counter}}. {{faq}}</h4></div>
 	 	<div class="row">{{faq.answers|safe}}</div>
+	 	<div class="row"><a href="javascript:;" onclick="goto_top();">Back to top</a></div>
+ 		<div class="row">&nbsp;</div>
 	 {% endfor %}
 {% endblock %}
