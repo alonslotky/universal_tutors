@@ -8,12 +8,18 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
+        # Deleting field 'Class.subject'
+        db.delete_column('classes_class', 'subject_id')
+
         # Adding field 'Class.subject_credits_per_hour'
         db.add_column('classes_class', 'subject_credits_per_hour', self.gf('django.db.models.fields.FloatField')(default=0), keep_default=False)
 
 
     def backwards(self, orm):
         
+        # User chose to not deal with backwards NULL issues for 'Class.subject'
+        raise RuntimeError("Cannot reverse this migration. 'Class.subject' and its values cannot be restored.")
+
         # Deleting field 'Class.subject_credits_per_hour'
         db.delete_column('classes_class', 'subject_credits_per_hour')
 
@@ -62,7 +68,6 @@ class Migration(SchemaMigration):
             'scribblar_id': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'status': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'student': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'classes_as_student'", 'to': "orm['auth.User']"}),
-            'subject': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'subject_credits_per_hour': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'tutor': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'classes_as_tutor'", 'to': "orm['auth.User']"}),
             'tutor_appeared': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
