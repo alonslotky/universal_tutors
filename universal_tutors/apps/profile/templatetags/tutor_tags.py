@@ -119,6 +119,7 @@ def get_messages(person, user):
     return {
         'messages': messages,
         'unread': messages.filter(read = False).count(),
+        'has_messages': bool(messages.count() or person.received_messages.filter(user = user)),
      }
     
 class ClassMessagesNode(template.Node):

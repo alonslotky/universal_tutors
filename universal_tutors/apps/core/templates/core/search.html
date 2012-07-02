@@ -252,18 +252,17 @@
 					
 					{% if is_authenticated %}
 						{% with tutor|get_messages:user as messages %}
-  						{% with messages.messages as msgs %}
 						{% if not tutor_profile.crb_checked %}
 							{% if user_profile.type == user_profile.TYPES.PARENT or user_profile.type == user_profile.TYPES.UNDER16 %}
 								
 					            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> 
-					            	{% if msgs|length == 0 %}
-						          		Send a Message
+					            	{% if messages.unread %}
+					            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
 						          	{% else %}
-						          		{% if messages.unread %} 
-						            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
-						            	{% else %}
+						          		{% if messages.has_messages %} 
 						            		View Messages
+						            	{% else %}
+							          		Send a Message
 						            	{% endif %}
 						            {% endif %}
 					            </a>
@@ -272,13 +271,13 @@
 							{% else %}
 								{% if user_profile.type != user_profile.TYPES.TUTOR %}
 					            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i> 
-									{% if msgs|length == 0 %}
-						          		Send a Message
+					            	{% if messages.unread %}
+					            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
 						          	{% else %}
-						          		{% if messages.unread %} 
-						            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
-						            	{% else %}
+						          		{% if messages.has_messages %} 
 						            		View Messages
+						            	{% else %}
+							          		Send a Message
 						            	{% endif %}
 						            {% endif %}
 								</a>
@@ -289,13 +288,13 @@
 			            {% else %}
 			            	{% if user_profile.type != user_profile.TYPES.TUTOR %}
 				            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>  
-				            	{% if msgs|length == 0 %}
-					          		Send a Message
+				            	{% if messages.unread %}
+				            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
 					          	{% else %}
-					          		{% if messages.unread %} 
-					            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
-					            	{% else %}
+					          		{% if messages.has_messages %} 
 					            		View Messages
+					            	{% else %}
+						          		Send a Message
 					            	{% endif %}
 					            {% endif %}
 			            	</a>
@@ -306,7 +305,6 @@
 				            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i>&nbsp;<span>{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
 						{% endif %}
 			            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
-			            {% endwith %}
 			            {% endwith %}
 			        {% else %}
 			            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
