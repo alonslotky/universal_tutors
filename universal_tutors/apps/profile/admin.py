@@ -3,9 +3,6 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from models import *
 
-class ChildReviews(admin.TabularInline):
-    model = TutorReview
-    extra = 0
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
@@ -14,29 +11,68 @@ class AdminUserAdmin(UserAdmin):
     list_display = ('username','email','first_name','last_name','date_joined','last_login','is_staff', 'is_active')
     list_editable = ['is_active']
     inlines = [ UserProfileInline ]
+admin.site.unregister(User)
+admin.site.register(User, AdminUserAdmin)
 
-class TutorAdmin(UserAdmin):
-    list_display = ('username','email','first_name','last_name','date_joined','last_login',)
-    list_editable = []
-    inlines = [ UserProfileInline, ChildReviews ]
 
-class UTUserAdmin(UserAdmin):
-    list_display = ('username','email','first_name','last_name','date_joined','last_login',)
+
+class TutorProfileAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Personal Details', {
+            'fields': ('title', 'about', 'video', 'profile_image', 'date_of_birth', 'country', 'timezone',)
+        }),
+        ('CRB', {
+            'fields': ('crb_file', 'crb_expiry_date',)
+        }),
+        ('Financial', {
+            'fields': ('income', 'currency', 'paypal_email')
+        }),
+        ('Status', {
+            'fields': ('featured', 'activated', 'activation_date',)
+        }),
+    )
+    
+    list_display = ('__unicode__', 'title', 'activated', 'crb_expiry_date', 'webcam', 'featured', 'avg_rate', 'no_reviews', 'classes_given', 'min_credits', 'max_credits', 'income', 'currency', 'paypal_email',)
+    list_filter = ['activated', 'crb_expiry_date', 'featured', 'currency']
+    list_editable = ['crb_expiry_date', 'featured']
+admin.site.register(TutorProfile, TutorProfileAdmin)
+
+
+class ParentProfileAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Personal Details', {
+            'fields': ('profile_image', 'date_of_birth', 'country', 'timezone',)
+        }),
+        ('Financial', {
+            'fields': ('currency',)
+        }),
+    )
+
+    list_display = ('__unicode__', 'country', 'date_of_birth')
+    list_filter = ['country']
     list_editable = []
-    inlines = [ UserProfileInline ]
+admin.site.register(ParentProfile, ParentProfileAdmin)
+
+class StudentProfileAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Personal Details', {
+            'fields': ('profile_image', 'date_of_birth', 'country', 'timezone',)
+        }),
+        ('Financial', {
+            'fields': ('currency',)
+        }),
+    )
+
+    list_display = ('__unicode__', 'type', 'date_of_birth', 'currency', 'country', 'timezone')
+    list_filter = ['type', 'country']
+    list_editable = []
+admin.site.register(StudentProfile, StudentProfileAdmin)
+ 
+    
     
 class BadReviewAdmin(admin.ModelAdmin):
     list_display = ('user', 'rate', 'related_class', 'text')
-    
-
 admin.site.register(BadReview, BadReviewAdmin)
-admin.site.unregister(User)
-admin.site.register(User, AdminUserAdmin)
-admin.site.register(Tutor, TutorAdmin)
-admin.site.register(TutorList, TutorAdmin)
-admin.site.register(Student, UTUserAdmin)
-admin.site.register(Parent, UTUserAdmin)
-
 
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('violator', 'user', 'created', 'description')
