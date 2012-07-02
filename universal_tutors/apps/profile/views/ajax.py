@@ -519,7 +519,8 @@ def book_class(request, tutor_id):
     class_ = Class(
         tutor = tutor,
         student = user,
-        subject = subject,
+        subject = '%s' % subject,
+        subject_credits_per_hour = subject.credits,
         date = date,
         duration = duration,
         cover = cover,
