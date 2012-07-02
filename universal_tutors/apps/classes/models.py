@@ -106,9 +106,10 @@ class Class(BaseModel):
     
     tutor = models.ForeignKey(User, related_name='classes_as_tutor')
     student = models.ForeignKey(User, related_name='classes_as_student')
-    subject = models.ForeignKey('profile.TutorSubject', related_name='classes')
+    subject = models.CharField(max_length = 255)
     date = models.DateTimeField()
     duration = models.PositiveSmallIntegerField()
+    subject_credits_per_hour = models.FloatField(default = 0)
     credit_fee = models.FloatField()
     earning_fee = models.FloatField()
     universal_fee = models.FloatField()
@@ -134,11 +135,7 @@ class Class(BaseModel):
         return difference_in_seconds(end, now) if self.date > now else -difference_in_seconds(now, end)
     
     def get_updated_credit_fee(self, commit=True):
-        tutor = self.tutor
-        tutor_profile = tutor.profile
-        tutor_subject = tutor.subjects.get(id=self.subject.id)
-        
-        self.credit_fee = tutor_subject.credits * (self.duration / 60.0)
+        self.credit_fee = self.subject_credits_per_hour * (self.duration / 60.0)
         self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
         self.universal_fee = self.credit_fee * UNIVERSAL_FEE
         if commit:
@@ -150,12 +147,11 @@ class Class(BaseModel):
     def save(self, *args, **kwargs):
         tutor = self.tutor
         tutor_profile = tutor.profile
-        tutor_subject = tutor.subjects.get(id=self.subject.id)
         is_new = not self.id
         
         if is_new:
-            if tutor_subject and tutor_profile.check_period(self.date, self.date.time(), (self.date + datetime.timedelta(minutes=self.duration)).time(), gtz=pytz.utc):
-                self.credit_fee = tutor_subject.credits * (self.duration / 60.0)
+            if tutor_profile.check_period(self.date, self.date.time(), (self.date + datetime.timedelta(minutes=self.duration)).time(), gtz=pytz.utc):
+                self.credit_fee = self.subject_credits_per_hour * (self.duration / 60.0)
                 self.earning_fee = self.credit_fee * (1 - UNIVERSAL_FEE)
                 self.universal_fee = self.credit_fee * UNIVERSAL_FEE
     
@@ -206,7 +202,7 @@ class Class(BaseModel):
         super(self.__class__, self).delete()
         
     def __unicode__(self):
-        return '%s' % self.subject
+        return self.subject
 
     def get_start(self):
         from django.utils.timezone import utc        
