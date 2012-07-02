@@ -5,6 +5,6 @@ class Command(NoArgsCommand):
     
     def handle_noargs(self, **options):
         from apps.profile.utils import check_crb        
-        check_crb()
+        check_crb(user_thread=False)
         
         
