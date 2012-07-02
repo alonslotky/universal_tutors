@@ -8,24 +8,14 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Renaming column for 'Class.subject' to match new field type.
-        db.rename_column('classes_class', 'subject_id', 'subject')
-        # Changing field 'Class.subject'
-        db.alter_column('classes_class', 'subject', self.gf('django.db.models.fields.CharField')(max_length=255))
-
-        # Removing index on 'Class', fields ['subject']
-        db.delete_index('classes_class', ['subject_id'])
+        # Adding field 'Class.subject'
+        db.add_column('classes_class', 'subject', self.gf('django.db.models.fields.CharField')(default='Test class', max_length=255), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # Adding index on 'Class', fields ['subject']
-        db.create_index('classes_class', ['subject_id'])
-
-        # Renaming column for 'Class.subject' to match new field type.
-        db.rename_column('classes_class', 'subject', 'subject_id')
-        # Changing field 'Class.subject'
-        db.alter_column('classes_class', 'subject_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['profile.TutorSubject']))
+        # Deleting field 'Class.subject'
+        db.delete_column('classes_class', 'subject')
 
 
     models = {
@@ -73,6 +63,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
             'student': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'classes_as_student'", 'to': "orm['auth.User']"}),
             'subject': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'subject_credits_per_hour': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'tutor': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'classes_as_tutor'", 'to': "orm['auth.User']"}),
             'tutor_appeared': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'universal_fee': ('django.db.models.fields.FloatField', [], {}),
