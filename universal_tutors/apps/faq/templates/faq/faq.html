@@ -9,11 +9,11 @@
 <script type="text/javascript">
 	var goto_top = function(id){
 		var destination = 0;
-		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 500);
+		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 500, 'easeOutExpo');
 	}
 	var goto_faq = function(id){
 		var destination = $('#faq-'+id).offset().top;
-		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 500);
+		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 500, 'easeOutExpo');
 	}
 </script>
 {% endblock %}
