@@ -37,11 +37,7 @@
 		clearTimeout(modal_message_timeout);
 		modal_message_to = to;
 		modal_message_class = class_;
-		
-		console.log($('.message-user-'+ modal_message_to +'-link').length);
-		$('.message-user-'+ modal_message_to +'-link').html('View Messages');
-		$('.message-user-'+ modal_message_to +'-value').addClass('hidden');
-	
+			
 		{% if user.is_authenticated %}
 		var url = '{% url view_modal_messages user.username %}'+ to +'/';
 		url += class_ ? class_+'/' : '';
@@ -115,6 +111,14 @@
 				'</div>'
 			);
 		}
+
+		if(messages.length) {
+			$('.message-user-'+ modal_message_to +'-link').html('<i class="icon-comment"></i> View Messages');
+		} else {
+			$('.message-user-'+ modal_message_to +'-link').html('<i class="icon-comment"></i> Send a Message');			
+		}
+		$('.message-user-'+ modal_message_to +'-value').addClass('hidden');
+
 		
 		$('#modal-messages-container').scrollTop(9999999);
 	};

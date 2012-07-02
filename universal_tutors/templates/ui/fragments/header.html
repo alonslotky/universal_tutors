@@ -51,6 +51,7 @@
 	</nav>
 	
 	<script type="text/javascript">
+		{% if user.is_authenticated %}
 		setInterval(function(){
 			$.get('{% url update_header %}', function(data){
 				var no_messages = parseInt(data['no_messages']);
@@ -70,7 +71,8 @@
 					$('#header-no-new-classes').addClass('hidden');
 				}
 			});
-		}, 15000)
+		}, 15000);
+		{% endif %}
 	</script>
 </header>
 {% endwith %}

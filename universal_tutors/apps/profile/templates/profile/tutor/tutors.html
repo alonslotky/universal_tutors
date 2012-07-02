@@ -56,21 +56,21 @@
 	          </div>
 	          
 	          <div class="two columns action">
-	          	{% with user|get_messages:tutor as messages %}
+	          	{% with tutor|get_messages:user as messages %}
 	            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>
-	            	{% if messages|length == 0 %} 
-	            		Send a Message
-            		{% else %}
-            			{% if messages.unread %} 
-		            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
-		            	{% else %}
+	            	{% if messages.unread %}
+	            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
+		          	{% else %}
+		          		{% if messages.has_messages %} 
 		            		View Messages
+		            	{% else %}
+			          		Send a Message
 		            	{% endif %}
-            		{% endif %}	            	
+		            {% endif %}
             	</a>
 	            {% endwith %}
 	            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
-	            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i>&nbsp;<span>{% if tutor|is_favorite:user %} Remove favorite{% else %}Add favorite{% endif %}</span></a>
+	            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i>&nbsp;<span> {% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
 	            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 	          </div>
 	        </div>
