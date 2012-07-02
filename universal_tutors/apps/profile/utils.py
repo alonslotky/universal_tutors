@@ -47,9 +47,9 @@ def mass_payments():
             })
 
 
-def check_crb():
+def check_crb(user_thread=True):
     for tutor in Tutor.objects.select_related().filter(profile__crb_expiry_date__isnull = False):
-        tutor.profile.check_crb()
+        tutor.profile.check_crb(user_thread)
 
 
 def send_message_email(use_thread=True):

@@ -128,7 +128,7 @@ class UserProfile(BaseModel):
         (6, 'ACCEPTED_BY_TUTOR', 'A class has been accepted by tutor'),
         (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
         (8, 'CRB_EXPIRED', 'The CRB is expired'),
-        (9, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 60 days'),
+        (9, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 2 weeks'),
         (10, 'MESSAGE', 'New message'),
         (11, 'CANCELED_BY_SYSTEM', 'Class canceled by the system'),
         (12, 'REFERRAL', 'User referral'),
@@ -595,17 +595,17 @@ class UserProfile(BaseModel):
         except IndexError:
             return 0
 
-    def check_crb(self):
+    def check_crb(self, user_thread=True):
         if self.crb_expiry_date:
             today = datetime.date.today()
             if self.crb_expiry_date < today and not self.crb_alert_expired:
-                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRED, {'tutor': self.user}, use_thread=False)
+                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRED, {'tutor': self.user}, use_thread=user_thread)
                 self.crb_alert_expired = True 
                 self.crb_alert_expire_date = True
                 super(self.__class__, self).save()
 
-            if self.crb_expiry_date < today + datetime.timedelta(days=60) and not self.crb_alert_expire_date:
-                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user}, use_thread=False)
+            if self.crb_expiry_date < today + datetime.timedelta(days=15) and not self.crb_alert_expire_date:
+                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user}, use_thread=user_thread)
                 self.crb_alert_expire_date = True
                 super(self.__class__, self).save()
 
