@@ -31,6 +31,7 @@ from paypal2.standart.ap import pay
 from scribblar import users, rooms
 
 
+### MANAGERS ######################################################
 class StudentManager(models.Manager):
     def get_query_set(self):
         return super(StudentManager, self).get_query_set().filter(
@@ -60,6 +61,27 @@ class UnchekedCRBTutorsManager(models.Manager):
     def get_query_set(self):
         return super(EditableWorksManager, self).get_query_set().exclude(crb_checked = True).order_by('date_joined')
 
+
+class StudentProfileManager(models.Manager):
+    def get_query_set(self):
+        return super(StudentProfileManager, self).get_query_set().filter(
+                    type__in = [UserProfile.TYPES.STUDENT, UserProfile.TYPES.UNDER16],
+                )
+
+class ParentProfileManager(models.Manager):
+    def get_query_set(self):
+        return super(ParentProfileManager, self).get_query_set().filter(
+                    type = UserProfile.TYPES.PARENT,
+                )
+
+class TutorProfileManager(models.Manager):
+    def get_query_set(self):
+        return super(TutorProfileManager, self).get_query_set().filter(
+                    type = UserProfile.TYPES.TUTOR,
+                )
+
+
+#### USER PROXIES ########################################################
 class Tutor(User):
     objects = ActiveTutorsManager()
     unchecked_crb = UnchekedCRBTutorsManager()
@@ -67,7 +89,6 @@ class Tutor(User):
     class Meta:
         verbose_name = 'Active Tutors'
         proxy = True
-
 
 class TutorList(User):
     objects = TutorManager()
@@ -88,6 +109,8 @@ class Parent(User):
         proxy = True
 
 
+
+### MODELS #############################################
 class UserProfile(BaseModel):
     """
     Profile and configurations for a user
@@ -761,6 +784,29 @@ class UserProfile(BaseModel):
         if not self.test_class_id:
             self.create_test_class()
         return self.test_class_id
+
+
+class TutorProfile(UserProfile):
+    objects = TutorProfileManager()
+
+    class Meta:
+        verbose_name = 'Tutor'
+        proxy = True
+
+class ParentProfile(UserProfile):
+    objects = ParentProfileManager()
+
+    class Meta:
+        verbose_name = 'Parent'
+        proxy = True
+
+class StudentProfile(UserProfile):
+    objects = StudentProfileManager()
+
+    class Meta:
+        verbose_name = 'Student'
+        proxy = True
+
 
 
 class UserCreditMovement(BaseModel):
