@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from models import *
 
 class ClassAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'tutor', 'date', 'duration', 'credit_fee', 'status')
+    list_display = ('subject', 'tutor', 'student', 'date', 'duration', 'credit_fee', 'universal_fee', 'status')
 admin.site.register(Class, ClassAdmin)
 
 class ClassSubjectAdmin(admin.ModelAdmin):
