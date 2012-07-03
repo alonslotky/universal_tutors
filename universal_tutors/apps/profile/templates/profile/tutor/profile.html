@@ -103,7 +103,7 @@
                 {% for item in subjects %}
                 <tr>
                   <td>{{item.subject}}</td>
-                  <td>{{item.level}}</td>
+                  <td>{% if item.level %}{{item.level}}{% endif %}</td>
                   <td>{{item.credits|floatformat}} credit{{item.credits|pluralize}}</td>
                 </tr>
                 {% empty %}

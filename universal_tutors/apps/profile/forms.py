@@ -34,7 +34,7 @@ class TutorSubjectForm(forms.ModelForm):
 class StudentInterestForm(forms.ModelForm):
     class Meta:
         models = StudentInterest
-        fields = ('subject',)
+        fields = ('subject', 'system', 'level')
 
 
 class ProfileForm(forms.ModelForm):

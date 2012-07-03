@@ -6,20 +6,21 @@
   <li id="subjectsTab">
     <h2 class="clear">Subjects</h2>
     <label>Maximum of 12 subjects allowed</label>
-	  
+	
 	<input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
 	<input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
 	<input id="id_subjects-MAX_NUM_FORMS" type="hidden" name="subjects-MAX_NUM_FORMS">
 	  
     <table id="subjects-table" class="stretch">
       <tr>
+        <th>Subject</th>
         <th>System</th>
         <th>Level</th>
-        <th>Subject</th>
         <th>Credits per hour</th>
         <th>Price in {{profile.currency}}</th>
         <th>Delete</th>
       </tr>
+            
       {% for item in subjects %}
       {% with item.level as level %}
       {% with item.system as system %}
@@ -28,26 +29,26 @@
         <td>
 		  <input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
 		  <input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
+		  <select id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" class="subjects-select-subjects">
+		  	<option value="">Select subject</option>
+		  	{% for sub in class_subjects %}
+		  	<option value="{{sub.id}}" {% if sub == subject %}selected="selected"{% endif %}>{{sub}}</option>
+		  	{% endfor %}
+		  </select>
+		</td>
+        <td>
 		  <select id="id_subjects-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="subjects-select-systems">
-		  	<option value="">-------</option>
-		  	{% for sys in systems %}
+		  	<option value="">Any system</option>
+		  	{% for sys in subject.systems.all %}
 		  	<option value="{{sys.id}}" {% if sys == system %}selected="selected"{% endif %}>{{sys}}</option>
 		  	{% endfor %}
 		  </select>
 		</td>
         <td>
 		  <select id="id_subjects-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="subjects-select-levels">
-		  	<option value="">-------</option>
+		  	<option value="">Any level</option>
 		  	{% for lvl in system.levels.all %}
 		  	<option value="{{lvl.id}}" {% if lvl == level %}selected="selected"{% endif %}>{{lvl}}</option>
-		  	{% endfor %}
-		  </select>
-		</td>
-        <td>
-		  <select id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" class="subjects-select-subject">
-		  	<option value="">-------</option>
-		  	{% for sys_sub in system.subjects.all %}
-		  	<option value="{{sys_sub.id}}" {% if sys_sub == subject %}selected="selected"{% endif %}>{{sys_sub}}</option>
 		  	{% endfor %}
 		  </select>
 		</td>
@@ -68,30 +69,24 @@
         
       {% if no_subjects < 12 %}
 	  <tr>
-		<td>			
+		<td>
 		  <input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
 		  <input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
-		  <select id="id_subjects-{{no_subjects}}-system" name="subjects-{{no_subjects}}-system" class="subjects-select-systems">
-		  	<option value="" selected="selected">-------</option>
-		  	{% for sys in systems %}
-		  	<option value="{{sys.id}}">{{sys}}</option>
+		  <select id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" class="subjects-select-subjects">
+		  	<option value="" selected="selected">Select subject</option>
+		  	{% for sub in class_subjects %}
+		  	<option value="{{sub.id}}">{{sub}}</option>
 		  	{% endfor %}
+		  </select>
+	    </td>
+		<td>			
+		  <select id="id_subjects-{{no_subjects}}-system" name="subjects-{{no_subjects}}-system" class="subjects-select-systems">
+		  	<option value="" selected="selected">Any system</option>
 		  </select>
 	    </td>
 		<td>
 		  <select id="id_subjects-{{no_subjects}}-level" name="subjects-{{no_subjects}}-level" class="subjects-select-levels">
-		  	<option value="" selected="selected">-------</option>
-		  	{% for lvl in system.levels.all %}
-		  	<option value="{{lvl.id}}">{{lvl}}</option>
-		  	{% endfor %}
-		  </select>
-	    </td>
-		<td>
-		  <select id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" class="subjects-select-subject">
-		  	<option value="" selected="selected">-------</option>
-		  	{% for sys_sub in system.subjects.all %}
-		  	<option value="{{sys_sub.id}}">{{sys_sub}}</option>
-		  	{% endfor %}
+		  	<option value="" selected="selected">Any level</option>
 		  </select>
 	    </td>
 		<td>
@@ -116,16 +111,25 @@
   	var currency_symbol = '{{currency.symbol}}';
   
   
+  	$('.subjects-select-subjects').live('change', function(){
+  		var self_value = $(this).val();
+  		var self_id = $(this).attr('id');
+  		var item_id = self_id.split('-')[1];
+  		if(self_value) {
+  			$('#id_subjects-'+ item_id +'-system').load('{% url subject_systems_options %}'+ self_value +'/1/');
+  		} else {
+  			$('#id_subjects-'+ item_id +'-system').html('<option value="" selected="selected">Any</option>');
+  		}
+  	});
+
   	$('.subjects-select-systems').live('change', function(){
   		var self_value = $(this).val();
   		var self_id = $(this).attr('id');
   		var item_id = self_id.split('-')[1];
   		if(self_value) {
-  			$('#id_subjects-'+ item_id +'-level').load('{% url system_levels_options %}'+ self_value +'/0/');
-  			$('#id_subjects-'+ item_id +'-subject').load('{% url system_subjects_options %}'+ self_value +'/0/');
+  			$('#id_subjects-'+ item_id +'-level').load('{% url system_levels_options %}'+ self_value +'/1/');
   		} else {
-  			$('#id_subjects-'+ item_id +'-level').html('<option value="" selected="selected">-------</option>');
-  			$('#id_subjects-'+ item_id +'-subject').html('<option value="" selected="selected">-------</option>');
+  			$('#id_subjects-'+ item_id +'-level').html('<option value="" selected="selected">Any</option>');
   		}
   	});
   
@@ -139,21 +143,21 @@
 	  		'	<td>'+
 			'		<input id="id_subjects-'+ id_subject +'-id" type="hidden" name="subjects-'+ id_subject +'-id">'+
 			'		<input id="id_subjects-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="subjects-'+ id_subject +'-user">'+
-			' 		<select id="id_subjects-'+ id_subject +'-system" name="subjects-'+ id_subject +'-system" class="subjects-select-systems">'+
-			'			<option value="">-------</option>'+
-			{% for sys in systems %}
-			'			<option value="{{sys.id}}">{{sys}}</option>'+
+			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" class="subjects-select-subjects">'+
+			'			<option value="">Select subject</option>'+
+			{% for sub in class_subjects %}
+			'			<option value="{{sub.id}}">{{sub}}</option>'+
 			{% endfor %}
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-level" class="subjects-select-levels">'+
-			'			<option value="">-------</option>'+
+			' 		<select id="id_subjects-'+ id_subject +'-system" name="subjects-'+ id_subject +'-system" class="subjects-select-systems">'+
+			'			<option value="">Any system</option>'+
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" class="subjects-select-subject">'+
-			'			<option value="">-------</option>'+
+			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-level" class="subjects-select-levels">'+
+			'			<option value="">Any level</option>'+
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
@@ -168,7 +172,6 @@
 	  		'</tr>'
   		);
   		$('#id_subjects-TOTAL_FORMS').val(parseInt($('#id_subjects-TOTAL_FORMS').val())+1);
-  		add_autocomplete('#id_subjects-'+ id_subject +'-subject');
   		id_subject++;
   	});
   	
@@ -182,39 +185,6 @@
 	  		$('#id_subjects-'+ id +'-price').html(currency_symbol +' 0.00');
   		}
   	});
-
-	var add_autocomplete = function(id){ 
-		// handle autocomplete data
-		$(id).autocomplete('{% url autocomplete_subjects %}', {
-			extraParams: {
-				'q': function(){
-					return $(id).val();
-				}
-			},
-			formatItem: function(r){
-				return r[1];
-			},
-			parse: function(r){
-				var rvData = eval(r);
-				var rv = [];
-				$.each(rvData, function(index, row){
-					rv.push({
-						data: row,
-						value: row[1],
-						result: row[1]
-					});
-				});
-				return rv;
-			}	
-		}).bind("result", function(data, value){
-			// TODO: load info about item via AJAX
-			var itemId = value[0];
-			var itemTitle = value[1];
-			$(this).data('itemId', itemId);
-			$(this).data('itemTitle', itemTitle);
-			return value[1];
-		});
-	};     	
   </script>
 {% endwith %}
 {% endwith %}

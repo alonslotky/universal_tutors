@@ -43,16 +43,28 @@
           <p>&nbsp;</p>
           <div class="row">
             <div class="nine columns">
-              <label>Interested In</br></label>
-              	{% for interest in profile.interests.all %}
-	              <div class="row">
-	                <div class="four columns tags">
-	                  <a class="tag">{{interest.subject}}</a>
-	                </div>
-	              </div>
-	            {% empty %}
-	            <div class="row">No interest has been selected</div>
-               	{% endfor %}
+              <div class="row"><h4>Interested In</h4></div>
+              <div class="row">
+	              <table class="stretch">
+	                <tr>
+	                  <th>Subject</th>
+	                  <th>System</th>
+	                  <th>Level</th>
+	                </tr>
+	                {% for item in person.interests.all %}
+	                <tr>
+	                  <td>{{item.subject}}</td>
+	                  <td>{% if item.system %}{{item.system}}{% endif %}</td>
+	                  <td>{% if item.level %}{{item.level}}{% endif %}</td>
+	                </tr>
+	                {% empty %}
+	                <tr>
+	                  <td>No subjects</td>
+	                  <td></td>
+	                </tr>
+					{% endfor %}
+	              </table>
+	           </div>
             </div>
             <div class="three columns action">
             {% if owner %}
