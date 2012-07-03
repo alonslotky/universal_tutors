@@ -133,7 +133,7 @@ def edit_tutor_profile(request):
         'qualifications_formset': qualifications_formset,
         'timezones': pytz.common_timezones,
         'date': datetime.date.today(),
-        'systems': EducationalSystem.objects.all(),
+        'class_subjects': ClassSubject.objects.all(),
     }
 
 
@@ -284,7 +284,7 @@ def edit_student_profile(request):
         'timezones': pytz.common_timezones,
         'interest_formset': interest_formset,
         'date': datetime.date.today(),
-        'subjects': ClassSubject.objects.all(),
+        'class_subjects': ClassSubject.objects.all(),
     }
 
 

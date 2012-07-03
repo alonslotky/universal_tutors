@@ -131,3 +131,22 @@ def system_subjects_options(request, system_id, all_option):
             'description': 'Any subject' if all_option else '-------',
         },
     }
+
+
+@main_render('classes/fragments/_option_items.html')
+def subject_systems_options(request, subject_id, all_option):
+    all_option = int(all_option)
+    
+    try:
+        subject = ClassSubject.objects.get(id = subject_id)
+        items = subject.systems.all()
+    except ClassSubject.DoesNotExist:
+        items = EducationalSystem.objects.all()
+    
+    return {
+        'items': items,
+        'blank': {
+            'value': '',
+            'description': 'Any system' if all_option else '-------',
+        },
+    }

@@ -956,9 +956,9 @@ class WithdrawItem(BaseModel):
 ### TUTOR ###########
 class TutorSubject(models.Model):
     user = models.ForeignKey(User, related_name='subjects')
-    system = models.ForeignKey(EducationalSystem, related_name='tutors')
     subject = models.ForeignKey(ClassSubject, related_name='tutors')
-    level = models.ForeignKey(ClassLevel, related_name='tutors')
+    system = models.ForeignKey(EducationalSystem, related_name='tutors', null=True, blank=True)
+    level = models.ForeignKey(ClassLevel, related_name='tutors', null=True, blank=True)
     credits = models.FloatField()
     
     def save(self, *args, **kwargs):
@@ -972,7 +972,7 @@ class TutorSubject(models.Model):
             profile.save()
     
     def __unicode__(self):
-        return '%s (%s)' % (self.subject, self.level)
+        return '%s (%s)' % (self.subject, self.level) if self.level else '%s' % self.subject
 
 
 class TutorQualification(models.Model):
@@ -996,9 +996,11 @@ class TutorQualification(models.Model):
 class StudentInterest(models.Model):
     user = models.ForeignKey(User, related_name='interests')
     subject = models.ForeignKey(ClassSubject, related_name='students')
+    system = models.ForeignKey(EducationalSystem, related_name='students', null=True, blank=True)
+    level = models.ForeignKey(ClassLevel, related_name='students', null=True, blank=True)
     
     def __unicode__(self):
-        return '%s' % (self.subject)
+        return '%s (%s)' % (self.subject, self.level) if self.level else '%s' % self.subject
 
 
 class TutorReview(BaseModel):

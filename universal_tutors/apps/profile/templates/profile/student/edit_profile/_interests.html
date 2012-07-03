@@ -11,78 +11,136 @@
   <input id="id_interests-INITIAL_FORMS" type="hidden" value="{{interests.count}}" name="interests-INITIAL_FORMS">
   <input id="id_interests-MAX_NUM_FORMS" type="hidden" name="interests-MAX_NUM_FORMS">
 	
-	<table id="interests-table" class="stretch">
+    <table id="interests-table" class="stretch">
       <tr>
         <th>Subject</th>
+        <th>System</th>
+        <th>Level</th>
         <th>Delete</th>
       </tr>
+            
       {% for item in interests %}
+      {% with item.level as level %}
+      {% with item.system as system %}
       {% with item.subject as subject %}
-
       <tr>
         <td>
 		  <input id="id_interests-{{forloop.counter0}}-id" type="hidden" name="interests-{{forloop.counter0}}-id" value="{{item.id}}">
 		  <input id="id_interests-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="interests-{{forloop.counter0}}-user">
-		  <select id="id_interests-{{forloop.counter0}}-subject" name="interests-{{forloop.counter0}}-subject" class="interests-select-subject">
-		  	<option value="">-------</option>
-		  	{% for sub in subjects %}
+		  <select id="id_interests-{{forloop.counter0}}-subject" name="interests-{{forloop.counter0}}-subject" class="interests-select-subjects">
+		  	<option value="">Select subject</option>
+		  	{% for sub in class_subjects %}
 		  	<option value="{{sub.id}}" {% if sub == subject %}selected="selected"{% endif %}>{{sub}}</option>
 		  	{% endfor %}
 		  </select>
 		</td>
-		<td>
-		   <input id="id_interests-{{no_interests}}-DELETE" type="checkbox" name="interests-{{forloop.counter0}}-DELETE" />
-	    </td>
+        <td>
+		  <select id="id_interests-{{forloop.counter0}}-system" name="interests-{{forloop.counter0}}-system" class="interests-select-systems">
+		  	<option value="">Any system</option>
+		  	{% for sys in subject.systems.all %}
+		  	<option value="{{sys.id}}" {% if sys == system %}selected="selected"{% endif %}>{{sys}}</option>
+		  	{% endfor %}
+		  </select>
+		</td>
+        <td>
+		  <select id="id_interests-{{forloop.counter0}}-level" name="interests-{{forloop.counter0}}-level" class="interests-select-levels">
+		  	<option value="">Any level</option>
+		  	{% for lvl in system.levels.all %}
+		  	<option value="{{lvl.id}}" {% if lvl == level %}selected="selected"{% endif %}>{{lvl}}</option>
+		  	{% endfor %}
+		  </select>
+		</td>
+        <td>
+		  <input id="id_interests-{{forloop.counter0}}-DELETE" type="checkbox" name="interests-{{forloop.counter0}}-DELETE" />
+		</td>
 	  </tr>
+      {% endwith %}
+      {% endwith %}
       {% endwith %}
       {% endfor %}
         
+      {% if no_interests < 12 %}
 	  <tr>
-		<td>			
+		<td>
 		  <input id="id_interests-{{no_interests}}-id" type="hidden" name="interests-{{no_interests}}-id">
 		  <input id="id_interests-{{no_interests}}-user" type="hidden" value="{{user.id}}" name="interests-{{no_interests}}-user">
-		  <select id="id_interests-{{no_interests}}-subject" name="interests-{{no_interests}}-subject" class="interests-select-subject">
-		  	<option value="" selected="selected">-------</option>
-		  	{% for sub in subjects %}
+		  <select id="id_interests-{{no_interests}}-subject" name="interests-{{no_interests}}-subject" class="interests-select-subjects">
+		  	<option value="" selected="selected">Select subject</option>
+		  	{% for sub in class_subjects %}
 		  	<option value="{{sub.id}}">{{sub}}</option>
 		  	{% endfor %}
 		  </select>
 	    </td>
-	    <td>
+		<td>			
+		  <select id="id_interests-{{no_interests}}-system" name="interests-{{no_interests}}-system" class="interests-select-systems">
+		  	<option value="" selected="selected">Any system</option>
+		  </select>
+	    </td>
+		<td>
+		  <select id="id_interests-{{no_interests}}-level" name="interests-{{no_interests}}-level" class="interests-select-levels">
+		  	<option value="" selected="selected">Any level</option>
+		  </select>
+	    </td>
+		<td>
 		   <input id="id_interests-{{no_interests}}-DELETE" type="checkbox" name="interests-{{no_interests}}-DELETE" />
 	    </td>
       </tr>
+      {% endif %}
     </table>
-    <a id="add-subject-link" href="javascript:;">+ add subject</a>
-	
-</li>
+	  {% if no_interests < 11 %}
+		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
+	  {% endif %}
+  </li>
+  <script type="text/javascript">
+  	var id_subject = {{no_interests}} + 1;
+  
+  	$('.interests-select-subjects').live('change', function(){
+  		var self_value = $(this).val();
+  		var self_id = $(this).attr('id');
+  		var item_id = self_id.split('-')[1];
+  		if(self_value) {
+  			$('#id_interests-'+ item_id +'-system').load('{% url subject_systems_options %}'+ self_value +'/1/');
+  		} else {
+  			$('#id_interests-'+ item_id +'-system').html('<option value="" selected="selected">Any</option>');
+  		}
+  	});
 
-<script type="text/javascript">
-	
-	var remove_interest = function(id) {
-		$('#interest-'+id).fadeOut(function(){
-			$.get('{% url remove_interest %}'+ id +'/');
-			$(this).remove();
-		});	
-	}
-	
-	var id_subject = {{no_interests}} + 1;
+  	$('.interests-select-systems').live('change', function(){
+  		var self_value = $(this).val();
+  		var self_id = $(this).attr('id');
+  		var item_id = self_id.split('-')[1];
+  		if(self_value) {
+  			$('#id_interests-'+ item_id +'-level').load('{% url system_levels_options %}'+ self_value +'/1/');
+  		} else {
+  			$('#id_interests-'+ item_id +'-level').html('<option value="" selected="selected">Any</option>');
+  		}
+  	});
   
   	$('#add-subject-link').click(function(){
-  		// if (parseInt($('#id_interests-TOTAL_FORMS').val()) > 11) {
-  			// $(this).remove();
-  			// return;
-  		// }
+  		if (parseInt($('#id_interests-TOTAL_FORMS').val()) > 11) {
+  			$(this).remove();
+  			return;
+  		}
   		$('#interests-table').append(
   			'<tr>'+
 	  		'	<td>'+
 			'		<input id="id_interests-'+ id_subject +'-id" type="hidden" name="interests-'+ id_subject +'-id">'+
 			'		<input id="id_interests-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="interests-'+ id_subject +'-user">'+
-			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="interests-select-subject">'+
-			'			<option value="">-------</option>'+
-			{% for sub in subjects %}
+			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="interests-select-subjects">'+
+			'			<option value="">Select subject</option>'+
+			{% for sub in class_subjects %}
 			'			<option value="{{sub.id}}">{{sub}}</option>'+
 			{% endfor %}
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+			' 		<select id="id_interests-'+ id_subject +'-system" name="interests-'+ id_subject +'-system" class="interests-select-systems">'+
+			'			<option value="">Any system</option>'+
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+			' 		<select id="id_interests-'+ id_subject +'-level" name="interests-'+ id_subject +'-level" class="interests-select-levels">'+
+			'			<option value="">Any level</option>'+
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
@@ -91,10 +149,9 @@
 	  		'</tr>'
   		);
   		$('#id_interests-TOTAL_FORMS').val(parseInt($('#id_interests-TOTAL_FORMS').val())+1);
-  		add_autocomplete('#id_interests-'+ id_subject +'-subject');
   		id_subject++;
   	});
-	
-</script>
+  	
+  </script>
 {% endwith %}
 {% endwith %}
