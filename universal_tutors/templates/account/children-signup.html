@@ -173,23 +173,42 @@
           
 	      <div class="row">
 	        <div class="twelve columns">
-	          <h3>Interests</h3>
+	          <h3>Interested subjects</h3>
 	        </div>
 	      </div>
-          
-          <label>Type an Interest to add</label>
           <div id="tracked-subject-error" class="formError"></div>
-          <div id="div_id_fake_container" class="row">
-            <div class="six columns">
-              <input id="autocomplete-subject" type="text" class="input-text">
-              <textarea id="id_subjects" name="subjects" class="hidden"></textarea>
-              <textarea id="id_new_subjects" name="new_subjects" class="hidden"></textarea>
-            </div>
-            <div class="six columns">
-              <div id="div_id_subjects_container" class="tags clear">
-              </div>
-            </div>
-          </div>
+		  <input id="id_interests-TOTAL_FORMS" type="hidden" value="1" name="interests-TOTAL_FORMS">
+		  <input id="id_interests-INITIAL_FORMS" type="hidden" value="1" name="interests-INITIAL_FORMS">
+		  <input id="id_interests-MAX_NUM_FORMS" type="hidden" name="interests-MAX_NUM_FORMS">
+			
+		    <table id="interests-table" class="stretch">
+		      <tr>
+		        <th>Subject</th>
+		        <th>System</th>
+		        <th>Level</th>
+		      </tr>
+			  <tr>
+				<td>
+				  <select id="id_interests-0-subject" name="interests-0-subject" class="interests-select-subjects">
+				  	<option value="" selected="selected">Select subject</option>
+				  	{% for sub in class_subjects %}
+				  	<option value="{{sub.id}}">{{sub}}</option>
+				  	{% endfor %}
+				  </select>
+			    </td>
+				<td>			
+				  <select id="id_interests-0-system" name="interests-0-system" class="interests-select-systems">
+				  	<option value="" selected="selected">Any system</option>
+				  </select>
+			    </td>
+				<td>
+				  <select id="id_interests-0-level" name="interests-0-level" class="interests-select-levels">
+				  	<option value="" selected="selected">Any level</option>
+				  </select>
+			    </td>
+		      </tr>
+		    </table>
+			<a id="add-subject-link" href="javascript:;">+ add subject</a>
           
           <hr class="inside">
 
@@ -301,6 +320,61 @@
 			$('#id_referral_other').val('');
 		}
 	});
+</script>
+<script type="text/javascript">
+  	var id_subject = 1;
+  
+  	$('.interests-select-subjects').live('change', function(){
+  		var self_value = $(this).val();
+  		var self_id = $(this).attr('id');
+  		var item_id = self_id.split('-')[1];
+  		if(self_value) {
+  			$('#id_interests-'+ item_id +'-system').load('{% url subject_systems_options %}'+ self_value +'/1/');
+  		} else {
+  			$('#id_interests-'+ item_id +'-system').html('<option value="" selected="selected">Any</option>');
+  		}
+  	});
 
+  	$('.interests-select-systems').live('change', function(){
+  		var self_value = $(this).val();
+  		var self_id = $(this).attr('id');
+  		var item_id = self_id.split('-')[1];
+  		if(self_value) {
+  			$('#id_interests-'+ item_id +'-level').load('{% url system_levels_options %}'+ self_value +'/1/');
+  		} else {
+  			$('#id_interests-'+ item_id +'-level').html('<option value="" selected="selected">Any</option>');
+  		}
+  	});
+  
+  	$('#add-subject-link').click(function(){
+  		if (parseInt($('#id_interests-TOTAL_FORMS').val()) > 11) {
+  			$(this).remove();
+  			return;
+  		}
+  		$('#interests-table').append(
+  			'<tr>'+
+	  		'	<td>'+
+			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="interests-select-subjects">'+
+			'			<option value="">Select subject</option>'+
+			{% for sub in class_subjects %}
+			'			<option value="{{sub.id}}">{{sub}}</option>'+
+			{% endfor %}
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+			' 		<select id="id_interests-'+ id_subject +'-system" name="interests-'+ id_subject +'-system" class="interests-select-systems">'+
+			'			<option value="">Any system</option>'+
+			'   	</select>'+
+	  		'	</td>'+
+	  		'	<td>'+
+			' 		<select id="id_interests-'+ id_subject +'-level" name="interests-'+ id_subject +'-level" class="interests-select-levels">'+
+			'			<option value="">Any level</option>'+
+			'   	</select>'+
+	  		'	</td>'+
+	  		'</tr>'
+  		);
+  		$('#id_interests-TOTAL_FORMS').val(parseInt($('#id_interests-TOTAL_FORMS').val())+1);
+  		id_subject++;
+  	});
 </script>
 {% endblock %}
