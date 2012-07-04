@@ -195,6 +195,7 @@ class SignupForm(forms.ModelForm):
     newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
     partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
     
+
     def clean_agreement(self):
         agreement = self.cleaned_data.get('agreement', False)
         if not agreement:
@@ -255,12 +256,12 @@ class SignupForm(forms.ModelForm):
         profile.partners_newsletters = self.cleaned_data.get('partners_newsletter', None)
         profile.timezone = self.cleaned_data.get('timezone', None)
         profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency', 1))
+        profile.date_of_birth = self.cleaned_data['date_of_birth']
         
         if self.parent:
             user.parent_set.create(parent=self.parent, active=True)
             profile.type = profile.TYPES.UNDER16
-        else:
-            profile.date_of_birth = self.cleaned_data['date_of_birth']
+
         profile.crb = self.cleaned_data.get('crb', False)
         profile.save()
         

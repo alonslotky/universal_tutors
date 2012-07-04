@@ -297,20 +297,6 @@
 			$('#id_div_referral_other').addClass('hidden');
 		}
 	});
-
-	var ac_subject = new AutoComplete({
-		'id': 'ac_subject',
-		'inputId': '#autocomplete-subject',
-		'formId': '#student-signup-form',
-		'errorCls': '#tracked-subject-error',
-		'main_container': '#div_id_fake_container',
-		'list_container': '#div_id_subjects_container',
-		'url': '{% url autocomplete_subjects %}',
-		'add_new_items': true,
-		'id_items': '#id_subjects',
-		'id_new_items': '#id_new_subjects',
-		'max': 12
-	});
 	
 	$('#id_referral').change(function(){
 		if( $(this).val() == '20' ) {
