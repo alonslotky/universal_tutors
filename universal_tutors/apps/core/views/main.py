@@ -51,7 +51,8 @@ def search(request):
     subject = request.GET.get('subject', '')
     level = request.GET.get('level', '')
 
-    price = int(request.GET.get('price', 0))
+    price_from = int(request.GET.get('price-from', 0))
+    price_to = int(request.GET.get('price-to', 0))
     day = int(request.GET.get('day', -1))
     time = int(request.GET.get('time', -1))
     crb = request.GET.get('crb', False)
@@ -89,8 +90,11 @@ def search(request):
     if favorite and user.is_authenticated():
         tutors = tutors.filter(profile__favorite = user)
     
-    if price:
-        tutors = tutors.filter(Q(subjects__credits__lte=price))
+    if price_from:
+        tutors = tutors.filter(Q(subjects__credits__gte=price_from))
+
+    if price_to:
+        tutors = tutors.filter(Q(subjects__credits__lte=price_to))
     
     if day >= 0 and time >=0:
         tutors = tutors.filter(week_availability__weekday=day, week_availability__begin__lte=datetime.time(time,0), week_availability__end__gte=datetime.time(time,0))
