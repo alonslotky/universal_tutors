@@ -552,7 +552,7 @@ class UserProfile(BaseModel):
                     firstname = user.first_name,
                     lastname = user.last_name,
                     email = user.email,
-                    roleid = 50 if self.type == self.TYPES.TUTOR else 10,
+                    roleid = 50 if self.type == self.TYPES.TUTOR else 40,
                 )
             except:
                 scribblar_user = None
