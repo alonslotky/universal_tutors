@@ -27,13 +27,13 @@
 		              
 		                <div class="row space">
 		                  <div class="three columns">
-		                    <label>System</label>
+		                    <label>Subject</label>
 		                  </div>
 		                  <div class="nine columns">
-		                    <select  id="id_system" class="stretch" name="system">
-		                      <option value="">Any educational system</option>
-		                      {% for system in systems %}
-			                      <option value="{{system.id}}">{{system}}</option>	                      
+		                    <select id="id_subject" class="stretch" name="subject">
+		                      <option value="">Any subject</option>
+		                      {% for subject in subjects %}
+		                      	 <option value="{{subject.id}}">{{subject}}</option>
 		                      {% endfor %}
 		                    </select>
 		                  </div>
@@ -44,14 +44,26 @@
 		                    <label>Price</label>
 		                  </div>
 		                  <div class="nine columns">
-		                    <select id="id_price" class="stretch" name="price">
-		                		<option value="0">Any price</option>
-			                  	<option value="10"> up to 10 credits</option>
-			                  	<option value="20"> up to 20 credits </option>
-			                  	<option value="30"> up to 30 credits </option>
-			                  	<option value="40"> up to 40 credits </option>
-			                  	<option value="50"> up to 50 credits </option>
-		                    </select>
+		                  	 <div class="six columns">
+			                    <select id="id_price-from" class="stretch" name="price-from">
+			                		<option value="0">From</option>
+				                  	<option value="0">0 credits</option>
+				                  	<option value="10">10 credits</option>
+				                  	<option value="20">20 credits</option>
+				                  	<option value="30">30 credits</option>
+				                  	<option value="40">40 credits</option>
+			                    </select>
+			                 </div>
+		                  	 <div class="six columns">
+			                    <select id="id_price-to" class="stretch" name="price-to">
+			                		<option value="0">To</option>
+				                  	<option value="10">10 credits</option>
+				                  	<option value="20">20 credits</option>
+				                  	<option value="30">30 credits</option>
+				                  	<option value="40">40 credits</option>
+				                  	<option value="50">50 credits</option>
+			                    </select>
+			                 </div>
 		                  </div>
 		                </div>
 		                
@@ -61,20 +73,14 @@
 		                
 		                <div class="row space">
 		                  <div class="three columns">
-		                    <label>Subject</label>
+		                    <label>System</label>
 		                  </div>
 		                  <div class="nine columns">
-		                    <select id="id_subject" class="stretch" name="subject">
-		                      <option value="">Any subject</option>
-		                      {% if selected_system %}
-			                      {% for subject in selected_system.subjects.all %}
-			                      	 <option value="{{subject.id}}">{{subject}}</option>
-			                      {% endfor %}
-		                      {% else %}
-			                      {% for subject in subjects %}
-			                      	 <option value="{{subject.id}}">{{subject}}</option>
-			                      {% endfor %}
-			                  {% endif %}
+		                    <select id="id_system" class="stretch" name="system">
+		                      <option value="">Any educational system</option>
+	                      	  {% for system in systems %}
+		                      <option value="{{system.id}}">{{system}}</option>	                      
+		                      {% endfor %}
 		                    </select>
 		                  </div>
 		                </div>
@@ -91,9 +97,7 @@
 				                      <option value="{{level.id}}">{{level}}</option>
 			                      {% endfor %}
 		                      {% else %}
-			                      {% for level in levels %}
-				                      <option value="{{level.id}}">{{level}}</option>
-			                      {% endfor %}
+			                      <option value="">Select educational system first</option>
 			                  {% endif %}
 		                    </select>
 		                  </div>
@@ -337,10 +341,11 @@
 			  		var value = $(this).val();
 			  		if(value) {
 			  			$('#id_level').load('{% url system_levels_options %}'+ value +'/1/');
-			  			$('#id_subject').load('{% url system_subjects_options %}'+ value +'/1/');
 			  		} else {
-			  			$('#id_level').load('{% url system_levels_options %}0/1/');
-			  			$('#id_subject').load('{% url system_subjects_options %}0/1/');
+			  			$('#id_level').html(
+			  				'<option value="">Any level</option>'+
+			  				'<option value="">Select educational system first</option>'
+			  			);
 			  		}
 			  	});
 
@@ -369,11 +374,16 @@
 					$("select#id_level option[value='" + level +"']").attr("selected", true);
 				}
 		
-				var price = $.query.get('price');
-				if (price) {
-					$("select#id_price option[value='" + price +"']").attr("selected", true);
+				var price_from = $.query.get('price-from');
+				if (price_from) {
+					$("select#id_price-from option[value='" + price_from +"']").attr("selected", true);
 				}
 				
+				var price_to = $.query.get('price-to');
+				if (price_to) {
+					$("select#id_price-to option[value='" + price_to +"']").attr("selected", true);
+				}
+
 				var day = $.query.get('day');
 				if (day>=0) {
 					$("select#id_day option[value='" + day +"']").attr("selected", true);
