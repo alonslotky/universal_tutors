@@ -13,14 +13,6 @@
     <textarea id="tutor-rate-student-text"  name="text">Feedback on this student ...</textarea>
     <input type="submit" class="small button" value="Send">
   </form>
-  
-  <span id="share-facebook" class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;">
-  	<span class="stLarge" style="background-image: url('http://w.sharethis.com/images/facebook_32.png');"></span>
-  </span>
-	
-  <span id="share-twitter" class="stButton" style="text-decoration:none;color:#000000;display:inline-block;cursor:pointer;">
-  	<span class="stLarge" style="background-image: url('http://w.sharethis.com/images/twitter_32.png');"></span>
-  </span>
 
   <a id="modal-review-close-button" class="close-reveal-modal">&#215;</a>
 </div>
@@ -59,42 +51,6 @@
 		});
 		
 	});
-	
-	$("#share-twitter").click(function(e){
-		e.preventDefault();
-		window.open('https://twitter.com/share?url='+ student_rated_url +'&via=UniversalTutors&text={{ user.get_full_name }} rated student '+ $('#modal-review-student-name').html() );	
-	});
-	
-	$("#share-facebook").click(function(e){
-		e.preventDefault();
-		FB.ui(
-		  {
-		    method: 'feed',
-		    name: "{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
-		    link: student_rated_url,
-		    picture: student_rated_url,
-		    description: $('#tutor-rate-student-text').val()
-		  },
-		  function(response) {
-
-		  }
-		);
-	});
-
-	var setup_share_buttons = function() {
-		$("#share-email").remove();
-		$('<span id="share-email"></span>').insertBefore("#modal-review-close-button");
-		
-		stWidget.addEntry({
-			"service": "email",
-			"element": document.getElementById('share-email'),
-			"url": student_rated_url,
-			"title": "{{ user.get_full_name }} rated student " + $('#modal-review-student-name').html(),
-			"type": "large",
-			"summary": $('#tutor-rate-student-text').val(),
-			"image": student_rated_url
-		});		
-	}
 
 	var tutor_rate_student = function(user_id, user_name, class_id, text) {
 		$('#modal-review-student-name').text(user_name);
@@ -106,11 +62,6 @@
 			var response_splited = response.split(',');
 			student_rated_image = response_splited[0];
 			student_rated_url = response_splited[1];
-			setup_share_buttons();		
 		});
 	}
-
-	$("#tutor-rate-student-text").keyup(function(){
-		setup_share_buttons();		
-	});
 </script>

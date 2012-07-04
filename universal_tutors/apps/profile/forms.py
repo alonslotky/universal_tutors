@@ -15,7 +15,7 @@ from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from allauth.account.utils import user_display, perform_login, send_email_confirmation
 from allauth.utils import email_address_exists
 
-from apps.classes.models import ClassSubject
+from apps.classes.models import *
 from apps.common.utils.form_fields import ListField
 from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
@@ -277,33 +277,33 @@ class SignupForm(forms.ModelForm):
         
 
 class StudentSignupForm(SignupForm):
-    subjects = ListField(required = False)
-
     def __init__(self, *args, **kwargs):
         super(StudentSignupForm, self).__init__(*args, **kwargs)
         
     def save(self, *args, **kwargs):
+        request = kwargs.get('request')
         user = super(StudentSignupForm, self).save(*args, **kwargs)
         profile = user.profile
 
-        list_subjects = self.cleaned_data['subjects']
-
-        user.interests.all().delete()
-        for id in list_subjects:
+        for i in range(0, 13):
             try:
-                subject = ClassSubject.objects.get(id = id)
-                user.interests.create(subject=subject)
+                subject = ClassSubject.objects.get(id = request.POST.get('interests-%s-subject' % i, 0) or 0)
             except ClassSubject.DoesNotExist:
-                pass
-#                    
-#        for title in list_new_subjects:
-#            try:
-#                subject = ClassSubject.objects.get(subject__iexact = title)
-#            except ClassSubject.DoesNotExist:
-#                subject = ClassSubject(subject = title)
-#            subject.save()
-#            profile.interests.add(subject)
+                subject = None
+
+            try:
+                system = EducationalSystem.objects.get(id = request.POST.get('interests-%s-system' % i, 0) or 0)
+            except EducationalSystem.DoesNotExist:
+                system = None
             
+            try:
+                level = ClassLevel.objects.get(id = request.POST.get('interests-%s-level' % i, 0) or 0)
+            except ClassLevel.DoesNotExist:
+                level = None
+        
+            if subject:
+                user.interests.create(subject=subject, system=system, level=level)
+
         profile.type = profile.TYPES.STUDENT
         profile.save()
         
