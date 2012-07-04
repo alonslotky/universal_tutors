@@ -19,6 +19,7 @@ from allauth.socialaccount.views import signup as socialaccount_signup
 from allauth.utils import passthrough_login_redirect_url
 
 from apps.common.utils.view_utils import handle_uploaded_file
+from apps.classes.models import ClassSubject
 from apps.profile.forms import *
 
 
@@ -64,6 +65,9 @@ def student_signup(request, *args, **kwargs):
         'form_class': form,
         'success_url': next_url,
         'template_name': 'account/student-signup.html',
+        'extra_ctx': {
+            'class_subjects': ClassSubject.objects.all(),
+        }
     })
     
     return allauth_signup(request, *args, **kwargs)
@@ -106,6 +110,7 @@ def allauth_signup(request, **kwargs):
     template_name = kwargs.pop("template_name", "account/signup.html")
     redirect_field_name = kwargs.pop("redirect_field_name", "next")
     success_url = kwargs.pop("success_url", None)
+    extra_ctx = kwargs.pop("extra_ctx", {})
     
     if success_url is None:
         success_url = get_default_redirect(request, redirect_field_name)
@@ -127,6 +132,7 @@ def allauth_signup(request, **kwargs):
                                                        reverse("account_login")),
            "redirect_field_name": redirect_field_name,
            "redirect_field_value": request.REQUEST.get(redirect_field_name) }
+    ctx.update(extra_ctx)
     return render_to_response(template_name, RequestContext(request, ctx))
 
 

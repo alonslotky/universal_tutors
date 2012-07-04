@@ -52,7 +52,7 @@
 	            	{% endif %}
 	        	</a>
 	          	{% if class.status == class.STATUS_TYPES.BOOKED or class.status == class.STATUS_TYPES.WAITING %}
-	            	{% if user == person %}<a href="javascript" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});"><i class="icon-cancel"></i> Cancel Class</a>{% endif %}
+	            	{% if user == person and class.student_can_cancel %}<a href="javascript" class="cancel-class" data-reveal-id="modal-cancel-class" onclick="cancel_class_step_0({{class.id}});"><i class="icon-cancel"></i> Cancel Class</a>{% endif %}
 				{% else %}
 					{% if user == person %}
 						{% with class.tutor_rating as tutor_rating %}
@@ -88,14 +88,13 @@
 	      {% endwith %}
 	      {% endwith %}
 	      {% endwith %}
+	   {% empty %}
+	      <article class="{% if class.is_active %}{% endif %}">
+	        <div class="row" style="text-align: center;">
+				You don't have any upcoming or previously given classes.
+	        </div>      
+	      </article>
 	   {% endfor %}
-	  {% if not allclasses.0 and not allclasses.1 and not allclasses.2 %}
-      <article class="{% if class.is_active %}{% endif %}">
-        <div class="row" style="text-align: center;">
-			You don't have any upcoming or previously given classes.
-        </div>      
-      </article>
-      {% endif %}  
 
 	{% include 'profile/fragments/_modal_messages.html' %}
 	{% include 'profile/fragments/_modal_class_material.html' %}

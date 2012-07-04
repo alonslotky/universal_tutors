@@ -158,9 +158,13 @@ def student_cancel_class(request):
         class_ = Class.objects.get(id=class_id, student=user)
     except Class.DoesNotExist:
         raise http.Http404()
+    
+    cancelation_time = datetime.datetime.now() - datetime.timedelta(minutes = 5 if class_.duration < 60 else 10)
+    
+    if class_.date < cancelation_time:
+        return http.HttpResponse('Grace period is over.')
         
     class_.canceled_by_student(reason)
-        
     return http.HttpResponse('done.')
 
 

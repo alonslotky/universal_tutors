@@ -448,6 +448,10 @@ class Class(BaseModel):
         else:
             return self.cover if self.cover else ''
 
+    def student_can_cancel(self):
+        cancelation_time = datetime.datetime.now() - datetime.timedelta(minutes = 5 if self.duration < 60 else 10)
+        return self.date >= cancelation_time
+
 
 class ClassUserHistory(models.Model):
     """
