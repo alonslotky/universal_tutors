@@ -517,5 +517,6 @@ def add_child(request):
     
     return {
         'form': form,
+        'class_subjects': ClassSubject.objects.all(),
     }
 
