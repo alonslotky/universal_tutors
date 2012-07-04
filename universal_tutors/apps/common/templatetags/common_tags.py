@@ -367,7 +367,7 @@ def age(date):
 
 @register.filter
 def convert_datetime(dt, timezone):
-    return convert_datetime_(dt, pytz.utc, timezone)
+    return convert_datetime_(dt, pytz.utc, timezone) if dt else ''
 
 
 @register.filter

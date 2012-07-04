@@ -49,17 +49,21 @@
             </tr>
             {% for movement in person.movements.all %}
             {% with movement.related_class as class %}
+            {% with movement.created|convert_datetime:user_profile.timezone as movement_date %}
+            {% with class.date|convert_datetime:user_profile.timezone as class_date %}
             <tr>
-              <td>{{movement.created|date:"D, d M Y"}}</td>
-              <td>{{movement.created|time:"H:i"}}</td>
+              <td>{{movement_date|date:"D, d M Y"}}</td>
+              <td>{{movement_date|time:"H:i"}}</td>
               <td>{{movement.get_type_display}}</td>
               <td>{{movement.credits}} credit{{movement.credits|pluralize}}</td>
               <td>{% if movement.value %}{{movement.value}}{% endif %}</td>
               <td>{% if class %}{{class}}{% endif %}</td>
               <td>{% if class %}{% if user_profile.type == user_profile.TYPES.TUTOR %}{{class.student.get_full_name}}{% else %}{{class.tutor.get_full_name}}{% endif %}{% endif %}</td>
-              <td>{% if class %}{{class.date|date:"D, d M Y \a\t H:i"}}{% endif %}</td>
+              <td>{% if class %}{{class_date|date:"D, d M Y \a\t H:i"}}{% endif %}</td>
               <td>{% if class %}{{class.duration}} minutes{% endif %}</td>
             </tr>
+            {% endwith %}
+            {% endwith %}
             {% endwith %}
             {% endfor %}
           </table>
