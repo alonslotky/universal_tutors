@@ -165,7 +165,7 @@ def signup(request, *args, **kwargs):
     return allauth_signup(request, *args, **kwargs)
 
 
-def socialaccount_signup(request, args, kwargs):
+def socialaccount_signup(request, *args, **kwargs):
     if request.user.is_authenticated():
         return http.HttpResponseRedirect(reverse(connections))
     signup = request.session.get('socialaccount_signup')
@@ -226,5 +226,5 @@ def social_signup(request, *args, **kwargs):
         }
     })
     
-    return socialaccount_signup(request, **kwargs)
+    return socialaccount_signup(request, *args, **kwargs)
 
