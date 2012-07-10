@@ -226,5 +226,5 @@ def social_signup(request, *args, **kwargs):
         }
     })
     
-    return socialaccount_signup(request, *args, **kwargs)
+    return socialaccount_signup(request, **kwargs)
 
