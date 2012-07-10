@@ -295,7 +295,7 @@ class UserProfile(BaseModel):
                     self.crb_alert_expire_date = False
                     self.crb_alert_expired = False
         
-        super(self.__class__, self).save(*args, **kwargs)
+        super(UserProfile, self).save(*args, **kwargs)
 
         user = self.user
         if self.type != self.TYPES.NONE and self.type != self.TYPES.PARENT:
@@ -309,7 +309,7 @@ class UserProfile(BaseModel):
 
         if self.activated and not self.activation_date:
             self.activation_date = datetime.datetime.now()
-            super(self.__class__, self).save(*args, **kwargs)
+            super(UserProfile, self).save(*args, **kwargs)
             self.send_notification(self.NOTIFICATIONS_TYPES.ACTIVATED, {})
                                 
         self.__update_location()
