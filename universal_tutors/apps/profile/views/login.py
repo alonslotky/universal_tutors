@@ -11,11 +11,14 @@ from django.contrib.auth import logout
 from django.core.paginator import Paginator, EmptyPage
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
+from django.contrib.sites.models import Site
 
+from allauth.socialaccount import helpers
+from allauth.socialaccount.forms import SignupForm
 from allauth.account.views import login
 from allauth.account.utils import get_default_redirect, user_display, complete_signup 
 # from allauth.account.views import signup as allauth_signup, login
-from allauth.socialaccount.views import signup as socialaccount_signup
+from allauth.socialaccount.views import connections
 from allauth.utils import passthrough_login_redirect_url
 
 from apps.common.utils.view_utils import handle_uploaded_file
@@ -162,6 +165,38 @@ def signup(request, *args, **kwargs):
     return allauth_signup(request, *args, **kwargs)
 
 
+def socialaccount_signup(request, *args, **kwargs):
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(reverse(connections))
+    signup = request.session.get('socialaccount_signup')
+    if not signup:
+        return http.HttpResponseRedirect(reverse('account_login'))
+    form_class = kwargs.pop("form_class", SignupForm)
+    template_name = kwargs.pop("template_name", 
+                               'socialaccount/signup.html')
+    data = signup['data']
+    extra_ctx = kwargs.pop("extra_ctx", {})
+    if request.method == "POST":
+        form = form_class(request.POST)
+        if form.is_valid():
+            user = form.save(request=request)
+            user.last_name = data.get('last_name', '')
+            user.first_name = data.get('first_name', '')
+            user.save()
+            account = signup['account']
+            account.user = user
+            account.sync(data)
+            return helpers.complete_social_signup(request, user, account)
+    else:
+        form = form_class(initial=data)
+    dictionary = dict(site=Site.objects.get_current(),
+                      account=signup['account'],
+                      form=form)
+    return render_to_response(template_name, 
+                              dictionary, 
+                              RequestContext(request, extra_ctx))
+
+
 def social_signup(request, *args, **kwargs):
     # next = request.REQUEST.get('next', reverse('profile'))
     user_type = int(request.GET.get('user_type', 0))
@@ -186,6 +221,9 @@ def social_signup(request, *args, **kwargs):
         # 'success_url': request.REQUEST.get('next', reverse('profile')),
         'success_url': next + '?user_type=%s' % user_type,
         'template_name': template_name,
+        'extra_ctx': {
+            'class_subjects': ClassSubject.objects.all(),
+        }
     })
     
     return socialaccount_signup(request, *args, **kwargs)
