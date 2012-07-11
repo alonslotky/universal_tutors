@@ -273,7 +273,7 @@ class UserProfile(BaseModel):
             location = '%s %s,' % (location, self.location) 
         location = '%s %s' % (location, self.get_country_display())
         self.latitude, self.longitude = geocode_location(location)
-        super(self.__class__, self).save()
+        super(UserProfile, self).save()
     
     def save(self, *args, **kwargs):
         if self.type != self.TYPES.NONE and not self.is_over16:
@@ -299,13 +299,7 @@ class UserProfile(BaseModel):
 
         user = self.user
         if self.type != self.TYPES.NONE and self.type != self.TYPES.PARENT:
-            users.edit(
-                userid = self.get_scribblar_id(),
-                firstname = user.first_name,
-                lastname = user.last_name,
-                email = user.email,
-                roleid = 50 if self.type == self.TYPES.TUTOR else 10,
-            )
+            self.edit_scribblar_user()
 
         if self.activated and not self.activation_date:
             self.activation_date = datetime.datetime.now()
@@ -313,6 +307,7 @@ class UserProfile(BaseModel):
             self.send_notification(self.NOTIFICATIONS_TYPES.ACTIVATED, {})
                                 
         self.__update_location()
+        print 'save 7'
 
     def delete(self):
         try:
@@ -320,7 +315,7 @@ class UserProfile(BaseModel):
         except:
             pass
         
-        super(self.__class__, self).delete()
+        super(UserProfile, self).delete()
 
     def get_video_id(self):
         video_id = None
@@ -542,6 +537,17 @@ class UserProfile(BaseModel):
     def get_first_photo(self):
         return self.photos.all()[0].photo.path if self.photos.all() else os.path.join(settings.MEDIA_ROOT, self.DEFAULT_PHOTO)
 
+    def edit_scribblar_user(self):
+        user = self.user
+        users.edit(
+            userid = self.get_scribblar_id(),
+            firstname = user.first_name,
+            lastname = user.last_name,
+            email = user.email,
+            roleid = 50 if self.type == self.TYPES.TUTOR else 10,
+        )
+
+    
     def get_scribblar_id(self):
         if not self.scribblar_id:
             user = self.user
@@ -563,7 +569,7 @@ class UserProfile(BaseModel):
                 
             if scribblar_user:
                 self.scribblar_id = scribblar_user['userid']
-                super(self.__class__, self).save()
+                super(UserProfile, self).save()
         
         return self.scribblar_id
 
@@ -625,12 +631,12 @@ class UserProfile(BaseModel):
                 self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRED, {'tutor': self.user}, use_thread=user_thread)
                 self.crb_alert_expired = True 
                 self.crb_alert_expire_date = True
-                super(self.__class__, self).save()
+                super(UserProfile, self).save()
 
             if self.crb_expiry_date < today + datetime.timedelta(days=15) and not self.crb_alert_expire_date:
                 self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user}, use_thread=user_thread)
                 self.crb_alert_expire_date = True
-                super(self.__class__, self).save()
+                super(UserProfile, self).save()
 
 
     def send_notification(self, type, context, use_thread=True):
@@ -654,7 +660,7 @@ class UserProfile(BaseModel):
     def topup_account(self, credits):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
             self.credit += credits
-            super(self.__class__, self).save()
+            super(UserProfile, self).save()
             currency = self.currency
             value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
             self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits, value=value)
@@ -662,7 +668,7 @@ class UserProfile(BaseModel):
     def withdraw_account(self, credits):
         if self.type == self.TYPES.TUTOR:
             self.income -= credits
-            super(self.__class__, self).save()
+            super(UserProfile, self).save()
             currency = self.currency
             value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
             self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.WITHDRAW, credits=credits, value=value)
@@ -793,7 +799,7 @@ class UserProfile(BaseModel):
         )
             
         self.test_class_id = scribblar_room['roomid']
-        super(self.__class__, self).save()
+        super(UserProfile, self).save()
     
     def get_test_class_id(self):
         if not self.test_class_minutes:
