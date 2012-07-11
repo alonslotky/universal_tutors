@@ -1,19 +1,16 @@
 <div id="modal-video" class="reveal-modal message">
-  <h4>Video</h4>
-	<iframe id="video-frame" width="520" height="300" src="{% if profile.video %}http://www.youtube.com/embed/{{ profile.get_video_id }}{% endif %}" class="hidden" frameborder="0" allowfullscreen></iframe>
-
-  <a id="close-video-link" class="close-reveal-modal" onclick="$('#video-frame').addClass('hidden');">&#215;</a>
+ <h4>Video</h4>
+  <a class="close-reveal-modal">&#215;</a>
 </div>
 
 <script type="text/javascript">
-	var change_video_profile = function(id) {
-		$('#video-frame').attr('src', 'http://www.youtube.com/embed/'+id);
-		$('#video-frame').removeClass('hidden');
-	}
 	$(function() {
 		$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ profile.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>');
-		$("a.close-reveal-modal").click(function(){
-			setTimeout(function(){$("div#modal-video iframe").remove();}, 100);
+		$("#modal-video").bind('reveal:close', 	function(){
+			setTimeout(function(){
+				$("div#modal-video iframe").remove();
+				$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ profile.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>');
+			}, 100);
 		});
 	});
 </script>
