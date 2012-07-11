@@ -307,7 +307,6 @@ class UserProfile(BaseModel):
             self.send_notification(self.NOTIFICATIONS_TYPES.ACTIVATED, {})
                                 
         self.__update_location()
-        print 'save 7'
 
     def delete(self):
         try:
