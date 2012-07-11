@@ -193,16 +193,24 @@ def tutor_classes(request):
     user = request.user
     profile = user.profile
 
-    classes = chain(
-        profile.waiting_classes(),
-        profile.booked_classes(),
-        profile.other_classes(),
-    )
+    classes_groups = [{
+       'title': 'Upcoming Classes',
+       'classes': profile.upcoming_classes(),
+       'empty': "You have no upcoming classes",
+    }, {
+       'title': 'Cancelled Classes',
+       'classes': profile.cancelled_classes(),
+       'empty': "You have no cancelled classes",
+    }, {
+       'title': 'Taken Classes',
+       'classes': profile.taken_classes(),
+       'empty': "You have not given any classes",
+    }]
     
     return {
         'profile': profile,
         'person': user,
-        'classes': classes
+        'classes_groups': classes_groups,
     }
 
 
@@ -309,16 +317,25 @@ def student_classes(request, username=None):
 
     profile = person.profile
 
-    classes = chain(
-        profile.booked_classes(),
-        profile.waiting_classes(),
-        profile.other_classes(),
-    )
+    classes_groups = [{
+       'title': 'Upcoming Classes',
+       'classes': profile.upcoming_classes(),
+       'empty': "You have no upcoming classes",
+    }, {
+       'title': 'Cancelled Classes',
+       'classes': profile.cancelled_classes(),
+       'empty': "You have no cancelled classes",
+    }, {
+       'title': 'Taken Classes',
+       'classes': profile.taken_classes(),
+       'empty': "You have not taken any classes",
+    }]
+    
     
     return {
         'profile': profile,
         'person': user,
-        'classes': classes
+        'classes_groups': classes_groups,
     }
 
 
