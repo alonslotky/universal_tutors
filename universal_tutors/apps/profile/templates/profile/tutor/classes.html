@@ -88,6 +88,13 @@
 			          <a href="{% url report student.username %}" class="report text-red"><i class="icon-flag"></i> Report Student</a>
 		           </div>
 		        {% else %}
+		        	{% if class.status == class.STATUS_TYPES.WAITING %}
+		        		{% if unread_messages %}
+		        			<a href="javascript:;" class="send-message" data-reveal-id="modal-message" onclick="view_modal_messages({{student.id}}, {{class.id}});"><i class="icon-comment"></i>
+			            		{{ unread_messages }} New Message{{ unread_messages|pluralize }}
+		            		</a>
+	            		{% endif %}
+		        	{% endif %}
 		        	<a href="javascript:;" onclick="accept_class({{class.id}});"><i class="icon-calendar-inv"></i> Accept Class</a>
 		        	<a href="javascript:;"  onclick="reject_class_step_0({{class.id}});" data-reveal-id="modal-reject-class" class="text-red"><i class="icon-cancel"></i> Reject Class</a>
 		        {% endif %}
