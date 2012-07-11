@@ -86,3 +86,10 @@ p span.credits { font-size: 16px; background-position: right -504px; }
 span.tutor-information {
 	display: block;
 }
+
+.nine.columns.no-margin {
+	margin-left: 0;
+}
+.three.columns.special {
+	width: 200px;
+}
