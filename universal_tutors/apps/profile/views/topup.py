@@ -67,7 +67,7 @@ def topup_cart(request, username=None):
             topup.save()
     else:
         try:
-            topup = person.topups.filter(status = TopUpItem.STATUS_TYPES.CART).latest('id')
+            person.topups.filter(status = TopUpItem.STATUS_TYPES.CART).latest('id').delete()
         except TopUpItem.DoesNotExist:
             pass
     
