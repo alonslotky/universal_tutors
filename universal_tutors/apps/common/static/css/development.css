@@ -21,6 +21,9 @@ body.classroom .container { height: 100%; }
     text-indent: -9999px;
     width: 261px;
 }
+.sigin-popup.facebook_connect_link {
+	display: inline-block;
+}
 #signup-form2 .facebook_connect_link { margin-left: 120px; }
 #signup-form2 .dropdown { width: 220px !important; }
 #signup-form2 .dropdown ul { width: 218px !important; }
