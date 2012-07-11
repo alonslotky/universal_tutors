@@ -232,15 +232,21 @@
 			            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
 			            <p>
 			            	<span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span><br/>
-			            	<span>
-			            		{% if tutor_profile.webcam %}<a title="Webcam" class="no-hover"><i class="icon-videocam"></i></a>{% endif %}
-			            		{% if tutor_profile.crb_checked %}<a title="CRB Checked" class="no-hover"><i class="icon-ok"></i></a>{% endif %}
-		            		</span>
+			            	{% if tutor_profile.webcam %}
+				            	<span class="tutor-information">
+				            		<a title="Webcam" class="no-hover"><i class="icon-videocam"></i></a>
+			            		</span>
+		            		{% endif %}
+		            		{% if tutor_profile.crb_checked %}
+			            		<span class="tutor-information">
+			            			<a title="CRB Checked" class="no-hover"><i class="icon-ok"></i> CRB</a>
+			            		</span>
+		            		{% endif %}
 			            </p>
 			          </div>
 			          
 			          <div class="four columns">
-			            <p>{{tutor_profile.about|truncatechars:160}}{% if tutor_profile.crb_checked %}<br/>(is CRB certified){% endif %}<br/><a href="{% url profile tutor.username %}">Read More</a></p>
+			            <p>{{tutor_profile.about|truncatechars:160}}<br/><a href="{% url profile tutor.username %}">Read More</a></p>
 			          </div>
 			          
 					  <div class="two columns rating">
