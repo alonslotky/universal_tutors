@@ -295,7 +295,7 @@ class UserProfile(BaseModel):
                     self.crb_alert_expire_date = False
                     self.crb_alert_expired = False
         
-        super(self.__class__, self).save(*args, **kwargs)
+        super(UserProfile, self).save(*args, **kwargs)
 
         user = self.user
         if self.type != self.TYPES.NONE and self.type != self.TYPES.PARENT:
@@ -309,7 +309,7 @@ class UserProfile(BaseModel):
 
         if self.activated and not self.activation_date:
             self.activation_date = datetime.datetime.now()
-            super(self.__class__, self).save(*args, **kwargs)
+            super(UserProfile, self).save(*args, **kwargs)
             self.send_notification(self.NOTIFICATIONS_TYPES.ACTIVATED, {})
                                 
         self.__update_location()
@@ -741,6 +741,24 @@ class UserProfile(BaseModel):
             return self.user.classes_as_tutor.exclude(status__in=[Class.STATUS_TYPES.PRE_BOOKED, Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('-date')
         else:
             return self.user.classes_as_student.exclude(status__in=[Class.STATUS_TYPES.PRE_BOOKED, Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('-date')
+        
+    def cancelled_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.CANCELED_BY_SYSTEM, Class.STATUS_TYPES.CANCELED_BY_TUTOR, Class.STATUS_TYPES.CANCELED_BY_STUDENT]).order_by('-date')
+        else:
+            return self.user.classes_as_student.filter(status__in=[Class.STATUS_TYPES.CANCELED_BY_SYSTEM, Class.STATUS_TYPES.CANCELED_BY_TUTOR, Class.STATUS_TYPES.CANCELED_BY_STUDENT]).order_by('-date')
+        
+    def taken_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.DONE).order_by('date')
+        else:
+            return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.DONE).order_by('date')
+        
+    def upcoming_classes(self):
+        if self.type == self.TYPES.TUTOR:
+            return self.user.classes_as_tutor.filter(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('date')
+        else:
+            return self.user.classes_as_student.filter(status__in=[Class.STATUS_TYPES.BOOKED, Class.STATUS_TYPES.WAITING]).order_by('date')  
 
     def no_messages(self):
         return Message.objects.filter(to=self.user, read = False).count()

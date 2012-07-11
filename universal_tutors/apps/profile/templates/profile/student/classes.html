@@ -13,12 +13,22 @@
       
       {% include 'profile/fragments/_timer.html' %}
       
-     {% for class in classes %}
+	  {% for group in classes_groups %}
+	  
+	  	{% if not forloop.first %}<hr class="big">{% endif %}
+	  	
+	  	<div class="row">
+        	<div class="twelve columns">
+         		<h2>{{group.title}}</h2>
+        	</div>
+      	</div>
+
+     	{% for class in group.classes %}
 	      {% with class.tutor as tutor %}
 	      {% with tutor.profile as tutor_profile %}
 	      {% with class.date|convert_datetime:user_profile.timezone as date %}
 	      {% get_class_messages tutor user class %}
-	      <article class="{% if class.status != class.STATUS_TYPES.BOOKED %}faded{% endif %}">
+	      <article class="{% if class.status != class.STATUS_TYPES.BOOKED and class.status != class.STATUS_TYPES.WAITING %}faded{% endif %}">
 	        <div class="row">
 	          <div class="one columns hide-on-phones">
 	            <img src="{% version tutor_profile.profile_image.path 'class_list_profile_image' %}" alt="{{tutor.get_full_name}}">
@@ -91,10 +101,12 @@
 	   {% empty %}
 	      <article class="{% if class.is_active %}{% endif %}">
 	        <div class="row" style="text-align: center;">
-				You don't have any upcoming or previously given classes.
+				{{ group.empty }}
 	        </div>      
 	      </article>
 	   {% endfor %}
+	   
+	{% endfor %}
 
 	{% include 'profile/fragments/_modal_messages.html' %}
 	{% include 'profile/fragments/_modal_class_material.html' %}

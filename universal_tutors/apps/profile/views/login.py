@@ -14,7 +14,6 @@ from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 
 from allauth.socialaccount import helpers
-from allauth.socialaccount.forms import SignupForm
 from allauth.account.views import login
 from allauth.account.utils import get_default_redirect, user_display, complete_signup 
 # from allauth.account.views import signup as allauth_signup, login
@@ -221,10 +220,13 @@ def social_signup(request, *args, **kwargs):
         # 'success_url': request.REQUEST.get('next', reverse('profile')),
         'success_url': next + '?user_type=%s' % user_type,
         'template_name': template_name,
-        'extra_ctx': {
-            'class_subjects': ClassSubject.objects.all(),
-        }
     })
+    if user_type == 2:
+        kwargs.update({
+            'extra_ctx': {
+                  'class_subjects': ClassSubject.objects.all(),
+            }
+        })
     
     return socialaccount_signup(request, *args, **kwargs)
 

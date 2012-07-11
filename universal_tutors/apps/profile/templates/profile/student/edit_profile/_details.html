@@ -123,7 +123,7 @@
 		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
 	});
 	
-	$('#id_profile_image').change(function(){
+	$('#id_profile_image').live("change", function(){
         var input = $(this)[0]
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -135,5 +135,9 @@
             reader.readAsDataURL(input.files[0]);
         }		
 	});
+	
+	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+  		$("input[name=profile_image]").parent().hide();
+  	}
 	
 </script>

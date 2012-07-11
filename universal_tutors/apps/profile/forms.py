@@ -507,21 +507,29 @@ class TutorSocialSignupForm(GenericSocialSignupForm):
         return user
 
 class StudentSocialSignupForm(GenericSocialSignupForm):
-    subjects = ListField(required = False)
 
     def save(self, request=None):
         user = super(StudentSocialSignupForm, self).save(request)
         profile = user.profile
-
-        list_subjects = self.cleaned_data['subjects']
-
-        user.interests.all().delete()
-        for id in list_subjects:
+        
+        for i in range(0, 13):
             try:
-                subject = ClassSubject.objects.get(id = id)
-                user.interests.create(subject=subject)
+                subject = ClassSubject.objects.get(id = request.POST.get('interests-%s-subject' % i, 0) or 0)
             except ClassSubject.DoesNotExist:
-                pass
+                subject = None
+
+            try:
+                system = EducationalSystem.objects.get(id = request.POST.get('interests-%s-system' % i, 0) or 0)
+            except EducationalSystem.DoesNotExist:
+                system = None
+            
+            try:
+                level = ClassLevel.objects.get(id = request.POST.get('interests-%s-level' % i, 0) or 0)
+            except ClassLevel.DoesNotExist:
+                level = None
+        
+            if subject:
+                user.interests.create(subject=subject, system=system, level=level)
 #                    
 #        for title in list_new_subjects:
 #            try:

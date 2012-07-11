@@ -11,7 +11,17 @@
 </div></section>
       
     {% include 'profile/fragments/_timer.html' %}
-      	{% for class in classes %}
+    	{% for group in classes_groups %}
+	  
+	  	{% if not forloop.first %}<hr class="big">{% endif %}
+	  	
+	  	<div class="row">
+        	<div class="twelve columns">
+         		<h2>{{group.title}}</h2>
+        	</div>
+      	</div>
+    
+      	{% for class in group.classes %}
 	      {% with class.student as student %}
 	      {% with student.profile as student_profile %}
 	      {% with class.date|convert_datetime:user_profile.timezone as date %}
@@ -89,10 +99,12 @@
 	   {% empty %}
 	      <article class="{% if class.is_active %}{% endif %}">
 	        <div class="row" style="text-align: center;">
-				You don't have any upcoming or previously given classes.
+				{{ group.empty }}
 	        </div>      
 	      </article>
 	   {% endfor %}
+   
+    {% endfor %}
 		   
     {% with 'True' as can_send_message %}
 	{% include 'profile/fragments/_modal_messages.html' %}

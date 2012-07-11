@@ -4,20 +4,28 @@
 	<p>Welcome to Universal Tutors, Phasellus at elit risus, iaculis rhoncus arcu. Duis auctor neque in magna sollicitudin in adipiscing libero dictum.</p>
 	<br/>
 	<div id="modal-signup-form-container">
-		<form id="modal-signup-form" class="nice custom signup">
+		<form id="modal-signup-form" class="nice signup">
 			{% csrf_token %}
 			<div class="row margin date_of_birth">
 				<h3>My date of birth</h3>
 				<div id="signup-dob-errors" class="formError hidden">Please, insert a valid date</div>
-				<select id="signup_day" class="signup_dob" name="day">
-					<option value="0">Day</option>
-				</select>
-				<select id="signup_month" class="signup_dob" name="month">
-					<option value="0">Month</option>
-				</select>
-				<select id="signup_year" class="signup_dob" name="year">
-					<option value="0">Year</option>
-				</select>
+				<div class="row">
+					<div class="column four">
+						<select id="signup_day" class="signup_dob stretch" name="day">
+							<option value="0">Day</option>
+						</select>
+					</div>
+					<div class="column four">
+						<select id="signup_month" class="signup_dob stretch" name="month">
+							<option value="0">Month</option>
+						</select>
+					</div>
+					<div class="column four">
+						<select id="signup_year" class="signup_dob stretch" name="year">
+							<option value="0">Year</option>
+						</select>
+					</div>
+				</div>
 				<div style="clear:both;"></div>
 			</div>
 			<div id="model-signup-type-container">
