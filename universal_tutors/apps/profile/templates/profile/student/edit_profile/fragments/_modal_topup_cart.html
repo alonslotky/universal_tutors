@@ -40,7 +40,7 @@
 			$('#modal-topup-loading').fadeIn(function(){
 				$.ajax({
 					type: 'get',
-					url: '{% url topup_cancel person.username 1 %}',
+					url: '{% url topup_cart person.username %}',
 					success: function(response) {
 						$('#modal-topup-container').html(response);
 						$('#modal-topup-loading').fadeOut(function(){
