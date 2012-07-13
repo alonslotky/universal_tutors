@@ -371,7 +371,7 @@ SPEED_TEST_LINK = 'http://www.speedtest.net/'
 
 
 # CURRENCY
-CURRENCY_RISK = 0.05 # 0.05 is 5%
+CURRENCY_RISK = 0.01 # 0.01 is 1%
 
 
 # Allow for local (per-user) override
