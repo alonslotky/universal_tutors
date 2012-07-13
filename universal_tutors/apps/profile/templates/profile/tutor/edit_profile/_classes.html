@@ -10,8 +10,8 @@
       <p>&nbsp;</p>
 	</div>
 	
-	<div id="schedule-classes-week-container">
-		{% include "profile/tutor/edit_profile/classes/default_weekday_calendar.html" %}
+	<div id="new-classes-schedule-container">
+		{% include "profile/tutor/edit_profile/classes/_new_weekday_calendar.html" %}
 	</div>
 
   <script type="text/javascript">
@@ -32,7 +32,7 @@
  		console.log(date_str);
   		
   		$.get('{% url ajax_week_classes %}'+ date_str +'/1/', function(response){
-	  		$('#schedule-classes-week-container').html(response);
+	  		$('#new-classes-schedule-container').html(response);
   		});
   	};
 	</script>

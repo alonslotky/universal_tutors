@@ -528,7 +528,7 @@ class UserProfile(BaseModel):
 
         for b in booked:
             date = convert_datetime(b.date, pytz.utc, self.timezone)
-            week[b.date.weekday()][2].append((date, b))
+            week[date.weekday()][2].append((date, b))
             
         return week
         

@@ -102,11 +102,13 @@
     	</div>
     	
 		<div id="schedule-week-schedule-container">
-			{% include "profile/tutor/book_class/_weekday_calendar.html" %}
+			{% include "profile/tutor/book_class/_new_week_calendar.html" %}
 		</div>    	
   </div>
   {% include "profile/tutor/book_class/_modal_book_class.html" %}
-  
+{% endblock %}
+
+{% block extra_js %}
   <script type="text/javascript">
   	var map_date = new Date();
   
@@ -147,5 +149,12 @@
 			}
 		}
 	}
+	
+	setInterval(function(){
+		$('.new-schedule-calendar').css('width', '100%');
+		var width = $('.new-schedule-calendar').width();
+  		width = width - (width % 25);
+		$('.new-schedule-calendar, .new-schedule-calendar-day').css('width', width+'px');
+	}, 1000);
   </script>
 {% endblock %}

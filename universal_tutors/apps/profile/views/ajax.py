@@ -311,7 +311,7 @@ def referral_friend(request):
 #### AVAILABILITY ###########################################################
 #############################################################################
 @login_required
-@main_render('profile/tutor/edit_profile/availability/_week_period.html')
+@main_render('profile/tutor/edit_profile/availability/_new_period.html')
 def edit_week_period(request, period_id, begin, end, weekday):
     user = request.user
 
@@ -598,7 +598,7 @@ def add_child(request):
 
 
 @login_required
-@main_render('profile/tutor/book_class/_weekday_calendar.html')
+@main_render('profile/tutor/book_class/_new_week_calendar.html')
 def ajax_book_class(request, username, date):
     """
     view my recent activity
@@ -637,9 +637,9 @@ def ajax_week_classes(request, date, is_tutor = 0):
         raise http.Http404()
 
     if int(is_tutor):
-        template = 'profile/tutor/edit_profile/classes/default_weekday_calendar.html'
+        template = 'profile/tutor/edit_profile/classes/_new_weekday_calendar.html'
     else:
-        template = 'profile/student/edit_profile/classes/default_weekday_calendar.html'
+        template = 'profile/student/edit_profile/classes/_new_weekday_calendar.html'
 
     return {
         'TEMPLATE': template,

@@ -20,7 +20,7 @@
       
       <div class="row">
           <h2>{{class}}</h2>
-          <h4>{{class.date|date:"M d, Y \a\t H:i"}} ({{class.duration}} minutes)</h4>
+          <h4>{{class.date|convert_datetime:user_profile.timezone|date:"M d, Y \a\t H:i"}} ({{class.duration}} minutes)</h4>
           {% if tutor == user %}
           	{% get_class_messages student tutor class %}
           {% else %}

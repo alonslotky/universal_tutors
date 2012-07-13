@@ -108,8 +108,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                  <td>No subjects</td>
-                  <td></td>
+                  <td colspan="3">No subjects</td>
                 </tr>
 				{% endfor %}
               </table>
@@ -197,7 +196,7 @@
 		  {% endif %}
           <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i>&nbsp;<span>{% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
           {% endif %}
-          <a href="{% url report person.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
+          <a href="{% url report person.username %}" class="report text-red"><i class="icon-flag"></i> Report tutor</a>
 			<script type="text/javascript">
 				$('#favorite-tutor').click(function(){
 					$.get('{% url favorite person.id %}', function(response){

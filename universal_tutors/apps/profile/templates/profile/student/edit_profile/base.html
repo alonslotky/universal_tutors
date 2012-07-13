@@ -5,8 +5,15 @@
 {% block title %}Profile{% endblock %}
 {% block body_class %}app student{% endblock %}
 
-{% block extra_css %}
-
+{% block extra_js %}
+<script type="text/javascript">
+	setInterval(function(){
+		$('.new-schedule-calendar').css('width', '100%');
+		var width = $('.new-schedule-calendar').width();
+  		width = width - (width % 25);
+		$('.new-schedule-calendar, .new-schedule-calendar-day').css('width', width+'px');
+	}, 200);
+</script>
 {% endblock %}
 
 {% block content %}
