@@ -1,5 +1,6 @@
 import datetime, urllib
 import simplejson as json
+from django.conf import settings
 from apps.core.models import Currency
 
 from ordereddict import OrderedDict
