@@ -71,7 +71,7 @@ admin.site.register(StudentProfile, StudentProfileAdmin)
     
     
 class BadReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'rate', 'related_class', 'text')
+    list_display = ('user', 'rate', 'from_review', 'related_class', 'text',)
 admin.site.register(BadReview, BadReviewAdmin)
 
 class ReportAdmin(admin.ModelAdmin):

@@ -1077,6 +1077,9 @@ class TutorReview(BaseModel):
     def __unicode__(self):
         return '%s (%s)' % (self.text, self.rate)
     
+    @property
+    def from_review(self):
+        return self.related_class.student
     
 class TutorInactiveReviewsManager(models.Manager):
     def get_query_set(self):
@@ -1088,7 +1091,6 @@ class BadReview(TutorReview):
     class Meta:
         verbose_name = 'Bad Review'
         proxy = True
-        
 
 
 class TutorFavorite(BaseModel):
