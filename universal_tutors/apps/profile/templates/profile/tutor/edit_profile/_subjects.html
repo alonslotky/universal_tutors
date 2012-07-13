@@ -29,7 +29,7 @@
         <td>
 		  <input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
 		  <input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
-		  <select id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" class="subjects-select-subjects">
+		  <select id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" class="stretch subjects-select-subjects">
 		  	<option value="">Select subject</option>
 		  	{% for sub in class_subjects %}
 		  	<option value="{{sub.id}}" {% if sub == subject %}selected="selected"{% endif %}>{{sub}}</option>
@@ -37,7 +37,7 @@
 		  </select>
 		</td>
         <td>
-		  <select id="id_subjects-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="subjects-select-systems">
+		  <select id="id_subjects-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="stretch subjects-select-systems">
 		  	<option value="">Any system</option>
 		  	{% for sys in subject.systems.all %}
 		  	<option value="{{sys.id}}" {% if sys == system %}selected="selected"{% endif %}>{{sys}}</option>
@@ -45,7 +45,7 @@
 		  </select>
 		</td>
         <td>
-		  <select id="id_subjects-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="subjects-select-levels">
+		  <select id="id_subjects-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="stretch subjects-select-levels">
 		  	<option value="">Any level</option>
 		  	{% for lvl in system.levels.all %}
 		  	<option value="{{lvl.id}}" {% if lvl == level %}selected="selected"{% endif %}>{{lvl}}</option>
@@ -72,7 +72,7 @@
 		<td>
 		  <input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
 		  <input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
-		  <select id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" class="subjects-select-subjects">
+		  <select id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" class="stretch subjects-select-subjects">
 		  	<option value="" selected="selected">Select subject</option>
 		  	{% for sub in class_subjects %}
 		  	<option value="{{sub.id}}">{{sub}}</option>
@@ -80,12 +80,12 @@
 		  </select>
 	    </td>
 		<td>			
-		  <select id="id_subjects-{{no_subjects}}-system" name="subjects-{{no_subjects}}-system" class="subjects-select-systems">
+		  <select id="id_subjects-{{no_subjects}}-system" name="subjects-{{no_subjects}}-system" class="stretch subjects-select-systems">
 		  	<option value="" selected="selected">Any system</option>
 		  </select>
 	    </td>
 		<td>
-		  <select id="id_subjects-{{no_subjects}}-level" name="subjects-{{no_subjects}}-level" class="subjects-select-levels">
+		  <select id="id_subjects-{{no_subjects}}-level" name="subjects-{{no_subjects}}-level" class="stretch subjects-select-levels">
 		  	<option value="" selected="selected">Any level</option>
 		  </select>
 	    </td>
@@ -143,7 +143,7 @@
 	  		'	<td>'+
 			'		<input id="id_subjects-'+ id_subject +'-id" type="hidden" name="subjects-'+ id_subject +'-id">'+
 			'		<input id="id_subjects-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="subjects-'+ id_subject +'-user">'+
-			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" class="subjects-select-subjects">'+
+			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" class="stretch subjects-select-subjects">'+
 			'			<option value="">Select subject</option>'+
 			{% for sub in class_subjects %}
 			'			<option value="{{sub.id}}">{{sub}}</option>'+
@@ -151,12 +151,12 @@
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-system" name="subjects-'+ id_subject +'-system" class="subjects-select-systems">'+
+			' 		<select id="id_subjects-'+ id_subject +'-system" name="subjects-'+ id_subject +'-system" class="stretch subjects-select-systems">'+
 			'			<option value="">Any system</option>'+
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-level" class="subjects-select-levels">'+
+			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-level" class="stretch subjects-select-levels">'+
 			'			<option value="">Any level</option>'+
 			'   	</select>'+
 	  		'	</td>'+
