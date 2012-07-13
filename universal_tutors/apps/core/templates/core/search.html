@@ -97,7 +97,7 @@
 				                      <option value="{{level.id}}">{{level}}</option>
 			                      {% endfor %}
 		                      {% else %}
-			                      <option value="">Select educational system first</option>
+			                      <option disabled="disabled">Select educational system first</option>
 			                  {% endif %}
 		                    </select>
 		                  </div>
@@ -350,7 +350,7 @@
 			  		} else {
 			  			$('#id_level').html(
 			  				'<option value="">Any level</option>'+
-			  				'<option value="">Select educational system first</option>'
+			  				'<option disabled="disabled">Select educational system first</option>'
 			  			);
 			  		}
 			  	});
