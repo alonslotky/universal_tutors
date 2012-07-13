@@ -195,7 +195,7 @@
 		      </tr>
 			  <tr>
 				<td>
-				  <select id="id_interests-0-subject" name="interests-0-subject" class="interests-select-subjects">
+				  <select id="id_interests-0-subject" name="interests-0-subject" class="stretch interests-select-subjects">
 				  	<option value="" selected="selected">Select subject</option>
 				  	{% for sub in class_subjects %}
 				  	<option value="{{sub.id}}">{{sub}}</option>
@@ -203,12 +203,12 @@
 				  </select>
 			    </td>
 				<td>			
-				  <select id="id_interests-0-system" name="interests-0-system" class="interests-select-systems">
+				  <select id="id_interests-0-system" name="interests-0-system" class="stretch interests-select-systems">
 				  	<option value="" selected="selected">Any system</option>
 				  </select>
 			    </td>
 				<td>
-				  <select id="id_interests-0-level" name="interests-0-level" class="interests-select-levels">
+				  <select id="id_interests-0-level" name="interests-0-level" class="stretch interests-select-levels">
 				  	<option value="" selected="selected">Any level</option>
 				  </select>
 			    </td>
@@ -414,7 +414,7 @@
   		$('#interests-table').append(
   			'<tr>'+
 	  		'	<td>'+
-			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="interests-select-subjects">'+
+			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="stretch interests-select-subjects">'+
 			'			<option value="">Select subject</option>'+
 			{% for sub in class_subjects %}
 			'			<option value="{{sub.id}}">{{sub}}</option>'+
@@ -422,12 +422,12 @@
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_interests-'+ id_subject +'-system" name="interests-'+ id_subject +'-system" class="interests-select-systems">'+
+			' 		<select id="id_interests-'+ id_subject +'-system" name="interests-'+ id_subject +'-system" class="stretch interests-select-systems">'+
 			'			<option value="">Any system</option>'+
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_interests-'+ id_subject +'-level" name="interests-'+ id_subject +'-level" class="interests-select-levels">'+
+			' 		<select id="id_interests-'+ id_subject +'-level" name="interests-'+ id_subject +'-level" class="stretch interests-select-levels">'+
 			'			<option value="">Any level</option>'+
 			'   	</select>'+
 	  		'	</td>'+

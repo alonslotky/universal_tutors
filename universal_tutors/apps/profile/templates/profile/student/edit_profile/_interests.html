@@ -27,7 +27,7 @@
         <td>
 		  <input id="id_interests-{{forloop.counter0}}-id" type="hidden" name="interests-{{forloop.counter0}}-id" value="{{item.id}}">
 		  <input id="id_interests-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="interests-{{forloop.counter0}}-user">
-		  <select id="id_interests-{{forloop.counter0}}-subject" name="interests-{{forloop.counter0}}-subject" class="interests-select-subjects">
+		  <select id="id_interests-{{forloop.counter0}}-subject" name="interests-{{forloop.counter0}}-subject" class="stretch interests-select-subjects">
 		  	<option value="">Select subject</option>
 		  	{% for sub in class_subjects %}
 		  	<option value="{{sub.id}}" {% if sub == subject %}selected="selected"{% endif %}>{{sub}}</option>
@@ -35,7 +35,7 @@
 		  </select>
 		</td>
         <td>
-		  <select id="id_interests-{{forloop.counter0}}-system" name="interests-{{forloop.counter0}}-system" class="interests-select-systems">
+		  <select id="id_interests-{{forloop.counter0}}-system" name="interests-{{forloop.counter0}}-system" class="stretch interests-select-systems">
 		  	<option value="">Any system</option>
 		  	{% for sys in subject.systems.all %}
 		  	<option value="{{sys.id}}" {% if sys == system %}selected="selected"{% endif %}>{{sys}}</option>
@@ -43,7 +43,7 @@
 		  </select>
 		</td>
         <td>
-		  <select id="id_interests-{{forloop.counter0}}-level" name="interests-{{forloop.counter0}}-level" class="interests-select-levels">
+		  <select id="id_interests-{{forloop.counter0}}-level" name="interests-{{forloop.counter0}}-level" class="stretch interests-select-levels">
 		  	<option value="">Any level</option>
 		  	{% for lvl in system.levels.all %}
 		  	<option value="{{lvl.id}}" {% if lvl == level %}selected="selected"{% endif %}>{{lvl}}</option>
@@ -64,7 +64,7 @@
 		<td>
 		  <input id="id_interests-{{no_interests}}-id" type="hidden" name="interests-{{no_interests}}-id">
 		  <input id="id_interests-{{no_interests}}-user" type="hidden" value="{{user.id}}" name="interests-{{no_interests}}-user">
-		  <select id="id_interests-{{no_interests}}-subject" name="interests-{{no_interests}}-subject" class="interests-select-subjects">
+		  <select id="id_interests-{{no_interests}}-subject" name="interests-{{no_interests}}-subject" class="stretch interests-select-subjects">
 		  	<option value="" selected="selected">Select subject</option>
 		  	{% for sub in class_subjects %}
 		  	<option value="{{sub.id}}">{{sub}}</option>
@@ -72,12 +72,12 @@
 		  </select>
 	    </td>
 		<td>			
-		  <select id="id_interests-{{no_interests}}-system" name="interests-{{no_interests}}-system" class="interests-select-systems">
+		  <select id="id_interests-{{no_interests}}-system" name="interests-{{no_interests}}-system" class="stretch interests-select-systems">
 		  	<option value="" selected="selected">Any system</option>
 		  </select>
 	    </td>
 		<td>
-		  <select id="id_interests-{{no_interests}}-level" name="interests-{{no_interests}}-level" class="interests-select-levels">
+		  <select id="id_interests-{{no_interests}}-level" name="interests-{{no_interests}}-level" class="stretch interests-select-levels">
 		  	<option value="" selected="selected">Any level</option>
 		  </select>
 	    </td>
@@ -126,7 +126,7 @@
 	  		'	<td>'+
 			'		<input id="id_interests-'+ id_subject +'-id" type="hidden" name="interests-'+ id_subject +'-id">'+
 			'		<input id="id_interests-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="interests-'+ id_subject +'-user">'+
-			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="interests-select-subjects">'+
+			' 		<select id="id_interests-'+ id_subject +'-subject" name="interests-'+ id_subject +'-subject" class="stretch interests-select-subjects">'+
 			'			<option value="">Select subject</option>'+
 			{% for sub in class_subjects %}
 			'			<option value="{{sub.id}}">{{sub}}</option>'+
@@ -134,12 +134,12 @@
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_interests-'+ id_subject +'-system" name="interests-'+ id_subject +'-system" class="interests-select-systems">'+
+			' 		<select id="id_interests-'+ id_subject +'-system" name="interests-'+ id_subject +'-system" class="stretch interests-select-systems">'+
 			'			<option value="">Any system</option>'+
 			'   	</select>'+
 	  		'	</td>'+
 	  		'	<td>'+
-			' 		<select id="id_interests-'+ id_subject +'-level" name="interests-'+ id_subject +'-level" class="interests-select-levels">'+
+			' 		<select id="id_interests-'+ id_subject +'-level" name="interests-'+ id_subject +'-level" class="stretch interests-select-levels">'+
 			'			<option value="">Any level</option>'+
 			'   	</select>'+
 	  		'	</td>'+
