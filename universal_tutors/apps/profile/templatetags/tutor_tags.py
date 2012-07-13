@@ -6,6 +6,39 @@ from apps.profile.models import TutorReview
 from apps.classes.settings import *
 
 @register.filter
+def get_new_schedule_period_size(period):
+    HOUR_SIZE = 4
+    MARGIN_LEFT = 4
+     
+    # begin position
+    begin = MARGIN_LEFT + period.begin.hour * HOUR_SIZE + period.begin.minute * HOUR_SIZE / 60;
+
+    # end position
+    end = MARGIN_LEFT + (period.end.hour if period.end.hour > 0 or period.end.minute > 0 else 24) * HOUR_SIZE + period.end.minute * HOUR_SIZE / 60
+    
+    # size
+    size = end - begin
+    
+    return 'left:%s%%; width:%s%%;' % (begin, size)
+
+
+@register.filter
+def get_new_class_period_calendar_size(begin, duration):
+    HOUR_SIZE = 4
+    MARGIN_LEFT = 4
+     
+    # begin position
+    begin = MARGIN_LEFT + begin.hour * HOUR_SIZE + begin.minute * HOUR_SIZE / 60;
+
+    # end position
+    end = begin + duration * HOUR_SIZE / 60
+
+    # size
+    size = end - begin
+    
+    return 'left:%s%%; width:%s%%;' % (begin, size)
+
+@register.filter
 def get_edit_period_calendar_size(period):
     HOUR_SIZE = 40
     OFFSET = 22
@@ -15,23 +48,6 @@ def get_edit_period_calendar_size(period):
 
     # end position
     end = (period.end.hour if period.end.hour > 0 or period.end.minute > 0 else 24) * HOUR_SIZE + period.end.minute * HOUR_SIZE / 60
-    
-    # size
-    size = end - begin - OFFSET
-    
-    return 'left:%spx; width:%spx;' % (begin, size)
-
-
-@register.filter
-def get_class_period_calendar_size(begin, duration):
-    HOUR_SIZE = 40
-    OFFSET = 22
-     
-    # begin position
-    begin = begin.hour * HOUR_SIZE + begin.minute * HOUR_SIZE / 60
-
-    # end position
-    end = begin + duration * HOUR_SIZE / 60
     
     # size
     size = end - begin - OFFSET

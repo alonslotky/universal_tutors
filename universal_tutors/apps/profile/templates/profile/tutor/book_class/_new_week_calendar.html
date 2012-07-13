@@ -1,0 +1,39 @@
+{% load common_tags tutor_tags %}
+
+<div class="show-on-phones">
+	<div class="list-week">
+		{% for day, availability in week %}
+			<div class="list-week-day">{{day|date:"D, d M y"}}</div>
+			<div id="list-week-day-{{day.weekday}}-list">
+				<div id="list-week-day-{{day.weekday}}-empty" class="list-week-item">No availability for this day</div>
+			</div>
+			{% empty %}
+		{% endfor %}		
+	</div>
+</div>
+
+<div class="hide-on-phones">
+	<div class="new-schedule-calendar">
+		<div class="new-schedule-calendar-header">
+			<div class="new-schedule-calendar-time first">&nbsp;</div>
+			{% for hour in 0|range_to:24 %}
+			<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}h</div>
+			{% endfor %}
+		</div>
+		{% for day, availability in week %}
+			<div id="new-availability-{{day.weekday}}" class="new-schedule-calendar-day">
+				<div class="new-schedule-calendar-background">
+					<div class="new-schedule-calendar-time first day withdate">
+						<div class="weekday">{{day|date:"D"}}</div>
+						<div class="date">{{day|date:"d M"}}</div>
+					</div>
+					{% for hour in 0|range_to:24 %}
+					<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">&nbsp;</div>
+					{% endfor %}
+				</div>
+				{% include "profile/tutor/book_class/_new_period.html" %}
+			</div>
+		{% endfor %}
+	</div>
+</div>
+

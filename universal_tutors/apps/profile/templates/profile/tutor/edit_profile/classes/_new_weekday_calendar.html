@@ -1,0 +1,60 @@
+{% load common_tags tutor_tags %}
+
+{% with profile|weekclasses:date as weekclasses %}
+<div class="hide-on-phones">
+	<div id="new-class-schedule-container" class="new-schedule-calendar">
+		<div class="new-schedule-calendar-header">
+			<div class="new-schedule-calendar-time first">&nbsp;</div>
+			{% for hour in 0|range_to:24 %}
+			<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}h</div>
+			{% endfor %}
+		</div>
+	
+		{% for day, weekday, periods in weekclasses %}
+			<div class="new-schedule-calendar-day">
+				<div class="new-schedule-calendar-background">
+					<div class="new-schedule-calendar-time first day withdate">
+						<div class="weekday">{{day|date:"D"}}</div>
+						<div class="date">{{day|date:"d M"}}</div>
+					</div>
+					{% for hour in 0|range_to:24 %}
+					<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">&nbsp;</div>
+					{% endfor %}
+				</div>
+				{% for begin, period in periods %}
+				{% with period.student as student %}
+					<div class="new-schedule-period with-borders" style="{{begin|get_new_class_period_calendar_size:period.duration}}">
+						<div class="inline-class-container">
+							<div class="inline-class">{{period}}</div>
+						</div>
+						<div class="class-container">
+							<div class="subject"><strong>Subject: </strong><a href="{% url class_detail period.id %}">{{period}}</a></div>
+							<div class="person"><strong>Student: </strong> <a href="{% url profile student.username %}">{{student.get_full_name}}</a></div>
+						</div>
+					</div>
+				{% endwith %}
+				{% endfor %}
+			</div>
+		{% endfor %}
+	</div>
+</div>
+
+<div class="show-on-phones">
+	<div class="list-week">
+		{% for day, weekday, periods in weekclasses %}
+			<div class="list-week-day">{{day|date:"D, d M y"}}</div>
+			{% for begin, period in periods %}
+				<div id="list-week-classes-item-{{period.id}}" class="list-week-item">
+					<div class="text">{{period.subject}} at {{begin|time:"H:i"}} ({{period.duration}} min) with {{period.student.get_full_name}}</div>
+				</div>
+			{% empty %}
+				<div class="list-week-item">
+					<div class="text">
+						No classes
+					</div>
+				</div>				
+			{% endfor %}
+		{% endfor %}		
+	</div>
+</div>
+{% endwith %}

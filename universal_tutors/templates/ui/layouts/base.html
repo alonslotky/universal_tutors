@@ -118,6 +118,7 @@
  	<script src="{{STATIC_URL}}js/lib/mdetect.js"></script>
  	<script src="{{STATIC_URL}}js/app.js"></script>
  	{# endslimall #}
+	{% block extra_js %}{% endblock %}
 
 	{% if settings.GOOGLE_ANALYTICS_CODE %}
 	<script type="text/javascript">

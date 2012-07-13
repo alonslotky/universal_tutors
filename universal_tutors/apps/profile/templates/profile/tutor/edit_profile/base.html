@@ -6,7 +6,25 @@
 {% block body_class %}app tutor{% endblock %}
 
 {% block extra_js %}
+<script type="text/javascript" src="{{STATIC_URL}}js/availability.js"></script>
+<script type="text/javascript">
+	var EDIT_WEEK_PERIOD_URL = '{% url user_edit_week_period %}';
+	var DELETE_WEEK_PERIOD_URL = '{% url user_delete_week_period %}';
 
+	setInterval(function(){
+		$('#new-schedule-container').css('width', '100%');
+		var width = $('#new-schedule-container').width();
+  		width = width - (width % 25);
+		$('#new-schedule-container, #new-schedule-container .new-schedule-calendar-day').css('width', width+'px');
+	}, 200);
+
+	setInterval(function(){
+		$('#new-class-schedule-container').css('width', '100%');
+		var width = $('#new-class-schedule-container').width();
+  		width = width - (width % 25);
+		$('#new-class-schedule-container, #new-class-schedule-container .new-schedule-calendar-day').css('width', width+'px');
+	}, 200);
+</script>
 {% endblock %}
 
 {% block content %}

@@ -1,10 +1,31 @@
+{% load common_tags %}
+
   <li id="availabilityTab">
     <h2 class="clear">Availability</h2>
 
 	{% with profile.get_default_week as default_week %}
-	<div style="min-width: 960px;" class="hide-on-phones">
-		<div id="schedule-default-week-container" class="shedule-box4 edit-space-calendar">
-			{% include "profile/tutor/edit_profile/availability/default_weekday_calendar.html" %}
+	<div class="hide-on-phones">
+		<div id="new-schedule-container" class="new-schedule-calendar">
+			<div class="new-schedule-calendar-header">
+				<div class="new-schedule-calendar-time first">&nbsp;</div>
+				{% for hour in 0|range_to:24 %}
+				<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}h</div>
+				{% endfor %}
+			</div>
+
+			{% for day, weekday, periods in default_week %}
+				<div id="new-schedule-calendar-day_{{weekday}}" class="new-schedule-calendar-day">
+					<div class="new-schedule-calendar-background">
+						<div class="new-schedule-calendar-time first day">{{day|slice:"3"}}</div>
+						{% for hour in 0|range_to:24 %}
+						<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">&nbsp;</div>
+						{% endfor %}
+					</div>
+					{% for period in periods %}
+						{% include "profile/tutor/edit_profile/availability/_new_period.html" %}
+					{% endfor %}
+				</div>
+			{% endfor %}
 		</div>
 		<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a>
 	</div>
