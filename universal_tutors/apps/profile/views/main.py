@@ -316,26 +316,63 @@ def student_classes(request, username=None):
         raise http.Http404()
 
     profile = person.profile
-
-    classes_groups = [{
-       'title': 'Upcoming Classes',
-       'classes': profile.upcoming_classes(),
-       'empty': "You have no upcoming classes",
-    }, {
-       'title': 'Cancelled Classes',
-       'classes': profile.cancelled_classes(),
-       'empty': "You have no cancelled classes",
-    }, {
-       'title': 'Taken Classes',
-       'classes': profile.taken_classes(),
-       'empty': "You have not taken any classes",
-    }]
+    type = None
+    if request.POST:
+        type = request.POST.get('type', None)
+        if type == 'all':
+            classes_groups = [{
+               'title': 'Upcoming Classes',
+               'classes': profile.upcoming_classes(),
+               'empty': "You have no upcoming classes",
+            }, {
+               'title': 'Completed Classes',
+               'classes': profile.taken_classes(),
+               'empty': "You have not taken any classes",
+            }, {
+               'title': 'Cancelled Classes',
+               'classes': profile.cancelled_classes(),
+               'empty': "You have no cancelled classes",
+            }]
+        elif type == 'upcoming':
+            classes_groups = [{
+               'title': 'Upcoming Classes',
+               'classes': profile.upcoming_classes(),
+               'empty': "You have no upcoming classes",
+            }]
+        elif type == 'completed':
+            classes_groups = [{
+               'title': 'Completed Classes',
+               'classes': profile.taken_classes(),
+               'empty': "You have not taken any classes",
+            }]
+        elif type == 'cancelled':
+            classes_groups = [{
+               'title': 'Cancelled Classes',
+               'classes': profile.cancelled_classes(),
+               'empty': "You have no cancelled classes",
+            }]
+            
+    else:
+        classes_groups = [{
+           'title': 'Upcoming Classes',
+           'classes': profile.upcoming_classes(),
+           'empty': "You have no upcoming classes",
+        }, {
+           'title': 'Completed Classes',
+           'classes': profile.taken_classes(),
+           'empty': "You have not taken any classes",
+        }, {
+           'title': 'Cancelled Classes',
+           'classes': profile.cancelled_classes(),
+           'empty': "You have no cancelled classes",
+        }]
     
     
     return {
         'profile': profile,
         'person': user,
         'classes_groups': classes_groups,
+        'type': type,
     }
 
 

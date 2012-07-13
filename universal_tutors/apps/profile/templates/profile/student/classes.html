@@ -9,6 +9,16 @@
 
 <section class="blue feature-box"><div class="inner">
       <h1>{% if user != person %}{{person.get_full_name}}'s {% endif %}Classes <span>Upcoming and previously taken classes.</span></h1>
+	  <div class="classes-filter">
+	      <form method="post" action="."> {% csrf_token %}
+		      <select name="type" onchange="javascript: $('.classes-filter form').submit();">
+		      	<option value="all">All</option>
+		      	<option {%if type == 'upcoming' %}selected="selected" {% endif %}value="upcoming">Upcoming</option>
+		      	<option {%if type == 'completed' %}selected="selected" {% endif %}value="completed">Completed</option>
+		      	<option {%if type == 'cancelled' %}selected="selected" {% endif %}value="cancelled">Cancelled</option>
+		      </select>
+		  </form>
+	  </div>
 </div></section>
       
       {% include 'profile/fragments/_timer.html' %}
