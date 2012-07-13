@@ -16,7 +16,7 @@ def update_currencies():
     
     for currency in Currency.objects.filter(manual=False):
         value = base_value * rates[currency.acronym]
-        currency.value = value + value * settings.CURRENCY_RISK
+        currency.value = value + value * settings.CURRENCY_RISK if currency.acronym != 'GBP' else 0
         currency.save()
 
 
