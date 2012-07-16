@@ -4,6 +4,7 @@
 
 {% block title %}Classroom {{class.name}}{% endblock %}
 {% block body_class %}app classroom{% endblock %}
+{% block feedback %}{% endblock %}
 
 {% block thirdparty_js_header %}
 <link href="http://media.muchosmedia.com/brainwave/style.css" rel="stylesheet" type="text/css">
@@ -93,60 +94,60 @@
 	
 		checkStatus();
 		checkFlash();
-
-
-		/* TIMER */
-		var timer_class = {{class.get_minutes_to_end}};
-		var timer_date = new Date();
-		
-		setInterval(function(){
-			var timer_now = new Date();
-	
-			var time_diff = (timer_now - timer_date) / 1000;
-	
-			var diff = timer_class - time_diff;
-			var positive = diff > 0 ? 1 : -1; 
-			
-			var total_seconds = positive * diff;
-			
-			var seconds = positive ? parseInt(total_seconds % 60) : 0;
-			var minutes = positive ? parseInt((total_seconds / 60) % 60) : 0;
-			var hours = positive ? parseInt((total_seconds/3600) % 24) : 0;
-	
-			var minutes_d = positive ? parseInt(minutes / 10) : 0;
-			var minutes_u = positive ? parseInt(minutes % 10) : 0;
-	
-			var seconds_d = positive ? parseInt(seconds / 10) : 0;
-			var seconds_u = positive ? parseInt(seconds % 10) : 0;
-			
-			if( diff > 0 ) {
-				$('#timer-text').html("Your class finishes in");
-				$('.timer-ago').addClass('hidden');
-			} else {
-				$('#timer-text').html("Your class finished");
-				$('.timer-ago').removeClass('hidden');				
-			}
-			
-			if(hours) {
-				$('.hours-numbers').removeClass('hidden');
-			} else {
-				$('.hours-numbers').addClass('hidden');
-			}
-	
-			$('#hours_u').html(hours);
-			$('#minutes_d').html(minutes_d);
-			$('#minutes_u').html(minutes_u);
-			$('#seconds_d').html(seconds_d);
-			$('#seconds_u').html(seconds_u);
-	
-	
-			if(total_seconds < 600) {
-				$('.timer-seconds').removeClass('hidden');
-			} else {
-				$('.timer-seconds').addClass('hidden');
-			}
-		}, 500);
 	});
+
+
+	/* TIMER */
+	var timer_class = {{class.get_minutes_to_end}};
+	var timer_date = new Date();
+	
+	setInterval(function(){
+		var timer_now = new Date();
+
+		var time_diff = (timer_now - timer_date) / 1000;
+
+		var diff = timer_class - time_diff;
+		var positive = diff > 0 ? 1 : -1; 
+		
+		var total_seconds = positive * diff;
+		
+		var seconds = positive > 0 ? parseInt(total_seconds % 60) : 0;
+		var minutes = positive > 0 ? parseInt((total_seconds / 60) % 60) : 0;
+		var hours = positive > 0 ? parseInt((total_seconds/3600) % 24) : 0;
+
+		var minutes_d = positive > 0 ? parseInt(minutes / 10) : 0;
+		var minutes_u = positive > 0 ? parseInt(minutes % 10) : 0;
+
+		var seconds_d = positive > 0 ? parseInt(seconds / 10) : 0;
+		var seconds_u = positive > 0 ? parseInt(seconds % 10) : 0;
+		
+		if( diff > 0 ) {
+			$('#timer-text').html("Your class finishes in");
+			$('.timer-ago').addClass('hidden');
+		} else {
+			$('#timer-text').html("Your class finished");
+			$('.timer-ago').removeClass('hidden');				
+		}
+		
+		if(hours) {
+			$('.hours-numbers').removeClass('hidden');
+		} else {
+			$('.hours-numbers').addClass('hidden');
+		}
+
+		$('#hours_u').html(hours);
+		$('#minutes_d').html(minutes_d);
+		$('#minutes_u').html(minutes_u);
+		$('#seconds_d').html(seconds_d);
+		$('#seconds_u').html(seconds_u);
+
+
+		if(total_seconds < 600) {
+			$('.timer-seconds').removeClass('hidden');
+		} else {
+			$('.timer-seconds').addClass('hidden');
+		}
+	}, 500);
 </script>
 {% endblock %}
 

@@ -51,8 +51,16 @@ def search(request):
     subject = request.GET.get('subject', '')
     level = request.GET.get('level', '')
 
-    price_from = int(request.GET.get('price-from', 0))
-    price_to = int(request.GET.get('price-to', 0))
+    try:
+        price_from = int(request.GET.get('price-from', 0))
+    except ValueError:
+        price_from = 0
+        
+    try:
+        price_to = int(request.GET.get('price-to', 0))
+    except ValueError:
+        price_to = 0
+    
     day = int(request.GET.get('day', -1))
     time = int(request.GET.get('time', -1))
     crb = request.GET.get('crb', False)
