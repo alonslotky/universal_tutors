@@ -123,6 +123,18 @@ def get_stars(rate):
      
     return result
 
+@register.simple_tag
+def get_avg_stars(rate):
+    result = """
+        <div class="big-stars-container">
+            <div class="big-stars-value" style="width: %s%%"></div>
+            <div class="big-stars-cover"></div>
+        </div>
+    """ % int(round(rate / 5.0  * 100))
+     
+    return result
+
+
 
 @register.filter
 def is_favorite(person, user):

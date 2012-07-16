@@ -112,3 +112,8 @@ header .class-info strong { color: #fff; }
 	z-index: 1000000;
 	right: 172px;
 }
+
+.big-stars-container { position: relative; float: left; width: 110px; height: 21px; background: #ddd; }
+.big-stars-container .big-stars-value { position: absolute; top:0; left:0; float: left; height: 21px; z-index: 1; background: #333; }
+.big-stars-container .big-stars-cover { position: absolute; top:0; left:0; float: left; width: 110px; height: 21px; z-index: 2; background: url('../images/misc/stars.png'); }
+
