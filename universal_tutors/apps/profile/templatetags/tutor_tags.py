@@ -131,11 +131,21 @@ def is_favorite(person, user):
 @register.filter
 def get_messages(person, user):
     messages = person.sent_messages.filter(to = user).order_by('-created')
+    sent_messages = person.received_messages.filter(user = user).order_by('-created')
     
+    if messages and sent_messages:
+        latest = (messages[0], 'Received') if messages[0].created > sent_messages[0].created else (sent_messages[0], 'Sent')
+    elif messages:
+        latest = (messages[0], 'Received')
+    elif sent_messages:
+        latest = (sent_messages[0], 'Sent')
+        
     return {
         'messages': messages,
         'unread': messages.filter(read = False).count(),
-        'has_messages': bool(messages.count() or person.received_messages.filter(user = user)),
+        'has_messages': bool(messages.count() or sent_messages),
+        'sent_messages': sent_messages,
+        'latest': latest,
      }
     
 class ClassMessagesNode(template.Node):

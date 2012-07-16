@@ -18,7 +18,7 @@
       {% for message_person in usermessages %}      
       {% with message_person.profile as user_profile %}
       {% with message_person|get_messages:person as messages %}
-      {% with messages.messages.0 as last_message %}
+      {% with messages.latest as latest %}
       <article>
         <div class="row">
           <div class="one columns hide-on-phones">
@@ -31,12 +31,14 @@
           </div>
           
           <div class="four columns description">
-            <p><a href="javascritp:;" data-reveal-id="modal-message" onclick="view_modal_messages({{message_person.id}});">{{last_message|truncatechars:200}}</a></p>
+            <p><a href="javascritp:;" data-reveal-id="modal-message" onclick="view_modal_messages({{message_person.id}});">
+            	{{latest.0|truncatechars:200}}
+            </a></p>
           </div>
           
           <div class="two columns timestamp">
-            <p>Received {% if not last_message.created|is_today %}on{% endif %} <br><strong>
-            	{% if last_message.created|is_today %}{{last_message.created|customnaturaltime}}{% else %}{{last_message.created|date:"D, d M Y"}}{% endif %}
+            <p>{{latest.1}} {% if not latest.0.created|is_today %}on{% endif %} <br><strong>
+            	{% if latest.0.created|is_today %}{{latest.0.created|customnaturaltime}}{% else %}{{latest.0.created|date:"D, d M Y"}}{% endif %}
             </strong></p>
           </div>
           

@@ -16,7 +16,7 @@
 					{% if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16 %}
 				          <li><a class="link-classes" href="{% url student_classes %}">Classes</a></li>
 				          <li><a class="link-tutors" href="{% url tutors %}">Tutors</a></li>
-				          <li><a class="link-messages" href="{% url student_messages %}" style="position:relative;">Messages<div class="unread {% if not no_messages %}hidden{% endif %}">{{no_messages}}<span> Unread Message</span></div></a></li>
+				          <li><a class="link-messages" href="{% url student_messages %}" style="position:relative;">Messages<div id="header-no-new-messages" class="unread {% if not no_messages %}hidden{% endif %}">{{no_messages}}<span> Unread Message</span></div></a></li>
 					{% endif %}
 				{% else %}
 		  				<li><a class="link-students" href="/student-guide/">Student Guide</a></li>
