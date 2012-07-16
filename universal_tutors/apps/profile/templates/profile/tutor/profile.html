@@ -129,7 +129,7 @@
             </div>
           </div>
 	      <div class="row">&nbsp; </div>
-    	{% autopaginate reviews 20 %}
+    	{% autopaginate reviews 8 %}
         {% for review1, review2 in reviews|reviews_style %}
 	          <div class="row clear">
 	            <div class="six columns">
@@ -138,7 +138,12 @@
 	              </div>
 	              
 	              <h5>{{review1.created}}</h5>
-	              <p>{{review1.text}}</p>
+	              <p>
+	              	{% with review1.related_class.student as student %}
+	              	<a href="{% url profile student.username %}">{{student.get_full_name}}</a> -
+	              	{{review1.text}}
+	              	{% endwith %}
+	              </p>
 	            </div>
 	            
 	            <div class="six columns">
@@ -148,7 +153,12 @@
 		              </div>
 		              
 		              <h5>{{review2.created}}</h5>
-		              <p>{{review2.text}}</p>
+		              <p>
+		              	{% with review2.related_class.student as student %}
+		              	<a href="{% url profile student.username %}">{{student.get_full_name}}</a> -
+		              	{{review2.text}}
+		              	{% endwith %}
+		              </p>
 		            {% endif %}
 	            </div>
 	          </div>

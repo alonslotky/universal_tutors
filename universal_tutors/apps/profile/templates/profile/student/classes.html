@@ -77,7 +77,11 @@
 					{% if user == person %}
 						{% with class.tutor_rating as tutor_rating %}
 							{% if tutor_rating %}
-				            <a href="javascript:;" class="view-rating text-gray" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}}, "{{tutor_rating.text}}", {{tutor_rating.rate}});'><i class="icon-doc-text"></i> View Tutor Review</a>
+								{% if user_profile.type == user_profile.TYPES.PARENT %}
+				            	<a href="javascript:;" class="view-rating text-gray" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}}, "{{tutor_rating.text}}", {{tutor_rating.rate}});'><i class="icon-doc-text"></i> View Tutor Review</a>
+								{% else %}
+				            	<a href="javascript:;" class="view-rating text-gray" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}}, "{{tutor_rating.text}}", {{tutor_rating.rate}}, true);'><i class="icon-doc-text"></i> View Tutor Review</a>
+								{% endif %}
 							{% else %}
 				            <a href="javascript:;" class="rate-tutor" data-reveal-id="modal-review" onclick='student_rate_tutor({{tutor.id}}, "{{tutor.get_full_name}}", {{class.id}});'><i class="icon-doc-text"></i> Review Tutor</a>
 				            {% endif %}
@@ -122,7 +126,6 @@
 	{% include 'profile/fragments/_modal_class_material.html' %}
 	{% include 'profile/student/fragments/_modal_cancel_class.html' %}
 	{% include 'profile/student/fragments/_modal_rate_tutor.html' %}
-	{% include 'profile/tutor/fragments/_modal_review_view.html' %}
 
 	<div id="modal-windows" class="hidden"></div>
 {% endblock %}
