@@ -20,7 +20,7 @@ def close_classes():
            Q(date__lte=dt120, duration=120)):
         class_.done()
     
-    dtw = now + datetime.timedelta(minutes=15)
+    dtw = now + datetime.timedelta(minutes=5)
     for class_ in Class.objects.filter(status=Class.STATUS_TYPES.WAITING, date__lte=dtw):
         class_.canceled_by_system(reason='Tutor did not confirm the class in the required time frame')
 
