@@ -44,25 +44,12 @@
 		                    <label>Price</label>
 		                  </div>
 		                  <div class="nine columns">
-		                  	 <div class="six columns">
-			                    <select id="id_price-from" class="stretch" name="price-from">
-			                		<option value="0">From</option>
-				                  	<option value="0">0 credits</option>
-				                  	<option value="10">10 credits</option>
-				                  	<option value="20">20 credits</option>
-				                  	<option value="30">30 credits</option>
-				                  	<option value="40">40 credits</option>
-			                    </select>
+		                  	 <div class="five columns">
+			                    <input id="id_price-from" type="text" class="input-text" name="price-from" placeholder="min">
 			                 </div>
-		                  	 <div class="six columns">
-			                    <select id="id_price-to" class="stretch" name="price-to">
-			                		<option value="0">To</option>
-				                  	<option value="10">10 credits</option>
-				                  	<option value="20">20 credits</option>
-				                  	<option value="30">30 credits</option>
-				                  	<option value="40">40 credits</option>
-				                  	<option value="50">50 credits</option>
-			                    </select>
+			                 <div class="two columns" style="text-align:center;">to</div>
+		                  	 <div class="five columns">
+			                    <input id="id_price-to" type="text" class="input-text" name="price-to" placeholder="max">
 			                 </div>
 		                  </div>
 		                </div>
@@ -128,30 +115,30 @@
 		                      <div class="six columns">
 		                        <select class="stretch" id="id_time" name="time">
 		                          	<option value="-1">Any Time</option>
-		                          	<option value="0">12:00 a.m.</option>
-		    						<option value="1">01:00 a.m.</option>
-		        					<option value="2">02:00 a.m.</option>
-							        <option value="3">03:00 a.m.</option>
-							        <option value="4">04:00 a.m.</option>
-							        <option value="5">05:00 a.m.</option>
-							        <option value="6">06:00 a.m.</option>
-							        <option value="7">07:00 a.m.</option>
-		                          	<option value="8">08:00 a.m.</option>
-		    						<option value="9">09:00 a.m.</option>
-		        					<option value="10">10:00 a.m.</option>
-							        <option value="11">11:00 a.m.</option>
-							        <option value="12">12:00 p.m.</option>
-							        <option value="13">01:00 p.m.</option>
-							        <option value="14">02:00 p.m.</option>
-							        <option value="15">03:00 p.m.</option>
-		                          	<option value="16">04:00 p.m.</option>
-		    						<option value="17">05:00 p.m.</option>
-		        					<option value="18">06:00 p.m.</option>
-							        <option value="19">07:00 p.m.</option>
-							        <option value="20">08:00 p.m.</option>
-							        <option value="21">09:00 p.m.</option>
-							        <option value="22">10:00 p.m.</option>
-						         	<option value="23">11:00 p.m.</option>
+		                          	<option value="0">00:00</option>
+		    						<option value="1">01:00</option>
+		        					<option value="2">02:00</option>
+							        <option value="3">03:00</option>
+							        <option value="4">04:00</option>
+							        <option value="5">05:00</option>
+							        <option value="6">06:00</option>
+							        <option value="7">07:00</option>
+		                          	<option value="8">08:00</option>
+		    						<option value="9">09:00</option>
+		        					<option value="10">10:00</option>
+							        <option value="11">11:00</option>
+							        <option value="12">12:00</option>
+							        <option value="13">13:00</option>
+							        <option value="14">14:00</option>
+							        <option value="15">15:00</option>
+		                          	<option value="16">16:00</option>
+		    						<option value="17">17:00</option>
+		        					<option value="18">18:00</option>
+							        <option value="19">19:00</option>
+							        <option value="20">20:00</option>
+							        <option value="21">21:00</option>
+							        <option value="22">22:00</option>
+						         	<option value="23">23:00</option>
 		                        </select>
 		                      </div>
 		                    </div>
@@ -382,12 +369,12 @@
 		
 				var price_from = $.query.get('price-from');
 				if (price_from) {
-					$("select#id_price-from option[value='" + price_from +"']").attr("selected", true);
+					$("input#id_price-from").val(price_from);
 				}
 				
 				var price_to = $.query.get('price-to');
 				if (price_to) {
-					$("select#id_price-to option[value='" + price_to +"']").attr("selected", true);
+					$("input#id_price-to").val(price_to);
 				}
 
 				var day = $.query.get('day');

@@ -1,0 +1,32 @@
+  	<div id="feedback-modal" class="reveal-modal">
+  	  <h2>We love feedback!</h2>
+  	  <p class="lead text-center">Suggest how we can make Universal Tutors better.</p>
+      <form id="feedback" method="post" action="/contact-us/" class="nice custom"> {% csrf_token %}
+      
+     		{% for question in questions %}
+     		<p>
+       		<label>{{ question.title }}</label>
+       		 <select name="question-{{ question.id }}" id="tfa_8" class="">
+       		 	<option value="">Please select...</option>
+       		 	{% for option in question.feedbackquestionoption_set.all %}
+       		 		<option value="{{ option.id }}">{{ option.title }}</option>
+       		 	{% endfor %}
+  		 		</select>
+  	 		</p>
+  	 		<br>
+  		<p>
+	        <label>{{ question.optional_text_title }}</label>
+	        <input type="text" id="tfa_16" name="comment-{{ question.id }}" value="" placeholder="" class="input-text">
+        </p>
+          
+        <br>
+     		{% endfor %}
+          
+        <input type="submit" class="button" value="Submit">
+        <input type="hidden" value="244717" name="feedback-submit" id="tfa_dbFormId"><input type="hidden" value="input-text" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="8a55ad301648f9d486cc4f2e79208e5b" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="2" name="tfa_dbVersionId" id="tfa_dbVersionId">
+      </form>
+  	  
+  	  <a class="close-reveal-modal">&#215;</a>
+  	</div>
+  	
+  	<a href="#" data-reveal-id="feedback-modal" id="feedback-button">Feedback</a>

@@ -87,13 +87,18 @@
 	
 	$("#share-facebook").click(function(e){
 		e.preventDefault();
+		var val = $('#student-rate-tutor-text').val();
+		var stars = $('#student-rate-tutor-star .star.on');
+		if (stars.length > 0) {
+			val += '\n(Rated ' + length + ' out of 5)';
+		}
 		FB.ui(
 		  {
 		    method: 'feed',
 		    name: "{{ user.get_full_name }} rated tutor " + $('#modal-review-tutor-name').html(),
 		    link: tutor_rated_url,
 		    picture: tutor_rated_image,
-		    description: $('#student-rate-tutor-text').val()
+		    description: val,
 		  },
 		  function(response) {
 
