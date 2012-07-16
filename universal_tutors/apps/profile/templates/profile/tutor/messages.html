@@ -19,12 +19,12 @@
       {% for person in usermessages %}      
       {% with person.profile as person_profile %}
       {% with person|get_messages:user as messages %}
-      {% with messages.messages.0 as last_message %}
+      {% with messages.latest as latest %}
       <article>
         <div class="row">
           <div class="one columns hide-on-phones">
             <img src="{% version person_profile.profile_image.path 'class_list_profile_image' %}" alt="{{person.get_full_name}}">
-            <div class="unread message-user-{{message_person.id}}-value {% if not messages.unread %}hidden{% endif %}">{{messages.unread}}<span> Unread Message{{messages.unread|pluralize}}</span></div>
+            <div class="unread message-user-{{person.id}}-value {% if not messages.unread %}hidden{% endif %}">{{messages.unread}}<span> Unread Message{{messages.unread|pluralize}}</span></div>
           </div>
           
           <div class="three columns title">
@@ -32,17 +32,19 @@
           </div>
           
           <div class="four columns description">
-            <p><a href="javascritp:;" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});">{{last_message|truncatechars:200}}</a></p>
+            <p><a href="javascritp:;" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});">
+            	{{latest.0|truncatechars:200}}
+            </a></p>
           </div>
           
           <div class="two columns timestamp">
-            <p>Received {% if not last_message.created|is_today %}on{% endif %} <br><strong>
-            	{% if last_message.created|is_today %}{{last_message.created|customnaturaltime}}{% else %}{{last_message.created|date:"D, d M Y"}}{% endif %}
+            <p>{{latest.1}} {% if not latest.0.created|is_today %}on{% endif %} <br><strong>
+            	{% if latest.0.created|is_today %}{{latest.0.created|customnaturaltime}}{% else %}{{latest.0.created|date:"D, d M Y"}}{% endif %}
             </strong></p>
           </div>
           
           <div class="two columns action">
-            <a href="javascript:;" class="send-message message-user-{{message_person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> 
+            <a href="javascript:;" class="send-message message-user-{{person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> 
             	{% if messages.unread %} 
             		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
             	{% else %}
