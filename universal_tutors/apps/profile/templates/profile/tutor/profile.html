@@ -123,10 +123,9 @@
               <h2>Reviews</h2>
             </div>
             <div class="six columns phone-two">
-              <div class="rating">
-              	{% get_stars profile.avg_rate %}<br/>
-              	({{profile.no_reviews}} review{{profile.no_reviews|pluralize}})
-              </div>
+            	{% with profile.no_reviews as no_reviews %}
+              	{% get_avg_stars profile.avg_rate %} &nbsp; ({{no_reviews}} review{{no_reviews|pluralize}})
+            	{% endwith %}
             </div>
           </div>
 	      <div class="row">&nbsp; </div>
