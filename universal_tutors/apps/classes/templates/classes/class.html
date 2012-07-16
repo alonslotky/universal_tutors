@@ -9,10 +9,10 @@
 <link href="http://media.muchosmedia.com/brainwave/style.css" rel="stylesheet" type="text/css">
 {% endblock %}
 
-{% block extra_head %}
+{% block extra_js %}
 <script type="text/javascript">
 	$(window).ready(function(){
-	var targetID = "scribblar";
+		var targetID = "scribblar";
 		
 		var flashvars = {
 			'userid': "{{user.profile.scribblar_id}}",
@@ -22,7 +22,8 @@
 		};
 	
 		var params = {
-			'allowscriptaccess': "always"
+			'allowscriptaccess': "always",
+			'wmode': 'opaque'
 		};
 		
 		var attributes = {
@@ -78,29 +79,11 @@
 							
 						}			
 					}
-				});				
+				});
 			}, 30000);
 		};
 	
 		checkStatus();
-		
-		var checkPopups = function() {
-			setTimeout(function(){
-				var all_closed = true;
-				$('.reveal-modal').each(function(){
-					if( $(this).css("display") != "none" && $(this).css("visibility") != "hidden" ) {
-						all_closed = false;
-					}
-				});
-				
-				if(all_closed) {
-					$('#alternate-container').removeClass('hidden')
-				} else {
-					$('#alternate-container').addClass('hidden');
-				}
-				checkPopups();
-			}, 500);
-		};
 		
 		var checkFlash = function() {
 			if(!swfobject.hasFlashPlayerVersion("10")) {
@@ -109,23 +92,99 @@
 		};
 	
 		checkStatus();
-		checkPopups();
 		checkFlash();
-	
+
+
+		/* TIMER */
+		var timer_class = {{class.get_minutes_to_end}};
+		var timer_date = new Date();
 		
+		setInterval(function(){
+			var timer_now = new Date();
+	
+			var time_diff = (timer_now - timer_date) / 1000;
+	
+			var diff = timer_class - time_diff;
+			var positive = diff > 0 ? 1 : -1; 
+			
+			var total_seconds = positive * diff;
+			
+			var seconds = positive ? parseInt(total_seconds % 60) : 0;
+			var minutes = positive ? parseInt((total_seconds / 60) % 60) : 0;
+			var hours = positive ? parseInt((total_seconds/3600) % 24) : 0;
+	
+			var minutes_d = positive ? parseInt(minutes / 10) : 0;
+			var minutes_u = positive ? parseInt(minutes % 10) : 0;
+	
+			var seconds_d = positive ? parseInt(seconds / 10) : 0;
+			var seconds_u = positive ? parseInt(seconds % 10) : 0;
+			
+			if( diff > 0 ) {
+				$('#timer-text').html("Your class finishes in");
+				$('.timer-ago').addClass('hidden');
+			} else {
+				$('#timer-text').html("Your class finished");
+				$('.timer-ago').removeClass('hidden');				
+			}
+			
+			if(hours) {
+				$('.hours-numbers').removeClass('hidden');
+			} else {
+				$('.hours-numbers').addClass('hidden');
+			}
+	
+			$('#hours_u').html(hours);
+			$('#minutes_d').html(minutes_d);
+			$('#minutes_u').html(minutes_u);
+			$('#seconds_d').html(seconds_d);
+			$('#seconds_u').html(seconds_u);
+	
+	
+			if(total_seconds < 600) {
+				$('.timer-seconds').removeClass('hidden');
+			} else {
+				$('.timer-seconds').addClass('hidden');
+			}
+		}, 500);
 	});
 </script>
 {% endblock %}
 
 {% block full_content %}
+{% with class.student as student %}
+{% with class.tutor as tutor %}
 	  <header>
 	    <div class="logo alt ir left"><a>Universal Tutors</a></div>
+
+		<div class="timer class-time">
+		    <div class="one to_calc">
+		      <p id="timer-text">Your class ends in</p>
+		    </div>
+		    
+		    <div class="two auto-width to_calc">
+		      <span id="hours_u" class="hours-numbers number"></span>
+		      <span class="hours-numbers">h&nbsp;</span>
+		      <span id="minutes_d" class="number"></span>
+		      <span id="minutes_u" class="number"></span>
+		      <span>m&nbsp;</span>
+		      <span id="seconds_d" class="number timer-seconds"></span>
+		      <span id="seconds_u" class="number timer-seconds"></span>
+		      <span class="timer-seconds">s</span>
+		    </div>
+		</div>		
+
 	    {% if user == class.student %}
 	    <a id="ask-continue-button" class="right button hidden" data-reveal-id="modal-ask-continue"><span class="icon rocketdown">Exit Classroom</span></a>
 	    <a id="exit-class-button" class="right button" data-reveal-id="modal-review" onclick='student_rate_tutor({{class.tutor.id}}, "{{class.tutor.get_full_name}}", {{class.id}});'><span class="icon rocketdown">Exit Classroom</span></a>	  	
 	  	{% else %}
 	    <a id="exit-class-button" class="right button" data-reveal-id="modal-review" onclick='tutor_rate_student({{class.student.id}}, "{{class.student.get_full_name}}", {{class.id}});'><span class="icon rocketdown">Exit Classroom</span></a>	  	
 	  	{% endif %}
+
+		<div class="class-info">
+			<div class="subject"><strong>Subject: </strong>{{class}}</div>
+			{% if user != tutor %}<div class="tutor"><strong>Tutor: </strong>{{tutor.get_full_name}}</div>{% endif %}
+			{% if user != student %}<div class="tutor"><strong>Student: </strong>{{student.get_full_name}}</div>{% endif %}
+		</div>
 	  </header>
 	  
 	  <div id="alternate-container" class="main scribblar-container">
@@ -139,5 +198,6 @@
 	{% else %}
 		{% include 'profile/tutor/fragments/_modal_rate_student.html' %}
 	{% endif %}
-	
+{% endwith %}	
+{% endwith %}	
 {% endblock %}
