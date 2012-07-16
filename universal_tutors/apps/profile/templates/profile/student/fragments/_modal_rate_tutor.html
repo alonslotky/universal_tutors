@@ -26,7 +26,7 @@
           <a href="javascript:;" onclick="rate_tutor(5);"><span id="student-rate-tutor-star-4" class="star off"></span></a>
           <p>Rate <span class="rate-tutor-name">John</span>'s Performance</p>
         </div>
-	    <input type="submit" class="small button" value="Send">
+	    <input id="modal-review-submit-button" type="submit" class="small button" value="Send">
         
       </div>
 	</div>
@@ -51,10 +51,12 @@
 	var tutor_rated_text;
 	var tutor_rated_image;
 	var tutor_rated_url;
+	var tutor_rated_lock;
 	
 	$(window).ready(function(){
 		$('#student-rate-tutor-form').submit(function(e){
 			e.preventDefault();
+			
 			$.ajax({
 				type: 'post',
 				url: '{% url student_rate_tutor %}',
@@ -121,7 +123,7 @@
 		});		
 	}
 	
-	var student_rate_tutor = function(user_id, user_name, class_id, text, rate) {
+	var student_rate_tutor = function(user_id, user_name, class_id, text, rate, lock) {
 		$('.rate-tutor-name').html(user_name);
 		$('#student-rate-tutor-id').val(user_id);
 		$('#student-rate-tutor-class').val(class_id);
@@ -136,9 +138,23 @@
 		});
 		
 		rate_tutor(rate);
+		
+		tutor_rated_lock = lock;
+		if(tutor_rated_lock) {
+			$('#modal-review-submit-button').addClass('hidden');
+			$('#student-rate-tutor-text').attr('disabled', 'disabled');
+		} else {
+			$('#modal-review-submit-button').removeClass('hidden');
+			$('#student-rate-tutor-text').removeAttr('disabled');
+		}
+		
 	}
 	
 	var rate_tutor = function(rate) {
+		if (tutor_rated_lock) {
+			return;
+		}
+		
 		$('#student-rate-tutor-rate').val(rate);
 		$('#student-rate-tutor-star .star').removeClass('on');		
 		$('#student-rate-tutor-star .star').addClass('off');		
