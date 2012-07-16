@@ -140,7 +140,7 @@
 	
 	$(window).ready(function(){
 		if(DetectMobileQuick() || DetectMobileLong() || DetectTierTablet()){
-		   $('#timer-no-flash-text').html('You cannot take or give a class on a mobile device.')
+		   $('#timer-no-flash-text').html('Please move to a flash enabled device to take or give a class.')
 		   $('#timer-no-flash').removeClass('hidden');
 		   $('#timer-enter-next-class-container').addClass('hidden');
 		} else {
