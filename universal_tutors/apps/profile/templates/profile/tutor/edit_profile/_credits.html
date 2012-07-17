@@ -1,13 +1,30 @@
   <li id="creditsTab">
     <h2 class="clear">Credits Overview</h2>
-    <div class="row user">
-      <div class="four columns">
-        <label>Credits</label>
+    <div class="row">
+      <div class="five columns">
+        <label>Credits earned before commission</label>
       </div>
-      <div class="eight columns">
-        <p>{{profile.income}} earned so far</p>
+      <div class="seven columns">
+        	{{profile.income_without_commission}} credit(s)<br/>
       </div>
     </div>
+    <div class="row">
+      <div class="five columns">
+        <label>Commission to Universal Tutors</label>
+      </div>
+      <div class="seven columns">
+        	{{profile.income_without_commission}} credit(s)<br/>
+      </div>
+    </div>
+    <div class="row space">
+      <div class="five columns">
+        <label>Commission earned after commission</label>
+      </div>
+      <div class="seven columns">
+        	{{profile.income}} credit(s)<br/>
+      </div>
+    </div>
+
     
     <a class="button" href="javascript:;" data-reveal-id="modal-withdraw"><span class="icon credits">Withdraw Credits</span></a>
     <a class="button" href="{% url history %}"><span class="icon history">View History</span></a>

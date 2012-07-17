@@ -123,3 +123,5 @@ header .class-info strong { color: #fff; }
 
 .row .checkbox-container { padding-top: 3px !important; }
 .row textarea.user.stretch { min-width: 100%; }
+
+.help-on-title { display: inline; line-height: inherit; text-align: middle; }

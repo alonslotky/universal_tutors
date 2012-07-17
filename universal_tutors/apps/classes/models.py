@@ -333,6 +333,7 @@ class Class(BaseModel):
             
             tutor_profile = tutor.profile
             tutor_profile.income += self.earning_fee
+            tutor_profile.income_without_commission += self.credit_fee
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count() 
             tutor_profile.save()
             tutor.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.INCOME, credits=self.credit_fee, related_class=self)
