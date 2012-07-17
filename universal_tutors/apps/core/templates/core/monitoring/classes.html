@@ -1,0 +1,49 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags %}
+
+{% block title %}Monitoring classes{% endblock %}
+{% block body_class %}app student classes{% endblock %}
+
+{% block content %}
+
+<section class="blue feature-box"><div class="inner">
+      <h1>Open Classes<span>Classes are been taken at this moment.</span></h1>
+</div></section> 
+     	{% for class in classes %}
+	      {% with class.tutor as tutor %}
+	      {% with class.student as student %}
+	      <article>
+	        <div class="row">
+	          <div class="two columns hide-on-phones">
+	            <img src="{% version tutor.profile.profile_image.path 'class_list_profile_image' %}" alt="{{tutor.get_full_name}}" title="Tutor: {{tutor.get_full_name}}">
+	            <img src="{% version student.profile.profile_image.path 'class_list_profile_image' %}" alt="{{student.get_full_name}}" title="Student: {{student.get_full_name}}">
+	          </div>
+	          
+	          <div class="three columns">
+	            <a href="{% url monitoring_class class.id %}"><h3>{{class.subject}}</h3></a>
+	            <p class="subheader"> 
+	            	Tutor: <a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a><br/>
+	            	Student: <a href="{% url profile student.username %}">{{student.get_full_name}}</a><br/>
+	            </p>
+	          </div>
+	          
+	          <div class="five columns">
+	            <p>{{class.get_description}}</p>
+	          </div>
+	          
+	          <div class="two columns action">
+		          <a href="{% url monitoring_class class.id %}" class="open-class"><i class="icon-search"></i> View class</a>
+	          </div>
+	        </div>
+	      </article>
+	      {% endwith %}
+	      {% endwith %}
+	   {% empty %}
+	      <article class="{% if class.is_active %}{% endif %}">
+	      	<div class="row">
+		        There are no open classes at this moment.   
+	      	</div>
+	      </article>
+	   {% endfor %}
+{% endblock %}

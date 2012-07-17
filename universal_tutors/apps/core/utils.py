@@ -4,6 +4,7 @@ from django.conf import settings
 from apps.core.models import Currency
 
 from ordereddict import OrderedDict
+from scribblar import users
 
 def update_currencies():
     url = 'http://openexchangerates.org/latest.json'
@@ -19,6 +20,24 @@ def update_currencies():
         currency.value = value + value * (settings.CURRENCY_RISK if currency.acronym != 'GBP' else 0)
         currency.save()
 
+
+def get_invisible_user():
+    scribblar_default_username = 'ut_inv_user_role_150'
+    scribblar_user = None
+    for s_user in users.list():
+        if s_user.get('username', '').lower() == scribblar_default_username:
+            scribblar_user = s_user
+            break
+
+    if not scribblar_user:
+        scribblar_user = users.add(
+            username = scribblar_default_username,
+            firstname = 'Universal',
+            lastname = 'Tutors',
+            roleid = 150,
+        )
+    
+    return scribblar_user
 
 def get_status_from_dict(dtc, key, class_):
     try:
@@ -117,3 +136,5 @@ def init_credits_evolution(items, classes):
         time = time.replace(year=time+1, month=1) if time.month == 12 else time.replace(month=time.month+1)
 
     return d
+
+

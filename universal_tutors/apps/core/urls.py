@@ -19,6 +19,9 @@ urlpatterns = patterns('apps.core.views.main',
     url(r'^(?i)reports/tutors/$', 'reports_tutors', name='reports_tutors'),
     url(r'^(?i)reports/classes/$', 'reports_classes', name='reports_classes'),
     url(r'^(?i)reports/financial/$', 'reports_financial', name='reports_financial'),
+
+    url(r'^(?i)monitoring/$', 'monitoring_classes', name='monitoring_classes'),
+    url(r'^(?i)monitoring/(?P<class_id>\d+)/$', 'monitoring_class', name='monitoring_class'),
 )
 
 # Ajax
