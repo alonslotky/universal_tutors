@@ -30,6 +30,10 @@ def multiply(x, y):
     return x*y
 
 @register.filter
+def sub(x, y):
+    return x-y
+
+@register.filter
 def paragraphs(var, arg):
     """ Retrieves n number of paragraphs from the supplied text. It doesn't remove 
     any existing tags inside paragraphs."""
