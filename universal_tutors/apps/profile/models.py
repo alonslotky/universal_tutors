@@ -207,6 +207,8 @@ class UserProfile(BaseModel):
     featured = models.BooleanField(default=False)
 
     # tutor
+    income_without_commission = models.FloatField(default=0)
+
     avg_rate = models.FloatField(default=0)
     no_reviews = models.PositiveIntegerField(default=0)
     min_credits = models.PositiveIntegerField(default=0)
@@ -707,6 +709,11 @@ class UserProfile(BaseModel):
     def withdraw_account(self, credits):
         if self.type == self.TYPES.TUTOR:
             self.income -= credits
+            if not self.income:
+                self.income_without_commission = 0
+            else:
+                swc = self.income_without_commission - self.income / (1 - UNIVERSAL_FEE)
+                self.income_without_commission = swc if swc > 0 else 0
             super(UserProfile, self).save()
             currency = self.currency
             value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
