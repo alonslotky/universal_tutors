@@ -1,0 +1,139 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Classroom {{class.name}}{% endblock %}
+{% block body_class %}app classroom{% endblock %}
+{% block feedback %}{% endblock %}
+
+{% block thirdparty_js_header %}
+<link href="http://media.muchosmedia.com/brainwave/style.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+	$(window).ready(function(){
+		var targetID = "scribblar";
+		
+		var flashvars = {
+			'userid': "{{scribblar_user.userid}}",
+			'roomid': "{{class.scribblar_id}}",
+			'preferredLocales': "en_US",
+			'username': "{{scribblar_user.firstname}} {{scribblar_user.lastname}}"
+		};
+	
+		var params = {
+			'allowscriptaccess': "always",
+			'wmode': 'opaque'
+		};
+		
+		var attributes = {
+			'id': "scribblar",
+			'name': "scribblar"
+		};
+	
+		swfobject.embedSWF(
+			"http://media.muchosmedia.com/scribblar/v2/main.swf", 
+			"alternate", 
+			"100%", 
+			"100%", 
+			"10", 
+			"http://media.muchosmedia.com/swfobject/expressInstall.swf", 
+			flashvars, 
+			params, 
+			attributes);
+	});
+
+
+	/* TIMER */
+	var timer_class = {{class.get_minutes_to_end}};
+	var timer_date = new Date();
+	
+	setInterval(function(){
+		var timer_now = new Date();
+
+		var time_diff = (timer_now - timer_date) / 1000;
+
+		var diff = timer_class - time_diff;
+		var positive = diff > 0 ? 1 : -1; 
+		
+		var total_seconds = positive * diff;
+		
+		var seconds = positive > 0 ? parseInt(total_seconds % 60) : 0;
+		var minutes = positive > 0 ? parseInt((total_seconds / 60) % 60) : 0;
+		var hours = positive > 0 ? parseInt((total_seconds/3600) % 24) : 0;
+
+		var minutes_d = positive > 0 ? parseInt(minutes / 10) : 0;
+		var minutes_u = positive > 0 ? parseInt(minutes % 10) : 0;
+
+		var seconds_d = positive > 0 ? parseInt(seconds / 10) : 0;
+		var seconds_u = positive > 0 ? parseInt(seconds % 10) : 0;
+		
+		if( diff > 0 ) {
+			$('#timer-text').html("Your class finishes in");
+			$('.timer-ago').addClass('hidden');
+		} else {
+			$('#timer-text').html("Your class finished");
+			$('.timer-ago').removeClass('hidden');				
+		}
+		
+		if(hours) {
+			$('.hours-numbers').removeClass('hidden');
+		} else {
+			$('.hours-numbers').addClass('hidden');
+		}
+
+		$('#hours_u').html(hours);
+		$('#minutes_d').html(minutes_d);
+		$('#minutes_u').html(minutes_u);
+		$('#seconds_d').html(seconds_d);
+		$('#seconds_u').html(seconds_u);
+
+
+		if(total_seconds < 600) {
+			$('.timer-seconds').removeClass('hidden');
+		} else {
+			$('.timer-seconds').addClass('hidden');
+		}
+	}, 500);
+</script>
+{% endblock %}
+
+{% block full_content %}
+{% with class.student as student %}
+{% with class.tutor as tutor %}
+	  <header>
+	    <div class="logo alt ir left"><a>Universal Tutors</a></div>
+
+		<div class="timer class-time">
+		    <div class="one to_calc">
+		      <p id="timer-text">Your class ends in</p>
+		    </div>
+		    
+		    <div class="two auto-width to_calc">
+		      <span id="hours_u" class="hours-numbers number"></span>
+		      <span class="hours-numbers">h&nbsp;</span>
+		      <span id="minutes_d" class="number"></span>
+		      <span id="minutes_u" class="number"></span>
+		      <span>m&nbsp;</span>
+		      <span id="seconds_d" class="number timer-seconds"></span>
+		      <span id="seconds_u" class="number timer-seconds"></span>
+		      <span class="timer-seconds">s</span>
+		    </div>
+		</div>		
+
+	    <a class="right button" href="{% url monitoring_classes %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
+
+		<div class="class-info">
+			<div class="subject"><strong>Subject: </strong>{{class}}</div>
+			<div class="tutor"><strong>Tutor: </strong>{{tutor.get_full_name}}</div>
+			<div class="tutor"><strong>Student: </strong>{{student.get_full_name}}</div>
+		</div>
+	  </header>
+	  
+	  <div id="alternate-container" class="main scribblar-container">
+	  	<div id="alternate"></div>
+	  </div>
+{% endwith %}	
+{% endwith %}	
+{% endblock %}

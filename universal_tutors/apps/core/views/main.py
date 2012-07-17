@@ -479,3 +479,53 @@ def reports_financial(request):
         'year': year,
     }
 
+
+
+
+@main_render('core/monitoring/classes.html')
+def monitoring_classes(request):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+
+    classes =  Class.objects.raw(
+        """
+        SELECT *
+        FROM classes_class
+        WHERE status = %(booked)s
+          AND date <= CURRENT_TIMESTAMP
+          AND date + (duration || ' minutes')::interval >= CURRENT_TIMESTAMP
+        ORDER BY date ASC
+        """ % {
+            'booked': Class.STATUS_TYPES.BOOKED,
+    })
+
+    return {
+        'classes': classes,
+    }
+    
+@main_render('core/monitoring/class.html')
+def monitoring_class(request, class_id):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+
+    try:
+        class_ = Class.objects.select_related().get(id = class_id)
+    except Class.DoesNotExist:
+        raise http.Http404()
+
+    scribblar_user = get_invisible_user()
+
+    return {
+        'class': class_,
+        'scribblar_user': scribblar_user,
+    }
