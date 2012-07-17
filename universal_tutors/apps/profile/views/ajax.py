@@ -237,6 +237,10 @@ def student_rate_tutor(request):
     except TutorReview.DoesNotExist:
         tutor.reviews_as_tutor.create(related_class = class_, text = text, rate = rate)
         
+    
+    if class_.status == class_.STATUS_TYPES.BOOKED:
+        class_.done()
+    
     return http.HttpResponse('done.')
 
 
