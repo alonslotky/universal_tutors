@@ -13,12 +13,16 @@
 	  
     <table id="subjects-table" class="stretch">
       <tr>
-        <th>Subject</th>
-        <th>System</th>
-        <th>Level</th>
-        <th>Credits per hour</th>
-        <th>Price in {{profile.currency}}</th>
-        <th>Delete</th>
+        <th>
+        	<div class="row">
+	        	<div class="two columns">Subject</div>
+	        	<div class="two columns">System</div>
+	        	<div class="two columns">Level</div>
+	        	<div class="two columns">Credits per hour</div>
+	        	<div class="two columns">Price in {{currency.acronym}}</div>
+	        	<div class="two columns">Delete</div>
+        	</div>
+        </th>
       </tr>
             
       {% for item in subjects %}
@@ -26,40 +30,44 @@
       {% with item.system as system %}
       {% with item.subject as subject %}
       <tr>
-        <td>
-		  <input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
-		  <input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
-		  <select id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" class="stretch subjects-select-subjects">
-		  	<option value="">Select subject</option>
-		  	{% for sub in class_subjects %}
-		  	<option value="{{sub.id}}" {% if sub == subject %}selected="selected"{% endif %}>{{sub}}</option>
-		  	{% endfor %}
-		  </select>
-		</td>
-        <td>
-		  <select id="id_subjects-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="stretch subjects-select-systems">
-		  	<option value="">Any system</option>
-		  	{% for sys in subject.systems.all %}
-		  	<option value="{{sys.id}}" {% if sys == system %}selected="selected"{% endif %}>{{sys}}</option>
-		  	{% endfor %}
-		  </select>
-		</td>
-        <td>
-		  <select id="id_subjects-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="stretch subjects-select-levels">
-		  	<option value="">Any level</option>
-		  	{% for lvl in system.levels.all %}
-		  	<option value="{{lvl.id}}" {% if lvl == level %}selected="selected"{% endif %}>{{lvl}}</option>
-		  	{% endfor %}
-		  </select>
-		</td>
-		<td>
-		  <input id="id_subjects-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text subject-credits" value="{{item.credits}}" />
-		</td>
-        <td>
-          <span id="id_subjects-{{forloop.counter0}}-price">{{currency.symbol}} {{item.credits|in_currency:currency|floatformat:2}}</span>
-		</td>
-        <td>
-		  <input id="id_subjects-{{forloop.counter0}}-DELETE" type="checkbox" name="subjects-{{forloop.counter0}}-DELETE" />
+      	<td>
+	      	<div class="row">
+		        <div class="two columns">
+				  <input id="id_subjects-{{forloop.counter0}}-id" type="hidden" name="subjects-{{forloop.counter0}}-id" value="{{item.id}}">
+				  <input id="id_subjects-{{forloop.counter0}}-user" type="hidden" value="{{user.id}}" name="subjects-{{forloop.counter0}}-user">
+				  <select id="id_subjects-{{forloop.counter0}}-subject" name="subjects-{{forloop.counter0}}-subject" class="stretch subjects-select-subjects">
+				  	<option value="">Select subject</option>
+				  	{% for sub in class_subjects %}
+				  	<option value="{{sub.id}}" {% if sub == subject %}selected="selected"{% endif %}>{{sub}}</option>
+				  	{% endfor %}
+				  </select>
+				</div>
+		        <div class="two columns">
+				  <select id="id_subjects-{{forloop.counter0}}-system" name="subjects-{{forloop.counter0}}-system" class="stretch subjects-select-systems">
+				  	<option value="">Any system</option>
+				  	{% for sys in subject.systems.all %}
+				  	<option value="{{sys.id}}" {% if sys == system %}selected="selected"{% endif %}>{{sys}}</option>
+				  	{% endfor %}
+				  </select>
+				</div>
+		        <div class="two columns">
+				  <select id="id_subjects-{{forloop.counter0}}-level" name="subjects-{{forloop.counter0}}-level" class="stretch subjects-select-levels">
+				  	<option value="">Any level</option>
+				  	{% for lvl in system.levels.all %}
+				  	<option value="{{lvl.id}}" {% if lvl == level %}selected="selected"{% endif %}>{{lvl}}</option>
+				  	{% endfor %}
+				  </select>
+				</div>
+		        <div class="two columns">
+				  <input id="id_subjects-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text subject-credits" value="{{item.credits}}" />
+				</div>
+		        <div class="two columns">
+		          <span id="id_subjects-{{forloop.counter0}}-price">{{currency.symbol}} {{item.credits|in_currency:currency|floatformat:2}}</span>
+				</div>
+		        <div class="two columns">
+				  <input id="id_subjects-{{forloop.counter0}}-DELETE" type="checkbox" name="subjects-{{forloop.counter0}}-DELETE" />
+				</div>
+			</div>
 		</td>
 	  </tr>
       {% endwith %}
@@ -69,35 +77,39 @@
         
       {% if no_subjects < 12 %}
 	  <tr>
-		<td>
-		  <input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
-		  <input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
-		  <select id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" class="stretch subjects-select-subjects">
-		  	<option value="" selected="selected">Select subject</option>
-		  	{% for sub in class_subjects %}
-		  	<option value="{{sub.id}}">{{sub}}</option>
-		  	{% endfor %}
-		  </select>
-	    </td>
-		<td>			
-		  <select id="id_subjects-{{no_subjects}}-system" name="subjects-{{no_subjects}}-system" class="stretch subjects-select-systems">
-		  	<option value="" selected="selected">Any system</option>
-		  </select>
-	    </td>
-		<td>
-		  <select id="id_subjects-{{no_subjects}}-level" name="subjects-{{no_subjects}}-level" class="stretch subjects-select-levels">
-		  	<option value="" selected="selected">Any level</option>
-		  </select>
-	    </td>
-		<td>
-		  <input id="id_subjects-{{no_subjects}}-credits" name="subjects-{{no_subjects}}-credits" type="text" class="input-text subject-credits" placeholder="Credits" />
-		</td>
-		<td>
-	       <span id="id_subjects-{{no_subjects}}-price">{{currency.symbol}} 0.00</span>
-	    </td>
-		<td>
-		   <input id="id_subjects-{{no_subjects}}-DELETE" type="checkbox" name="subjects-{{no_subjects}}-DELETE" />
-	    </td>
+        <td>
+	      	<div class="row">
+		        <div class="two columns">
+				  <input id="id_subjects-{{no_subjects}}-id" type="hidden" name="subjects-{{no_subjects}}-id">
+				  <input id="id_subjects-{{no_subjects}}-user" type="hidden" value="{{user.id}}" name="subjects-{{no_subjects}}-user">
+				  <select id="id_subjects-{{no_subjects}}-subject" name="subjects-{{no_subjects}}-subject" class="stretch subjects-select-subjects">
+				  	<option value="" selected="selected">Select subject</option>
+				  	{% for sub in class_subjects %}
+				  	<option value="{{sub.id}}">{{sub}}</option>
+				  	{% endfor %}
+				  </select>
+				</div>
+		        <div class="two columns">
+				  <select id="id_subjects-{{no_subjects}}-system" name="subjects-{{no_subjects}}-system" class="stretch subjects-select-systems">
+				  	<option value="" selected="selected">Any system</option>
+				  </select>
+				</div>
+		        <div class="two columns">
+				  <select id="id_subjects-{{no_subjects}}-level" name="subjects-{{no_subjects}}-level" class="stretch subjects-select-levels">
+				  	<option value="" selected="selected">Any level</option>
+				  </select>
+				</div>
+		        <div class="two columns">
+				  <input id="id_subjects-{{no_subjects}}-credits" name="subjects-{{no_subjects}}-credits" type="text" class="input-text subject-credits" placeholder="Credits" />
+				</div>
+		        <div class="two columns">
+			       <span id="id_subjects-{{no_subjects}}-price">{{currency.symbol}} 0.00</span>
+				</div>
+		        <div class="two columns">
+				   <input id="id_subjects-{{no_subjects}}-DELETE" type="checkbox" name="subjects-{{no_subjects}}-DELETE" />
+				</div>        	
+			</div>        	
+        </td>
       </tr>
       {% endif %}
     </table>
@@ -141,33 +153,37 @@
   		$('#subjects-table').append(
   			'<tr>'+
 	  		'	<td>'+
-			'		<input id="id_subjects-'+ id_subject +'-id" type="hidden" name="subjects-'+ id_subject +'-id">'+
-			'		<input id="id_subjects-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="subjects-'+ id_subject +'-user">'+
-			' 		<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" class="stretch subjects-select-subjects">'+
-			'			<option value="">Select subject</option>'+
-			{% for sub in class_subjects %}
-			'			<option value="{{sub.id}}">{{sub}}</option>'+
-			{% endfor %}
-			'   	</select>'+
-	  		'	</td>'+
-	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-system" name="subjects-'+ id_subject +'-system" class="stretch subjects-select-systems">'+
-			'			<option value="">Any system</option>'+
-			'   	</select>'+
-	  		'	</td>'+
-	  		'	<td>'+
-			' 		<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-level" class="stretch subjects-select-levels">'+
-			'			<option value="">Any level</option>'+
-			'   	</select>'+
-	  		'	</td>'+
-	  		'	<td>'+
-			'		<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text subject-credits" placeholder="Credits" />'+
-	  		'	</td>'+
-	  		'	<td>'+
-	  		'		<span id="id_subjects-'+ id_subject +'-price">{{currency.symbol}} 0.00</span>'+
-	  		'	</td>'+
-	  		'	<td>'+
-	  		'		<input id="id_subjects-'+ id_subject +'-DELETE" name="subjects-'+ id_subject +'-DELETE" type="checkbox">'+
+	  		'		<div class="row">'+
+			'			<div class="two columns">'+
+			'				<input id="id_subjects-'+ id_subject +'-id" type="hidden" name="subjects-'+ id_subject +'-id">'+
+			'				<input id="id_subjects-'+ id_subject +'-user" type="hidden" value="{{user.id}}" name="subjects-'+ id_subject +'-user">'+
+			' 				<select id="id_subjects-'+ id_subject +'-subject" name="subjects-'+ id_subject +'-subject" class="stretch subjects-select-subjects">'+
+			'					<option value="">Select subject</option>'+
+								{% for sub in class_subjects %}
+			'					<option value="{{sub.id}}">{{sub}}</option>'+
+								{% endfor %}
+			'   			</select>'+
+	  		'			</div>'+
+	  		'			<div class="two columns">'+
+			' 				<select id="id_subjects-'+ id_subject +'-system" name="subjects-'+ id_subject +'-system" class="stretch subjects-select-systems">'+
+			'					<option value="">Any system</option>'+
+			'   			</select>'+
+	  		'			</div>'+
+	  		'			<div class="two columns">'+
+			' 				<select id="id_subjects-'+ id_subject +'-level" name="subjects-'+ id_subject +'-level" class="stretch subjects-select-levels">'+
+			'					<option value="">Any level</option>'+
+			'   			</select>'+
+	  		'			</div>'+
+	  		'			<div class="two columns">'+
+			'				<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text subject-credits" placeholder="Credits" />'+
+	  		'			</div>'+
+	  		'			<div class="two columns">'+
+	  		'				<span id="id_subjects-'+ id_subject +'-price">{{currency.symbol}} 0.00</span>'+
+	  		'			</div>'+
+	  		'			<div class="two columns">'+
+	  		'				<input id="id_subjects-'+ id_subject +'-DELETE" name="subjects-'+ id_subject +'-DELETE" type="checkbox">'+
+	  		'			</div>'+
+	  		'		</div>'+
 	  		'	</td>'+
 	  		'</tr>'
   		);
