@@ -3,7 +3,7 @@
 
 body.classroom .container { height: 100%; }
 
-dl.nice.contained.tabs dd a { padding: 7px 15px 9px; }
+dl.nice.contained.tabs dd a { padding: 7px 10px 9px; }
 
 .auto-width { width: auto !important; max-width: none !important; }
 
