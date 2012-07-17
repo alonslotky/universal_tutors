@@ -1,7 +1,7 @@
 {% load fb_versions %}
   
   <li id="referralTab">
-    <h2 class="clear">Refer a Friend</h2>
+    <h2 class="clear">Refer a Friend <span id="tooltip-refer-a-friend" style="display: inline; vertical-align: middle;">[?]</span></h2>
     
       <div id="id_referral_name_error" class="formError hidden">This field is required</div>
 	  <div class="row">
@@ -70,3 +70,11 @@
   		}
   	});
   </script>
+ <script type="text/javascript">
+	$(window).ready(function(){
+		$('#tooltip-refer-a-friend').popover({
+			title: 'Refer a friend',
+			content: 'Referring a friend as either a tutor or student to Universal Tutors will bring both of you discounts on your sessions'
+		});
+	});
+</script>

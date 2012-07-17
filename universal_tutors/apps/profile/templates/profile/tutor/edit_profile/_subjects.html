@@ -4,7 +4,7 @@
 {% with subjects.count as no_subjects %}
 {% with profile.currency as currency %}
   <li id="subjectsTab">
-    <h2 class="clear">Subjects</h2>
+    <h2 class="clear">Subjects <span id="tooltip-subjects" style="display: inline; vertical-align: middle;">[?]</span></h2>
     <label>Maximum of 12 subjects allowed</label>
 	
 	<input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
@@ -186,6 +186,14 @@
   		}
   	});
   </script>
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#tooltip-subjects').popover({
+			title: 'Subjects',
+			content: 'In order for students to find the tutor best suited to their needs we ask you to be, where appropriate, quite specific about the subjects, levels and curriculums you teach'
+		});
+	});
+</script>
 {% endwith %}
 {% endwith %}
 {% endwith %}

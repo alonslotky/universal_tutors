@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from apps.common.utils.view_utils import main_render
 from apps.profile.models import *
 from apps.classes.models import *
-from apps.core.models import Video
+from apps.core.models import Video, Currency
 from apps.core.utils import *
 
 from ordereddict import OrderedDict
@@ -135,6 +135,7 @@ def search(request):
         'results_per_page': results_per_page,
         'user': user,
         'tutors': tutors.distinct(),
+        'currencies': Currency.objects.all(),
     }
 
 
