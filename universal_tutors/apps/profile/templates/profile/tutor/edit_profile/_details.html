@@ -41,14 +41,13 @@
           <textarea id="id_about" name="about" class="user">{{form.about.value}}</textarea>
           
           {% if form.video.errors %}<div class="formError">{{ form.video.errors }}</div>{% endif %}
-          <div class="row user">
+          <div class="row user space">
             <div class="three columns phone-one">
               <label>Video (URL)</label>
-              <span>Youtube video link</span>
             </div>
             <div class="nine columns phone-three">
-              <input id="id_video" name="video" type="text" class="input-text" {% if form.video.value %}value{% else %}placeholder{% endif %}="{{form.video.value}}">
-	            <div class="row"><span>Your video must not exceed 60 seconds.</span></div>
+              <input id="id_video" name="video" type="text" class="input-text" value="{% if form.video.value %}{{form.video.value}}{% endif %}" placeholder="Youtube video link">
+	          <span>Your video must not exceed 60 seconds.</span>
             </div>
           </div>
 
@@ -56,9 +55,8 @@
             <div class="three columns phone-one">
               <label>I have a Webcam</label>
             </div>
-            <div class="nine columns phone-three">
-              {{ form.webcam }}<br/ >
-              {{form.webcam.help_text}}
+            <div class="nine columns phone-three checkbox-container">
+              {{ form.webcam }}
             </div>
           </div>
 
@@ -126,7 +124,7 @@
             <div class="three columns phone-one">
               <label>I have a CRB</label>
             </div>
-            <div class="nine columns phone-three">
+            <div class="nine columns phone-three checkbox-container">
               <div class="row">{{ form.crb }}</div>
               <div class="row">To apply for a CRB <a href="{% url crb_form %}" target="_blank">click here</a>.</div>
             </div>  

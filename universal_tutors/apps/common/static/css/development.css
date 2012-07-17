@@ -118,3 +118,5 @@ header .class-info strong { color: #fff; }
 .big-stars-container .big-stars-cover { position: absolute; top:0; left:0; float: left; width: 110px; height: 21px; z-index: 2; background: url('../images/misc/stars.png'); }
 
 .feature-text .video.button { line-height: 18px; font-size: 2rem;}
+
+.row .checkbox-container { padding-top: 3px !important; }
