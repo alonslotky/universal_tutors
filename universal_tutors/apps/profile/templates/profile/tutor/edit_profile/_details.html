@@ -22,7 +22,7 @@
 		  <div class="row space">&nbsp;</div>
           <div class="row space"><div class="button"><a href="{% url profile %}" class="icon">view public profile</a></div></div>
       </div>
-      <div class="eight column">
+      <div class="eight columns">
          {% if form.first_name.errors %}<div class="formError">First name is required</div>{% endif %}
          {% if form.last_name.errors %}<div class="formError">Last name is required</div>{% endif %}
           <div class="row">
@@ -37,8 +37,12 @@
           </div>
           
           {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
-          <label>Description <span>(max 300 characters)</span></label>
-          <textarea id="id_about" name="about" class="user">{{form.about.value}}</textarea>
+          <div class="row space">
+          	<div class="twelve columns">
+	          <label>Description <span>(max 300 characters)</span></label>
+	          <textarea id="id_about" name="about" class="user stretch">{{form.about.value}}</textarea>          		
+          	</div>
+          </div>
           
           {% if form.video.errors %}<div class="formError">{{ form.video.errors }}</div>{% endif %}
           <div class="row user space">

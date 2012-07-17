@@ -120,3 +120,4 @@ header .class-info strong { color: #fff; }
 .feature-text .video.button { line-height: 18px; font-size: 2rem;}
 
 .row .checkbox-container { padding-top: 3px !important; }
+.row textarea.user.stretch { min-width: 100%; }
