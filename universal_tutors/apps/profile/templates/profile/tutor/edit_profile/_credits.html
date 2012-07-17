@@ -1,3 +1,4 @@
+  {% load common_tags %}
   <li id="creditsTab">
     <h2 class="clear">Credits Overview</h2>
     <div class="row">
@@ -13,7 +14,7 @@
         <label>Commission to Universal Tutors</label>
       </div>
       <div class="seven columns">
-        	{{profile.income_without_commission}} credit(s)<br/>
+        	{{profile.income_without_commission|sub:profile.income}} credit(s)<br/>
       </div>
     </div>
     <div class="row space">
