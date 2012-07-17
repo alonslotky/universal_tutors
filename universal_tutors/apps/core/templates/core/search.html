@@ -41,7 +41,7 @@
 		
 		                <div class="row space">
 		                  <div class="three columns">
-		                    <label>Price</label>
+		                    <label>Price <span id="tooltip-price">[?]</span></label>
 		                  </div>
 		                  <div class="nine columns">
 		                  	 <div class="five columns">
@@ -418,6 +418,20 @@
 					$.get('{% url favorite %}'+ tutor_id +'/', function(response){
 						$('.tutor-favorite-'+ tutor_id +' span').html(response);
 					});
+				});
+			});
+		</script>
+		<script type="text/javascript">
+			$(window).ready(function(){
+				$('#tooltip-price').popover({
+					title: 'Price',
+					content: 'prices throughout the site are based on a credit system. 1 credit is equal to 1 pound Sterling. '+
+					         'If you have a EUR or USD account then a credit’s value will change over time, 1 credit is currently equivalent to: <br/>' +
+							 {% for currency in currencies %}
+							 {% if currency.acronym != 'GBP' %}
+							 '- {{currency.acronym}}: {{currency.symbol}}{{currency.credit_value|floatformat:2}}{% if not forloop.last %}<br/>'+{% else %}'{% endif %}
+							 {% endif %}
+							 {% endfor %}
 				});
 			});
 		</script>

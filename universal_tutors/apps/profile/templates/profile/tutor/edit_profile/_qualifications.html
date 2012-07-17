@@ -1,7 +1,7 @@
 {% with user.qualifications.all as qualifications %}
 {% with qualifications.count as no_qualifications %}
   <li id="qualificationsTab">
-    <h2 class="clear">Qualifications</h2>
+    <h2 class="clear">Qualifications <span id="tooltip-qualifications" style="display: inline; vertical-align: middle;">[?]</span></h2>
     
     <table class="stretch">
       <tr>
@@ -87,5 +87,13 @@
   		id_qualification++;
   	});	
   </script>
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#tooltip-qualifications').popover({
+			title: 'Qualifications',
+			content: 'Uploading degree certificates or similar qualifications will significantly increase the number of students who choose you as their tutor'
+		});
+	});
+</script>
 {% endwith %}
 {% endwith %}

@@ -47,7 +47,7 @@
           {% if form.video.errors %}<div class="formError">{{ form.video.errors }}</div>{% endif %}
           <div class="row user space">
             <div class="three columns phone-one">
-              <label>Video (URL)</label>
+              <label>Video (URL) <span id="tooltip-video">[?]</span></label>
             </div>
             <div class="nine columns phone-three">
               <input id="id_video" name="video" type="text" class="input-text" value="{% if form.video.value %}{{form.video.value}}{% endif %}" placeholder="Youtube video link">
@@ -189,4 +189,12 @@
   		$("input[name=profile_image]").parent().hide();
   	}
 	
+</script>
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#tooltip-video').popover({
+			title: 'Video',
+			content: 'Providing a short video intro to yourself will help you attract more students as it provides them with more comfort about their choice of tutor'
+		});
+	});
 </script>

@@ -162,6 +162,16 @@
               <input type="text" id="id_referral_other" name="referral_other" value="{% if form.referral_other.value %}{{ form.referral_other.value }}{% endif %}" class="input-text oversize stretch" />
             </div>
           </div>
+
+		  {% if form.referral_key.errors %}<div class="formError">{{ form.referral_key.errors }}</div>{% endif %}
+          <div class="row space">
+            <div class="three columns">
+              <label>Referral Key <span id="tooltip-referral">[?]</span></label>
+            </div>
+            <div class="nine columns">
+              <input type="text" id="id_referral_key" name="referral_key" value="{% if form.referral_key.value %}{{ form.referral_key.value }}{% endif %}" class="input-text oversize stretch" />
+            </div>
+          </div>
           
           <hr class="inside">
 
@@ -319,5 +329,13 @@
   		$(".four.columns.photo").hide();
   	}
 	
+</script>
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#tooltip-referral').popover({
+			title: 'Referral Key',
+			content: 'If you have been referred by another user of the site then please enter the code here to receive your special offer'
+		});
+	});
 </script>
 {% endblock %}

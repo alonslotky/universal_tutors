@@ -40,7 +40,7 @@
           {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
-	          <label>Description* <br/><span>(max 300 characters)</span></label>
+	          <label>Description* <span id="tooltip-description">[?]</span><br/><span>(max 300 characters)</span></label>
     		</div>
             <div class="nine columns">
 	          <textarea id="id_about" name="about" class="user">{{form.about.value}}</textarea>
@@ -49,7 +49,7 @@
 
           <div class="row space">
             <div class="three columns">
-              <label>Gender</label>
+              <label>Gender*</label>
             </div>
             <div class="nine columns">
               {{form.gender}}
@@ -94,7 +94,7 @@
           {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
           <div class="row date_of_birth space">
             <div class="three columns phone-one">
-              <label>Timezone</label>
+              <label>Timezone*</label>
             </div>
             <div class="nine columns phone-three">
               	{{form.timezone}}
@@ -103,7 +103,7 @@
 
           <div class="row">
             <div class="three columns phone-one">
-              <label>I have a Webcam</label>
+              <label>I have a Webcam <span id="tooltip-webcam">[?]</span></label>
             </div>
             <div class="nine columns phone-three">
               	<div class="">{{form.webcam}}</div>
@@ -165,7 +165,7 @@
 
           <div class="row date_of_birth">
             <div class="three columns phone-one">
-              <label>I have a CRB check</label>
+              <label>I have a CRB check <span id="tooltip-crb">[?]</span></label>
             </div>
             <div class="nine columns phone-three">
               	<div class="">{{form.crb}}</div>
@@ -185,7 +185,7 @@
 	      {% if form.paypal_email.errors %}<div class="formError">{{ form.paypal_email.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
-              <label>Paypal Email</label>
+              <label>Paypal Email <span id="tooltip-paypal">[?]</span></label>
             </div>
             <div class="nine columns">
               <input type="text" id="id_email" name="paypal_email" placeholder="Required to withdraw income - can be added at later date" value="{{ form.paypal_email.value }}" class="input-text oversize stretch" />
@@ -194,7 +194,7 @@
 
           <div class="row date_of_birth">
             <div class="three columns phone-one">
-              <label>Currency</label>
+              <label>Currency*</label>
             </div>
             <div class="nine columns phone-three">
               	{{form.currency}}
@@ -232,7 +232,7 @@
 		  {% if form.referral_key.errors %}<div class="formError">{{ form.referral_key.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
-              <label>Referral Key</label>
+              <label>Referral Key <span id="tooltip-referral">[?]</span></label>
             </div>
             <div class="nine columns">
               <input type="text" id="id_referral_key" name="referral_key" value="{% if form.referral_key.value %}{{ form.referral_key.value }}{% endif %}" class="input-text oversize stretch" />
@@ -411,6 +411,36 @@
 	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
   		$(".four.columns.photo").hide();
   	}
+
+</script>
+
+<script type="text/javascript">
+	$(window).ready(function(){
+		$('#tooltip-description').popover({
+			title: 'Description',
+			content: 'This is one of the first things students will see in the search results, so make sure you tell them the interesting bits about you'
+		});
+
+		$('#tooltip-webcam').popover({
+			title: 'Webcam',
+			content: 'Our classrooms include the optional use of video communication, your chances of getting booked for classes are far better if you have a webcam'
+		});
+
+		$('#tooltip-crb').popover({
+			title: 'CRB',
+			content: 'If you would like to teach under 16’s then we strongly recommend that you provide a recent CRB check or purchase a new one as we advise all under 16’s and their parents only to use CRB checked tutors'
+		});
+
+		$('#tooltip-paypal').popover({
+			title: 'Paypal Email',
+			content: 'This is required in order for Universal Tutors to transfer your earnings to you'
+		});
+
+		$('#tooltip-referral').popover({
+			title: 'Referral Key',
+			content: 'If you have been referred by another user of the site then please enter the code here to receive your special offer'
+		});
+	});
 
 </script>
 {% endblock %}
