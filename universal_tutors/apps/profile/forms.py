@@ -40,12 +40,15 @@ class StudentInterestForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     first_name = forms.CharField()
     last_name = forms.CharField()
+    account_email = forms.EmailField()
     password  = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password1 = forms.CharField(label=_('New Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
 
     class Meta:
-        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'video', 'gender', 'profile_image', 'crb', 'crb_file', 'currency', 'webcam', 'paypal_email')
+        fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'gender', 
+                  'profile_image', 'crb', 'crb_file', 'currency', 'webcam', 'paypal_email',
+                  'notifications_messages', 'notifications_classes', 'notifications_other',)
         model = UserProfile
         widgets = {
             'profile_image': forms.FileInput(),
@@ -57,6 +60,14 @@ class ProfileForm(forms.ModelForm):
         self.fields['country'].required = True
         # self.fields['webcam'].help_text = 'Users will need atleast a 500kbps internet connection in order to use the classroom functionality'
 
+
+    def clean_account_email(self):
+        email = self.cleaned_data['account_email']
+        user_id = self.instance.user.id if self.instance else 0 
+        if User.objects.filter(email=email).exclude(id=user_id).count() > 0:
+            raise forms.ValidationError(_(u"This email is already registered."))
+        return email
+    
     def clean(self):
         cleaned_data = self.cleaned_data
 

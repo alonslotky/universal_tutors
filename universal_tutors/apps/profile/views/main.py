@@ -99,7 +99,10 @@ def edit_tutor_profile(request):
     data = {
         'first_name': user.first_name,
         'last_name': user.last_name,
+        'account_email': user.email,
     }
+
+
     form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
     subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
     qualifications_formset = TutorQualificationFormSet(request.POST or None, request.FILES or None, instance=user)
@@ -270,6 +273,7 @@ def edit_student_profile(request):
     data = {
         'first_name': user.first_name,
         'last_name': user.last_name,
+        'account_email': user.email,
     }
     
     form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
@@ -519,6 +523,7 @@ def edit_parent_profile(request):
     data = {
         'first_name': user.first_name,
         'last_name': user.last_name,
+        'account_email': user.email,
     }
     
     form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)

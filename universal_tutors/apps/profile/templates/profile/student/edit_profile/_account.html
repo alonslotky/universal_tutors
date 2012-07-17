@@ -1,6 +1,41 @@
   <li id="accountTab">
     <h2 class="clear">Account Details</h2>
     
+    {% if form.account_email.errors %}<div class="formError">{{form.account_email.errors}}</div>{% endif %}
+    <div class="row">
+      <div class="four columns">
+        <label>Email</label>
+      </div>
+      <div class="eight columns">
+        <input id="id_account_email" name="account_email" type="text" class="input-text clear" value="{{form.account_email.value}}">
+      </div>
+    </div>
+      <div class="row">
+        <div class="four columns">
+          <label>Receive message notifications</label>
+        </div>
+        <div class="eight columns">
+          {{ form.notifications_messages }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="four columns">
+          <label>Receive class related notifications</label>
+        </div>
+        <div class="eight columns">
+          {{ form.notifications_classes }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="four columns">
+          <label>Receive other site notifications</label>
+        </div>
+        <div class="eight columns">
+          {{ form.notifications_other }}
+        </div>
+      </div>
+    <hr>
+
     {% if form.password.errors %}<div class="formError">Invalid password</div>{% endif %}
     <div class="row">
       <div class="four columns">
