@@ -688,6 +688,7 @@ class UserProfile(BaseModel):
         user = self.user
 
         context['user'] = user
+        context['user_profile'] = self
         context['PROJECT_SITE_DOMAIN'] = settings.PROJECT_SITE_DOMAIN
 
         try:
