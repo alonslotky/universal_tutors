@@ -43,7 +43,7 @@
         <dd><a href="#credits">Credits</a></dd>
       </dl>
       
-      <form id="profile-form" method="post" enctype="multipart/form-data" class="nice">
+      <form action="." id="profile-form" method="post" enctype="multipart/form-data" class="nice">
 	      {% csrf_token %}
 	      <ul class="nice tabs-content contained">
 			{% include "profile/student/edit_profile/_details.html" %}
