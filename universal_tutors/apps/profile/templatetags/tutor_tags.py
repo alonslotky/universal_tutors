@@ -151,6 +151,8 @@ def get_messages(person, user):
         latest = (messages[0], 'Received')
     elif sent_messages:
         latest = (sent_messages[0], 'Sent')
+    else:
+        latest = None
         
     return {
         'messages': messages,

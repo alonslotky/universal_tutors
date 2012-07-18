@@ -4,13 +4,12 @@
 </div>
 
 <script type="text/javascript">
-	$(function() {
-		$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ profile.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>');
-		$("#modal-video").bind('reveal:close', 	function(){
-			setTimeout(function(){
-				$("div#modal-video iframe").remove();
-				$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ profile.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>');
-			}, 100);
-		});
+	var change_video_profile = function(video_id) {
+		$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/'+ video_id +'" frameborder="0" allowfullscreen></iframe>');
+	}
+	$("#modal-video").bind('reveal:close', 	function(){
+		setTimeout(function(){
+			$("div#modal-video iframe").remove();
+		}, 100);
 	});
 </script>

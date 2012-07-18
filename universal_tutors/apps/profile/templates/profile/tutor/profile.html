@@ -22,9 +22,9 @@
     <div class="two columns">
       <div class="row space">
 	      <div class="profile-picture">
-	        <img src="{% version profile.profile_image.path 'profile_image' %}" alt="{{person.get_full_name}}">
-	        {% if profile.video %}
-	        <a href="javascript:;" class="watch-video ir" data-reveal-id="modal-video" onclick="$('#video-frame').removeClass('hidden');">Watch Video</a>
+	        <img src="{% version profile.get_profile_image_path 'profile_image' %}" alt="{{person.get_full_name}}">
+	        {% if profile.video_approved and profile.video %}
+	        <a href="javascript:;" class="watch-video ir" data-reveal-id="modal-video" onclick="change_video_profile('{{profile.get_video_id}}');">Watch Video</a>
 	        {% endif %}
 	      </div>
 	  </div>
@@ -50,22 +50,26 @@
           <div class="row">
             <div class="six columns">
 
-              {% if profile.about %}
+              {% if profile.get_about %}
               <label>Description</label>
-              <p>{{profile.about}}</p>
+              <p>{{profile.get_about}}</p>
               {% endif %}
               	
               <label>Qualifications</label>
               <ul class="tutor-qualifications-list">
-                {% for item in person.qualifications.all %}
-	                {% if item.document %}
-	                <li><a class="open" href="{{item.document.url}}" target="blank">{{item.qualification}}</a></li>
-                	{% else %}
-	                <li>{{item.qualification}}</li>                	
-                	{% endif %}
-                {% empty %}
-	                <li>No qualifications</li>                	                
-                {% endfor %}
+              	{% if profile.qualification_documents_approved %}
+	                {% for item in person.qualifications.all %}
+		                {% if item.document %}
+		                <li><a class="open" href="{{item.document.url}}" target="blank">{{item.qualification}}</a></li>
+	                	{% else %}
+		                <li>{{item.qualification}}</li>                	
+	                	{% endif %}
+	                {% empty %}
+		                <li>No qualifications</li>                	                
+	                {% endfor %}
+				{% else %}
+	                <li>No qualifications have been approved</li>                	                				
+				{% endif %}
               </ul>
 
               <label>CRB certified</label>
@@ -221,7 +225,7 @@
   
   {% include 'profile/fragments/_modal_messages.html' %}
   {% include 'profile/fragments/_alert_crb.html' %}
-  {% if profile.video %}
+  {% if profile.video_approved and profile.video %}
   {% include 'profile/fragments/_modal_video.html' %}
   {% endif %}
    

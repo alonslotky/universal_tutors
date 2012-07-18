@@ -5,19 +5,49 @@ from django.db.models import Q, Sum
 from django.template import RequestContext, Context, loader
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
-from apps.common.utils.date_utils import to_calendar, next_month, next_month, prev_month
+from apps.profile.models import *
 
 import datetime
 
-@main_render(template='core/fragments/home/_calendar.html')
-def get_calendar(request, date):
-    dt = date.split('-')
-    date = datetime.date(int(dt[0]), int(dt[1]), 1)    
-    nxt_month = next_month(date)
-    prv_month = prev_month(date)
-    months = [to_calendar(date), to_calendar(nxt_month)]
+def approve_item(request, tutor_id, type, approve):
+    user = request.user
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+    
+    approve = int(approve)
+    try:
+        tutor = User.objects.select_related().get(id = tutor_id, profile__type=UserProfile.TYPES.TUTOR)
+        profile = tutor.profile
+    except Class.DoesNotExist:
+        raise http.Http404()
+    
+    if type == 'image':
+        profile.profile_image_approved = bool(approve)
+    if type == 'description':
+        profile.about_approved = bool(approve)
+    if type == 'video':
+        profile.video_approved = bool(approve)
+    if type == 'qualifications':
+        profile.qualification_documents_approved = bool(approve)
+    if type == 'crb':
+        if approve:
+            date = request.GET.get('crb_date', '').split('-')
+            try:
+                profile.crb_expiry_date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+            except:
+                return http.HttpResponse('approved' if profile.crb_checked else 'not approved')
+        else:
+            profile.crb_expiry_date = None
+    
+    profile.save()
+    
+    return http.HttpResponse('approved' if approve else 'not approved')
+
+
+    
     
     return {
         'months': months,

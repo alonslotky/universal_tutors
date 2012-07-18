@@ -164,11 +164,16 @@ class CustomIndexDashboard(Dashboard):
 
         # append another link list module for "support".
         self.children.append(modules.LinkList(
-            _('Monitoring Classes'),
+            _('Monitoring'),
             column=2,
             children=[
                 {
-                    'title': _('Open classes'),
+                    'title': _('Profiles waiting for approval'),
+                    'url': reverse('waiting_approval'),
+                    'external': True,
+                },
+                {
+                    'title': _('Classes'),
                     'url': reverse('monitoring_classes'),
                     'external': True,
                 },
