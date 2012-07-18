@@ -12,6 +12,7 @@ from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.classes.settings import CREDIT_VALUE
 import urlparse, threading
 
+
 class Currency(BaseModel):
     class Meta:
         verbose_name_plural = 'Currencies'
@@ -86,6 +87,22 @@ class Bundle(models.Model):
     def get_discount_percentage(self):
         return '%s' % (self.discount * 100)
     
+
+#class Discount(BaseModel):
+#    """
+#    Create discount code and roles
+#    """
+#    
+#    description = models.CharField(max_length=30, null=True, blank=True, help_text='Optional. Just to internal identification')
+#    code = models.SlugField(max_length=15, null=True, blank=True, unique=True, db_index=True, help_text='We recommend more than 6 chars. To auto-generation left this field empty.')
+#    start = models.DateField()
+#    end = models.DateField()
+#    valid = models.PositiveSmallIntegerField(help_text="Number of times this discount can be user. Type 0 for unlimited.")
+#    discount = models.PositiveSmallIntegerField(help_text="A percentage. Example: 10 for 10%")
+#
+#    def __unicode__(self):
+#        return self.description if self.description else self.code
+
 
 from apps.profile.models import UserProfile as _UserProfile
 

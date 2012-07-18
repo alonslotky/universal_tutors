@@ -16,6 +16,7 @@ from allauth.account.utils import user_display, perform_login, send_email_confir
 from allauth.utils import email_address_exists
 
 from apps.classes.models import *
+from apps.classes.settings import MINIMUM_CREDITS_PER_HOUR
 from apps.common.utils.form_fields import ListField
 from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
@@ -29,6 +30,12 @@ class TutorSubjectForm(forms.ModelForm):
     class Meta:
         models = TutorSubject
         fields = ('system', 'level', 'subject', 'credits')
+    
+    def clean_credits(self):
+        credits = self.cleaned_data['credits']
+        if credits < MINIMUM_CREDITS_PER_HOUR:
+            raise forms.ValidationError(_(u'Minimum %s credits per hour' % MINIMUM_CREDITS_PER_HOUR))
+        return credits
         
         
 class StudentInterestForm(forms.ModelForm):

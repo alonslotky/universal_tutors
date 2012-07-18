@@ -20,6 +20,7 @@ from apps.common.utils.decorators import over16_required
 from apps.profile.models import UserProfile, NewsletterSubscription
 from apps.profile.forms import *
 from apps.classes.models import *
+from apps.classes.settings import MINIMUM_CREDITS_PER_HOUR
 
 import pytz, datetime
 
@@ -130,6 +131,7 @@ def edit_tutor_profile(request):
             return http.HttpResponseRedirect(reverse('edit_profile'))
 
     return {
+        'MINIMUM_CREDITS_PER_HOUR': MINIMUM_CREDITS_PER_HOUR,
         'profile':profile,
         'form': form,
         'subject_formset': subject_formset,
