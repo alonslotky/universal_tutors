@@ -155,6 +155,7 @@ class UserProfile(BaseModel):
         (10, 'MESSAGE', 'New message'),
         (11, 'CANCELED_BY_SYSTEM', 'Class canceled by the system'),
         (12, 'REFERRAL', 'User referral'),
+        (13, 'NEW_TUTOR', 'New tutor'),
     ))
     
     UPLOAD_IMAGES_PATH = 'uploads/profiles/profile_images'
@@ -659,22 +660,6 @@ class UserProfile(BaseModel):
 
     def send_notification(self, type, context, use_thread=True):
         from apps.core.models import EmailTemplate
-
-
-        (0, 'BOOKED', 'A new class has been booked'),
-        (1, 'CANCELED_BY_TUTOR', 'Class canceled by tutor'),
-        (2, 'CANCELED_BY_STUDENT', 'Class canceled by student'),
-        (3, 'INCOME', 'Credits income'),
-        (4, 'ACTIVATED', 'Activated account'),
-        (5, 'CLASS', 'Class is about to start'),
-        (6, 'ACCEPTED_BY_TUTOR', 'A class has been accepted by tutor'),
-        (7, 'REJECTED_BY_TUTOR', 'A class has been rejected by tutor'),
-        (8, 'CRB_EXPIRED', 'The CRB is expired'),
-        (9, 'CRB_EXPIRE_DATE', 'The CRB is going to expire in less than 2 weeks'),
-        (10, 'MESSAGE', 'New message'),
-        (11, 'CANCELED_BY_SYSTEM', 'Class canceled by the system'),
-        (12, 'REFERRAL', 'User referral'),
-
 
         TYPES = self.NOTIFICATIONS_TYPES 
         if type in [TYPES.MESSAGE]:

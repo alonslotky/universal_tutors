@@ -548,5 +548,5 @@ def waiting_approval(request):
                     Q(profile__about_approved=False) |
                     Q(profile__video_approved=False) |
                     Q(profile__qualification_documents_approved=False)
-                ),
+                ).distinct(),
     }

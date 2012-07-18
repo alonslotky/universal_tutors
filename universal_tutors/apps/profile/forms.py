@@ -20,7 +20,7 @@ from apps.classes.settings import MINIMUM_CREDITS_PER_HOUR
 from apps.common.utils.form_fields import ListField
 from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
-from apps.core.models import Currency
+from apps.core.models import Currency, EmailTemplate
 
 import urllib2
 import urlparse
@@ -378,6 +378,17 @@ class TutorSignupForm(SignupForm):
         profile.type = profile.TYPES.TUTOR
         profile.paypal_email = self.cleaned_data.get('paypal_email', None)
         profile.save()
+        
+        try:
+            email = EmailTemplate.objects.get(type=UserProfile.NOTIFICATIONS_TYPES.NEW_TUTOR)
+            email.send_email({
+                'user': user,
+                'tutor': user,
+                'profile': profile,
+                'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+            }, [settings.PROJECT_INFO_EMAIL_ADDRESS])
+        except EmailTemplate.DoesNotExist:
+            pass
         
         return user
     
