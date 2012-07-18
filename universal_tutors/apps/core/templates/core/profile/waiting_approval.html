@@ -25,11 +25,18 @@
 	        {% endif %}
           </div>
           
-          <div class="four columns">
+          <div class="three columns">
+      		<strong>Description</strong><br/>
+			{% if tutor_profile.about %}
             <p>{{tutor_profile.about|truncatechars:300}}</p>
+          	{% else %}
+            <p>No description</p>          	
+          	{% endif %}
           </div>
           
-          <div class="two columns">
+          <div class="three columns">
+          		<strong>CRB and Qualifications</strong><br/>
+                {% if tutor_profile.crb_file %}<a class="open" href="{{tutor_profile.crb_file.url}}" target="_blank">CRB Document</a><br/>{% endif %}        		
 	          	{% for item in tutor.qualifications.all %}
 	                {% if item.document %}
 	                <a class="open" href="{{item.document.url}}" target="_blank">{{item.qualification}}</a><br/>
