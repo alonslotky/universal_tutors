@@ -529,3 +529,24 @@ def monitoring_class(request, class_id):
         'class': class_,
         'scribblar_user': scribblar_user,
     }
+
+
+@main_render('core/profile/waiting_approval.html')
+def waiting_approval(request):
+    """
+    detailed profile from a user
+    """
+    user = request.user
+
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+
+    return {
+        'users': User.objects.select_related().filter(
+                    Q(profile__type = UserProfile.TYPES.TUTOR),
+                    Q(profile__profile_image_approved=False) |
+                    Q(profile__about_approved=False) |
+                    Q(profile__video_approved=False) |
+                    Q(profile__qualification_documents_approved=False)
+                ),
+    }

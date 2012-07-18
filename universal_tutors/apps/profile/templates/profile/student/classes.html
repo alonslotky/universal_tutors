@@ -41,7 +41,7 @@
 	      <article class="{% if class.status != class.STATUS_TYPES.BOOKED and class.status != class.STATUS_TYPES.WAITING %}faded{% endif %}">
 	        <div class="row">
 	          <div class="one columns hide-on-phones">
-	            <img src="{% version tutor_profile.profile_image.path 'class_list_profile_image' %}" alt="{{tutor.get_full_name}}">
+	            <img src="{% version tutor_profile.get_profile_image_path 'class_list_profile_image' %}" alt="{{tutor.get_full_name}}">
 	          </div>
 	          
 	          <div class="three columns">

@@ -1,0 +1,97 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags %}
+
+{% block title %}Tutors{% endblock %}
+{% block body_class %}app student tutors{% endblock %}
+
+{% block content %}
+      <section class="blue feature-box"><div class="inner">
+        <h1>Tutors <span>Waiting for approval.</span></h1>
+      </div></section>
+      
+      {% for tutor in users %}
+      {% with tutor.profile as tutor_profile %}
+      <article>
+        <div class="row">
+          <div class="one columns hide-on-phones">
+            <img src="{% version tutor_profile.profile_image.path 'list_tutors' %}" alt="{{tutor.get_full_name}}">
+          </div>
+          
+          <div class="two columns">
+            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
+			{% if tutor_profile.video %}
+	        	<p><a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a></p>
+	        {% endif %}
+          </div>
+          
+          <div class="four columns">
+            <p>{{tutor_profile.about|truncatechars:300}}</p>
+          </div>
+          
+          <div class="two columns">
+	          	{% for item in tutor.qualifications.all %}
+	                {% if item.document %}
+	                <a class="open" href="{{item.document.url}}" target="_blank">{{item.qualification}}</a><br/>
+	            	{% else %}
+	                {{item.qualification}}<br/>                	
+	            	{% endif %}
+	            {% endfor %}
+          	</ul>
+          </div>
+          
+          <div class="three columns action">
+            <a onclick="set_approval('image', {{tutor.id}}, 1);" id="image-not-approved-{{tutor.id}}" href="javascript:;" class="text-red {% if tutor_profile.profile_image_approved %}hidden{% endif %}"><i class="icon-cancel"></i> Image not approved</a>
+            <a onclick="set_approval('image', {{tutor.id}}, 0);" id="image-approved-{{tutor.id}}" href="javascript:;" class="{% if not tutor_profile.profile_image_approved %}hidden{% endif %}"><i class="icon-ok"></i> Image approved</a>
+
+            <a onclick="set_approval('description', {{tutor.id}}, 1);" id="description-not-approved-{{tutor.id}}" href="javascript:;" class="text-red {% if tutor_profile.about_approved %}hidden{% endif %}"><i class="icon-cancel"></i> Description not approved</a>
+            <a onclick="set_approval('description', {{tutor.id}}, 0);" id="description-approved-{{tutor.id}}" href="javascript:;" class="{% if not tutor_profile.about_approved %}hidden{% endif %}"><i class="icon-ok"></i> Description approved</a>
+
+			{% if tutor_profile.video %}
+            <a onclick="set_approval('video', {{tutor.id}}, 1);" id="video-not-approved-{{tutor.id}}" href="javascript:;" class="text-red {% if tutor_profile.video_approved %}hidden{% endif %}"><i class="icon-cancel"></i> Video not approved</a>
+            <a onclick="set_approval('video', {{tutor.id}}, 0);" id="video-approved-{{tutor.id}}" href="javascript:;" class="{% if not tutor_profile.video_approved %}hidden{% endif %}"><i class="icon-ok"></i> Video approved</a>
+			{% endif %}
+
+            <a onclick="set_approval('qualifications', {{tutor.id}}, 1);" id="qualifications-not-approved-{{tutor.id}}" href="javascript:;" class="text-red {% if tutor_profile.qualification_documents_approved %}hidden{% endif %}"><i class="icon-cancel"></i> Qualifications not approved</a>
+            <a onclick="set_approval('qualifications', {{tutor.id}}, 0);" id="qualifications-approved-{{tutor.id}}" href="javascript:;" class="{% if not tutor_profile.qualification_documents_approved %}hidden{% endif %}"><i class="icon-ok"></i> Qualifications approved</a>
+          
+            <a onclick="set_approval('crb', {{tutor.id}}, 1);" id="crb-not-approved-{{tutor.id}}" href="javascript:;" class="text-red {% if tutor_profile.crb_checked %}hidden{% endif %}"><i class="icon-cancel"></i> CRB not approved</a>
+            <a onclick="set_approval('crb', {{tutor.id}}, 0);" id="crb-approved-{{tutor.id}}" href="javascript:;" class="{% if not tutor_profile.crb_checked %}hidden{% endif %}"><i class="icon-ok"></i> CRB approved</a>
+          </div>
+        </div>
+      </article>
+      {% endwith %}
+	  {% empty %}
+	  	<div class="row center">
+	      There are no profiles waiting for approval
+	  	</div>
+      {% endfor %}
+  {% include 'profile/fragments/_modal_video.html' %}
+  
+  <script type="text/javascript">
+  	var set_approval = function(type, tutor_id, action) {
+  		if(!action) {
+  			if(!confirm('Are you sure you want disapprove this item?')) {
+  				return;
+  			}
+  		}
+  		
+  		if(action && type=='crb') {
+  			crb = '?crb_date=' + prompt('Insert the expiration date please. (YYYY-MM-DD)');
+  		} else {
+  			crb = ''
+  		}
+  		
+  		$.get('{% url approve_item %}'+ tutor_id +'/'+ type +'/'+ action +'/'+ crb, function(response){
+  			if(response == 'approved') {
+  				$('#'+ type +'-approved-'+ tutor_id).removeClass('hidden');
+  				$('#'+ type +'-not-approved-'+ tutor_id).addClass('hidden');
+  			} else {
+  				$('#'+ type +'-approved-'+ tutor_id).addClass('hidden');  				
+  				$('#'+ type +'-not-approved-'+ tutor_id).removeClass('hidden');
+  			}
+  		});
+  	}
+  </script>
+{% endblock %}
+

@@ -22,9 +22,12 @@ urlpatterns = patterns('apps.core.views.main',
 
     url(r'^(?i)monitoring/$', 'monitoring_classes', name='monitoring_classes'),
     url(r'^(?i)monitoring/(?P<class_id>\d+)/$', 'monitoring_class', name='monitoring_class'),
+
+    url(r'^(?i)waiting_for_approval/$', 'waiting_approval', name='waiting_approval'),
 )
 
 # Ajax
 urlpatterns += patterns('apps.core.views.ajax',
-    
+    url(r'^(?i)waiting_for_approval/approve_item/$', 'approve_item', name='approve_item'),
+    url(r'^(?i)waiting_for_approval/approve_item/(?P<tutor_id>\d+)/(?P<type>\w+)/(?P<approve>\d+)/$', 'approve_item', name='approve_item'),    
 )

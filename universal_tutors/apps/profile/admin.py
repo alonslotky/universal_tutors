@@ -32,9 +32,9 @@ class TutorProfileAdmin(admin.ModelAdmin):
         }),
     )
     
-    list_display = ('__unicode__', 'title', 'activated', 'crb_expiry_date', 'webcam', 'featured', 'avg_rate', 'no_reviews', 'classes_given', 'min_credits', 'max_credits', 'income', 'currency', 'paypal_email',)
+    list_display = ('__unicode__', 'title', 'activated', 'crb_expiry_date', 'featured', 'profile_image_approved', 'about_approved', 'video_approved', 'qualification_documents_approved', 'avg_rate', 'no_reviews', 'classes_given', 'min_credits', 'max_credits', 'income', 'currency',)
     list_filter = ['activated', 'crb_expiry_date', 'featured', 'currency']
-    list_editable = ['crb_expiry_date', 'featured']
+    list_editable = ['crb_expiry_date', 'featured', 'profile_image_approved', 'about_approved', 'video_approved', 'qualification_documents_approved']
 admin.site.register(TutorProfile, TutorProfileAdmin)
 
 

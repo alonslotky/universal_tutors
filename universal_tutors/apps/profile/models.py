@@ -196,6 +196,12 @@ class UserProfile(BaseModel):
     other_referral = models.CharField(max_length=200, null=True, blank=True)
     referral_key = models.CharField(max_length=30, null=True, blank=True)
     
+    # tutor
+    profile_image_approved = models.BooleanField(default=False)
+    about_approved = models.BooleanField(default=False)
+    video_approved = models.BooleanField(default=False)
+    qualification_documents_approved = models.BooleanField(default=False)
+
     crb = models.BooleanField(default=False)
     crb_file = models.FileField(upload_to='uploads/tutor/crb_certificates', null=True, blank=True, max_length=100)
     crb_expiry_date = models.DateField(null=True, blank=True)
@@ -206,7 +212,7 @@ class UserProfile(BaseModel):
     activation_date = models.DateTimeField(null=True, blank=True, default=None)
     featured = models.BooleanField(default=False)
 
-    # tutor
+
     income_without_commission = models.FloatField(default=0)
 
     avg_rate = models.FloatField(default=0)
@@ -221,6 +227,7 @@ class UserProfile(BaseModel):
     
     classes_given = models.PositiveIntegerField(default=0)
 
+
     # RECEIVE NOTIFICATIONS
     notifications_messages = models.BooleanField(default=True)
     notifications_classes = models.BooleanField(default=True)
@@ -228,8 +235,9 @@ class UserProfile(BaseModel):
 
     @property
     def crb_checked(self):
-        return self.crb_expiry_date >= datetime.date.today()
-
+        if self.crb_expiry_date:
+            return self.crb_expiry_date >= datetime.date.today()
+        return False
 
     @property
     def is_over16(self):
@@ -286,12 +294,8 @@ class UserProfile(BaseModel):
             self.type = self.TYPES.UNDER16
 
         if self.type == self.TYPES.TUTOR:
-            if self.profile_image and \
-               self.profile_image != settings.DEFAULT_PROFILE_IMAGE and \
-               self.about and \
-               self.video:
-                self.activated = True
-                    
+            if self.user.subjects.count():
+                self.activated = True                    
             else:
                 self.activated = False
             
@@ -338,8 +342,16 @@ class UserProfile(BaseModel):
 
 
     def get_profile_image_path(self):
-        return self.profile_image.path if self.profile_image else os.path.join(settings.MEDIA_ROOT, self.DEFAULT_PHOTO)
+        if self.profile_image_approved:
+            return self.profile_image.path
+        return os.path.join(settings.MEDIA_ROOT, settings.DEFAULT_PROFILE_IMAGE)
 
+    def get_about(self):
+        if self.about_approved:
+            return self.about
+        else:
+            return ''
+    
     def get_social_accounts(self):
         return self.user.socialaccount_set.all()
 
