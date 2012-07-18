@@ -60,6 +60,7 @@
 				</div>
 		        <div class="two columns">
 				  <input id="id_subjects-{{forloop.counter0}}-credits" name="subjects-{{forloop.counter0}}-credits" type="text" class="input-text subject-credits" value="{{item.credits}}" />
+				  <div id="id_subjects-{{forloop.counter0}}-credits-error" class="formError without-margin hidden">&nbsp;Minimum {{MINIMUM_CREDITS_PER_HOUR}} credits</div>
 				</div>
 		        <div class="two columns">
 		          <span id="id_subjects-{{forloop.counter0}}-price">{{currency.symbol}} {{item.credits|in_currency:currency|floatformat:2}}</span>
@@ -101,6 +102,7 @@
 				</div>
 		        <div class="two columns">
 				  <input id="id_subjects-{{no_subjects}}-credits" name="subjects-{{no_subjects}}-credits" type="text" class="input-text subject-credits" placeholder="Credits" />
+				  <div id="id_subjects-{{no_subjects}}-credits-error" class="formError without-margin hidden">&nbsp;Minimum {{MINIMUM_CREDITS_PER_HOUR}} credits</div>
 				</div>
 		        <div class="two columns">
 			       <span id="id_subjects-{{no_subjects}}-price">{{currency.symbol}} 0.00</span>
@@ -176,6 +178,7 @@
 	  		'			</div>'+
 	  		'			<div class="two columns">'+
 			'				<input id="id_subjects-'+ id_subject +'-credits" name="subjects-'+ id_subject +'-credits" type="text" class="input-text subject-credits" placeholder="Credits" />'+
+			'	  			<div id="id_subjects-'+ id_subject +'-credits-error" class="formError without-margin hidden">&nbsp;Minimum {{MINIMUM_CREDITS_PER_HOUR}} credits</div>'+
 	  		'			</div>'+
 	  		'			<div class="two columns">'+
 	  		'				<span id="id_subjects-'+ id_subject +'-price">{{currency.symbol}} 0.00</span>'+
@@ -197,8 +200,14 @@
   		
   		if(!isNaN(value)) {
 	  		$('#id_subjects-'+ id +'-price').html(currency_symbol +' '+ (value * credit_value).toFixed(2));
+			if (value < {{MINIMUM_CREDITS_PER_HOUR}}) {
+		  		$('#id_subjects-'+ id +'-credits-error').removeClass('hidden');
+			} else {
+		  		$('#id_subjects-'+ id +'-credits-error').addClass('hidden');
+			}
   		} else {
 	  		$('#id_subjects-'+ id +'-price').html(currency_symbol +' 0.00');
+	  		$('#id_subjects-'+ id +'-credits-error').removeClass('hidden');
   		}
   	});
   </script>
