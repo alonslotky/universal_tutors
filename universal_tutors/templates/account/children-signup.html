@@ -331,6 +331,10 @@
   			$('#id_interests-'+ item_id +'-level').html('<option value="" selected="selected">Any</option>');
   		}
   	});
+
+	$('#id_country').live("change", function(){
+		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
+	});
   
   	$('#add-subject-link').click(function(){
   		if (parseInt($('#id_interests-TOTAL_FORMS').val()) > 11) {

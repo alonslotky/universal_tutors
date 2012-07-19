@@ -20,7 +20,7 @@ from apps.classes.settings import MINIMUM_CREDITS_PER_HOUR
 from apps.common.utils.form_fields import ListField
 from apps.common.utils.fields import COUNTRIES
 from apps.profile.models import *
-from apps.core.models import Currency, EmailTemplate
+from apps.core.models import Currency, EmailTemplate, Country, Timezone
 
 import urllib2
 import urlparse
@@ -203,7 +203,7 @@ class SignupForm(forms.ModelForm):
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
-    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.common_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='UTC')
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(t.timezone, t.timezone) for t in Country.objects.get(country='UK').timezones.all()], widget=forms.Select(attrs={'class': 'stretch'}), initial='UTC')
     
     referral = forms.ChoiceField(label=_('Referral'), choices=UserProfile.REFERRAL_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
     referral_other = forms.CharField(required = False, initial='')

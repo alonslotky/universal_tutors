@@ -1,0 +1,3 @@
+{% for tz in timezones %}
+<option value="{{tz.timezone}}" {% if tz.timezone == 'UTC' %}selected="selected"{% endif %}>{{tz.timezone}}</option>
+{% endfor %}

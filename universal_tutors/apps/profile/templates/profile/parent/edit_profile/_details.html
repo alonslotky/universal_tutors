@@ -1,4 +1,4 @@
-{% load fb_versions %}
+{% load fb_versions common_tags %}
   
   <li id="detailsTab">
     <h2 class="clear">Profile Details</h2>
@@ -89,7 +89,7 @@
             </div>
             <div class="nine columns phone-three">
               <select id="id_timezone" name="timezone" class="stretch">
-              	{% for tz in timezones %}
+              	{% for tz in profile.country|get_country_timezones %}
 	                <option value="{{tz}}" {% if profile.timezone == tz %}selected="selected"{% endif %}>{{tz}}</option>
               	{% endfor %}
               </select>
@@ -135,6 +135,10 @@
 
             reader.readAsDataURL(input.files[0]);
         }		
+	});
+
+	$('#id_country').live("change", function(){
+		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
 	
 	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {

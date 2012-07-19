@@ -29,5 +29,8 @@ urlpatterns = patterns('apps.core.views.main',
 # Ajax
 urlpatterns += patterns('apps.core.views.ajax',
     url(r'^(?i)waiting_for_approval/approve_item/$', 'approve_item', name='approve_item'),
-    url(r'^(?i)waiting_for_approval/approve_item/(?P<tutor_id>\d+)/(?P<type>\w+)/(?P<approve>\d+)/$', 'approve_item', name='approve_item'),    
+    url(r'^(?i)waiting_for_approval/approve_item/(?P<tutor_id>\d+)/(?P<type>\w+)/(?P<approve>\d+)/$', 'approve_item', name='approve_item'),
+
+    url(r'^(?i)timezones/$', 'timezones', name='get_timezones'),
+    url(r'^(?i)timezones/(?P<country>\w+)/$', 'timezones', name='get_timezones'),
 )
