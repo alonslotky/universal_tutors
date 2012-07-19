@@ -11,15 +11,16 @@
       <h1>{% if user != person %}{{person.get_full_name}}'s {% endif %}Messages <span>Conversations with tutors.</span></h1>
       </div></section>
       
-      <div class="hide-on-phones">
+      <div id="message-timer-container" class="hide-on-phones">
       {% include 'profile/fragments/_timer.html' %}
       </div>
       
+      <script>var user_messages_items = new Array();</script>
       {% for message_person in usermessages %}      
       {% with message_person.profile as user_profile %}
       {% with message_person|get_messages:person as messages %}
       {% with messages.latest as latest %}
-      <article>
+      <article id="list-user-message-item-{{person.id}}">
         <div class="row">
           <div class="one columns hide-on-phones">
             <img src="{% version user_profile.get_profile_image_path 'class_list_profile_image' %}" alt="{{message_person.get_full_name}}">
@@ -53,6 +54,7 @@
           </div>
         </div>
       </article>
+      <script>user_messages_items[{{forloop.counter0}}] = {'id': {{person.id}}, 'date': '{{latest.0.created|date:"YmdHis"}}'};</script>
 	  {% endwith %}
 	  {% endwith %}
 	  {% endwith %}
@@ -62,6 +64,15 @@
 		
 	{% include 'profile/fragments/_modal_messages.html' %}
 	  <script type="text/javascript">
+	  	user_messages_items.sort(function(y, x) {
+	  		if (y['date'].toString() < x['date'].toString()) return -1;
+    		if (y['date'].toString() > x['date'].toString()) return 1;
+    		return 0;
+	  	});
+		for(i=0; i<user_messages_items.length; i++){
+			$('#list-user-message-item-'+ user_messages_items[i]['id']).insertAfter('#message-timer-container');
+		}
+	  	
 	  	modal_message_on_close = function() {
 	  		window.location.reload();	
 	  	}
