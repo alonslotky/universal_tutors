@@ -61,3 +61,5 @@ django-allauth
 
 # Raw Jam forks of pluggable apps
 -e git+git://github.com/rawjam/django-pagination.git#egg=django-pagination
+
+django-mailchimp==0.1.30

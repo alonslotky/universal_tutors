@@ -30,6 +30,8 @@ from apps.classes.settings import *
 from paypal2.standart.ap import pay
 from scribblar import users, rooms
 
+import mailchimp
+
 
 ### MANAGERS ######################################################
 class StudentManager(models.Manager):
@@ -291,6 +293,16 @@ class UserProfile(BaseModel):
         super(UserProfile, self).save()
     
     def save(self, *args, **kwargs):
+        if self.newsletters and self.type != 0:
+            if self.type in [self.TYPES.STUDENT, self.TYPES.UNDER16]:
+                list = mailchimp.utils.get_connection().get_list_by_id(settings.STUDENTS_LIST_ID)
+            elif self.type == self.TYPES.PARENT:
+                list = mailchimp.utils.get_connection().get_list_by_id(settings.PARENTS_LIST_ID)
+            elif self.type == self.TYPES.TUTOR:
+                list = mailchimp.utils.get_connection().get_list_by_id(settings.TUTORS_LIST_ID)
+
+            list.subscribe(self.user.email, {'EMAIL': self.user.email})
+        
         if self.type != self.TYPES.NONE and not self.is_over16:
             self.type = self.TYPES.UNDER16
 

@@ -151,6 +151,8 @@ INSTALLED_APPS = (
     'paypal.standard.ipn',
     'paypal2.standart.ap',
     
+    'mailchimp',
+    
     # CMS
 #    'cms',
 #    'mptt',
@@ -372,6 +374,13 @@ SPEED_TEST_LINK = 'http://www.speedtest.net/'
 
 # CURRENCY
 CURRENCY_RISK = 0.01 # 0.01 is 1%
+
+
+# MAILCHIMP
+MAILCHIMP_API_KEY = '7c27ea718104470fafdb3d872cdd95d0-us4'
+STUDENTS_LIST_ID = 'c8c2caf7be'
+TUTORS_LIST_ID = '635078691a'
+PARENTS_LIST_ID = '2e1436b5d3'
 
 
 # Allow for local (per-user) override
