@@ -505,3 +505,17 @@ def get_facebook_api_id():
         return FacebookApp.objects.latest('id').api_key
     except FacebookApp.DoesNotExit:
         return ''
+    
+@register.filter
+def get_country_timezones(country):
+    from apps.core.models import Country, Timezone
+
+    try:
+        timezones = Country.objects.get(country=country).timezones.all()
+    except Country.DoesNotExist:
+        timezones = None
+        
+    if not timezones:
+        timezones = Timezone.objects.all()
+        
+    return [t.timezone for t in timezones]

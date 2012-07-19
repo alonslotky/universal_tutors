@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
 from apps.profile.models import *
+from apps.core.models import *
 
 import datetime
 
@@ -47,11 +48,18 @@ def approve_item(request, tutor_id, type, approve):
     return http.HttpResponse('approved' if approve else 'not approved')
 
 
+@main_render('core/fragments/_timezones_options.html')
+def timezones(request, country):
+    try:
+        timezones = Country.objects.get(country=country).timezones.all()
+    except Country.DoesNotExist:
+        timezones = None
+        
+    if not timezones:
+        timezones = Timezone.objects.all()
     
+    print timezones
     
     return {
-        'months': months,
-        'today': datetime.date.today(),
-        'next_month': nxt_month,
-        'prev_month': prv_month,
+        'timezones': timezones,
     }

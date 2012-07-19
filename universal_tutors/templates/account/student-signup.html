@@ -321,6 +321,11 @@
             $("a#remove-image").removeClass('hidden');
         }		
 	});
+
+	$('#id_country').live("change", function(){
+		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
+	});
+
 	
 	var removeImage = function(){
 		$('#id_image_preview').attr('src', "http://placehold.it/175x175");
