@@ -225,7 +225,7 @@ def student_rate_tutor(request):
     text = request.POST.get('text')
     
     try:
-        class_ = Class.objects.get(id=class_id, student=user)
+        class_ = Class.objects.get(Q(id=class_id), Q(student=user) | Q(student__parent_set__parent=user, student__parent_set__active=True))
     except Class.DoesNotExist:
         raise http.Http404()
 
