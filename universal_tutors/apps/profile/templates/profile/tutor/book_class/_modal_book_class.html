@@ -115,6 +115,8 @@
 
 		book_date = year +'-'+ (month<9?('0'+(month+1)):(month+1)) +'-'+ day;
 
+		$('#book-class-errors').html('');
+		$('#book-class-errors').addClass('hidden');
 		$('#book-class-subject').val('0');
 		$('#book-class-duration').val('0');
 		$('#book-class-date').html('<option value="'+ book_date +'" selected="selected">'+ book_date +'</div>');
