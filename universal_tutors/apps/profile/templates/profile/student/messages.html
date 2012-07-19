@@ -61,4 +61,9 @@
 	  {% endfor %}
 		
 	{% include 'profile/fragments/_modal_messages.html' %}
+	  <script type="text/javascript">
+	  	modal_message_on_close = function() {
+	  		window.location.reload();	
+	  	}
+	  </script>
 {% endblock %}

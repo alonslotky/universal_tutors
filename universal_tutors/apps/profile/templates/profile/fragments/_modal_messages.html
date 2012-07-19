@@ -49,6 +49,10 @@
 	var modal_message_to;
 	var modal_message_class;
 	var modal_message_timeout;
+	
+	/* overwrite if necessary */
+	var modal_message_on_close = function() {}
+
 
 	var view_modal_messages = function(to, class_, force_stay) {
 		clearTimeout(modal_message_timeout);
@@ -81,6 +85,10 @@
 				load_modal_messages(response);
 				modal_message_timeout = setTimeout(function(){ view_modal_messages(modal_message_to, modal_message_class, true); }, 2000);
 			}
+		});
+		
+		$('#modal-message').bind('reveal:closed', function(){
+			modal_message_on_close();
 		});
 	};
 	
