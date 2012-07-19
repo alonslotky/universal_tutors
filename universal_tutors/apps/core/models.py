@@ -8,6 +8,7 @@ from django.template import Template, Context
 
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.model_utils import get_namedtuple_choices
+from apps.common.utils.fields import CountryField
 
 from apps.classes.settings import CREDIT_VALUE
 import urlparse, threading
@@ -133,3 +134,30 @@ class EmailTemplate(models.Model):
             t.start()
         else:
             email_message.send()
+
+
+#### TIMEZONE #############################################################
+class Timezone(models.Model):    
+    class Meta:
+        ordering = ['timezone']
+        
+    timezone = models.CharField(max_length=100, unique=True, db_index=True)
+
+    def __unicode__(self):
+        return self.timezone
+
+class Country(models.Model):
+    class Meta:
+        verbose_name = 'Country and timezones'
+        ordering = ['country_name']
+        
+    country = CountryField(unique=True, db_index=True)
+    country_name = models.CharField(max_length=150)
+    timezones = models.ManyToManyField(Timezone, null=True, blank=True)
+
+    def list_timezones(self):
+        return ', '.join([t.timezone for t in self.timezones.all()])
+            
+    def __unicode__(self):
+        return self.country_name
+
