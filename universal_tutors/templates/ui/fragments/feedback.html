@@ -1,26 +1,30 @@
   	<div id="feedback-modal" class="reveal-modal">
-  	  <h2>We love feedback!</h2>
-  	  <p class="lead text-center">Suggest how we can make Universal Tutors better.</p>
+  	  <h3>We love feedback!</h3>
+  	  <p class="lead">Suggest how we can make Universal Tutors better.</p>
+	  <div id="feedback-not-complete" class="formError hidden">Please answer all the questions before submit this form</div>
       <form id="feedback" method="post" action="/contact-us/" class="nice custom"> {% csrf_token %}
-      
      		{% for question in questions %}
-     		<p>
-       		<label>{{ question.title }}</label>
-       		 <select name="question-{{ question.id }}" id="tfa_8" class="">
-       		 	<option value="">Please select...</option>
-       		 	{% for option in question.feedbackquestionoption_set.all %}
-       		 		<option value="{{ option.id }}">{{ option.title }}</option>
-       		 	{% endfor %}
-  		 		</select>
-  	 		</p>
-  	 		<br>
-  		<p>
-	        <label>{{ question.optional_text_title }}</label>
-	        <input type="text" id="tfa_16" name="comment-{{ question.id }}" value="" placeholder="" class="input-text">
-        </p>
-          
-        <br>
-     		{% endfor %}
+     		<h3>Question {{forloop.counter}}</h3>
+       		<div class="row space">
+       			<div class="row">{{ question.title }}</div>
+       			<div class="row">
+       				<div class="nine columns">
+			       		<select name="question-{{ question.id }}" id="tfa_8" class="stretch feedback-answer">
+			       		 	<option value="0">Please select a answer...</option>
+			       		 	{% for option in question.feedbackquestionoption_set.all %}
+			       		 		<option value="{{ option.id }}">{{ option.title }}</option>
+			       		 	{% endfor %}
+			  		 	</select>
+       				</div>
+       			</div>
+
+		        <div class="row">{{ question.optional_text_title }}</div>
+       			<div class="row">
+			        <input type="text" id="tfa_16" name="comment-{{ question.id }}" value="" placeholder="" class="input-text">
+       			</div> 
+       		</div>
+       		{% endfor %}
+
           
         <input type="submit" class="button" value="Submit">
         <input type="hidden" value="244717" name="feedback-submit" id="tfa_dbFormId"><input type="hidden" value="input-text" name="tfa_dbResponseId" id="tfa_dbResponseId"><input type="hidden" value="8a55ad301648f9d486cc4f2e79208e5b" name="tfa_dbControl" id="tfa_dbControl"><input type="hidden" value="2" name="tfa_dbVersionId" id="tfa_dbVersionId">
@@ -30,3 +34,20 @@
   	</div>
   	
   	<a href="#" data-reveal-id="feedback-modal" id="feedback-button">Feedback</a>
+
+
+<script type="text/javascript">
+	$('#feedback').submit(function(e){
+		var valid = true;
+		$('.feedback-answer').each(function(){
+			if( !parseInt($(this).val()) ){
+				valid = false;
+			}
+		});
+		
+		if( !valid ) {
+			$('#feedback-not-complete').removeClass('hidden');
+			e.preventDefault();
+		}
+	});
+</script>

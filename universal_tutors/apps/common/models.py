@@ -6,7 +6,7 @@ class FeedbackQuestion(TitleAndSlugModel):
         ordering = ['position', 'id']
 
     optional_text_title = models.CharField(max_length=255, null=True, blank=True)
-    position = models.PositiveSmallIntegerField(default=1, help_text='Question number position. NOTE: The system auto correct on front-end if some number is missing')
+    position = models.PositiveSmallIntegerField(default=0, help_text='Question number position. NOTE: The system auto correct on front-end if some number is missing')
 
     def __unicode__(self):
         return self.title
@@ -17,7 +17,7 @@ class FeedbackQuestionOption(BaseModel):
 
     title = models.CharField(max_length=255, null=True, blank=True)
     question = models.ForeignKey('FeedbackQuestion')
-    position = models.PositiveSmallIntegerField(default=1, help_text='Answer ordering')
+    position = models.PositiveSmallIntegerField(default=0, help_text='Answer ordering')
 
     def __unicode__(self):
         return self.title
