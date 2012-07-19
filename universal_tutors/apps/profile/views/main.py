@@ -227,10 +227,12 @@ def tutor_messages(request):
     view my recent activity
     """
     user = request.user
+    old = datetime.datetime(2000,1,1) # just a hold date
+
     usermessages = User.objects.select_related() \
                     .filter(Q(sent_messages__to = user) | Q(received_messages__user = user)) \
                     .annotate(max_sent = Max('sent_messages__created'), max_received = Max('received_messages__created'))
-    usermessages = sorted(usermessages, cmp=lambda y,x: cmp(max(x.max_sent, x.max_received), max(y.max_sent, y.max_received)))
+    usermessages = sorted(usermessages, cmp=lambda y,x: cmp(max(x.max_sent, x.max_received) or old, max(y.max_sent, y.max_received) or old))
 
 
     return {
@@ -404,10 +406,12 @@ def student_messages(request, username=None):
 
     profile = user.profile
 
+    old = datetime.datetime(2000,1,1) # just a hold date
+
     usermessages = User.objects.select_related() \
                     .filter(Q(sent_messages__to = person) | Q(received_messages__user = person)) \
                     .annotate(max_sent = Max('sent_messages__created'), max_received = Max('received_messages__created'))
-    usermessages = sorted(usermessages, cmp=lambda y,x: cmp(max(x.max_sent, x.max_received), max(y.max_sent, y.max_received)))
+    usermessages = sorted(usermessages, cmp=lambda y,x: cmp(max(x.max_sent, x.max_received) or old, max(y.max_sent, y.max_received) or old))
 
     return {
         'usermessages':usermessages,
