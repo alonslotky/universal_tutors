@@ -8,7 +8,7 @@
 {% block content %}
 
 <section class="blue feature-box"><div class="inner">
-      <h1>Open Classes<span>Classes are been taken at this moment.</span></h1>
+      <h1>Classes Monitoring<span>Classes currently in progress.</span></h1>
 </div></section> 
      	{% for class in classes %}
 	      {% with class.tutor as tutor %}
@@ -42,7 +42,7 @@
 	   {% empty %}
 	      <article class="{% if class.is_active %}{% endif %}">
 	      	<div class="row">
-		        There are no open classes at this moment.   
+		        There are no classes currently in progress.   
 	      	</div>
 	      </article>
 	   {% endfor %}

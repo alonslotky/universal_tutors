@@ -63,4 +63,9 @@
 	  {% endfor %}
 		
 	  {% with 'True' as can_send_message %}{% include 'profile/fragments/_modal_messages.html' %}{% endwith %}
+	  <script type="text/javascript">
+	  	modal_message_on_close = function() {
+	  		window.location.reload();	
+	  	}
+	  </script>
 {% endblock %}
