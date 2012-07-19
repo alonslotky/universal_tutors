@@ -1,10 +1,13 @@
 import datetime, urllib
 import simplejson as json
 from django.conf import settings
-from apps.core.models import Currency
+from apps.core.models import *
+from apps.common.utils.fields import COUNTRIES
 
 from ordereddict import OrderedDict
 from scribblar import users
+import pytz
+
 
 def update_currencies():
     url = 'http://openexchangerates.org/latest.json'
@@ -137,4 +140,13 @@ def init_credits_evolution(items, classes):
 
     return d
 
+
+
+
+### TIMEZONE #########
+def init_timezones():
+    for id, name in COUNTRIES:
+        Country.objects.get_or_create(country=id, country_name=name)
+    for timezone in pytz.all_timezones:
+        Timezone.objects.get_or_create(timezone=timezone)
 

@@ -46,5 +46,19 @@ admin.site.register(Bundle, BundleAdmin)
 
 class EmailTemplateAdmin(admin.ModelAdmin):
     pass
-        
 admin.site.register(EmailTemplate, EmailTemplateAdmin)
+
+
+class CountryAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Timezones', {
+            'fields': ('timezones',)
+        }),
+    )
+
+    list_display = ['country_name', 'list_timezones']
+    filter_horizontal = ['timezones']
+    search_fields = ['country_name', 'country']
+admin.site.register(Country, CountryAdmin)
+
+
