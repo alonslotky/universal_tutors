@@ -583,6 +583,10 @@ def add_child(request):
     if request.method == "POST":
         if form.is_valid():
             user = form.save(request=request)
+            profile = user.profile
+            for p in request.FILES.getlist('profile_image'):
+                profile.profile_image.save(p.name, p)
+                profile.save()
             return http.HttpResponseRedirect('%s#children' % reverse('edit_parent_profile'))
     
     return {

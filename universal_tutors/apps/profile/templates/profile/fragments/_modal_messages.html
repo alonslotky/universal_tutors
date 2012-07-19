@@ -14,6 +14,23 @@
   {% if user == person or can_send_message or messages.length > 0 %}
   <form id="modal-message-form" class="nice" method="post">
   	{% csrf_token %}
+    {% if user_profile.type == user_profile.TYPES.PARENT %}
+    <div class="row">
+	  <div class="two columns phone-one">        
+	    <label>Child*</label>
+	  </div>
+	  <div class="ten columns phone-three">
+		<select id="message-child" name="child" class="stretch">
+			<option value="0">---------</option>
+			{% for item in user.children.all %}
+			{% with item.child as child %}
+			<option value="{{child.id}}">{{child.get_full_name}}</option>
+			{% endwith %}
+			{% endfor %}
+		</select>
+	  </div>	  
+    </div>				
+    {% endif %}
     <div class="row">
       <div class="nine columns">
         <textarea id="modal-message-text" name="modal-message-text" type="text" class="text-area" placeholder="Write a Message ..."></textarea>
@@ -69,7 +86,10 @@
 	
 	$('#modal-message-form').submit(function(e){
 		e.preventDefault();
-		if (modal_message_to && $('#modal-message-text').val()) {
+		
+		var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#message-child').val()){% else %}true;{% endif %}
+		
+		if (modal_message_to && $('#modal-message-text').val() && child) {
 			var url = '{% url send_modal_message %}'+ modal_message_to +'/';
 			url += modal_message_class ? modal_message_class+'/' : '';
 	
@@ -106,7 +126,7 @@
 			var message = messages[i];
 			$('#modal-messages-container').append(
 				'<div class="post '+ (message.user_id==modal_message_to?'them':'you') +'">'+
-				'	<h6>'+ message.user +'</h6>'+
+				'	<h6>'+ message.user + (message.child?' ('+ message.child +'\'s parent)':'') +'</h6>'+
 				'	<p>'+ message.text +'</p>'+
 				'</div>'
 			);

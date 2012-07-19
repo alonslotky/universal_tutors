@@ -88,6 +88,7 @@ def view_modal_messages(request, username, to, class_id=0):
             'user_id': message.user.id,
             'user': message.user.get_full_name(),
             'text': message.message,
+            'child': message.child.get_full_name() if message.child else '',
         } for message in messages]
     })
     
@@ -97,6 +98,7 @@ def view_modal_messages(request, username, to, class_id=0):
 @login_required
 def send_modal_message(request, to, class_id=0):
     user = request.user
+    user_profile = user.profile
     to = get_object_or_404(User, id=to)
     class_id = int(class_id)
     
@@ -110,6 +112,13 @@ def send_modal_message(request, to, class_id=0):
         raise http.Http404()
     
     text = request.POST.get('modal-message-text')
+    child = None
+    if user_profile.type == user_profile.TYPES.PARENT:
+        try:
+            child = User.objects.select_related().get(id=request.POST.get('child', 0))
+            profile = child.profile
+        except User.DoesNotExist:
+            return http.HttpResponse("Please select one of your children.") 
     
     if class_id:
         try:
@@ -117,9 +126,9 @@ def send_modal_message(request, to, class_id=0):
         except Class.DoesNotExist:
             raise http.Http404()
     
-        Message.objects.create(user=user, to=to, related_class=class_, message=text)
+        Message.objects.create(user=user, to=to, related_class=class_, message=text, child=child)
     else:
-        Message.objects.create(user=user, to=to, message=text)
+        Message.objects.create(user=user, to=to, message=text, child=child)
     
     return http.HttpResponseRedirect(reverse('view_modal_messages', args=[user.username, to.id, class_id]))
 
@@ -487,7 +496,7 @@ def book_class(request, tutor_id):
     user = request.user
     profile = user.profile
     
-    if request.method != 'POST' or (profile.type != profile.TYPES.STUDENT and profile.type != profile.TYPES.UNDER16):
+    if request.method != 'POST' or profile.type == profile.TYPES.TUTOR:
         raise http.Http404()
     
     subject_id = request.POST.get('subject', 0)
@@ -496,6 +505,18 @@ def book_class(request, tutor_id):
     duration = int(request.POST.get('duration', 0))
     cover = request.POST.get('cover', None)
     message = request.POST.get('message', None)
+    child_id = request.POST.get('child', 0)
+
+    if profile.type == profile.TYPES.PARENT:
+        try:
+            child = User.objects.select_related().get(id=child_id)
+            profile = child.profile
+            if profile.parent == user:
+                user = child
+            else:
+                raise http.Http404()
+        except User.DoesNotExist:
+            return http.HttpResponse("Please select one of your children.") 
 
     if duration < 30 or duration > 120 or (duration % 30 != 0):
         raise http.Http404()

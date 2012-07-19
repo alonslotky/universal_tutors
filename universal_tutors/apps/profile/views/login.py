@@ -121,11 +121,10 @@ def allauth_signup(request, **kwargs):
         form = form_class(request.POST)
         if form.is_valid():
             user = form.save(request=request)
-            if request.FILES.get('profile_image', None):
-                profile = user.profile
-                f, filename = handle_uploaded_file(request.FILES['profile_image'], profile.UPLOAD_IMAGES_PATH)
-                user.profile.profile_image = '%s/%s' % (profile.UPLOAD_IMAGES_PATH, filename)
-                user.profile.save()
+            profile = user.profile
+            for p in request.FILES.getlist('profile_image'):
+                profile.profile_image.save(p.name, p)
+                profile.save()
             return complete_signup(request, user, success_url)
     else:
         form = form_class()
@@ -185,6 +184,10 @@ def socialaccount_signup(request, *args, **kwargs):
             account = signup['account']
             account.user = user
             account.sync(data)
+            profile = user.profile
+            for p in request.FILES.getlist('profile_image'):
+                profile.profile_image.save(p.name, p)
+                profile.save()
             return helpers.complete_social_signup(request, user, account)
     else:
         form = form_class(initial=data)

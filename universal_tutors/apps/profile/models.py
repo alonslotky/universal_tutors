@@ -1242,6 +1242,7 @@ class Message(BaseModel):
     related_class = models.ForeignKey(Class, null=True, blank=True, related_name='messages')
     read = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
+    child = models.ForeignKey(User, related_name='parent_messages', null=True, blank=True)
     
     def __unicode__(self):
         return self.message

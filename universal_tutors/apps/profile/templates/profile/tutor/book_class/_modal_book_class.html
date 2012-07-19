@@ -9,6 +9,24 @@
 		<div class="row">&nbsp;</div>
 		<div id="book-class-errors" class="formError"></div>
 		
+		{% if user_profile.type == user_profile.TYPES.PARENT %}
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Child*</label>
+		  </div>
+		  <div class="eight columns phone-three">
+			<select id="book-child" name="child" class="stretch">
+				<option value="0">---------</option>
+				{% for item in user.children.all %}
+				{% with item.child as child %}
+				<option value="{{child.id}}">{{child.get_full_name}}</option>
+				{% endwith %}
+				{% endfor %}
+			</select>
+		  </div>	  
+		</div>
+		{% endif %}
+
 		<div class="row">
 		  <div class="four columns phone-one">        
 		    <label>Date*</label>
@@ -125,9 +143,10 @@
 		var start_hour = start_str[0];
 		var start_min = start_str[1];
 		var duration = parseInt($('#book-class-duration').val());
-		var subject = parseInt($('#book-class-subject').val());
+		var subject = parseInt($('#book-class-subject').val());		
+		var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#book-child').val()){% else %}true{% endif %};
 		
-		if(subject && duration) {
+		if(subject && duration && child) {
 			var book_time = new Date(book_start_date.getTime());
 			book_time.setHours(start_hour);
 			book_time.setMinutes(start_min);
@@ -148,7 +167,11 @@
 							},								
 							success: function(response){
 								if(response=='Done.') {
+									{% if user_profile.type == user_profile.TYPES.PARENT %}
+									window.location.href = '{% url edit_profile %}';
+									{% else %}
 									window.location.href = '{% url student_classes %}';
+									{% endif %}
 								} else {
 									$('#book-class-errors').html(response);
 									$('#book-class-errors').removeClass('hidden');
