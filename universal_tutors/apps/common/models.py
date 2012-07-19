@@ -2,11 +2,25 @@ from django.db import models
 from apps.common.utils.abstract_models import TitleAndSlugModel, BaseModel
 
 class FeedbackQuestion(TitleAndSlugModel):
+    class Meta:
+        ordering = ['position', 'id']
+
     optional_text_title = models.CharField(max_length=255, null=True, blank=True)
+    position = models.PositiveSmallIntegerField(default=1, help_text='Question number position. NOTE: The system auto correct on front-end if some number is missing')
+
+    def __unicode__(self):
+        return self.title
 
 class FeedbackQuestionOption(BaseModel):
+    class Meta:
+        ordering = ['position', 'id']
+
     title = models.CharField(max_length=255, null=True, blank=True)
     question = models.ForeignKey('FeedbackQuestion')
+    position = models.PositiveSmallIntegerField(default=1, help_text='Answer ordering')
+
+    def __unicode__(self):
+        return self.title
     
 class FeedbackAnswer(BaseModel):
     question = models.ForeignKey(FeedbackQuestion)
