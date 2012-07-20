@@ -87,7 +87,7 @@
 		checkStatus();
 		
 		var checkFlash = function() {
-			if(!swfobject.hasFlashPlayerVersion("10")) {
+			if(!swfobject.hasFlashPlayerVersion("10") && (DetectMobileQuick() || DetectMobileLong() || DetectTierTablet())){
 			   window.location.href="{% url class_no_flash class.id %}";
 			}
 		};
