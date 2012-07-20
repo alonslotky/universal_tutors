@@ -401,7 +401,7 @@ def student_messages(request, username=None):
 
     profile = user.profile
     usermessages = User.objects.select_related() \
-                    .filter(Q(sent_messages__to = person) | Q(received_messages__user = person))
+                    .filter(Q(sent_messages__to = person) | Q(received_messages__user = person)).distinct()
     return {
         'usermessages':usermessages,
         'person': person,
