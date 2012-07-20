@@ -3,6 +3,12 @@
 {% load fb_versions common_tags %}
 
 {% block title %}Home{% endblock %}
+
+{% block extra_head %}
+<link rel="image_src" href="http://universaltutors.rawjam.co.uk{{ STATIC_URL }}images/shared/logo-x2.png" /> 
+<meta property="og:image" content="http://universaltutors.rawjam.co.uk{{ STATIC_URL }}images/shared/logo-x2.png" /> 
+{% endblock %}
+
 {% block body_class %}marketing home{% endblock %}
 
 {% block content %}
