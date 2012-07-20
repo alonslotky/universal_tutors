@@ -24,7 +24,7 @@ from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.common.utils.date_utils import add_minutes_to_time, first_day_of_week, minutes_difference, minutes_to_time, convert_datetime, difference_in_minutes
 
 from apps.classes.models import Class, ClassSubject, ClassLevel, EducationalSystem
-from apps.core.models import Currency, Bundle
+from apps.core.models import Currency, Bundle, DiscountUser
 from apps.classes.settings import *
 
 from paypal2.standart.ap import pay
@@ -891,6 +891,13 @@ class UserProfile(BaseModel):
             self.create_test_class()
         return self.test_class_id
 
+    def get_active_discount(self):
+        try:
+            discount = self.user.discounts.filter(active=True).latest('id')
+        except DiscountUser.DoesNotExist:
+            return None
+      
+        return discount if discount.is_valid() else None
 
 class TutorProfile(UserProfile):
     objects = TutorProfileManager()
@@ -929,6 +936,7 @@ class UserCreditMovement(BaseModel):
         (6, 'WITHDRAW', 'Withdraw to PayPal Account'),
         (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor (Refund)'),
         (8, 'CANCELED_BY_SYSTEM', 'Class canceled by system (Refund)'),
+        (9, 'DISCOUNT', 'Discount Bonus'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')

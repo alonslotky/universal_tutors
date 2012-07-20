@@ -43,6 +43,18 @@ class BundleAdmin(admin.ModelAdmin):
     list_display = ('credits', 'discount')
 admin.site.register(Bundle, BundleAdmin)
 
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'code', 'type', 'start', 'end', 'discount_percentage', 'discount_fixed', 'valid')
+    list_filter = ('type',)
+    search_fields = ('description',)
+admin.site.register(Discount, DiscountAdmin)
+
+class DiscountUserAdmin(admin.ModelAdmin):
+    list_display = ('discount', 'user', 'active', 'used')
+    list_filter = ('discount', 'user', 'active')
+    search_fields = ('discount', 'user', 'user__first_name', 'user__last_name')
+admin.site.register(DiscountUser, DiscountUserAdmin)
+
 
 class EmailTemplateAdmin(admin.ModelAdmin):
     pass

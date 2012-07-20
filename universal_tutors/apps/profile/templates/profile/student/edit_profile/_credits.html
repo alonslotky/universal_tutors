@@ -13,4 +13,61 @@
     
     <a id="add-credits" class="button" href="javascript:;" data-reveal-id="modal-topup" onclick="topup_account('{% url topup_cart %}');"><span class="icon credits">Top Up Credits</span></a>
     <a class="button" href="{% url history %}"><span class="icon history">View History</span></a>
+    <div class="row space">&nbsp;</div>
+    <h3 class="clear">Discount</h3>
+    
+    <div id="id_discount_error" class="formError"></div>
+    {% with user_profile.get_active_discount as active_discount %}
+      {% if active_discount %}
+	    <div class="row">
+	      <div class="five columns">
+	        <label>Actived discount</label>
+	      </div>
+	      <div class="seven columns">
+	          {{active_discount.discount.code}}
+	      </div>
+	    </div>
+      {% else %}
+	    <div class="row">
+	      <div class="five columns">
+	        <label>Insert your discount code</label>
+	      </div>
+	      <div class="seven columns">
+	          <input id="id_discount" name="discount" type="text" class="input-text clear" value="{{form.discount.value}}">
+	      </div>
+	    </div>
+	    <div class="row">
+		    <a class="button" href="javascript:;" id="active-discount-button"><span class="icon rocket">Activate discount&nbsp;</span></a>
+	    </div>
+      {% endif %}
+    {% endwith %}
   </li>
+  
+  <script type="text/javascript">
+  	$('#active-discount-button').click(function(e){
+  		var discount = $('#id_discount').val();
+  		if(!discount) {
+  			$('#id_discount_error').html('Please insert a valid code.');
+  			$('#id_discount_error').removeClass('hidden');
+  		} else {
+  			$('#active-discount-button span').html('Loading...');
+  			$.ajax({
+  				type: 'POST',
+  				data: {
+  					'discount': discount,
+  					'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val() 
+  				},
+  				url: '{% url activate_discount %}',
+  				success: function(response) {
+  					if(response == 'done.') {
+  						window.location.reload();
+  					} else {
+			  			$('#id_discount_error').html(response);
+			  			$('#id_discount_error').removeClass('hidden');
+			  			$('#active-discount-button span').html('Activate discount&nbsp;');
+  					}
+  				}
+  			})	
+  		}
+  	});
+  </script>
