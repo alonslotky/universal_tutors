@@ -93,16 +93,16 @@ def init_total_price():
     return d
 
 def get_total_price_slot(class_):
-    if class_.subject.credits < 10: return '< 10 credits'
-    if class_.subject.credits < 15: return '10 to 15 credits'
-    if class_.subject.credits < 20: return '15 to 20 credits'
-    if class_.subject.credits < 25: return '20 to 25 credits'
-    if class_.subject.credits < 30: return '25 to 30 credits'
-    if class_.subject.credits < 35: return '30 to 35 credits'
-    if class_.subject.credits < 40: return '35 to 40 credits'
-    if class_.subject.credits < 45: return '40 to 45 credits'
-    if class_.subject.credits < 50: return '45 to 50 credits'
-    if class_.subject.credits >= 50: return '> 50 credits'
+    if class_.subject_credits_per_hour < 10: return '< 10 credits'
+    if class_.subject_credits_per_hour < 15: return '10 to 15 credits'
+    if class_.subject_credits_per_hour < 20: return '15 to 20 credits'
+    if class_.subject_credits_per_hour < 25: return '20 to 25 credits'
+    if class_.subject_credits_per_hour < 30: return '25 to 30 credits'
+    if class_.subject_credits_per_hour < 35: return '30 to 35 credits'
+    if class_.subject_credits_per_hour < 40: return '35 to 40 credits'
+    if class_.subject_credits_per_hour < 45: return '40 to 45 credits'
+    if class_.subject_credits_per_hour < 50: return '45 to 50 credits'
+    if class_.subject_credits_per_hour >= 50: return '> 50 credits'
 
 def init_class_time():
     d = OrderedDict()

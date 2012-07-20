@@ -201,9 +201,9 @@ def reports_students(request):
     
     for class_ in classes:
         add_student_to_dict(class_time, '%s minutes' % class_.duration, class_)
-        add_student_to_dict(system, '%s' % class_.subject.system, class_)
-        add_student_to_dict(level, '%s' % class_.subject.level, class_)
-        add_student_to_dict(subject, '%s' % class_.subject.subject, class_)
+        if class_.system: add_student_to_dict(system, '%s' % class_.system, class_)
+        if class_.level: add_student_to_dict(level, '%s' % class_.level, class_)
+        if class_.only_subject: add_student_to_dict(subject, '%s' % class_.only_subject, class_)
         add_student_to_dict(subject_level, '%s' % class_.subject, class_)
         add_student_to_dict(price_per_hour, get_price_per_hour_slot(class_), class_)
         add_student_to_dict(total_price, get_total_price_slot(class_), class_)
@@ -282,9 +282,9 @@ def reports_tutors(request):
     
     for class_ in classes:
         add_tutor_to_dict(class_time, '%s minutes' % class_.duration, class_)
-        add_tutor_to_dict(system, '%s' % class_.subject.system, class_)
-        add_tutor_to_dict(level, '%s' % class_.subject.level, class_)
-        add_tutor_to_dict(subject, '%s' % class_.subject.subject, class_)
+        if class_.system: add_tutor_to_dict(system, '%s' % class_.system, class_)
+        if class_.level: add_tutor_to_dict(level, '%s' % class_.level, class_)
+        if class_.only_subject: add_tutor_to_dict(subject, '%s' % class_.only_subject, class_)
         add_tutor_to_dict(subject_level, '%s' % class_.subject, class_)
         add_tutor_to_dict(price_per_hour, get_price_per_hour_slot(class_), class_)
         add_tutor_to_dict(total_price, get_total_price_slot(class_), class_)
@@ -356,9 +356,9 @@ def reports_classes(request):
     
     for class_ in classes:
         add_class_to_dict(class_time, '%s minutes' % class_.duration, class_)
-        add_class_to_dict(system, '%s' % class_.subject.system, class_)
-        add_class_to_dict(level, '%s' % class_.subject.level, class_)
-        add_class_to_dict(subject, '%s' % class_.subject.subject, class_)
+        if class_.system: add_class_to_dict(system, '%s' % class_.system, class_)
+        if class_.level: add_class_to_dict(level, '%s' % class_.level, class_)
+        if class_.only_subject: add_class_to_dict(subject, '%s' % class_.only_subject, class_)
         add_class_to_dict(subject_level, '%s' % class_.subject, class_)
         add_class_to_dict(price_per_hour, get_price_per_hour_slot(class_), class_)
         add_class_to_dict(total_price, get_total_price_slot(class_), class_)
