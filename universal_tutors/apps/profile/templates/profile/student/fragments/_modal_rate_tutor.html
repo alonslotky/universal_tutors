@@ -65,7 +65,7 @@
 					{% if user_profile.type == user_profile.TYPES.PARENT %}
 					window.location.reload();
 					{% else %}
-					window.location.href('{% url student_classes %}');
+					window.location.href = '{% url student_classes %}';
 					{% endif %}
 				}
 			});
