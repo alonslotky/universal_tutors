@@ -1017,7 +1017,7 @@ class WithdrawItem(BaseModel):
     user = models.ForeignKey(User, related_name = 'withdraws')
     currency = models.ForeignKey(Currency, related_name='withdraws')
     value = models.FloatField()
-    credits = models.PositiveIntegerField()
+    credits = models.FloatField()
     status = models.PositiveSmallIntegerField(choices = STATUS_TYPES.get_choices(), default = STATUS_TYPES.PROCESSING)
     invoice = models.CharField(max_length = 20, null=True, blank=True)
     commission = models.FloatField(default=0)
