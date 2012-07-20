@@ -62,7 +62,11 @@
 				url: '{% url student_rate_tutor %}',
 				data: $('#student-rate-tutor-form').serialize(),
 				success: function() {
+					{% if user_profile.type == user_profile.TYPES.PARENT %}
 					window.location.reload();
+					{% else %}
+					window.location.href('{% url student_classes %}');
+					{% endif %}
 				}
 			});
 		});
