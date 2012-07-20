@@ -83,13 +83,13 @@ admin.site.register(ReportedStudent, ReportAdmin)
 
 class TopUpItemAdmin(admin.ModelAdmin):
     list_display = ('user', 'credits', 'value', 'currency', 'status', 'created')
-    list_filter = ('user', 'status')
+    list_filter = ('user', 'status', 'currency')
     search_fields = ('user', 'user__first_name', 'user__last_name')
 admin.site.register(TopUpItem, TopUpItemAdmin)
 
 class WithdrawItemAdmin(admin.ModelAdmin):
     list_display = ('user', 'credits', 'value', 'currency', 'status', 'created')
-    list_filter = ('user', 'status')
+    list_filter = ('user', 'status', 'currency')
     search_fields = ('user', 'user__first_name', 'user__last_name')
 admin.site.register(WithdrawItem, WithdrawItemAdmin)
 
