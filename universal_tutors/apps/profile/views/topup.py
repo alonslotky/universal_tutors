@@ -128,7 +128,8 @@ def topup_cancel(request, username, ajax=0):
             return http.HttpResponseRedirect('%s#credits' % reverse('edit_student_profile'))
         else:
             return http.HttpResponseRedirect('%s#children' % reverse('edit_parent_profile'))
-        
+    
+
 @csrf_exempt
 @main_render('profile/student/successfull_topup.html')
 def topup_successful(request, username):

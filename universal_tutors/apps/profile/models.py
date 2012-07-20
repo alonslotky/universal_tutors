@@ -758,10 +758,33 @@ class UserProfile(BaseModel):
         return completeness
 
 
+    def available_withdraw(self):
+        user = self.user
+        in_process = user.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PROCESSING)\
+                        .aggregate(sum_credits=models.Sum('credits'), sum_commission=models.Sum('commission') )
+
+        free_to_withdraw = self.income - (in_process['sum_credits'] or 0) - (in_process['sum_commission'] or 0)
+        commission = free_to_withdraw * COMMISSION_WITHDRAW_PERCENTAGE - COMMISSION_WITHDRAW_FIXED
+        credits = free_to_withdraw - commission
+        
+        return {
+            'credits': free_to_withdraw,
+            'commission': commission,
+            'income': credits,
+        }
+
     def process_manual_withdraw(self):
         if self.type == self.TYPES.TUTOR:
+            user = self.user
+            in_process = user.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PROCESSING)\
+                            .aggregate(sum_credits=models.Sum('credits'), sum_commission=models.Sum('commission') )
+            
+            free_to_withdraw = self.income - in_process['sum_credits'] - in_process['sum_commission']
+            print free_to_withdraw
+            
+            commission = free_to_withdraw * COMMISSION_WITHDRAW_PERCENTAGE - COMMISSION_WITHDRAW_FIXED
+            credits = free_to_withdraw - commission
             currency = self.currency
-            credits = self.income
             credit_value = currency.credit_value()
             amount = credits * credit_value
             email = self.paypal_email
@@ -771,6 +794,7 @@ class UserProfile(BaseModel):
                 credits = credits, 
                 email = email,
                 currency = currency,
+                commission = commission,
             )
             withdraw.save()
         
@@ -785,6 +809,8 @@ class UserProfile(BaseModel):
                 'currencyCode': currency.acronym,
                 'receivers': receivers,
             })
+            
+            return True
 
     def waiting_classes(self):
         if self.type == self.TYPES.TUTOR:
@@ -994,6 +1020,7 @@ class WithdrawItem(BaseModel):
     credits = models.PositiveIntegerField()
     status = models.PositiveSmallIntegerField(choices = STATUS_TYPES.get_choices(), default = STATUS_TYPES.PROCESSING)
     invoice = models.CharField(max_length = 20, null=True, blank=True)
+    commission = models.FloatField(default=0)
     email = models.EmailField()
 
     def save(self, *args, **kwargs):
@@ -1011,7 +1038,7 @@ class WithdrawItem(BaseModel):
         if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
             self.status = self.STATUS_TYPES.DONE
             super(self.__class__, self).save()
-            self.user.profile.withdraw_account(self.credits)
+            self.user.profile.withdraw_account(self.credits + self.commission)
         elif self.status == self.STATUS_TYPES.PENDING:
             self.status = self.STATUS_TYPES.DONE
             super(self.__class__, self).save()

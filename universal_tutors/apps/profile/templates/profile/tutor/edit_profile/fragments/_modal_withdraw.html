@@ -8,21 +8,35 @@
 	  <form id="modal-withdraw-form" class="nice">
 	  	{% csrf_token %}
 		<div class="row">&nbsp;</div>
+		{% with user_profile.available_withdraw as available_withdraw %}
+		{% if available_withdraw.income > 0 %}
 		<div class="row">
-		  <div class="four columns">        
-		    <label>Credits</label>
+			<p>Warning: You will incur a small fee for withdrawing outside of the usual monthly payment.</p>
+		</div>
+		<div class="row">&nbsp;</div>
+		<div class="row">
+		  <div class="eight columns">        
+		    <label>Credits available to withdraw</label>
 		  </div>
-		  <div class="eight columns">
-			<strong>{{user_profile.income}} credits</strong>
+		  <div class="four columns">
+			<strong>{{available_withdraw.credits}} credits</strong>
 		  </div>	  
 		</div>
 		<div class="row">
-		  <div class="four columns">        
+		  <div class="eight columns">        
+		    <label>Withdrawing Fee</label>
+		  </div>
+		  <div class="four columns">
+			<strong>{{available_withdraw.commission}} credits</strong>
+		  </div>	  
+		</div>
+		<div class="row">
+		  <div class="eight columns">        
 		    <label>Value</label>
 		  </div>
-		  <div class="eight columns">
+		  <div class="four columns">
 		  	{% with user_profile.currency as currency %}
-			<strong>{{currency.symbol}} {{user_profile.income|in_currency:currency|floatformat:2}}</strong>
+			<strong>{{currency.symbol}} {{available_withdraw.income|in_currency:currency|floatformat:2}}</strong>
 			{% endwith %}
 		  </div>	  
 		</div>
@@ -30,6 +44,18 @@
 	  	<div class="row">
 		    <input type="submit" class="small button" value="Withdraw">
 		</div>
+		{% else %}
+			{% if user_profile.income %}
+			<div class="row">
+				<p>Your withdraw is in process.</p>
+			</div>
+			{% else %}
+			<div class="row">
+				<p>You don't have credits to withdraw.</p>
+			</div>		
+			{% endif %}
+		{% endif %}
+		{% endwith %}
 	  </form>
       	
     </div>
