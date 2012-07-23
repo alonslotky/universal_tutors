@@ -323,6 +323,8 @@ class Class(BaseModel):
             from apps.profile.models import UserCreditMovement, Referral
 
             tutor = self.tutor
+            tutor_profile = tutor.profile
+
             try:
                 referral = Referral.objects.filter(user = tutor, used=False, activated=True).latest('id')
                 referral.used = True
@@ -348,7 +350,6 @@ class Class(BaseModel):
                     super(self.__class__, self).save()
                     user_discount.use()           
                     
-            tutor_profile = tutor.profile
             tutor_profile.income += self.earning_fee
             tutor_profile.income_without_commission += self.credit_fee
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count() 
