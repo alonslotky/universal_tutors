@@ -56,7 +56,7 @@
 
 	<div class="row">
 		<div class="four columns">
-		{% render_credit_movements topup_credits withdraw_credits profit_credits "Distribution by status" %}
+		{% render_credit_movements topup_credits withdraw_credits profit_credits "Credit report by period" %}
 		</div>
 		<div class="three columns">&nbsp;</div>
 		<div class="three columns">
@@ -92,6 +92,9 @@
 		</div>
 	</div>
 	<div class="row">
+		<h3>Breakdown by currency</h3>
+	</div>
+	<div class="row">
 		{% for key, currency in currencies.iteritems %}
 		<div class="four columns">
 		{% render_value_movements currency "Number of classes that signed up in this period" %}
@@ -104,13 +107,17 @@
 		<h2>Financial Timeline</h2>
 	</div>
 	<div class="row">
-		<div class="nine columns">
-			{% render_credit_evolution credits_evolution "Distribution by status" %}
-		</div>
-		<div class="three columns">
+		{% render_credit_evolution credits_evolution "Distribution by status" %}
+	</div>
+	<div class="row">
+		<h2>Credit report</h2>
+	</div>
+	<div class="row">
+		<div class="row">&nbsp;</div>
+		<div class="five columns">
 			<div class="row">
 				<div class="six columns">
-					<strong>Unused: </strong>
+					<strong>Unused credits: </strong>
 				</div>
 				<div class="six columns">
 					{{unused_credits}} credit{{unused_credits|pluralize}}
@@ -118,55 +125,27 @@
 			</div>
 			<div class="row">
 				<div class="six columns">
-					<strong>To withdraw: </strong>
+					<strong>Credits to withdraw: </strong>
 				</div>
 				<div class="six columns">
 					<div class="row">
 						{{credits_to_withdraw}} credit{{credits_to_withdraw|pluralize}}
 					</div>
-					{% for key, currency in currencies.iteritems %}
-					<div class="row">{{key}} {{currency.withdraw}}</div>
-					{% endfor %}
 				</div>
 			</div>
+				{% for key, currency in currencies_to_withdraw.iteritems %}
+			<div class="row">
+					<div class="six columns">
+						<strong>Amount for withdrawal ({{ key }}): </strong>
+					</div>
+					<div class="six columns">
+						<div class="row">{{currency.withdraw}}</div>
+					</div>
+			</div>
+				{% endfor %}
 		</div>
 	</div>
 
 
-	{% comment %}
-	<div class="row">
-		<h2>Educational system, subjects and level</h2>
-	</div>
-
-	<div class="row">
-		<div class="six columns">
-		{% render_user_per_classes_status system "Number of classes by educational system" 1 %}
-		</div>
-		<div class="six columns">
-			{% render_user_per_classes_status level "Number of classes by level" 1 %}
-		</div>
-	</div>
-	<div class="row">
-		{% render_user_per_classes_status subject "Number of classes by subject" 1 %}
-	</div>
-	<div class="row">
-		{% render_user_per_classes_status subject_level "Number of classes by subject and level" 1 "" %}			
-	</div>
-
-	<div class="row">
-		<h2>Price and time</h2>
-	</div>
-
-	<div class="row">
-		<div class="six columns">
-			{% render_user_per_classes_status class_time "Number of classes by class time" 0 "" %}
-		</div>
-		<div class="six columns">
-			{% render_user_per_classes_status price_per_hour "Number of classes by price per hour" 0 "" %}
-		</div>
-	</div>
-	<div class="row">
-		{% render_user_per_classes_status total_price "Number of classes by class price" 0 "" %}
-	</div>
-	{% endcomment %}
+	
 {% endblock %}

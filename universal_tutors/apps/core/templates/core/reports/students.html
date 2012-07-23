@@ -56,10 +56,10 @@
 
 	<div class="row">
 		<div class="five columns">
-		{% render_user_classes total_students students_taking_classes "Number of students taking classes" "students" %}
+		{% render_user_classes total_students students_taking_classes "Percentage of students who have taken classes" "students" %}
 		</div>
 		<div class="five columns">
-		{% render_user_signup total_students students_signed_up "Number of students that signed up in this period" "students" %}
+		{% render_user_signup total_students students_signed_up "Percentage of students that signed up in this period" "students" %}
 		</div>
 		<div class="two columns">
 			<form method="get" action="{% url reports_students %}">
@@ -99,12 +99,10 @@
 	</div>
 
 	<div class="row">
-		<div class="six columns">
 		{% render_user_per_classes_status system "Number of students by educational system" 1 %}
-		</div>
-		<div class="six columns">
-			{% render_user_per_classes_status level "Number of students by level" 1 %}
-		</div>
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status level "Number of students by level" 1 %}
 	</div>
 	<div class="row">
 		{% render_user_per_classes_status subject "Number of students by subject" 1 %}
@@ -118,14 +116,12 @@
 	</div>
 
 	<div class="row">
-		<div class="six columns">
-			{% render_user_per_classes_status class_time "Number of students by class time" 0 "" %}
-		</div>
-		<div class="six columns">
-			{% render_user_per_classes_status price_per_hour "Number of students by price per hour" 0 "" %}
-		</div>
+		{% render_user_per_classes_status class_time "Number of students by class time" 0 "" %}
 	</div>
 	<div class="row">
-		{% render_user_per_classes_status total_price "Number of students by class price" 0 "" %}
+		{% render_user_per_classes_status price_per_hour "Student pricing preference per hour" 0 "" %}
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status total_price "Student preference by class price" 0 "" %}
 	</div>
 {% endblock %}

@@ -444,7 +444,7 @@ def reports_financial(request):
         if item.type == TYPES.WITHDRAW:
             currencies[symbol]['withdraw'] += value
             credits_evolution[item.created.strftime('%b %Y')]['withdraw'] += value
-            withdraw_credits += item.credits      
+            withdraw_credits += item.credits
 
     for class_ in classes:
         profit_credits += class_.universal_fee
