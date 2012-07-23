@@ -712,9 +712,7 @@ class UserProfile(BaseModel):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
             self.credit += credits
             super(UserProfile, self).save()
-            currency = self.currency
-            value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
-            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.REFERRAL, credits=credits, value=value)
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.REFERRAL, credits=credits)
 
     def topup_account(self, credits):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
