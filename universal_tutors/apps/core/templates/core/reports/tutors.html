@@ -99,12 +99,10 @@
 	</div>
 
 	<div class="row">
-		<div class="six columns">
 		{% render_user_per_classes_status system "Number of tutors by educational system" 1 %}
-		</div>
-		<div class="six columns">
-			{% render_user_per_classes_status level "Number of tutors by level" 1 %}
-		</div>
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status level "Number of tutors by level" 1 %}
 	</div>
 	<div class="row">
 		{% render_user_per_classes_status subject "Number of tutors by subject" 1 %}
@@ -118,14 +116,12 @@
 	</div>
 
 	<div class="row">
-		<div class="six columns">
-			{% render_user_per_classes_status class_time "Number of tutors by class time" 0 "" %}
-		</div>
-		<div class="six columns">
-			{% render_user_per_classes_status price_per_hour "Number of tutors by price per hour" 0 "" %}
-		</div>
+		{% render_user_per_classes_status class_time "Number of tutors by class time" 0 "" %}
 	</div>
 	<div class="row">
-		{% render_user_per_classes_status total_price "Number of tutors by class price" 0 "" %}
+		{% render_user_per_classes_status price_per_hour "Tutor pricing preference per hour" 0 "" %}
+	</div>
+	<div class="row">
+		{% render_user_per_classes_status total_price "Tutor preference by class price" 0 "" %}
 	</div>
 {% endblock %}
