@@ -323,6 +323,8 @@ class Class(BaseModel):
             from apps.profile.models import UserCreditMovement, Referral
 
             tutor = self.tutor
+            tutor_profile = tutor.profile
+
             try:
                 referral = Referral.objects.filter(user = tutor, used=False, activated=True).latest('id')
                 referral.used = True
@@ -331,10 +333,22 @@ class Class(BaseModel):
                 self.earning_fee = self.credit_fee
                 self.universal_fee = 0
                 super(self.__class__, self).save()                
+
             except Referral.DoesNotExist:
-                pass
-            
-            tutor_profile = tutor.profile
+                user_discount = tutor_profile.get_active_discount()
+                if user_discount:
+                    discount = user_discount.discount
+                    if discount.discount_percentage:
+                        diff = self.universal_fee * discount.discount_percentage
+                        self.universal_fee -= diff
+                        self.earning_fee += diff
+                    if discount.discount_fixed:
+                        diff = discount.discount_fixed if self.universal_fee - discount.discount_fixed >= 0 else self.universal_fee
+                        self.universal_fee -= diff
+                        self.earning_fee += diff
+                    super(self.__class__, self).save()
+                    user_discount.use()           
+                    
             tutor_profile.income += self.earning_fee
             tutor_profile.income_without_commission += self.credit_fee
             tutor_profile.classes_given = tutor.classes_as_tutor.filter(status=self.STATUS_TYPES.DONE).count() 
@@ -352,14 +366,14 @@ class Class(BaseModel):
                 count = user.referrals.filter(user=user, used=True).count()
                 if count < 3:
                     if profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
-                        profile.credit += 5
-                        profile.save()
-                        referral.used = True 
+                        profile.receive_referral(REFERRAL_CREDITS)
+                        referral.used = True
                     elif profile.type == profile.TYPES.TUTOR:
                         referral.activated = True
                 else:
                    referral.used = True 
                 referral.save()
+        
 
     def book(self):
         tutor = self.tutor

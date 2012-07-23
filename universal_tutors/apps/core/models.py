@@ -5,13 +5,14 @@ from django.db.models import Q
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template import Template, Context
+from django.contrib.auth.models import User
 
 from apps.common.utils.abstract_models import BaseModel
 from apps.common.utils.model_utils import get_namedtuple_choices
 from apps.common.utils.fields import CountryField
 
 from apps.classes.settings import CREDIT_VALUE
-import urlparse, threading
+import urlparse, threading, string, random, datetime
 
 
 class Currency(BaseModel):
@@ -90,22 +91,70 @@ class Bundle(models.Model):
         return '%s' % (self.discount * 100)
     
 
-#class Discount(BaseModel):
-#    """
-#    Create discount code and roles
-#    """
-#    
-#    description = models.CharField(max_length=30, null=True, blank=True, help_text='Optional. Just to internal identification')
-#    code = models.SlugField(max_length=15, null=True, blank=True, unique=True, db_index=True, help_text='We recommend more than 6 chars. To auto-generation left this field empty.')
-#    start = models.DateField()
-#    end = models.DateField()
-#    valid = models.PositiveSmallIntegerField(help_text="Number of times this discount can be user. Type 0 for unlimited.")
-#    discount = models.PositiveSmallIntegerField(help_text="A percentage. Example: 10 for 10%")
-#
-#    def __unicode__(self):
-#        return self.description if self.description else self.code
+class Discount(BaseModel):
+    """
+    Create discount code and roles
+    """
+    
+    TYPES = get_namedtuple_choices('USER_TYPE', (
+        (0, 'ALL', 'All users'),
+        (1, 'TUTOR', 'Tutors'),
+        (2, 'STUDENT', 'Students'),
+        (3, 'PARENT', 'Parents'),
+    ))
+    
+    type = models.PositiveSmallIntegerField(choices=TYPES.get_choices())
+    description = models.CharField(max_length=255, null=True, blank=True, help_text='Optional. Just to internal identification')
+    code = models.SlugField(max_length=15, null=True, blank=True, unique=True, db_index=True, help_text='We recommend more than 6 chars. To auto-generation left this field empty.')
+    start = models.DateField()
+    end = models.DateField()
+    valid = models.PositiveSmallIntegerField(help_text="Number of times this discount can be used by an user. Type 0 for unlimited.")
 
+    discount_percentage = models.FloatField(help_text="A percentage. Example: 0.10 for 10%")
+    discount_fixed = models.FloatField(help_text="A percentage. Example: 10 for 10 credits")
 
+    def __unicode__(self):
+        return self.description if self.description else self.code
+
+    def is_valid(self, used=0):
+        today = datetime.date.today()
+        return (self.start <= today <= self.end) and (not self.valid or used <= self.valid)
+    
+    def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(10))
+        super(Discount, self).save(*args, **kwargs)
+            
+
+class DiscountUser(BaseModel):
+    """
+    Users who used discount
+    """
+    class Meta:
+        unique_together = ('user', 'discount')
+
+    user = models.ForeignKey(User, related_name='discounts')
+    discount = models.ForeignKey(Discount, related_name='users')
+    used = models.PositiveIntegerField(default=0)
+    active = models.BooleanField(default=False)
+    
+    def __unicode__(self):
+        return '%s: %s' % (self.discount, self.user.get_full_name())
+    
+    def is_valid(self):
+        valid = self.discount.is_valid(self.used)
+        if not valid:
+            self.active = False
+            super(DiscountUser, self).save()
+        return valid
+
+    def use(self):
+        self.used += 1
+        super(DiscountUser, self).save()
+        self.is_valid()
+        
+
+# EMAIL TEMPLATES
 from apps.profile.models import UserProfile as _UserProfile
 
 class EmailTemplate(models.Model):

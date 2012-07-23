@@ -119,7 +119,9 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)get_user_image/$', 'get_user_data', {}, name = "get_user_data"),
     url(r'^(?i)get_user_image/(?P<user_id>\d+)/$', 'get_user_data', {}, name = "get_user_data"),
     
-    url(r'^(?i)update_header/$', 'update_header', {}, name = "update_header"),  
+    url(r'^(?i)update_header/$', 'update_header', {}, name = "update_header"),
+    
+    url(r'^(?i)activate_discount/$', 'activate_discount', {}, name="activate_discount"),
 )
 
 urlpatterns += patterns('apps.profile.views.topup',

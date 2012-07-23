@@ -9,7 +9,7 @@
 			var data = new google.visualization.arrayToDataTable([
 				['', '{% if verbose %}{{verbose}}{% else %}{{users}}{% endif %}'],
 				['In this period', {{users}}],
-				['In other period', {{total}}-{{users}}]
+				['In another period', {{total}}-{{users}}]
 		      ]);
 
 			// Set chart options

@@ -3,13 +3,6 @@
 {% load fb_versions common_tags %}
 
 {% block title %}Home{% endblock %}
-{% block extra_head %}
-<meta property="og:image" content="http://universaltutors.rawjam.co.uk{{ STATIC_URL }}images/shared/logo-x2.png" />
-<script type="text/javascript">var switchTo5x=true;</script>
-<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-<script type="text/javascript">stLight.options({publisher: "950b5df8-9351-42f6-bebd-1d861c2d395b"}); </script>
-{% endblock %}
-
 {% block body_class %}marketing home{% endblock %}
 
 {% block content %}
@@ -37,9 +30,13 @@
       
       <div class="row">
         <div class="five columns centered text-center">
-			<!-- Sharethis Button BEGIN -->
-			<span st_image="http://sharethis.com/images/logo.jpg" st_url="http://universaltutors.com/" class='st_fblike_hcount' displayText='Facebook Like'></span>
-			<span st_url="http://universaltutors.com/" class='st_twitter_hcount' displayText='Tweet'></span>
+			<!-- AddThis Button BEGIN -->
+			<div class="addthis_toolbox addthis_default_style" addthis:url="http://universaltutors.com/">
+				<a class="addthis_button_facebook_like inline" style="opacity:1;" fb:like:layout="button_count"></a>
+				<a class="addthis_button_tweet inline"></a>
+			</div>
+			<script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+			<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4fb386b55399dc7b"></script>
 			<!-- AddThis Button END -->
         </div>
       </div>

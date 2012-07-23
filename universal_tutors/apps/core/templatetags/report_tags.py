@@ -58,6 +58,7 @@ def render_credit_movements(topup, withdraw, profit, title=None):
         'topup': topup,
         'withdraw': withdraw,
         'profit': profit,
+        'title': title,
         'id': datetime.datetime.now().strftime("%S%f"),
     }
 

@@ -1,4 +1,4 @@
-{% load classes_tags %}
+{% load classes_tags common_tags %}
 
 <div class="row">&nbsp;</div>
 <div class="row">
@@ -25,6 +25,18 @@
 	<strong>{{currency.symbol}} {{topup.value|floatformat:2}}</strong>
   </div>	  
 </div>
+{% if discount %}
+<div class="row">
+  <div class="four columns">        
+    <label>Discount ({{discount.code}})</label>
+  </div>
+  <div class="eight columns">
+	{% if discount.discount_fixed %}<div class="row"><strong>You are getting {{discount.discount_fixed|floatformat}} credit{{discount.discount_fixed|pluralize}} more.</strong></div>{% endif %}
+	{% if discount.discount_percentage %}<div class="row"><strong>You are getting a {{discount.discount_percentage|multiply:100|floatformat}}% discount in total price</strong></div>{% endif %}
+  </div>	  
+</div>
+{% else %}
+{% endif %}
 <div class="row">&nbsp;</div>
 <div class="row center">
   {% if settings.DEBUG %}{{form.sandbox}}{% else %}{{form.render}}{% endif %}

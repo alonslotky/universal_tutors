@@ -17,6 +17,7 @@ from apps.profile.forms import *
 from apps.classes.models import ClassSubject
 from apps.common.utils.view_utils import main_render, handle_uploaded_file
 from apps.common.utils.date_utils import convert_datetime
+from apps.core.models import Discount
 
 import pytz, datetime
 
@@ -769,3 +770,39 @@ def update_header(request):
     })
     
     return http.HttpResponse(data, mimetype='application/json')
+
+
+@login_required
+def activate_discount(request):
+    if not request.method == 'POST':
+        raise http.Http404()
+    
+    user = request.user
+    profile = user.profile
+    code = request.POST.get('discount', '')
+    
+    if not code:
+        raise http.Http404()
+    
+    try:
+        if profile.type == profile.TYPES.TUTOR:
+            discount = Discount.objects.get(code=code, type__in=[Discount.TYPES.ALL, Discount.TYPES.TUTOR])
+        elif profile.type == profile.TYPES.PARENT:
+            discount = Discount.objects.get(code=code, type__in=[Discount.TYPES.ALL, Discount.TYPES.TUTOR])
+        else:
+            discount = Discount.objects.get(code=code, type__in=[Discount.TYPES.ALL, Discount.TYPES.STUDENT])
+            
+    except Discount.DoesNotExist:
+        return http.HttpResponse('Invalid discount code!')
+    
+    user_discount, created = user.discounts.get_or_create(discount=discount)
+    user_discount.active = True
+    user_discount.save()
+    
+    user.discounts.exclude(id=user_discount.id).update(active=False)
+    if user_discount.is_valid():
+        return http.HttpResponse('done.')
+    else:
+        return http.HttpResponse('This discount code has been expired!')
+
+
