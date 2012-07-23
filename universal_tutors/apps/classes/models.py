@@ -343,8 +343,7 @@ class Class(BaseModel):
                         self.universal_fee -= diff
                         self.earning_fee += diff
                     if discount.discount_fixed:
-                        diff = self.universal_fee - discount.discount_fixed
-                        diff = diff if diff >= 0 else 0
+                        diff = discount.discount_fixed if self.universal_fee - discount.discount_fixed >= 0 else self.universal_fee
                         self.universal_fee -= diff
                         self.earning_fee += diff
                     super(self.__class__, self).save()

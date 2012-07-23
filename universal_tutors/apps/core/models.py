@@ -148,7 +148,7 @@ class DiscountUser(BaseModel):
         return valid
 
     def use(self):
-        self.user += 1
+        self.used += 1
         super(DiscountUser, self).save()
         self.is_valid()
         
