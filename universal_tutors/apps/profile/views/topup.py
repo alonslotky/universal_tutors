@@ -54,7 +54,10 @@ def topup_cart(request, username=None):
 
     form = None 
     topup = None
+    discount = None
     if request.method == "POST":
+        user_discount = profile.get_active_discount()
+        
         credits = int(round(float(request.POST.get('credits', 0))))
         try:
             bundle = Bundle.objects.filter(credits__lte = credits).order_by('-credits')[0]
@@ -62,8 +65,21 @@ def topup_cart(request, username=None):
         except IndexError:
             value = round(credits * currency.credit_value(), 2)
 
+        if user_discount:
+            discount = user_discount.discount
+            if discount.discount_percentage:
+                value *= (1-discount.discount_percentage)
+            if discount.discount_fixed:
+                credits += discount_fixed
+
         if credits:
-            topup = TopUpItem(user=person, credits=credits, value=value, currency=currency)
+            topup = TopUpItem(
+                user = person, 
+                credits = credits, 
+                value = value, 
+                currency = currency,
+                discount = user_discount,
+            )
             topup.save()
     else:
         try:
@@ -95,6 +111,7 @@ def topup_cart(request, username=None):
         'currency': currency,
         'topup': topup,
         'bundles': Bundle.objects.all(),
+        'discount': discount,
     }
 
 @login_required

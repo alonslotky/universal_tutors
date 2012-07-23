@@ -147,6 +147,12 @@ class DiscountUser(BaseModel):
             super(DiscountUser, self).save()
         return valid
 
+    def use(self):
+        self.user += 1
+        super(DiscountUser, self).save()
+        self.is_valid()
+        
+
 # EMAIL TEMPLATES
 from apps.profile.models import UserProfile as _UserProfile
 

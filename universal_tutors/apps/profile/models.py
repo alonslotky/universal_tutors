@@ -708,6 +708,14 @@ class UserProfile(BaseModel):
         email_template.send_email(context, to, use_thread)
 
 
+    def receive_referral(self, credits):
+        if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
+            self.credit += credits
+            super(UserProfile, self).save()
+            currency = self.currency
+            value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
+            self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.REFERRAL, credits=credits, value=value)
+
     def topup_account(self, credits):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
             self.credit += credits
@@ -936,7 +944,7 @@ class UserCreditMovement(BaseModel):
         (6, 'WITHDRAW', 'Withdraw to PayPal Account'),
         (7, 'REJECTED_BY_TUTOR', 'Rejected by tutor (Refund)'),
         (8, 'CANCELED_BY_SYSTEM', 'Class canceled by system (Refund)'),
-        (9, 'DISCOUNT', 'Discount Bonus'),
+        (9, 'REFERRAL', 'Refer a friend - Bonus'),
     ))
 
     user = models.ForeignKey(User, related_name='movements')
@@ -969,6 +977,7 @@ class TopUpItem(BaseModel):
     credits = models.PositiveIntegerField()
     status = models.PositiveSmallIntegerField(choices = STATUS_TYPES.get_choices(), default = STATUS_TYPES.CART)
     invoice = models.CharField(max_length = 20, null=True, blank=True)
+    discount = models.ForeignKey(DiscountUser, related_name='topups', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.invoice:
@@ -989,6 +998,8 @@ class TopUpItem(BaseModel):
         elif self.status == self.STATUS_TYPES.FLAGGED:
             self.status = self.STATUS_TYPES.DONE
             super(self.__class__, self).save()
+        if self.discount:
+            self.discount.use()
             
     def flagged(self):
         if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
