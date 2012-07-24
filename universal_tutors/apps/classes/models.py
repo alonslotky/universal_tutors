@@ -482,5 +482,5 @@ class ClassUserHistory(models.Model):
     leave = models.DateTimeField(auto_now = True)
 
     def __unicode__(self):
-        return '%s [%s]: from %s to %s' % (self.user, self._class, self.enter, self.leave)
+        return u'%s [%s]: from %s to %s' % (self.user, self._class, self.enter, self.leave)
 
