@@ -952,7 +952,7 @@ class UserCreditMovement(BaseModel):
     related_class = models.ForeignKey(Class, null=True, blank=True)
 
     def __unicode__(self):
-        return '%s: %s' % (self.get_type_display(), self.credits)
+        return u'%s: %s' % (self.get_type_display(), self.credits)
 
 class TopUpItem(BaseModel):
     """
@@ -986,7 +986,7 @@ class TopUpItem(BaseModel):
         super(self.__class__, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return "[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
+        return u"[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
 
     def topup(self):
         if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
@@ -1049,7 +1049,7 @@ class WithdrawItem(BaseModel):
         super(self.__class__, self).save(*args, **kwargs)
     
     def __unicode__(self):
-        return "[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
+        return u"[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
 
     def complete(self):
         if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
@@ -1096,7 +1096,7 @@ class TutorSubject(models.Model):
             profile.save()
     
     def __unicode__(self):
-        return '%s (%s)' % (self.subject, self.level) if self.level else '%s' % self.subject
+        return u'%s (%s)' % (self.subject, self.level) if self.level else '%s' % self.subject
 
 
 class TutorQualification(models.Model):
@@ -1124,7 +1124,7 @@ class StudentInterest(models.Model):
     level = models.ForeignKey(ClassLevel, related_name='students', null=True, blank=True)
     
     def __unicode__(self):
-        return '%s (%s)' % (self.subject, self.level) if self.level else '%s' % self.subject
+        return u'%s (%s)' % (self.subject, self.level) if self.level else '%s' % self.subject
 
 
 class TutorReview(BaseModel):
@@ -1176,7 +1176,7 @@ class TutorReview(BaseModel):
         profile.save()
 
     def __unicode__(self):
-        return '%s (%s)' % (self.text, self.rate)
+        return u'%s (%s)' % (self.text, self.rate)
     
     @property
     def from_review(self):
@@ -1202,7 +1202,7 @@ class TutorFavorite(BaseModel):
     tutor = models.ForeignKey(User, related_name='students_has_favorite')
     
     def __unicode__(self):
-        return '%s favorite %s' % (self.user, self.tutor)
+        return u'%s favorite %s' % (self.user, self.tutor)
 
 
 class WeekAvailability(models.Model):
@@ -1274,7 +1274,7 @@ class Child(models.Model):
         super(self.__class__, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return '%s' % self.child
+        return u'%s' % self.child
 
 
 class StudentReview(BaseModel):
@@ -1352,7 +1352,7 @@ class Report(BaseModel):
         self.send_report()
     
     def __unicode__(self):
-        return '%s reported %s' % (self.user, self.violator)
+        return u'%s reported %s' % (self.user, self.violator)
 
 class ReportedTutorManager(models.Manager):
     def get_query_set(self):
