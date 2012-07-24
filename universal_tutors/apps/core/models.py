@@ -108,10 +108,10 @@ class Discount(BaseModel):
     code = models.SlugField(max_length=15, null=True, blank=True, unique=True, db_index=True, help_text='We recommend more than 6 chars. To auto-generation left this field empty')
     start = models.DateField(help_text='Date at this discount starts')
     end = models.DateField(help_text='Date at this discount ends')
-    valid = models.PositiveSmallIntegerField(help_text="Number of times this discount can be used by an user. Type 0 for unlimited.")
+    valid = models.PositiveSmallIntegerField(default=0, help_text="Number of times this discount can be used by an user. Type 0 for unlimited.")
 
-    discount_percentage = models.FloatField(help_text="A percentage. Example: 0.10 for 10% discount on top-up for student; 10% deducted from UT commission at the end of class for tutors")
-    discount_fixed = models.FloatField(help_text="A fixed number of credits. Example: additional 10 credits on top-up for a student; 10 credits deducted from UT commission at the end of class for a tutor")
+    discount_percentage = models.FloatField(default=0, help_text="A percentage. Example: 0.10 for 10% discount on top-up for student; 10% deducted from UT commission at the end of class for tutors")
+    discount_fixed = models.FloatField(default=0, help_text="A fixed number of credits. Example: additional 10 credits on top-up for a student; 10 credits deducted from UT commission at the end of class for a tutor")
 
     def __unicode__(self):
         return self.description if self.description else self.code
