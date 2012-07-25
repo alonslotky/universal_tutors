@@ -7,8 +7,10 @@ from apps.classes.settings import *
 
 @register.filter
 def in_currency(value, currency):
-    return value * currency.credit_value()
-
+    try:
+        return value * currency.credit_value()
+    except AttributeError:
+        return 0
 
 @register.filter
 def discount(value, d):
@@ -16,4 +18,7 @@ def discount(value, d):
 
 @register.filter
 def rec_url(class_, id):
-    return class_.get_rec_url(id)
+    try:
+        return class_.get_rec_url(id)
+    except AttributeError:
+        return ''
