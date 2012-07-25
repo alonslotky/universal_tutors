@@ -293,6 +293,12 @@ class UserProfile(BaseModel):
         super(UserProfile, self).save()
     
     def save(self, *args, **kwargs):
+        if not self.currency:
+            try:
+                self.currency = Currency.objects.get(acronym='GBP')
+            except Currency.DoesNotExist:
+                self.currency = Currency.objects.latest('id')
+        
         if self.newsletters and self.type != 0:
             if self.type in [self.TYPES.STUDENT, self.TYPES.UNDER16]:
                 list = mailchimp.utils.get_connection().get_list_by_id(settings.STUDENTS_LIST_ID)
