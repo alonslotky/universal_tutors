@@ -34,6 +34,7 @@
     <div class="row">
       <div class="nine columns">
         <textarea id="modal-message-text" name="modal-message-text" type="text" class="text-area" placeholder="Write a Message ..."></textarea>
+	    <div id="modal-message-text-error" class="formError hidden"></div>
       </div>
       
       <div class="three columns">
@@ -97,29 +98,40 @@
 		
 		var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#message-child').val()){% else %}true;{% endif %}
 		
-		if (modal_message_to && $('#modal-message-text').val() && child) {
-			var url = '{% url send_modal_message %}'+ modal_message_to +'/';
-			url += modal_message_class ? modal_message_class+'/' : '';
-	
-			$.ajax({
-				type: 'post',
-				data: $('#modal-message-form').serialize(),
-				url: url,
-				complete: function() {
-					$('#modal-messages-loading').fadeOut(function(){
-							$('#modal-messages-container').fadeIn();
-					});	
-				},
-				error: function() {
-					$('#modal-messages-container').html("It is not possible show the messages right now. Please try again later.")
-				},
-				success: function(response) {
-					$('#modal-message-text').val('');
-					$('#modal-message-text').css('height', '30px');
-					$('#modal-message-text').height($('#modal-message-text').get(0).scrollHeight + 15);
-					load_modal_messages(response);
-				}
-			});
+		var message_text = $('#modal-message-text').val();
+		
+		if (modal_message_to && message_text && child) {
+			
+			if (message_text.length <= 500) {
+				var url = '{% url send_modal_message %}'+ modal_message_to +'/';
+				url += modal_message_class ? modal_message_class+'/' : '';
+		
+				$.ajax({
+					type: 'post',
+					data: $('#modal-message-form').serialize(),
+					url: url,
+					complete: function() {
+						$('#modal-messages-loading').fadeOut(function(){
+								$('#modal-messages-container').fadeIn();
+						});	
+					},
+					error: function() {
+						$('#modal-messages-container').html("It is not possible show the messages right now. Please try again later.")
+					},
+					success: function(response) {
+						$('#modal-message-text').val('');
+						$('#modal-message-text').css('height', '30px');
+						$('#modal-message-text').height($('#modal-message-text').get(0).scrollHeight + 15);
+						load_modal_messages(response);
+					}
+				});
+			} else {
+				$('#modal-message-text-error').html('There is a limit of 500 characters. You tried to submit '+ message_text.length +'.');
+				$('#modal-message-text-error').removeClass('hidden');
+				setTimeout(function(){
+					$('#modal-message-text-error').addClass('hidden');				
+				}, 3000);			
+			}
 		}
 	});
 	
