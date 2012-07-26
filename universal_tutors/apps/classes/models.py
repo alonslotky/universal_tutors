@@ -128,6 +128,9 @@ class Class(BaseModel):
     def end_date(self):
         return self.date + datetime.timedelta(minutes=self.duration)
     
+    def get_absolute_url(self):
+        return reverse('class_detail', args=[self.id])
+    
     def get_minutes_to_start(self):
         now = datetime.datetime.now()
         return difference_in_seconds(self.date, now) if self.date > now else -difference_in_seconds(now, self.date)
