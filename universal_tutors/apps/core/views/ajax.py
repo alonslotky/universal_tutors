@@ -58,8 +58,6 @@ def timezones(request, country):
     if not timezones:
         timezones = Timezone.objects.all()
     
-    print timezones
-    
     return {
         'timezones': timezones,
     }
