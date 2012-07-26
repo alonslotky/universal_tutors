@@ -44,9 +44,10 @@ class BundleAdmin(admin.ModelAdmin):
 admin.site.register(Bundle, BundleAdmin)
 
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'code', 'type', 'start', 'end', 'discount_percentage', 'discount_fixed', 'valid')
+    list_display = ('__unicode__', 'code', 'type', 'start', 'end', 'discount_percentage', 'discount_fixed', 'valid', 'total_times', 'total_times_used')
     list_filter = ('type',)
     search_fields = ('description',)
+    exclude = ('total_times_used',)
 admin.site.register(Discount, DiscountAdmin)
 
 class DiscountUserAdmin(admin.ModelAdmin):

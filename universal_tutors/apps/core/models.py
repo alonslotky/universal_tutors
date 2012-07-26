@@ -108,6 +108,8 @@ class Discount(BaseModel):
     start = models.DateField(help_text='Date at this discount starts')
     end = models.DateField(help_text='Date at this discount ends')
     valid = models.PositiveSmallIntegerField(default=0, help_text="Number of times this discount can be used by an user. Type 0 for unlimited.")
+    total_times = models.PositiveSmallIntegerField(default=0, help_text="Total number of times this discount can be used by users. Type 0 for unlimited.")
+    total_times_used = models.PositiveSmallIntegerField(default=0)
 
     discount_percentage = models.FloatField(default=0, help_text="A percentage. Example: 0.10 for 10% discount on top-up for student; 10% deducted from UT commission at the end of class for tutors")
     discount_fixed = models.FloatField(default=0, help_text="A fixed number of credits. Example: additional 10 credits on top-up for a student; 10 credits deducted from UT commission at the end of class for a tutor")
@@ -117,7 +119,11 @@ class Discount(BaseModel):
 
     def is_valid(self, used=0):
         today = datetime.date.today()
-        return (self.start <= today <= self.end) and ((not self.valid) or used < self.valid)
+        return (self.start <= today <= self.end) and ((not self.valid) or used < self.valid) and ((not self.total_times) or self.total_times_used < self.total_times)
+    
+    def use(self):
+        self.total_times_used += 1
+        super(Discount, self).save()
     
     def save(self, *args, **kwargs):
         if not self.code:
@@ -150,6 +156,7 @@ class DiscountUser(BaseModel):
     def use(self):
         self.used += 1
         super(DiscountUser, self).save()
+        self.discount.use()
         self.is_valid()
         
 
