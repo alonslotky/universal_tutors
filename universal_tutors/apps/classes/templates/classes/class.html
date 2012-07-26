@@ -56,8 +56,19 @@
 					},
 					success: function(response) {
 						if (response == '{{class.RESPONSE_TYPES.CLOSE}}') {
-							$('#alternate-container').remove();
-							$('#exit-class-button').click();
+							{% if user == class.student %}
+						    student_rate_tutor({{class.tutor.id}}, "{{class.tutor.get_full_name}}", {{class.id}});
+							{% else %}
+							tutor_rate_student({{class.student.id}}, "{{class.student.get_full_name}}", {{class.id}});
+							{% endif %}
+
+							$('#modal-review-close-button').remove();
+						    var modalLocation = $('#exit-class-button').attr('data-reveal-id');
+						    
+							$('#' + modalLocation).reveal({
+								animation: 'none',
+							    closeOnBackgroundClick: false
+    						});
 						}
 						
 						{% if user == class.student %}
