@@ -186,6 +186,7 @@
 	});
 
 	$('#id_country').live("change", function(){
+		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
 	
