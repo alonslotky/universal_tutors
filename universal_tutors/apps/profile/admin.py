@@ -71,8 +71,9 @@ admin.site.register(StudentProfile, StudentProfileAdmin)
     
     
 class BadReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'rate', 'from_review', 'related_class', 'text',)
-    readonly_fields = ('from_review',)
+    list_display = ('tutor', 'student', 'student_email', 'related_class', 'text',)
+    readonly_fields = ('tutor', 'student', 'student_email')
+    exclude = ('user', )
     
 admin.site.register(BadReview, BadReviewAdmin)
 

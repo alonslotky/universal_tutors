@@ -1184,8 +1184,17 @@ class TutorReview(BaseModel):
         return u'%s (%s)' % (self.text, self.rate)
     
     @property
-    def from_review(self):
-        return self.related_class.student
+    def tutor(self):
+        return self.user.get_full_name()
+
+    @property
+    def student(self):
+        return self.related_class.student.get_full_name()
+
+    @property
+    def student_email(self):
+        return self.related_class.student.email
+
     
 class TutorInactiveReviewsManager(models.Manager):
     def get_query_set(self):
@@ -1299,7 +1308,7 @@ class Message(BaseModel):
     
     user = models.ForeignKey(User, related_name='sent_messages')
     to = models.ForeignKey(User, related_name='received_messages')
-    message = models.CharField(max_length=500)
+    message = models.CharField(max_length=520)
     related_class = models.ForeignKey(Class, null=True, blank=True, related_name='messages')
     read = models.BooleanField(default=False)
     email_sent = models.BooleanField(default=False)
