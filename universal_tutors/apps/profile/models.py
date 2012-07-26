@@ -581,7 +581,7 @@ class UserProfile(BaseModel):
             firstname = user.first_name,
             lastname = user.last_name,
             email = user.email,
-            roleid = 50 if self.type == self.TYPES.TUTOR else 10,
+            roleid = 50 if self.type == self.TYPES.TUTOR else 40,
         )
 
     
@@ -850,9 +850,9 @@ class UserProfile(BaseModel):
         
     def taken_classes(self):
         if self.type == self.TYPES.TUTOR:
-            return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.DONE).order_by('date')
+            return self.user.classes_as_tutor.filter(status=Class.STATUS_TYPES.DONE).order_by('-date')
         else:
-            return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.DONE).order_by('date')
+            return self.user.classes_as_student.filter(status=Class.STATUS_TYPES.DONE).order_by('-date')
         
     def upcoming_classes(self):
         if self.type == self.TYPES.TUTOR:
