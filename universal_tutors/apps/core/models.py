@@ -118,7 +118,7 @@ class Discount(BaseModel):
 
     def is_valid(self, used=0):
         today = datetime.date.today()
-        return (self.start <= today <= self.end) and (not self.valid or used <= self.valid)
+        return (self.start <= today <= self.end) and ((not self.valid) or used < self.valid)
     
     def save(self, *args, **kwargs):
         if not self.code:
