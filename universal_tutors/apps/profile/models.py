@@ -793,7 +793,7 @@ class UserProfile(BaseModel):
             
             free_to_withdraw = self.income - in_process['sum_credits'] - in_process['sum_commission']
             
-            commission = free_to_withdraw * COMMISSION_WITHDRAW_PERCENTAGE - COMMISSION_WITHDRAW_FIXED
+            commission = free_to_withdraw * COMMISSION_WITHDRAW_PERCENTAGE + COMMISSION_WITHDRAW_FIXED
             credits = free_to_withdraw - commission
             currency = self.currency
             credit_value = currency.credit_value()
