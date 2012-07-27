@@ -776,7 +776,7 @@ class UserProfile(BaseModel):
                         .aggregate(sum_credits=models.Sum('credits'), sum_commission=models.Sum('commission') )
 
         free_to_withdraw = self.income - (in_process['sum_credits'] or 0) - (in_process['sum_commission'] or 0)
-        commission = free_to_withdraw * COMMISSION_WITHDRAW_PERCENTAGE - COMMISSION_WITHDRAW_FIXED
+        commission = free_to_withdraw * COMMISSION_WITHDRAW_PERCENTAGE + COMMISSION_WITHDRAW_FIXED
         credits = free_to_withdraw - commission
         
         return {
