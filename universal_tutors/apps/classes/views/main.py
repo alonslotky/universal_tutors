@@ -47,7 +47,7 @@ def detail(request, class_id):
     if class_.date > start:
         before = True
     
-    elif class_.date < end:
+    elif class_.date < end or (class_.status != class_.STATUS_TYPES.BOOKED):
         after = True
         material = class_.get_material()
         recordings = class_.get_recordings()
