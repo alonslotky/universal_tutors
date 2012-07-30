@@ -63,7 +63,7 @@
 	            {% if tutor_profile.video_approved and tutor_profile.video %}
 	            	<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a>
 	            {% else %}
-	            	<span class="watch-video text-gray"><i class="icon-videocam"></i> Watch Video</span>			            
+	            	<a class="watch-video text-gray"><i class="icon-videocam"></i> Watch Video</a>			            
 	            {% endif %}
 	          	{% with tutor|get_messages:user as messages %}
 		      	  {% if tutor_profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}

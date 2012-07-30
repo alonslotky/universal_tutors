@@ -170,7 +170,7 @@
             {% if profile.video_approved and profile.video %}
             	<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a>
             {% else %}
-            	<span class="watch-video text-gray"><i class="icon-videocam"></i> Watch Video</span>			            
+            	<a class="watch-video text-gray"><i class="icon-videocam"></i> Watch Video</a>			            
             {% endif %}
  
 	          {% if user_profile.type != user_profile.TYPES.TUTOR %}
