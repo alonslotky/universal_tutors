@@ -60,6 +60,11 @@
 	          </div>
 	          
 	          <div class="two columns action">
+	            {% if tutor_profile.video_approved and tutor_profile.video %}
+	            	<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a>
+	            {% else %}
+	            	<span class="watch-video text-gray"><i class="icon-videocam"></i> Watch Video</span>			            
+	            {% endif %}
 	          	{% with tutor|get_messages:user as messages %}
 		      	  {% if tutor_profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
 	            	<a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>

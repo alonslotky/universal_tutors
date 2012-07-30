@@ -165,49 +165,55 @@
         </div>
         <div class="three columns action">
 		  {% if owner %}
-          <a href="{% url edit_tutor_profile %}" class="book-class">Edit profile</a>
+          	<a href="{% url edit_tutor_profile %}" class="book-class">Edit profile</a>
 		  {% else %}
+            {% if profile.video_approved and profile.video %}
+            	<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a>
+            {% else %}
+            	<span class="watch-video text-gray"><i class="icon-videocam"></i> Watch Video</span>			            
+            {% endif %}
+ 
+	          {% if user_profile.type != user_profile.TYPES.TUTOR %}
+	          
+				  {% with person|get_messages:user as messages %}
+				  {% with messages.messages as msgs %}
+				  {% with msgs|length as no_msgs %}
+				  
+		      	  {% if no_msgs == 0 %}
+			      	  {% if profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
+			          <a href="javascript:;" class="send-message message-user-{{person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> Send message</a>
+					  {% else %}
+		              <a href="javascript:;" class="send-message message-user-{{person.id}}-link" onclick="setup_alert_box(function(){ view_modal_messages({{person.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> Send message</a>		  
+					  {% endif %}
+		          {% else %}
+		          <a href="javascript:;" class="send-message message-user-{{person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i>
+		      		{% if messages.unread %} 
+		        		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
+		        	{% else %}
+		        		View Messages
+		        	{% endif %}
+		      	  </a>
+		      	  {% endif %}
+		          {% endwith %}
+		          {% endwith %}
+		          {% endwith %}
+	
+		          {% if profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
+		          <a href="{% url book_class person.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
+				  {% else %}
+		          <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class person.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-calendar-inv"></i> Book a Class</a>
+				  {% endif %}
+	          	  <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i>&nbsp;<span>{% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
+	          {% endif %}
           
-          {% if user_profile.type != user_profile.TYPES.TUTOR %}
-          
-		  {% with person|get_messages:user as messages %}
-		  {% with messages.messages as msgs %}
-		  {% with msgs|length as no_msgs %}
-		  
-      	  {% if no_msgs == 0 %}
-	      	  {% if profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
-	          <a href="javascript:;" class="send-message message-user-{{person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i> Send message</a>
-			  {% else %}
-              <a href="javascript:;" class="send-message message-user-{{person.id}}-link" onclick="setup_alert_box(function(){ view_modal_messages({{person.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i> Send message</a>		  
-			  {% endif %}
-          {% else %}
-          <a href="javascript:;" class="send-message message-user-{{person.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{person.id}});"><i class="icon-comment"></i>
-      		{% if messages.unread %} 
-        		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
-        	{% else %}
-        		View Messages
-        	{% endif %}
-      	  </a>
-      	  {% endif %}
-          {% endwith %}
-          {% endwith %}
-          {% endwith %}
-
-          {% if profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
-          <a href="{% url book_class person.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
-		  {% else %}
-          <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class person.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-calendar-inv"></i> Book a Class</a>
-		  {% endif %}
-          <a id="favorite-tutor" href="javascript:;" class="favorite"><i class="icon-star"></i>&nbsp;<span>{% if person|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
-          {% endif %}
-          <a href="{% url report person.username %}" class="report text-red"><i class="icon-flag"></i> Report tutor</a>
-			<script type="text/javascript">
-				$('#favorite-tutor').click(function(){
-					$.get('{% url favorite person.id %}', function(response){
-						$('#favorite-tutor span').html(response);
+	          	<a href="{% url report person.username %}" class="report text-red"><i class="icon-flag"></i> Report tutor</a>
+				<script type="text/javascript">
+					$('#favorite-tutor').click(function(){
+						$.get('{% url favorite person.id %}', function(response){
+							$('#favorite-tutor span').html(response);
+						});
 					});
-				});
-			</script>
+				</script>
           {% endif %}
         </div>
       </div>
