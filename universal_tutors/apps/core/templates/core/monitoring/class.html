@@ -70,10 +70,10 @@
 		var seconds_u = positive > 0 ? parseInt(seconds % 10) : 0;
 		
 		if( diff > 0 ) {
-			$('#timer-text').html("Your class finishes in");
+			$('#timer-text').html("Class ends in");
 			$('.timer-ago').addClass('hidden');
 		} else {
-			$('#timer-text').html("Your class finished");
+			$('#timer-text').html("Class has finished");
 			$('.timer-ago').removeClass('hidden');				
 		}
 		
@@ -107,7 +107,7 @@
 
 		<div class="timer class-time">
 		    <div class="one to_calc">
-		      <p id="timer-text">Your class ends in</p>
+		      <p id="timer-text">Ends in</p>
 		    </div>
 		    
 		    <div class="two auto-width to_calc">
@@ -125,9 +125,12 @@
 	    <a class="right button" href="{% url monitoring_classes %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
 
 		<div class="class-info">
-			<div class="subject"><strong>Subject: </strong>{{class}}</div>
 			<div class="tutor"><strong>Tutor: </strong>{{tutor.get_full_name}}</div>
 			<div class="tutor"><strong>Student: </strong>{{student.get_full_name}}</div>
+		</div>
+		<div class="class-info">
+			<div class="subject"><strong>Subject: </strong>{{class}}</div>
+			<div class="subject"><strong>Started at: </strong>{{class.date|date:"H:i"}} ({{class.duration}} min)</div>
 		</div>
 	  </header>
 	  
