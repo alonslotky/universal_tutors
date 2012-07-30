@@ -61,7 +61,11 @@
 	          
 	          <div class="two columns action">
 	          	{% with tutor|get_messages:user as messages %}
-	            <a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>
+		      	  {% if tutor_profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
+	            	<a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" data-reveal-id="modal-message" onclick="view_modal_messages({{tutor.id}});"><i class="icon-comment"></i>
+				  {% else %}
+	            	<a href="javascript:;" class="send-message message-user-{{tutor.id}}-link" onclick="setup_alert_box(function(){ view_modal_messages({{tutor.id}}); }, 'modal-message');" data-reveal-id="modal-alert-crb"><i class="icon-comment"></i>				  
+				  {% endif %}
 	            	{% if messages.unread %}
 	            		{{ messages.unread }} New Message{{ messages.unread|pluralize }}
 		          	{% else %}
@@ -73,7 +77,13 @@
 		            {% endif %}
             	</a>
 	            {% endwith %}
-	            <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
+	            
+		          {% if tutor_profile.crb_checked or user_profile.type == user_profile.TYPES.STUDENT %}
+		          <a href="{% url book_class tutor.username %}" class="book-class"><i class="icon-calendar-inv"></i> Book a Class</a>
+				  {% else %}
+		          <a href="javascript:;" class="book-class" onclick="setup_alert_box(function(){ window.location.href = '{% url book_class tutor.username %}'; });" data-reveal-id="modal-alert-crb"><i class="icon-calendar-inv"></i> Book a Class</a>
+				  {% endif %}
+
 	            <a href="javascript:;" class="favorite tutor-favorite-{{tutor.id}}" id-tutor="{{tutor.id}}"><i class="icon-star"></i>&nbsp;<span>{% if tutor|is_favorite:user %}Remove favorite{% else %}Add favorite{% endif %}</span></a>
 	            <a href="{% url report tutor.username %}" class="report text-red"><i class="icon-flag"></i> Report</a>
 	          </div>
@@ -89,6 +99,8 @@
       
       
   	{% with 'True' as can_send_message %}{% include 'profile/fragments/_modal_messages.html' %}{% endwith %}
+    {% include 'profile/fragments/_alert_crb.html' %}
+
 	
 	<script type="text/javascript">
 		$('.favorite').click(function(){

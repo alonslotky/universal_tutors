@@ -917,6 +917,9 @@ class TutorProfile(UserProfile):
         verbose_name = 'Tutor'
         proxy = True
 
+    def subjects_list(self):
+        return '\n'.join(['%s' % subject for subject in self.subjects.all()])
+
 class ParentProfile(UserProfile):
     objects = ParentProfileManager()
 
