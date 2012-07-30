@@ -105,6 +105,7 @@
 
 <script type="text/javascript">
 	var book_start_date, book_end_date;
+	var book_months_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dez'];
 	var set_booking_selection = function(year, month, day, start_hour, start_min, end_hour, end_min) {
 		var book_time = new Date(year, month, day, start_hour, start_min);
 		
@@ -114,19 +115,20 @@
 			book_end_date.setDate(book_end_date.getDate()+1);
 
 		book_date = year +'-'+ (month<9?('0'+(month+1)):(month+1)) +'-'+ day;
+		book_date_display = (day<10?'0'+day:day) +' '+ book_months_list[month] +' '+ year;
 
 		$('#book-class-errors').html('');
 		$('#book-class-errors').addClass('hidden');
 		$('#book-class-subject').val('0');
 		$('#book-class-duration').val('0');
-		$('#book-class-date').html('<option value="'+ book_date +'" selected="selected">'+ book_date +'</div>');
+		$('#book-class-date').html('<option value="'+ book_date +'" selected="selected">'+ book_date_display +'</div>');
 		
 		$('#book-class-start').html('');
 		while(book_time < book_end_date){
 			$('#book-class-start').append(
 				'<option value="'+ book_time.getHours() +'-'+ book_time.getMinutes() +'">'+
 				 	(book_time.getHours() < 10 ? '0'+book_time.getHours() : book_time.getHours()) +
-				 	'h'+
+				 	':'+
 				 	(book_time.getMinutes() < 10 ? '0'+book_time.getMinutes() : book_time.getMinutes()) +
 				'</option>'
 			);

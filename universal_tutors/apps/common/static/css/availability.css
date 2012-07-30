@@ -30,15 +30,15 @@
 	float: left; height: 30px; 
 	border-left: 1px solid rgb(120, 170, 26); 
 	border-right: 1px solid rgb(120, 170, 26); 
- 	line-height: 30px; vertical-align: middle; color: rgb(120, 170, 26);
- 	cursor: w-resize; 
+ 	line-height: 30px; vertical-align: middle; color: #000;
+ 	cursor: w-resize;
 }
 .new-schedule-calendar-day .new-schedule-period .right { 
 	float: right; cursor: e-resize; margin-left: -1px;
 }
 .new-schedule-calendar-day .new-schedule-period .options { 
 	float: right; cursor: pointer; 
- 	height: 30px; line-height: 30px; vertical-align: middle; color: rgb(120, 170, 26);
+ 	height: 30px; line-height: 30px; vertical-align: middle; color: #000;
 	border-left: 1px solid rgb(120, 170, 26);
 	border-right: 1px solid rgb(120, 170, 26); 
 	z-index: 3;

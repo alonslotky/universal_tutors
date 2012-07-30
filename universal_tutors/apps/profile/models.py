@@ -1240,11 +1240,20 @@ class WeekAvailability(models.Model):
     end = models.TimeField()
 
     def save(self, *args, **kwargs):
-        if (self.begin > self.end and self.end.hour!=0) \
-            or self.user.week_availability \
-                .exclude(Q(id=self.id) | Q(end=self.begin) | Q(begin=self.end)) \
-                .filter(Q(weekday=self.weekday), Q(begin__range=(self.begin, self.end)) | Q(end__range=(self.begin, self.end))):
+        if (self.begin > self.end and self.end.hour!=0):
             return
+        elif self.end.hour==0:
+            if self.user.week_availability \
+                .exclude(Q(id=self.id) | Q(end=self.begin)) \
+                .filter(Q(weekday=self.weekday), Q(begin__gte=self.begin) | Q(end__gt=self.begin) | Q(end=self.end)):
+                return   
+        elif self.user.week_availability \
+                .exclude(Q(id=self.id) | Q(end=self.begin)) \
+                .filter(Q(weekday=self.weekday), 
+                        Q(begin__range=(self.begin, self.end)) | Q(end__range=(self.begin, self.end)) | \
+                        Q(begin__lte=self.begin, end__gt=self.begin) | Q(begin__lt=self.end, end__gte=self.end)):
+                return
+            
         super(self.__class__, self).save(*args, **kwargs)
     
     def __unicode__(self):

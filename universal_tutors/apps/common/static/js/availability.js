@@ -99,8 +99,8 @@ $(window).mousemove(function(e) {
 		if(isPeriodValid(left, width, fullwidth)) {
 			$('#'+ schedule_calendar_day_id).append(
 				'<div id="schedule-period_0" class="new-schedule-period" style="left:'+ left +'%;width:'+ width +'%;">'+
-				'	<div class="left">&lsaquo;</div>'+
-				'	<div class="right">&rsaquo;</div>'+
+				'	<div class="left">&laquo;</div>'+
+				'	<div class="right">&raquo;</div>'+
 				'</div>'
 			);
 			
