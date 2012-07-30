@@ -252,7 +252,7 @@
 			            {% if tutor_profile.video_approved and tutor_profile.video %}
 			            	<a href="javascript:;" class="watch-video" data-reveal-id="modal-video" onclick="change_video_profile('{{tutor_profile.get_video_id}}');"><i class="icon-videocam"></i> Watch Video</a>
 			            {% else %}
-			            	<a class="watch-video text-gray"><i class="icon-videocam"></i> Watch Video</a>			            
+			            	<a class="watch-video text-gray"><i class="icon-videocam"></i> No Video</a>			            
 			            {% endif %}
 						
 						{% if is_authenticated %}
