@@ -13,6 +13,7 @@ def update_currencies():
     url = 'http://openexchangerates.org/latest.json'
     
     currencies = json.load(urllib.urlopen(url))
+    print currencies
     base = currencies['base']
     rates = currencies['rates']
     

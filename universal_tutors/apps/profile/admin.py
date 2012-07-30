@@ -15,7 +15,6 @@ admin.site.unregister(User)
 admin.site.register(User, AdminUserAdmin)
 
 
-
 class TutorProfileAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Personal Details', {
@@ -30,7 +29,12 @@ class TutorProfileAdmin(admin.ModelAdmin):
         ('Status', {
             'fields': ('featured', 'activated', 'activation_date',)
         }),
+        ('Subjects', {
+            'fields': ('subjects_list',)
+        }),
+        
     )
+    readonly_fields = ['subjects_list', 'paypal_email', 'activation_date', 'activated']
     
     list_display = ('__unicode__', 'title', 'activated', 'crb_expiry_date', 'featured', 'profile_image_approved', 'about_approved', 'video_approved', 'qualification_documents_approved', 'avg_rate', 'no_reviews', 'classes_given', 'min_credits', 'max_credits', 'income', 'currency',)
     list_filter = ['activated', 'crb_expiry_date', 'featured', 'currency']
