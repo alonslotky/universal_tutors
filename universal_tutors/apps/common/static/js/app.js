@@ -76,6 +76,11 @@ jQuery(document).ready(function ($) {
       $('.sign-up-button').removeClass('isOpen');	
   });
   
+  
+  $(window).bind('click touchstart',function(){
+  	$('.popover').remove();
+  });
+  
 });
 
 
