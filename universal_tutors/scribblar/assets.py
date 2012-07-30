@@ -16,6 +16,7 @@ def details(*args, **kwargs):
 
 def url(*args, **kwargs):
     client = kwargs.pop('client')
+    assetid = kwargs.pop('assetid')
     result = details(assetid=assetid)
     return SCRIBBLAR_ASSETS_URL % {'client': client, 'path': result['path'] }
         
