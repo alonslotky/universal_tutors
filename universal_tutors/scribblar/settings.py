@@ -8,7 +8,7 @@ except AttributeError:
 try:
     SCRIBBLAR_ASSETS_URL = settings.SCRIBBLAR_ASSETS_URL
 except AttributeError:
-    SCRIBBLAR_ASSETS_URL = 'http://api.muchosmedia.com/brainwave/uploads/client_%(client)s/f_%(assetid)s%(ext)s'
+    SCRIBBLAR_ASSETS_URL = 'http://api.muchosmedia.com/brainwave/uploads/client_%(client)s/%(path)s'
     
 try:
     SCRIBBLAR_RECORDINGS_URL = settings.SCRIBBLAR_RECORDINGS_URL

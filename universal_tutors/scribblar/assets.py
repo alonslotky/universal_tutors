@@ -16,10 +16,6 @@ def details(*args, **kwargs):
 
 def url(*args, **kwargs):
     client = kwargs.pop('client')
-    assetid = kwargs.pop('assetid')
     result = details(assetid=assetid)
-    try:
-        return SCRIBBLAR_ASSETS_URL % {'client': client, 'assetid': assetid, 'ext': os.path.splitext(result['clientfilename'])[1] }
-    except IndexError:
-        return SCRIBBLAR_ASSETS_URL % {'client': client, 'assetid': assetid, 'ext': '' }
+    return SCRIBBLAR_ASSETS_URL % {'client': client, 'path': result['path'] }
         

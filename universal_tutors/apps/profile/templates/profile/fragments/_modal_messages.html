@@ -147,7 +147,7 @@
 			$('#modal-messages-container').append(
 				'<div class="post '+ (message.user_id==modal_message_to?'them':'you') +'">'+
 				'	<h6>'+ message.user + (message.child?' ('+ message.child +'\'s parent)':'') +'</h6>'+
-				'	<p>'+ message.text +'</p>'+
+				'	<p>'+ message.text.replace(/\n/g, '<br />') +'</p>'+
 				'</div>'
 			);
 		}
