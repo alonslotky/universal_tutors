@@ -52,7 +52,7 @@
         </div>
       </section>
       
-      <a class="squeezemein button" href="#" data-reveal-id="modal-video"><span>Get a Tour of the Classroom</span></a>
+      <a class="squeezemein button" href="#" data-reveal-id="modal-video" onclick="open_general_video();"><span>Get a Tour of the Classroom</span></a>
       
       <section class="blue"><div class="inner">
         <div class="row clear">
@@ -117,11 +117,6 @@
       </section>
       
       {% if video %}
-  		<script>
-  			$("a[data-reveal-id=modal-video]").click(function() {
-  				$("div#modal-video iframe").removeClass("hidden");
-  			})
-  		</script>
   		{% include "core/fragments/_modal_video.html" %}
 	{% endif %}
 {% endblock %}

@@ -1,16 +1,18 @@
 <div id="modal-video" class="reveal-modal message">
   <h4>Video</h4>
+  <div id="modal-video-frame-container" style="min-height: 1px;"></div>
   <a class="close-reveal-modal">&#215;</a>
 </div>
 
 <script>
-	$(function() {
-		$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ video.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>');
-		$("#modal-video").bind('reveal:close', 	function(){
-			setTimeout(function(){
-				$("div#modal-video iframe").remove();
-				$("div#modal-video h4").after('<iframe id="video-frame" width="520" height="300" src="http://www.youtube.com/embed/{{ video.get_video_id }}" class="hidden" frameborder="0" allowfullscreen></iframe>');
-			}, 100);
-		});
+	var open_general_video = function() {
+		var width = $('div#modal-video-frame-container').width();
+		var height = parseInt(width * 9 / 16.0);
+		$("div#modal-video-frame-container").html('<iframe id="video-frame" width="'+ width +'" height="'+ height +'" src="http://www.youtube.com/embed/{{ video.get_video_id }}" frameborder="0" allowfullscreen></iframe>');
+	}
+	$("#modal-video").bind('reveal:close', 	function(){
+		setTimeout(function(){
+			$("div#modal-video iframe").remove();
+		}, 100);
 	});
 </script>
