@@ -10,10 +10,26 @@
       <h1>Classes <span>Upcoming and previously given classes.</span></h1>
 </div></section>
       
-    {% include 'profile/fragments/_timer.html' %}
-    	{% for group in classes_groups %}
+      {% include 'profile/fragments/_timer.html' %}
+      
+  	  <div class="row">
+	      <form id="class-filter-form" method="post" action="."> {% csrf_token %}
+	  	  	<div class="nine columns">&nbsp;</div>	
+	  	  	<div class="two columns">
+			      <select name="type" onchange="javascript: $('#class-filter-form').submit();" class="stretch">
+			      	<option value="all">All</option>
+			      	<option {%if type == 'upcoming' %}selected="selected" {% endif %}value="upcoming">Upcoming</option>
+			      	<option {%if type == 'completed' %}selected="selected" {% endif %}value="completed">Completed</option>
+			      	<option {%if type == 'cancelled' %}selected="selected" {% endif %}value="cancelled">Cancelled</option>
+			      </select>
+			</div>
+		  </form>
+	  </div>
+
+      
+	  {% for group in classes_groups %}
 	  
-	  	{% if not forloop.first %}<hr class="big">{% endif %}
+	  	<hr class="big">
 	  	
 	  	<div class="row">
         	<div class="twelve columns">
