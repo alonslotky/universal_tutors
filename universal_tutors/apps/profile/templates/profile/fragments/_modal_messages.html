@@ -34,6 +34,7 @@
     <div class="row">
       <div class="nine columns">
         <textarea id="modal-message-text" name="modal-message-text" type="text" class="text-area" placeholder="Write a Message ..."></textarea>
+	    <div id="modal-message-text-hint" class="formHint">0 of 500 characters used</div>
 	    <div id="modal-message-text-error" class="formError hidden"></div>
       </div>
       
@@ -101,7 +102,7 @@
 	$('#modal-message-form').submit(function(e){
 		e.preventDefault();
 		
-		var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#message-child').val()){% else %}true;{% endif %}
+		var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#message-child').val());{% else %}true;{% endif %}
 		
 		var message_text = $('#modal-message-text').val();
 		
@@ -124,9 +125,11 @@
 						$('#modal-messages-container').html("It is not possible show the messages right now. Please try again later.")
 					},
 					success: function(response) {
+						$('#modal-message-text-hint').html('0 of 500 characters used');
 						$('#modal-message-text').val('');
 						$('#modal-message-text').css('height', '30px');
 						$('#modal-message-text').height($('#modal-message-text').get(0).scrollHeight + 15);
+						
 						load_modal_messages(response);
 					}
 				});
@@ -137,6 +140,12 @@
 					$('#modal-message-text-error').addClass('hidden');				
 				}, 3000);			
 			}
+		} else {
+			$('#modal-message-text-error').html('All fields are required.');
+			$('#modal-message-text-error').removeClass('hidden');
+			setTimeout(function(){
+				$('#modal-message-text-error').addClass('hidden');				
+			}, 3000);			
 		}
 	});
 	
@@ -175,13 +184,25 @@
 		'overflow': 'hidden',
 		'resize': 'none'
 	});
+	
 	$('#modal-message-text').keyup(function(e){
 		$('#modal-message-text').css('height', '30px');
 		$('#modal-message-text').height($(this).get(0).scrollHeight + 15);
 	});
+	
+	$('#modal-message-text').bind('keyup focus blur', function(){
+		var text = $(this).val();
+		if(text != 'Write a message ...') {
+			$('#modal-message-text-hint').html(text.length +' of 500 characters used');
+		} else {
+			$('#modal-message-text-hint').html('0 of 500 characters used');
+		}
+	});
+	
 	$('#modal-message-text').keypress(function(e){
 		var code = (e.keyCode ? e.keyCode : e.which);
-		if(code == 13) {
+		if(parseInt(code) == 13) {
+			e.preventDefault();
 			$('#modal-message-form').submit();
 		}
 	});
