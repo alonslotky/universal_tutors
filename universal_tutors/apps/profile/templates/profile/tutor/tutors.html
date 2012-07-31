@@ -7,7 +7,7 @@
 
 {% block content %}
       <section class="blue feature-box"><div class="inner">
-        <h1>Tutors <span>Favorite and Used Tutors.</span></h1>
+        <h1>Tutors <span>Favorite and Used Tutors {% if user != person %}of {{person.get_full_name}}{% endif %}.</span></h1>
       </div></section>
       
       <div class="hide-on-phones">
@@ -97,9 +97,15 @@
 	      {% endwith %}
 	      {% endfor %}
 	  {% empty %}
-	  	<div class="row center">
-	      You don't have any favorite Tutors and haven't attended any classes yet.
-      	</div>
+		  	<div class="row center">
+		  		<div class="twelve columns">
+				      {% if user == person %}
+				      	You don't have any favorite Tutors and haven't attended any classes yet.
+			      	  {% else %}
+				      	{{person.get_full_name}} doesn't have any favorite Tutors and hasn't attended any classes yet.	      	  
+			      	  {% endif %}
+		  		</div>
+	      	</div>
       {% endfor %}
       
       

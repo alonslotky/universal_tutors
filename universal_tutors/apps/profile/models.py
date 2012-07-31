@@ -274,7 +274,11 @@ class UserProfile(BaseModel):
             return self.credit + self.user.classes_as_student.filter(status=Class.STATUS_TYPES.BOOKED).aggregate(credits_booked = models.Sum('credit_fee'))['credits_booked']
         else:
             return self.credit
-    
+
+    @property
+    def child_type(self):
+        return 'son' if self.gender == self.GENDER_TYPES.MALE else 'daughter'
+        
     def __unicode__(self):
         user = self.user
         if user.first_name:

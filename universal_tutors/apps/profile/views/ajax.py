@@ -69,6 +69,8 @@ def view_modal_messages(request, username, to, class_id=0):
     to = get_object_or_404(User, id=to)
     class_id = int(class_id)
     
+    person_profile = person.profile
+    
     if class_id:
         try:
             class_ = Class.objects.get(id=class_id)
@@ -90,6 +92,8 @@ def view_modal_messages(request, username, to, class_id=0):
             'user': message.user.get_full_name(),
             'text': message.message,
             'child': message.child.get_full_name() if message.child else '',
+            'parent': person_profile.parent.get_full_name() if person_profile.type == person_profile.TYPES.UNDER16 else '',
+            'child_type': person_profile.child_type if person_profile.type == person_profile.TYPES.UNDER16 else '',
         } for message in messages]
     })
     
