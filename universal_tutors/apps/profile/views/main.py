@@ -44,7 +44,10 @@ def profile(request, username=None):
     can_send_message = True
     if profile.type == profile.TYPES.TUTOR:
         reviews = person.reviews_as_tutor.filter(is_active=True)
-        template = 'profile/tutor/profile.html'
+        if 'page' in request.GET:
+            template = 'profile/tutor/profile/_reviews.html'
+        else:
+            template = 'profile/tutor/profile.html'
     elif profile.type == profile.TYPES.STUDENT or profile.type == profile.TYPES.UNDER16:
         if not Message.objects.filter(Q(user=person, to=user) | Q(user=user, to=person)) and \
             not user.classes_as_tutor.filter(student=person) and not profile.parent == user:

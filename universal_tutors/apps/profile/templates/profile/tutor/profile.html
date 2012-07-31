@@ -124,43 +124,10 @@
             </div>
           </div>
 	      <div class="row">&nbsp; </div>
-    	{% autopaginate reviews 8 %}
-        {% for review1, review2 in reviews|reviews_style %}
-	          <div class="row clear">
-	            <div class="six columns">
-	              <div class="small rating">
-	                {% get_stars review1.rate %}
-	              </div>
-	              
-	              <h5>{{review1.created}}</h5>
-	              <p>
-	              	{% with review1.related_class.student as student %}
-	              	<a href="{% url profile student.username %}">{{student.get_full_name}}</a> -
-	              	{{review1.text}}
-	              	{% endwith %}
-	              </p>
-	            </div>
-	            
-	            <div class="six columns">
-		            {% if review2 %}
-		              <div class="small rating">
-		                {% get_stars review2.rate %}
-		              </div>
-		              
-		              <h5>{{review2.created}}</h5>
-		              <p>
-		              	{% with review2.related_class.student as student %}
-		              	<a href="{% url profile student.username %}">{{student.get_full_name}}</a> -
-		              	{{review2.text}}
-		              	{% endwith %}
-		              </p>
-		            {% endif %}
-	            </div>
-	          </div>
-	      {% empty %}
-	      		No reviews at moment.
-          {% endfor %}
-          {% paginate %}
+
+		<div id="reviews-container">
+			{% include "profile/tutor/profile/_reviews.html" %}
+		</div>
           
         </div>
         <div class="three columns action">
