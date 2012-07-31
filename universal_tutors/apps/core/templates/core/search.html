@@ -210,7 +210,7 @@
 		      {% for tutor in tutors %}
 		      {% with tutor.profile as tutor_profile %}
 			      <article>
-			        <div class="row">
+			        <div class="row search-results-item">
 			          <div class="one columns hide-on-phones">
 			            <img src="{% version tutor_profile.get_profile_image_path 'list_tutors' %}" alt="{{tutor.get_full_name}}">
 			          </div>
