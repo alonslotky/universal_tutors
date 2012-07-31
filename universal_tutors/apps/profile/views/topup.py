@@ -57,7 +57,7 @@ def topup_cart(request, username=None):
     topup = None
     discount = None
     if request.method == "POST":
-        user_discount = person_profile.get_active_discount()
+        user_discount = profile.get_active_discount() or person_profile.get_active_discount()
         
         credits = int(round(float(request.POST.get('credits', 0))))
         try:

@@ -122,7 +122,9 @@
 	   
 	{% endfor %}
 
+	{% with 'True' as read_child_message %}
 	{% include 'profile/fragments/_modal_messages.html' %}
+	{% endwith %}
 	{% include 'profile/fragments/_modal_class_material.html' %}
 	{% include 'profile/student/fragments/_modal_cancel_class.html' %}
 	{% include 'profile/student/fragments/_modal_rate_tutor.html' %}

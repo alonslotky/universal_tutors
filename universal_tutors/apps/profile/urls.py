@@ -36,7 +36,6 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutor/classes/$', 'tutor_classes', {}, name = "tutor_classes"),
     url(r'^(?i)tutor/messages/$', 'tutor_messages', {}, name = "tutor_messages"),
     url(r'^(?i)tutor/crb_form/$', 'crb_form', {}, name = "crb_form"),
-    url(r'^(?i)tutors/$', 'tutors', {}, name = "tutors"),
 
     url(r'^(?i)book-class/(?P<username>[\w\-\_]+)/$', 'book_class', {}, name = "book_class"),
     url(r'^(?i)report/(?P<username>[\w\-\_]+)/$', 'report', {}, name = "report"),
@@ -74,12 +73,20 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)test_class/status/$', 'check_tutor_class_status', {}, name = "check_tutor_class_status"),
 )
 
+# parents
+urlpatterns += patterns('apps.profile.views.main',
+    url(r'^(?i)parent/messages/$', 'parent_messages', {}, name = "parent_messages"),
+)
+
+
 # Students
 urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)student/classes/$', 'student_classes', {}, name = "student_classes"),
     url(r'^(?i)student/classes/(?P<username>[\w\-\_]+)/$', 'student_classes', {}, name = "student_classes"),
     url(r'^(?i)student/messages/$', 'student_messages', {}, name = "student_messages"),
     url(r'^(?i)student/messages/(?P<username>[\w\-\_]+)/$', 'student_messages', {}, name = "student_messages"),
+    url(r'^(?i)student/tutors/$', 'tutors', {}, name = "tutors"),
+    url(r'^(?i)student/tutors/(?P<username>[\w\-\_]+)/$$', 'tutors', {}, name = "tutors"),
 )
 
 urlpatterns += patterns('apps.profile.views.ajax',

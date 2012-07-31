@@ -397,6 +397,8 @@ def student_messages(request, username=None):
 
     if username:
         person = get_object_or_404(User, username = username)
+        if person != user and person.profile.parent != user:
+            raise http.Http404()
     elif user.is_authenticated():
         person = user
     else:
@@ -410,21 +412,46 @@ def student_messages(request, username=None):
         'person': person,
         'profile': profile,
     }
+
+@login_required
+@over16_required()
+@main_render(template='profile/parent/messages.html')
+def parent_messages(request):
+    """
+    view my recent activity
+    """
+    user = request.user
+    usermessages = User.objects.select_related() \
+                    .filter(Q(sent_messages__to = user) | Q(received_messages__user = user)).distinct()
+
+    return {
+        'usermessages':usermessages,
+    }
     
 @login_required
 @over16_required()
 @main_render('profile/tutor/tutors.html')
-def tutors(request):
+def tutors(request, username=None):
     """
     tutors list
     """
+        
     user = request.user
+
+    if username:
+        person = get_object_or_404(User, username = username)
+        if person != user and person.profile.parent != user:
+            raise http.Http404()
+    elif user.is_authenticated():
+        person = user
+    else:
+        raise http.Http404()
     
     tutor_groups = []
 
-    favorite_and_used = User.objects.select_related().filter(profile__favorite=user, classes_as_tutor__student=user).distinct()
-    favorite = User.objects.select_related().filter(profile__favorite=user).exclude(classes_as_tutor__student=user).distinct()
-    used = User.objects.select_related().filter(classes_as_tutor__student=user).exclude(profile__favorite=user).distinct()
+    favorite_and_used = User.objects.select_related().filter(profile__favorite=person, classes_as_tutor__student=person).distinct()
+    favorite = User.objects.select_related().filter(profile__favorite=person).exclude(classes_as_tutor__student=person).distinct()
+    used = User.objects.select_related().filter(classes_as_tutor__student=person).exclude(profile__favorite=person).distinct()
 
     if favorite_and_used:
         tutor_groups.append({
@@ -446,7 +473,7 @@ def tutors(request):
 
     return {
         'tutor_groups': tutor_groups,
-        'user': user
+        'person': person
     }
 
 
