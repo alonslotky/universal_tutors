@@ -117,6 +117,16 @@ def edit_tutor_profile(request):
             form.save()
             profile.update_tutor_information(form)
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
+
+            try:
+                profile.profile_image = UploadProfileImage.objects.get(key=request.session.session_key).image
+                profile.save()
+                UploadProfileImage.objects.filter(key=request.session.session_key).update(image=None)
+                UploadProfileImage.objects.filter(key=request.session.session_key).delete()
+            except UploadProfileImage.DoesNotExist:
+                pass
+
+        
         else:
             success = False
 
@@ -293,6 +303,16 @@ def edit_student_profile(request):
             form.save()
             profile.update_tutor_information(form)
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
+
+            try:
+                profile.profile_image = UploadProfileImage.objects.get(key=request.session.session_key).image
+                profile.save()
+                UploadProfileImage.objects.filter(key=request.session.session_key).update(image=None)
+                UploadProfileImage.objects.filter(key=request.session.session_key).delete()
+            except UploadProfileImage.DoesNotExist:
+                pass
+
+        
         else:
             success = False
             
@@ -535,6 +555,15 @@ def edit_parent_profile(request):
             form.save()
             profile.update_tutor_information(form)
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
+
+            try:
+                profile.profile_image = UploadProfileImage.objects.get(key=request.session.session_key).image
+                profile.save()
+                UploadProfileImage.objects.filter(key=request.session.session_key).update(image=None)
+                UploadProfileImage.objects.filter(key=request.session.session_key).delete()
+            except UploadProfileImage.DoesNotExist:
+                pass
+
         else:
             success = False
 

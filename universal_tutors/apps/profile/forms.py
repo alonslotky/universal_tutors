@@ -252,6 +252,15 @@ class SignupForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True, request=None):
+        image = None
+        session_key = ''
+        if request:
+            session_key = request.session.session_key
+            try:
+                image = UploadProfileImage.objects.get(key=session_key).image
+            except UploadProfileImage.DoesNotExist:
+                pass
+            
         user = super(SignupForm, self).save(commit=False)
 
         password = self.cleaned_data['password1']
@@ -275,6 +284,9 @@ class SignupForm(forms.ModelForm):
         profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency', 1))
         profile.date_of_birth = self.cleaned_data['date_of_birth']
 
+        if image:
+            profile.profile_image = image
+
         if self.parent:
             user.parent_set.create(parent=self.parent, active=True)
             profile.type = profile.TYPES.UNDER16
@@ -282,6 +294,9 @@ class SignupForm(forms.ModelForm):
         profile.crb = self.cleaned_data.get('crb', False)
         profile.save()
         
+        if session_key:
+            UploadProfileImage.objects.filter(key=session_key).update(image=None)
+            UploadProfileImage.objects.filter(key=session_key).delete()        
         
         send_email_confirmation(user, request=request)
         
@@ -499,6 +514,15 @@ class GenericSocialSignupForm(SocialSignupForm):
 
 
     def save(self, request=None):
+        image = None
+        session_key = ''
+        if request:
+            session_key = request.session.session_key
+            try:
+                image = UploadProfileImage.objects.get(key=session_key).image
+            except UploadProfileImage.DoesNotExist:
+                pass
+
         user = super(GenericSocialSignupForm, self).save(request)
         profile = user.profile
         profile.country = self.cleaned_data['country']
@@ -512,7 +536,15 @@ class GenericSocialSignupForm(SocialSignupForm):
         profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency', 1))
         profile.date_of_birth = self.cleaned_data['date_of_birth']
         profile.crb = self.cleaned_data.get('crb', False)
+
+        if image:
+            profile.profile_image = image
+
         profile.save()
+        
+        if session_key:
+            UploadProfileImage.objects.filter(key=session_key).update(image=None)
+            UploadProfileImage.objects.filter(key=session_key).delete()        
 
         return user
 

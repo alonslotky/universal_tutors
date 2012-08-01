@@ -5,6 +5,14 @@
 {% block title %}Sign Up{% endblock %}
 {% block body_class %}tutors{% endblock %}
 
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+{% endblock %}
+
 {% block content %}
   <section class="blue feature-box"><div class="inner">
     <h1>Sign Up as a Tutor</h1>
@@ -278,17 +286,20 @@
 		  </div>          
           
         </div>
-        
-        <div class="four columns photo">
-          <img id="id_image_preview" src="http://placehold.it/175x175" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
-          <div><input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">
-          	<a id="remove-image" href="javascript:;" class="hidden" onclick="removeImage();">Remove Image</a>
-          </div>
-        </div>
-        
-      </div>
-    
     </form>
+        
+    <div class="four columns photo">
+    	<div class="row">
+	  		<img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
+    	</div>
+    	<div id="id_profile_image_preview" class="row">
+  			<a href="javascript:;">Choose image</a>
+    	</div>
+    	<div class="row">
+	      	<a id="remove-image" href="javascript:;" class="hidden">Remove Image</a>
+    	</div>
+    </div>
+    
   </section>
   
 <script type="text/javascript">
@@ -386,32 +397,10 @@
 		}
 	});
 
-	$('#id_profile_image').live("change", function(){
-        var input = $(this)[0]
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#id_image_preview').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
-            $("a#remove-image").removeClass('hidden');
-        }
-	});
-
 	$('#id_country').live("change", function(){
 		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
-	
-	var removeImage = function(){
-		$('#id_image_preview').attr('src', "http://placehold.it/175x175");
-		var imageInput = $("#id_profile_image");
-		$(imageInput).parent().prepend('<input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">');
-		$(imageInput).remove();
-		$("a#remove-image").addClass('hidden');
-	}
 
 	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
   		$(".four.columns.photo").hide();
@@ -450,4 +439,28 @@
 	});
 
 </script>
+
+<script type="text/javascript">
+	function createUploader(){
+        var photoUpload = new qq.FileUploaderBasic({
+            button: document.getElementById('id_profile_image_preview'),
+            action: "{% url preview_profile_image %}",
+            multiple: false,
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+			onComplete: function( id, fileName, responseJSON ) {
+				$('#id_image_preview').attr('src', responseJSON.url);
+				$('#remove-image').removeClass('hidden');
+	       }
+        });
+        
+  	}
+  	window.onload = createUploader;
+
+    $('#remove-image').click(function(){
+    	$(this).addClass('hidden');
+    	$('#id_image_preview').attr('src', '{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}');
+    	$('#')
+    });	
+</script>
+
 {% endblock %}

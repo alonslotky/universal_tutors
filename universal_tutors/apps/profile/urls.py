@@ -129,6 +129,8 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)update_header/$', 'update_header', {}, name = "update_header"),
     
     url(r'^(?i)activate_discount/$', 'activate_discount', {}, name="activate_discount"),
+    url(r'^(?i)preview_profile_image/$', 'preview_profile_image', {}, name="preview_profile_image"),
+    url(r'^(?i)preview_profile_image_delete/$', 'preview_profile_image_delete', {}, name="preview_profile_image_delete"),
 )
 
 urlpatterns += patterns('apps.profile.views.topup',

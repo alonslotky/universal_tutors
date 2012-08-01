@@ -1,10 +1,9 @@
-import simplejson as json
-
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django import http
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.core.files import File
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render_to_response
 from django.views.decorators.csrf import csrf_exempt
@@ -12,14 +11,19 @@ from django.core.mail import EmailMessage
 from django.template import Context, loader
 from django.conf import settings
 
-from apps.profile.models import NewsletterSubscription, Message, UserProfile
+from filebrowser.templatetags.fb_versions import VersionNode
+
+from apps.profile.models import *
 from apps.profile.forms import *
+from apps.profile.utils import *
 from apps.classes.models import ClassSubject
 from apps.common.utils.view_utils import main_render, handle_uploaded_file
 from apps.common.utils.date_utils import convert_datetime
 from apps.core.models import Discount
 
-import pytz, datetime
+import pytz, datetime, os, string, random
+import base64
+import cStringIO
 
 try:
     import simplejson
@@ -812,4 +816,36 @@ def activate_discount(request):
     else:
         return http.HttpResponse('This discount code has been expired!')
 
+@csrf_exempt
+def preview_profile_image(request):
+    if not request.method == 'POST':
+        raise http.Http404()
+    
+    upload = request
+    is_raw = True
+    try:
+        filename = request.GET[ 'qqfile' ]
+    except KeyError: 
+        return HttpResponseBadRequest( "AJAX request not valid" )
+     
 
+    name, ext = os.path.splitext(filename)
+    name = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
+    new_filename = '%s%s' % (name, ext.lower())
+    filename = os.path.join(settings.MEDIA_ROOT, UploadProfileImage.UPLOAD_IMAGES_PATH, new_filename)
+    success = save_upload( upload, filename, is_raw )
+  
+    image, created = UploadProfileImage.objects.get_or_create(key=request.session.session_key)
+    image.image = File(open(filename))
+    image.save()
+ 
+    import json
+    ret_json = { 'url': image.image.url }
+    return HttpResponse( json.dumps( ret_json ) )
+
+
+@csrf_exempt
+def preview_profile_image_delete(request):
+    UploadProfileImage.objects.filter(key=request.session.session_key).update(image=None)
+    UploadProfileImage.objects.filter(key=request.session.session_key).delete()
+    return http.HttpResponse('done.')
