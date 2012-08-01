@@ -16,9 +16,13 @@ urlpatterns = patterns('apps.core.views.main',
 
     url(r'^(?i)reports/$', 'reports', name='reports'),
     url(r'^(?i)reports/students/$', 'reports_students', name='reports_students'),
+    url(r'^(?i)reports/students/download/$', 'reports_students', {'xls':1},name='reports_students_download'),
     url(r'^(?i)reports/tutors/$', 'reports_tutors', name='reports_tutors'),
+    url(r'^(?i)reports/tutors/download/$', 'reports_tutors', {'xls':1}, name='reports_tutors_download'),
     url(r'^(?i)reports/classes/$', 'reports_classes', name='reports_classes'),
+    url(r'^(?i)reports/classes/download/$', 'reports_classes', {'xls':1}, name='reports_classes_download'),
     url(r'^(?i)reports/financial/$', 'reports_financial', name='reports_financial'),
+    url(r'^(?i)reports/financial/download/$', 'reports_financial', {'xls':1}, name='reports_financial_download'),
 
     url(r'^(?i)monitoring/$', 'monitoring_classes', name='monitoring_classes'),
     url(r'^(?i)monitoring/(?P<class_id>\d+)/$', 'monitoring_class', name='monitoring_class'),
