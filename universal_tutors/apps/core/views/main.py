@@ -482,6 +482,37 @@ def reports_financial(request):
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### MONITORING ############################################################
+###########################################################################
 @main_render('core/monitoring/classes.html')
 def monitoring_classes(request):
     """

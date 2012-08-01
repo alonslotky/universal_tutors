@@ -1475,6 +1475,24 @@ class Referral(BaseModel):
             to = ['%s <%s>' % (self.name, self.email)]
             email_template.send_email(context, to)
 
+
+class UploadProfileImage(models.Model):
+    UPLOAD_IMAGES_PATH = 'uploads/profiles/profile_images'
+    
+    def get_upload_to(instance, filename):
+        name, ext = os.path.splitext(filename)
+        name = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
+        new_filename = '%s%s' % (name, ext.lower())
+        return os.path.join(UserProfile.UPLOAD_IMAGES_PATH, new_filename)
+
+    key = models.CharField(max_length=150)
+    image = models.ImageField(verbose_name=_('Image'), upload_to=get_upload_to, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.key
+
+
+
 #### TOPUP CREDITS #######################################################
 def topup_successful(sender, **kwargs):
     ipn_obj = sender
