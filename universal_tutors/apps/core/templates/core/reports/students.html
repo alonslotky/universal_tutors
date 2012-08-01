@@ -62,7 +62,7 @@
 		{% render_user_signup total_students students_signed_up "Percentage of students that signed up in this period" "students" %}
 		</div>
 		<div class="two columns">
-			<form method="get" action="{% url reports_students %}">
+			<form id="report-data-form" method="get" action="">
 			  <div class="row">
 		          <select id="report-year-filter" name="year" class="stretch">
 		          	<option value="">Any year</option>
@@ -88,7 +88,10 @@
 		          </select>
 			  </div>
 			  <div class="row">
-			      <input type="submit" class="button stretch" value="Load data" />
+			      <input type="submit" class="button stretch" value="Load data" onclick="$('#report-data-form').attr('action', '{% url reports_students %}');" />
+			  </div>
+			  <div class="row">
+			      <input type="submit" class="button stretch" value="Download data" onclick="$('#report-data-form').attr('action', '{% url reports_students_download %}');" />
 			  </div>
 			</form>
 		</div>

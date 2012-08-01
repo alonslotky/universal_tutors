@@ -12,6 +12,7 @@ from apps.profile.models import *
 from apps.classes.models import *
 from apps.core.models import Video, Currency
 from apps.core.utils import *
+from apps.core.views.xls import *
 
 from ordereddict import OrderedDict
 import datetime, random
@@ -150,7 +151,7 @@ def reports(request):
 
 
 @main_render(template='core/reports/students.html')
-def reports_students(request):
+def reports_students(request, xls=0):
     user = request.user
 
     if not user.is_authenticated() or not user.is_superuser:
@@ -208,8 +209,9 @@ def reports_students(request):
         add_student_to_dict(price_per_hour, get_price_per_hour_slot(class_), class_)
         add_student_to_dict(total_price, get_total_price_slot(class_), class_)
         users.add(class_.student.username)
-    
-    return {
+
+    context = {
+        'classes': classes,
         'price_per_hour': price_per_hour,
         'total_price': total_price,
         'class_time': class_time,
@@ -228,10 +230,15 @@ def reports_students(request):
         'month': month,
         'year': year,
     }
+    
+    if xls:
+        return reports_students_xls(context)
+    else:
+        return context
 
 
 @main_render(template='core/reports/tutors.html')
-def reports_tutors(request):
+def reports_tutors(request, xls=0):
     user = request.user
 
     if not user.is_authenticated() or not user.is_superuser:
@@ -290,7 +297,8 @@ def reports_tutors(request):
         add_tutor_to_dict(total_price, get_total_price_slot(class_), class_)
         users.add(class_.tutor.username)
     
-    return {
+    context = {
+        'classes': classes,
         'price_per_hour': price_per_hour,
         'total_price': total_price,
         'class_time': class_time,
@@ -310,9 +318,14 @@ def reports_tutors(request):
         'year': year,
     }
 
+    if xls:
+        return reports_tutors_xls(context)
+    else:
+        return context
+
 
 @main_render(template='core/reports/classes.html')
-def reports_classes(request):
+def reports_classes(request, xls=0):
     user = request.user
 
     if not user.is_authenticated() or not user.is_superuser:
@@ -364,7 +377,8 @@ def reports_classes(request):
         add_class_to_dict(total_price, get_total_price_slot(class_), class_)
         class_status[class_.status] += 1
     
-    return {
+    context = {
+        'classes': classes,
         'price_per_hour': price_per_hour,
         'total_price': total_price,
         'class_time': class_time,
@@ -382,9 +396,14 @@ def reports_classes(request):
         'year': year,
     }
 
+    if xls:
+        return reports_classes_xls(context)
+    else:
+        return context
+
 
 @main_render(template='core/reports/financial.html')
-def reports_financial(request):
+def reports_financial(request, xls=0):
     user = request.user
 
     if not user.is_authenticated() or not user.is_superuser:
@@ -458,7 +477,7 @@ def reports_financial(request):
         if profile.type in [UserProfile.TYPES.STUDENT, UserProfile.TYPES.UNDER16]:
             unused_credits += profile.credit
         
-    return {
+    context = {
         'topup_credits': topup_credits,
         'withdraw_credits': withdraw_credits,
         'profit_credits': profit_credits,
@@ -479,13 +498,10 @@ def reports_financial(request):
         'year': year,
     }
 
-
-
-
-
-
-
-
+    if xls:
+        return reports_financial_xls(context)
+    else:
+        return context
 
 
 
