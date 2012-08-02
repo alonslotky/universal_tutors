@@ -235,6 +235,18 @@ class UserProfile(BaseModel):
     notifications_messages = models.BooleanField(default=True)
     notifications_classes = models.BooleanField(default=True)
     notifications_other = models.BooleanField(default=True)
+    
+    @property
+    def age(self):
+        today = datetime.date.today()
+        try: # raised when birth date is February 29 and the current year is not a leap year
+            birthday = self.date_of_birth.replace(year=today.year)
+        except ValueError:
+            birthday = self.date_of_birth.replace(year=today.year, day=self.date_of_birth.day-1)
+        if birthday > today:
+            return today.year - self.date_of_birth.year - 1
+        else:
+            return today.year - self.date_of_birth.year
 
     @property
     def crb_checked(self):
