@@ -162,7 +162,7 @@
 						window.location.reload();			
 					},
 					error: function(){
-						$('#add-availability-errors').html('It is not possible to create availability for between '+ 
+						$('#add-availability-errors').html('It is not possible to create availability between '+ 
 							(from_hour<10?'0'+from_hour:from_hour) +':'+ (from_minute<10?'0'+from_minute:from_minute) +' and '+ 
 							(to_hour<10?'0'+to_hour:to_hour) +':'+ (to_minute<10?'0'+to_minute:to_minute) +'.');
 						$('#add-availability-errors').removeClass('hidden');

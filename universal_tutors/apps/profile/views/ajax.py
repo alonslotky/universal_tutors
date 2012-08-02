@@ -815,7 +815,7 @@ def activate_discount(request):
     if user_discount.is_valid():
         return http.HttpResponse('done.')
     else:
-        return http.HttpResponse('This discount code has been expired!')
+        return http.HttpResponse('This discount code has expired!')
 
 @csrf_exempt
 def preview_profile_image(request):

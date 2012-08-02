@@ -31,7 +31,7 @@
     <label>Discount ({{discount.code}})</label>
   </div>
   <div class="eight columns">
-	{% if discount.discount_fixed %}<div class="row"><strong>You are getting {{discount.discount_fixed|floatformat}} credit{{discount.discount_fixed|pluralize}} more.</strong></div>{% endif %}
+	{% if discount.discount_fixed %}<div class="row"><strong>You are receiving {{discount.discount_fixed|floatformat}} free extra credit{{discount.discount_fixed|pluralize}}.</strong></div>{% endif %}
 	{% if discount.discount_percentage %}<div class="row"><strong>You are getting a {{discount.discount_percentage|multiply:100|floatformat}}% discount in total price</strong></div>{% endif %}
   </div>	  
 </div>
