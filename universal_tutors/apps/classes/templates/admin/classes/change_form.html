@@ -10,23 +10,19 @@
 			<h4>Class Materials</h4>
 			{% for item in original.get_material %}
 			{% if item.allowdownload == '1' %}
-			<tr>
-				<td><a href="{% url class_download original.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}}</a></td>
-			</tr>
+			<a href="{% url class_download original.id %}?id={{item.assetid}}" target="_blank">{{item.clientfilename}}</a><br/>
 			{% endif %}		
 			{% empty %}
-			<tr><td>No assets available for this class</td></tr>
+			No assets available for this class
 			{% endfor %}
 		</div>
 		
 		<div style="float: left; margin-left: 20px;">
 			<h4>Class Recordings</h4>
 			{% for item in original.get_recordings %}
-			<tr>
-				<td><a target="_blank" href="{{original|rec_url:item.recid}}" target="_blank">Record {{forloop.counter}}</a></td>
-			</tr>
+			<a target="_blank" href="{{original|rec_url:item.recid}}" target="_blank">Record {{forloop.counter}}</a><br/>
 			{% empty %}
-			<tr><td>No recordings available for this class</td></tr>
+			No recordings available for this class
 			{% endfor %}
 		</div>
 	</div>
