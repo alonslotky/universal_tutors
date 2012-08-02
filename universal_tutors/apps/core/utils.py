@@ -10,7 +10,7 @@ import pytz
 
 
 def update_currencies():
-    url = 'http://openexchangerates.org/latest.json?app_id=%s' % settings.OPENXCHANGE_API_KEY
+    url = 'http://openexchangerates.org/api/latest.json?app_id=%s' % settings.OPENXCHANGE_API_KEY
     
     currencies = json.load(urllib.urlopen(url))
     base = currencies['base']
