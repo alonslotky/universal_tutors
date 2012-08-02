@@ -63,12 +63,14 @@
 							{% endif %}
 
 							$('#modal-review-close-button').remove();
-						    var modalLocation = $('#exit-class-button').attr('data-reveal-id');
+						       var modalLocation = $('#exit-class-button').attr('data-reveal-id');
 						    
-							$('#' + modalLocation).reveal({
-								animation: 'none',
-							    closeOnBackgroundClick: false
-    						});
+						    	if( $('#' + modalLocation).css("display") == "none" || $(this).css("visibility") == "hidden" ) {
+								$('#' + modalLocation).reveal({
+									animation: 'none',
+								    closeOnBackgroundClick: false
+	    							});
+    							}
 						}
 						
 						{% if user == class.student %}
