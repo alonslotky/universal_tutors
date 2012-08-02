@@ -1,4 +1,4 @@
-import datetime, urllib
+import datetime, urllib, urllib2
 import simplejson as json
 from django.conf import settings
 from apps.core.models import *
@@ -12,7 +12,7 @@ import pytz
 def update_currencies():
     url = 'http://openexchangerates.org/api/latest.json?app_id=%s' % settings.OPENXCHANGE_API_KEY
     
-    currencies = json.load(urllib.urlopen(url))
+    currencies = json.load(urllib2.urlopen(url))
     base = currencies['base']
     rates = currencies['rates']
     
