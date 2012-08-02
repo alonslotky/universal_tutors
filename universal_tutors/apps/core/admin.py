@@ -61,6 +61,9 @@ class EmailTemplateAdmin(admin.ModelAdmin):
     pass
 admin.site.register(EmailTemplate, EmailTemplateAdmin)
 
+class TimezoneAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Timezone, TimezoneAdmin)
 
 class CountryAdmin(admin.ModelAdmin):
     fieldsets = (
