@@ -887,7 +887,7 @@ class UserProfile(BaseModel):
         scribblar_room = rooms.add(
             roomname = 'Test class for %s' % self,
             roomowner = self.get_scribblar_id(),
-            promoteguests = '0',
+            promoteguests = '1',
             allowguests = '0',
             clearassets = '0',
             enablehistory = '1',
