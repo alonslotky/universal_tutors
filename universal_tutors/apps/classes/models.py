@@ -174,7 +174,7 @@ class Class(BaseModel):
         scribblar_room = rooms.add(
             roomname = '%s' % self.subject,
             roomowner = self.tutor.profile.get_scribblar_id(),
-            promoteguests = '1',
+            promoteguests = '0',
             allowguests = '0',
             clearassets = '0',
             enablehistory = '1',
