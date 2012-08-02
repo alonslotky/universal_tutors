@@ -34,16 +34,16 @@
             <li><a href="#" data-reveal-id="modal-signin">Log In</a></li>
             <li><a data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();" href="javascript:;">Sign Up</a></li>
 			{% else %}
-				{% if user_uprofile.type == profile.TYPES.TUTOR %}
+				{% if user_profile.type == user_profile.TYPES.TUTOR %}
 			          <li><a href="{% url tutor_classes %}">Classes</a></li>
 			          <li><a href="{% url tutor_messages %}">Messages</a></li>
 				{% endif %}
-				{% if user_profile.type == profile.TYPES.STUDENT or user_profile.type == profile.TYPES.UNDER16 %}
+				{% if user_profile.type == user_profile.TYPES.STUDENT or user_profile.type == user_profile.TYPES.UNDER16 %}
 			          <li><a href="{% url student_classes %}">Classes</a></li>
 			          <li><a href="{% url tutors %}">Tutors</a></li>
 			          <li><a href="{% url student_messages %}">Messages</a></li>
 				{% endif %}			
-				{% if user_profile.type == profile.TYPES.PARENT %}
+				{% if user_profile.type == user_profile.TYPES.PARENT %}
 			          <li><a href="{% url parent_messages %}">Messages</a></li>
 				{% endif %}			
 	          <li><a href="{% url edit_profile %}">Profile</a></li>
