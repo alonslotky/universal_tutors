@@ -191,25 +191,35 @@ def reports_financial_xls(context):
     sheet = wbk.add_sheet('general')
     sheet.write(0,0, 'Period')
     sheet.write(0,1, period)
+    sheet.write(1,0, 'Unused credits')
+    sheet.write(1,1, context['unused_credits'])
 
-    sheet.write(2, 0, 'Type')
-    sheet.write(2, 1, 'Credits')
+    sheet.write(3, 0, 'Type')
+    sheet.write(3, 1, 'Credits')
     
-    sheet.write(3, 0, 'Top-up')
-    sheet.write(3, 1, context['topup_credits'])
+    sheet.write(4, 0, 'Top-up')
+    sheet.write(4, 1, context['topup_credits'])
     
-    sheet.write(4, 0, 'Withdraw')
-    sheet.write(4, 1, context['withdraw_credits'])
+    sheet.write(5, 0, 'Withdraw')
+    sheet.write(5, 1, context['withdraw_credits'])
     
-    sheet.write(5, 0, 'Profit')
-    sheet.write(5, 1, context['profit_credits'])
+    sheet.write(6, 0, 'Profit')
+    sheet.write(6, 1, context['profit_credits'])
 
     for index, (key, currency) in enumerate(context['currencies'].iteritems()):
-        sheet.write(2, 2+index, '%s' % currency['name'])
-        sheet.write(3, 2+index, currency['topup'])
-        sheet.write(4, 2+index, currency['withdraw'])
-        sheet.write(5, 2+index, 'N/A')
+        sheet.write(3, 2+index, '%s' % currency['name'])
+        sheet.write(4, 2+index, currency['topup'])
+        sheet.write(5, 2+index, currency['withdraw'])
+        sheet.write(6, 2+index, 'N/A')
         
+    sheet.write(8, 0, 'Credits to withdraw')
+    sheet.write(8, 1, context['credits_to_withdraw'])
+    for index, (key, currency) in enumerate(context['currencies'].iteritems()):
+        sheet.write(9+index, 0, 'Value to withdraw in %s' % currency['name'])
+        sheet.write(9+index, 1, currency['withdraw'])
+
+
+    
     name = ('financial-%s.xls' % ''.join(period.split())).lower()
     filename = os.path.join(settings.SITE_ROOT, 'reports', name)
     wbk.save(filename)
