@@ -57,19 +57,50 @@ class ParentProfileAdmin(admin.ModelAdmin):
     list_editable = []
 admin.site.register(ParentProfile, ParentProfileAdmin)
 
+#def user_link(obj):
+#    return '<a href="/admin/auth/user/%s/">Open User Record</a>' % obj.id
+    
+#def profile_link(obj):
+#    return '<a href="/admin/profile/userprofile/%s/">Open Main Profile Record</a>' % obj.id
+
+#class StudentInterestInline(admin.StackedInline):
+#    model = StudentInterest.user.profile
+
+def date_of_birth_and_age(self):
+    return "%s (%s yrs old)" % (self.date_of_birth, self.age)
+date_of_birth_and_age.short_description = 'Date of Birth'
+date_of_birth_and_age.allow_tags = True
+
+def email_addy(self):
+    return "<a href='mailto:%s'>%s</a>" % (self.user.email, self.user.email)
+email_addy.short_description = 'Email'
+email_addy.allow_tags = True
+
+def student_interests(self):
+    return "<a href='/admin/profile/studentinterest/?user=%s'>View</a>" % (self.user.id)
+student_interests.short_description = 'Interests'
+student_interests.allow_tags = True
+
 class StudentProfileAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Personal Details', {
-            'fields': ('profile_image', 'date_of_birth', 'country', 'timezone',)
+            'fields': ('profile_image', 'date_of_birth', 'country', 'timezone', )
         }),
         ('Financial', {
             'fields': ('currency',)
         }),
     )
 
-    list_display = ('__unicode__', 'type', 'date_of_birth', 'currency', 'country', 'timezone')
+    list_display = ('__unicode__', 'type', email_addy, date_of_birth_and_age, 'gender', 'currency', 'country', 'timezone', student_interests)
     list_filter = ['type', 'country']
     list_editable = []
+    #inlines = [StudentInterestInline,]
+    
+    """def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "studentinterest":
+            kwargs["queryset"] = StudentInterest.objects.filter(user=self.user)
+        return super(StudentProfileAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)"""
+    
 admin.site.register(StudentProfile, StudentProfileAdmin)
  
     
@@ -97,6 +128,14 @@ class WithdrawItemAdmin(admin.ModelAdmin):
     list_filter = ('user', 'status', 'currency')
     search_fields = ('user', 'user__first_name', 'user__last_name')
 admin.site.register(WithdrawItem, WithdrawItemAdmin)
+
+class UserProfileAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(UserProfile, UserProfileAdmin)
+
+class StudentInterestAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(StudentInterest, StudentInterestAdmin)
 
 
 #class NewsletterSubscriptionAdmin(admin.ModelAdmin):
