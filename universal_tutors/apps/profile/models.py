@@ -920,11 +920,10 @@ class UserProfile(BaseModel):
 
     def get_active_discount(self):
         try:
-            discount = self.user.discounts.filter(active=True).latest('id')
+            return self.user.discounts.filter(active=True).latest('id')
         except DiscountUser.DoesNotExist:
             return None
-      
-        return discount if discount.is_valid() else None
+
 
 class TutorProfile(UserProfile):
     objects = TutorProfileManager()

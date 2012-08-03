@@ -824,11 +824,8 @@ def activate_discount(request):
         return http.HttpResponse('Invalid discount code!')
     
     user_discount, created = user.discounts.get_or_create(discount=discount)
-    user_discount.active = True
-    user_discount.save()
-    
     user.discounts.exclude(id=user_discount.id).update(active=False)
-    if user_discount.is_valid():
+    if user_discount.activate():
         return http.HttpResponse('done.')
     else:
         return http.HttpResponse('This discount code has expired!')
