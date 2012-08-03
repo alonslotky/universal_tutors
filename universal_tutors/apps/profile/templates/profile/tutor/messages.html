@@ -29,6 +29,19 @@
           
           <div class="three columns title">
             <h3 class="title"><a href="{% url profile person.username %}">{{person.get_full_name}}</a></h3>
+            {% if person_profile.type == person_profile.TYPES.UNDER16 %}
+            {% with person_profile.parent as parent %}
+            <p class="subheader"><a href="{% url profile parent.username %}">{{person_profile.child_type}} of {{parent.get_full_name}}</a></p>
+            {% endwith %}
+            {% endif %}
+            
+            {% if person_profile.type == person_profile.TYPES.PARENT %}
+            {% with messages.messages.0.child as child %}
+            {% if child %}
+            <p class="subheader"><a href="{% url profile child.username %}">{{child.get_full_name}}'s parent</a></p>
+            {% endif %}
+            {% endwith %}
+            {% endif %}            
           </div>
           
           <div class="four columns description">

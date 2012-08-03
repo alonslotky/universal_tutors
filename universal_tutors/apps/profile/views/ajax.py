@@ -89,20 +89,34 @@ def view_modal_messages(request, username, to, class_id=0):
 
     messages.filter(to=user).update(read=True)
 
-    data = json.dumps({
-        'to': to.get_full_name(), 
-        'messages': [{
-            'to_id': message.to.id,
-            'to': message.to.get_full_name(),
-            'user_id': message.user.id,
-            'user': message.user.get_full_name(),
-            'text': message.message,
-            'child': message.child.get_full_name() if message.child else '',
-            'parent_to': message.to.profile.parent.get_full_name() if message.to.type == person_profile.TYPES.TUTOR else '',
-            'parent_from': message.user.profile.parent.get_full_name() if message.user.type == person_profile.TYPES.TUTOR else '',
-            'child_type': person_profile.child_type if person_profile.type == person_profile.TYPES.UNDER16 else '',
-        } for message in messages]
-    })
+    message_list = []
+    for message in messages:
+        child = ''
+        parent = ''
+        child_type = ''
+        if person_profile.type == person_profile.TYPES.TUTOR and person == message.to:
+            message_profile = message.user.profile
+            if message_profile.type == message_profile.TYPES.PARENT:
+                child = message.child.get_full_name()
+            else:
+                parent = message_profile.parent.get_full_name()
+                child_type = message_profile.child_type
+        
+        message_list.append({
+                'to_id': message.to.id,
+                'to': message.to.get_full_name(),
+                'user_id': message.user.id,
+                'user': message.user.get_full_name(),
+                'text': message.message,
+                'child': child,
+                'parent': parent,
+                'child_type': child_type,
+            })
+    
+        data = json.dumps({
+            'to': to.get_full_name(), 
+            'messages': message_list,
+        })
     
     return http.HttpResponse(data, mimetype='application/json')
 
