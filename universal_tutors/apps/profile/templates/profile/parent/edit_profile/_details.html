@@ -5,13 +5,11 @@
     
     <div class="row">
       <div class="four columns photo">
-
-    	<div class="row">
-	  		<img id="id_image_preview" src="{% version profile.profile_image.path 'profile_image' %}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
-    	</div>
-    	<div id="id_profile_image_preview" class="row space">
-  			<a href="javascript:;">Choose image</a>
-    	</div>
+          <div class="row space">
+	        <img id="id_image_preview" src="{% version profile.profile_image.path 'profile_image' %}" alt="{{user.get_full_name}}" style="max-width: 175px; max-height: 175px;">
+	        <div>{{form.profile_image}}</div>
+	        {% if form.profile_image.errors %}<div class="formError">{{ form.profile_image.errors }}</div>{% endif %}
+		  </div>
 
           <div class="row space">
           	{% with profile.get_completeness as completeness %}
@@ -148,26 +146,4 @@
   		$("input[name=profile_image]").parent().hide();
   	}
 	
-</script>
-<script type="text/javascript">
-	function createUploader(){
-        var photoUpload = new qq.FileUploaderBasic({
-            button: document.getElementById('id_profile_image_preview'),
-            action: "{% url preview_profile_image %}",
-            multiple: false,
-            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
-			onComplete: function( id, fileName, responseJSON ) {
-				$('#id_image_preview').attr('src', responseJSON.url);
-				$('#remove-image').removeClass('hidden');
-	       }
-        });
-        
-  	}
-  	window.onload = createUploader;
-
-    $('#remove-image').click(function(){
-    	$(this).addClass('hidden');
-    	$('#id_image_preview').attr('src', '{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}');
-    	$('#')
-    });	
 </script>
