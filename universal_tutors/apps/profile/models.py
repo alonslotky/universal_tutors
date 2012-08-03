@@ -309,6 +309,7 @@ class UserProfile(BaseModel):
         super(UserProfile, self).save()
     
     def save(self, *args, **kwargs):
+        user = self.user
         if not self.currency:
             try:
                 self.currency = Currency.objects.get(acronym='GBP')
@@ -323,13 +324,17 @@ class UserProfile(BaseModel):
             elif self.type == self.TYPES.TUTOR:
                 list = mailchimp.utils.get_connection().get_list_by_id(settings.TUTORS_LIST_ID)
 
-            list.subscribe(self.user.email, {'EMAIL': self.user.email})
+            list.subscribe(user.email, {
+                'FNAME': user.first_name,
+                'LNAME': user.last_name,
+                'EMAIL': user.email,
+            }, double_optin=False)
         
         if self.type != self.TYPES.NONE and not self.is_over16:
             self.type = self.TYPES.UNDER16
 
         if self.type == self.TYPES.TUTOR:
-            if self.user.subjects.count():
+            if user.subjects.count():
                 self.activated = True                    
             else:
                 self.activated = False
@@ -342,7 +347,6 @@ class UserProfile(BaseModel):
         
         super(UserProfile, self).save(*args, **kwargs)
 
-        user = self.user
         if self.type != self.TYPES.NONE and self.type != self.TYPES.PARENT:
             self.edit_scribblar_user()
 
