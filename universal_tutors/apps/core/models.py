@@ -148,18 +148,22 @@ class DiscountUser(BaseModel):
         return '%s: %s' % (self.discount, self.user.get_full_name())
     
     def is_valid(self):
-        valid = self.discount.is_valid(self.used)
-        if not valid:
-            self.active = False
+        return self.discount.is_valid(self.used)
+
+    def activate(self):
+        is_valid = self.is_valid()
+        if is_valid:
+            self.active = True
+            self.used += 1
             super(DiscountUser, self).save()
-        return valid
+            self.discount.use()
+        return is_valid        
 
     def use(self):
-        self.used += 1
-        super(DiscountUser, self).save()
-        self.discount.use()
-        self.is_valid()
-        
+        if not self.is_valid():
+            self.active = False
+            self.save()
+
 
 # EMAIL TEMPLATES
 from apps.profile.models import UserProfile as _UserProfile
