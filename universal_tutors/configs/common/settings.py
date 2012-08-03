@@ -374,6 +374,7 @@ SPEED_TEST_LINK = 'http://www.speedtest.net/'
 
 # CURRENCY
 CURRENCY_RISK = 0.01 # 0.01 is 1%
+OPENXCHANGE_API_KEY = "233ea3db45284d63bafe73b31078a0ff"
 
 
 # MAILCHIMP
