@@ -80,7 +80,7 @@
 		    <label>Topics</label>
 		  </div>
 		  <div class="eight columns phone-three">
-		  	<textarea name="cover" placeholder="Topics you would like to cover (optional)"></textarea>		  		
+		  	<textarea id="id-book-cover" name="cover">Topics you would like to cover (optional)</textarea>		  		
 		  </div>	  
 		</div>
 
@@ -89,7 +89,7 @@
 		    <label>Message</label>
 		  </div>
 		  <div class="eight columns phone-three">
-		  	<textarea name="message" placeholder="Write a message to tutor (optional)"></textarea>		  		
+		  	<textarea id="id-book-message" name="message">Write a message to tutor (optional)</textarea>		  		
 		  </div>	  
 		</div>
 
@@ -103,6 +103,28 @@
   	<a class="close-reveal-modal">&#215;</a>
 </div>
 
+<script type="text/javascript">
+	$('#id-book-cover').focus(function(){
+		if($(this).val() == 'Topics you would like to cover (optional)') {
+			$(this).val('');
+		}			
+	});
+	$('#id-book-cover').blur(function(){
+		if($(this).val() == '') {
+			$(this).val('Topics you would like to cover (optional)');
+		}			
+	});
+	$('#id-book-message').focus(function(){
+		if($(this).val() == 'Write a message to tutor (optional)') {
+			$(this).val('');
+		}			
+	});
+	$('#id-book-message').blur(function(){
+		if($(this).val() == '') {
+			$(this).val('Write a message to tutor (optional)');
+		}			
+	});
+</script>
 <script type="text/javascript">
 	var book_start_date, book_end_date;
 	var book_months_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
