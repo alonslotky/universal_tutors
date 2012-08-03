@@ -1,5 +1,4 @@
 {% load fb_versions common_tags %}
-  
   <li class="active" id="detailsTab">
     <h2 class="clear">Profile Details</h2>
     <div class="row">
@@ -8,14 +7,21 @@
     	<div class="row">
 	  		<img id="id_image_preview" src="{% version profile.profile_image.path 'profile_image' %}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
     	</div>
+	    <div id="id_profile_image_old" class="row space hidden">
+	  	  <input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">
+	    </div>
     	<div id="id_profile_image_preview" class="row space">
   			<a href="javascript:;">Choose image</a>
     	</div>
 
           <div class="row space">
-	        <img id="id_image_preview" src="{% version profile.profile_image.path 'profile_image' %}" alt="{{user.get_full_name}}" style="max-width: 175px; max-height: 175px;">
-	        <div>{{form.profile_image}}</div>
-	        {% if form.profile_image.errors %}<div class="formError">{{ form.profile_image.errors }}</div>{% endif %}
+          	{% with profile.get_completeness as completeness %}
+            <label>Profile completeness</label>
+		  	<div class="profile-completeness">
+		  		<div class="bar" style="width: {{completeness}}%;"></div>
+		  		<div class="value">{{ completeness }}%</div>
+		  	</div>
+		  	{% endwith %}
 		  </div>
 		  <div class="row space">&nbsp;</div>
           <div class="row space"><div class="button"><a href="{% url profile %}" class="icon">view public profile</a></div></div>
@@ -170,7 +176,7 @@
 		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
 	});
 	
-	$('#id_profile_image').change(function(){
+	$('#id_profile_image').live('change', function(){
         var input = $(this)[0]
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -201,3 +207,25 @@
 		});
 	});
 </script>
+<script type="text/javascript">
+	function createUploader(){
+        var photoUpload = new qq.FileUploaderBasic({
+            button: document.getElementById('id_profile_image_preview'),
+            action: "{% url preview_profile_image %}",
+            multiple: false,
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+			onComplete: function( id, fileName, responseJSON ) {
+				$('#id_image_preview').attr('src', responseJSON.url);
+				$('#remove-image').removeClass('hidden');
+	       }
+        });
+        
+  	}
+  	window.onload = createUploader;
+
+	if($.browser.msie) {
+		$('#id_profile_image_old').removeClass('hidden');
+		$('#id_profile_image_preview').addClass('hidden');
+	}
+</script>
+
