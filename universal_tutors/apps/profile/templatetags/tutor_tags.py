@@ -202,6 +202,6 @@ def weekclasses(profile, date=None):
 def indefinite(value):
     value = '%s' % value
     if value:
-        return 'n' if value[0] in ['a','e','i','o','u'] else ''
+        return 'n' if value[0].lower() in ['a','e','i','o','u'] else ''
     else:
         return ''
