@@ -203,7 +203,7 @@ class SignupForm(forms.ModelForm):
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
-    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(t.timezone, t.timezone) for t in Country.objects.get(country='UK').timezones.all()], widget=forms.Select(attrs={'class': 'stretch'}), initial='UTC')
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='UTC')
     
     referral = forms.ChoiceField(label=_('Referral'), choices=[('', 'Please select an option')]+UserProfile.REFERRAL_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
     referral_other = forms.CharField(required = False, initial='')
@@ -472,7 +472,7 @@ class GenericSocialSignupForm(SocialSignupForm):
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
-    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.common_timezones], widget=forms.Select(attrs={'class': 'stretch'}))
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}))
     
     referral = forms.ChoiceField(label=_('Referral'), choices=UserProfile.REFERRAL_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
     referral_other = forms.CharField(required = False, initial='')
