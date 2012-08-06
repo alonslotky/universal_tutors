@@ -332,7 +332,7 @@
 </script>
 <script type="text/javascript">
 	$(window).ready(function(){
-		$('#tooltip-referral').clickover({
+		$('#tooltip-referral').{% if request.mobile %}clickover{% else %}popover{% endif %}({
 			title: 'Referral Key',
 			content: 'If you have been referred by another user of the site then please enter the code here to receive your special offer'
 		});

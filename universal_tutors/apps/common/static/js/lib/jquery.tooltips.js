@@ -9,7 +9,6 @@
 ;(function($) {
   var methods = {
     init : function( options ) { 
-
       return this.each(function() {    
         var targets = $('.has-tip'),
         tips = $('.tooltip'),
