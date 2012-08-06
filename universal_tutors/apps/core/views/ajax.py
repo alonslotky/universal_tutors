@@ -11,7 +11,7 @@ from apps.common.utils.view_utils import main_render
 from apps.profile.models import *
 from apps.core.models import *
 
-import datetime
+import datetime, urllib, urllib2
 
 def approve_item(request, tutor_id, type, approve):
     user = request.user
@@ -61,3 +61,6 @@ def timezones(request, country):
     return {
         'timezones': timezones,
     }
+    
+def formassembly_submit(request):
+    return http.HttpResponse('Thank you. Your feedback has been processed successfully.')

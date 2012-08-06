@@ -37,4 +37,6 @@ urlpatterns += patterns('apps.core.views.ajax',
 
     url(r'^(?i)timezones/$', 'timezones', name='get_timezones'),
     url(r'^(?i)timezones/(?P<country>\w+)/$', 'timezones', name='get_timezones'),
+
+    url(r'^(?i)formassembly/submit/$', 'formassembly_submit', name='formassembly_submit'),
 )
