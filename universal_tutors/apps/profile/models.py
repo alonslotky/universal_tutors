@@ -689,13 +689,13 @@ class UserProfile(BaseModel):
         if self.crb_expiry_date:
             today = datetime.date.today()
             if self.crb_expiry_date < today and not self.crb_alert_expired:
-                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRED, {'tutor': self.user}, use_thread=user_thread)
+                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRED, {'tutor': self.user, 'date': self.crb_expiry_date}, use_thread=user_thread)
                 self.crb_alert_expired = True 
                 self.crb_alert_expire_date = True
                 super(UserProfile, self).save()
 
             if self.crb_expiry_date < today + datetime.timedelta(days=15) and not self.crb_alert_expire_date:
-                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user}, use_thread=user_thread)
+                self.send_notification(self.NOTIFICATIONS_TYPES.CRB_EXPIRE_DATE, {'tutor': self.user, 'date': self.crb_expiry_date}, use_thread=user_thread)
                 self.crb_alert_expire_date = True
                 super(UserProfile, self).save()
 
