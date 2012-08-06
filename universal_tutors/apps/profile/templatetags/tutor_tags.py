@@ -197,3 +197,11 @@ def get_week(profile, date):
 @register.filter
 def weekclasses(profile, date=None):
     return profile.week_classes(date)
+
+@register.filter
+def indefinite(value):
+    value = '%s' % value
+    if value:
+        return 'n' if value[0] in ['a','e','i','o','u'] else ''
+    else:
+        return ''
