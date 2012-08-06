@@ -273,7 +273,7 @@ class UserProfile(BaseModel):
         date = datetime.date(today.year - 16, today.month, today.day)
 
         if self.date_of_birth and self.date_of_birth <= date:
-            return self
+            return None
         
         try:
             return self.user.parent_set.filter(active=True).latest('id').parent
