@@ -113,10 +113,10 @@ def view_modal_messages(request, username, to, class_id=0):
                 'child_type': child_type,
             })
     
-        data = json.dumps({
-            'to': to.get_full_name(), 
-            'messages': message_list,
-        })
+    data = json.dumps({
+        'to': to.get_full_name(), 
+        'messages': message_list,
+    })
     
     return http.HttpResponse(data, mimetype='application/json')
 
