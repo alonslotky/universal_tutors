@@ -31,6 +31,7 @@ from paypal2.standart.ap import pay
 from scribblar import users, rooms
 
 import mailchimp
+from mailchimp.chimpy.chimpy import ChimpyException
 
 
 ### MANAGERS ######################################################
@@ -316,7 +317,7 @@ class UserProfile(BaseModel):
             except Currency.DoesNotExist:
                 self.currency = Currency.objects.latest('id')
         
-        if self.newsletters and self.type != 0:
+        if self.newsletters and self.type != self.TYPES.NONE:
             if self.type in [self.TYPES.STUDENT, self.TYPES.UNDER16]:
                 list = mailchimp.utils.get_connection().get_list_by_id(settings.STUDENTS_LIST_ID)
             elif self.type == self.TYPES.PARENT:
@@ -324,11 +325,14 @@ class UserProfile(BaseModel):
             elif self.type == self.TYPES.TUTOR:
                 list = mailchimp.utils.get_connection().get_list_by_id(settings.TUTORS_LIST_ID)
 
-            list.subscribe(user.email, {
-                'FNAME': user.first_name,
-                'LNAME': user.last_name,
-                'EMAIL': user.email,
-            }, double_optin=False)
+            try:
+                list.subscribe(user.email, {
+                    'FNAME': user.first_name,
+                    'LNAME': user.last_name,
+                    'EMAIL': user.email,
+                }, double_optin=False)
+            except ChimpyException:
+                pass
         
         if self.type != self.TYPES.NONE and not self.is_over16:
             self.type = self.TYPES.UNDER16
