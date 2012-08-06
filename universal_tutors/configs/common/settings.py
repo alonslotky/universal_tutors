@@ -81,6 +81,7 @@ MIDDLEWARE_CLASSES = (
 #    'johnny.middleware.QueryCacheMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'minidetector.Middleware',
     #'cms.middleware.page.CurrentPageMiddleware',
     #'cms.middleware.user.CurrentUserMiddleware',
 )
