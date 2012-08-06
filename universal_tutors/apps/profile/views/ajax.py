@@ -98,7 +98,7 @@ def view_modal_messages(request, username, to, class_id=0):
             message_profile = message.user.profile
             if message_profile.type == message_profile.TYPES.PARENT:
                 child = message.child.get_full_name()
-            else:
+            elif message_profile.type == message_profile.TYPES.UNDER16:
                 parent = message_profile.parent.get_full_name()
                 child_type = message_profile.child_type
         

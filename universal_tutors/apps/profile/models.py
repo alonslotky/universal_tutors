@@ -272,7 +272,7 @@ class UserProfile(BaseModel):
         # there are no problem because 29 Feb less 16 years it's 29 Feb too
         date = datetime.date(today.year - 16, today.month, today.day)
 
-        if self.date_of_birth and self.date_of_birth <= date:
+        if self.type != self.TYPES.UNDER16:
             return None
         
         try:
