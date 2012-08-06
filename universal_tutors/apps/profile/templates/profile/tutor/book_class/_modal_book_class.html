@@ -163,6 +163,14 @@
 	$('#modal-book-class-form').submit(function(e){
 		e.preventDefault();
 		
+		if($('#id-book-cover').val() == 'Topics you would like to cover (optional)') {
+			$('#id-book-cover').val('');
+		}
+				
+		if($('#id-book-message').val() == 'Write a message to tutor (optional)') {
+			$('#id-book-message').val('');
+		}			
+
 		var date = $('#book-class-date').val();
 		var start = $('#book-class-start').val();
 		var start_str = start.split('-');
