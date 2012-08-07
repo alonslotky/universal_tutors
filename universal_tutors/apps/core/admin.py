@@ -78,3 +78,6 @@ class CountryAdmin(admin.ModelAdmin):
 admin.site.register(Country, CountryAdmin)
 
 
+class DocumentAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(Document, DocumentAdmin)
