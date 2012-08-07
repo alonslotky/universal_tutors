@@ -86,10 +86,25 @@
 		
 	});
 	
-	$("#share-twitter").click(function(e){
-		e.preventDefault();
-		window.open('https://twitter.com/share?url='+ tutor_rated_url +'&via=UniversalTutors&text={{ user.get_full_name }} rated tutor '+ $('#modal-review-tutor-name').html() );	
-	});
+	var TweetThisLink = {
+	    shorten : function(e) {
+	        e.preventDefault();
+	        var url = tutor_rated_url;
+	        BitlyClient.shorten(url, 'TweetThisLink.response');
+	    },
+	    
+	    response : function(data) {
+	        var bitly_link = null;
+	        for (var r in data.results) {
+	            bitly_link = data.results[r]['shortUrl']; 
+	            break;
+	        }
+	        var tweet_text = 'I rated tutor with '+ $('#student-rate-tutor-star .star.on').length +' of 5 stars: '+ $('#modal-review-tutor-name').html()
+	        document.location = "http://twitter.com/home?status=" + encodeURIComponent(tweet_text + ' ' + bitly_link);
+	    }
+	}
+			
+	$("#share-twitter").bind('click', TweetThisLink.shorten);
 	
 	$("#share-facebook").click(function(e){
 		e.preventDefault();

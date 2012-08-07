@@ -385,6 +385,11 @@ TUTORS_LIST_ID = '635078691a'
 PARENTS_LIST_ID = '2e1436b5d3'
 
 
+# BITLY DETAILS
+BITLY_LOGIN = 'universaltutors'
+BITLY_APIKEY = 'R_87a7cd909769b2eb4aa9d82c9979e3b8'
+
+
 # Allow for local (per-user) override
 try:
     from local_settings import *
