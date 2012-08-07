@@ -226,7 +226,6 @@ class Country(models.Model):
 ### DOCUMENTS ###############################################################
 class Document(models.Model):
     class Meta:
-        verbose_name = 'Documents'
         ordering = ['slug']
     
     slug = models.SlugField(unique=True, db_index=True)
