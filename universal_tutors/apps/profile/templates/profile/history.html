@@ -58,7 +58,7 @@
               <td>{{movement.get_type_display}}</td>
               <td>{{movement.credits}} credit{{movement.credits|pluralize}}</td>
               {% if user_profile.type == user_profile.TYPES.TUTOR %}<td>{% if class and movement.type == movement.MOVEMENTS_TYPES.INCOME %}{{class.universal_fee}} credit{{class.universal_fee|pluralize}}{% endif %}</td>{% endif %}
-              <td>{% if movement.value %}{{movement.value}}{% endif %}</td>
+              <td nowrap="nowrap">{% if movement.value %}{{movement.value}}{% endif %}</td>
               <td>{% if class %}{{class}}{% endif %}</td>
               <td>{% if class %}{% if user_profile.type == user_profile.TYPES.TUTOR %}{{class.student.get_full_name}}{% else %}{{class.tutor.get_full_name}}{% endif %}{% endif %}</td>
               <td>{% if class %}{{class_date|date:"D, d M Y \a\t H:i"}}{% endif %}</td>
