@@ -42,7 +42,7 @@
               <th>Type</th>
               <th>Credits</th>
 			  {% if user_profile.type == user_profile.TYPES.TUTOR %}<th>Commission</th>{% endif %}
-              <th>Value</th>
+              <th>{% if user_profile.type == user_profile.TYPES.TUTOR %}Value{% else %}Cost{% endif %}</th>
               <th>Class</th>
               <th>{% if user_profile.type == user_profile.TYPES.TUTOR %}Student{% else %}Tutor{% endif %}</th>
               <th>Class scheduled for</th>
