@@ -431,7 +431,7 @@
 		</script>
 		<script type="text/javascript">
 			$(window).ready(function(){
-				$('#tooltip-price').clickover({
+				$('#tooltip-price').{% if request.mobile %}clickover{% else %}popover{% endif %}({
 					title: 'Price',
 					content: 'prices throughout the site are based on a credit system. 1 credit is equal to 1 pound Sterling. '+
 					         'If you have a EUR or USD account then a credit’s value will change over time, 1 credit is currently equivalent to: <br/>' +
