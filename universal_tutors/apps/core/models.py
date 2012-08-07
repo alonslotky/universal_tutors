@@ -221,3 +221,16 @@ class Country(models.Model):
     def __unicode__(self):
         return self.country_name
 
+
+
+### DOCUMENTS ###############################################################
+class Document(models.Model):
+    class Meta:
+        verbose_name = 'Documents'
+        ordering = ['slug']
+    
+    slug = models.SlugField(unique=True, db_index=True)
+    file = models.FileField(upload_to='uploads/documents')
+    
+    def __unicode__(self):
+        return self.slug
