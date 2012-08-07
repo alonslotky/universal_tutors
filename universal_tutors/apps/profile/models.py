@@ -744,12 +744,18 @@ class UserProfile(BaseModel):
             super(UserProfile, self).save()
             self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.REFERRAL, credits=credits)
 
-    def topup_account(self, credits):
+    def topup_account(self, credits, topup_item=None):
         if self.type == self.TYPES.STUDENT or self.type == self.TYPES.UNDER16:
             self.credit += credits
             super(UserProfile, self).save()
-            currency = self.currency
-            value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
+            
+            if topup_item:
+                currency = topup_item.currency
+                value = '%s %.2f' % (currency.symbol, topup_item.value)
+            else:
+                currency = self.currency
+                value = '%s %.2f' % (currency.symbol, currency.credit_value() * credits)
+            
             self.user.movements.create(type=UserCreditMovement.MOVEMENTS_TYPES.TOPUP, credits=credits, value=value)
 
     def withdraw_account(self, credits):
@@ -1023,7 +1029,7 @@ class TopUpItem(BaseModel):
         if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
             self.status = self.STATUS_TYPES.DONE
             super(self.__class__, self).save()
-            self.user.profile.topup_account(self.credits)
+            self.user.profile.topup_account(self.credits, self)
         elif self.status == self.STATUS_TYPES.FLAGGED:
             self.status = self.STATUS_TYPES.DONE
             super(self.__class__, self).save()
@@ -1034,7 +1040,7 @@ class TopUpItem(BaseModel):
         if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
             self.status = self.STATUS_TYPES.FLAGGED
             super(self.__class__, self).save()
-            self.user.profile.topup_account(self.credits)
+            self.user.profile.topup_account(self.credits, self)
 
     def cancel(self):
         if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.FLAGGED:
