@@ -10,6 +10,8 @@
 	        <li><a href="{% url search %}">Search</a></li>
 	        {% if not is_authenticated %}
 	        <li><a href="#" data-reveal-id="modal-signin">Log In</a></li>
+	        {% else %}
+          	<li><a href="{% url logout %}">Sign out</a></li>
 	        {% endif %}
 	        <li class="logo"><a class="ir" href="{% url home %}">Home</a></li>
 	        {% if not is_authenticated %}
