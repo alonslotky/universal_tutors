@@ -444,7 +444,6 @@
 </script>
 
 <script type="text/javascript">
-	alert('{{request.mobile}}');
 	$(window).ready(function(){
 		$('#tooltip-interests').{% if request.mobile %}clickover{% else %}popover{% endif %}({
 			title: 'Interests',
