@@ -127,5 +127,6 @@ header .class-info strong { color: #fff; }
 .row textarea.user.stretch { min-width: 100%; }
 
 .formError.without-margin { margin-top: -8px; }
-.help-on-title { display: inline; line-height: inherit; text-align: middle; }
+.help-on-title { display: inline; line-height: inherit; text-align: center; }
 
+#id_profile_image_preview input[type="file"] { max-width: none !important; }
