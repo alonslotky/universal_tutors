@@ -816,7 +816,7 @@ def activate_discount(request):
         if profile.type == profile.TYPES.TUTOR:
             discount = Discount.objects.get(code=code, type__in=[Discount.TYPES.ALL, Discount.TYPES.TUTOR])
         elif profile.type == profile.TYPES.PARENT:
-            discount = Discount.objects.get(code=code, type__in=[Discount.TYPES.ALL, Discount.TYPES.TUTOR])
+            discount = Discount.objects.get(code=code, type__in=[Discount.TYPES.ALL, Discount.TYPES.PARENT])
         else:
             discount = Discount.objects.get(code=code, type__in=[Discount.TYPES.ALL, Discount.TYPES.STUDENT])
             

@@ -35,7 +35,7 @@
 	        <td><a href="{% url profile child.username %}">{{child.get_full_name}}</a></td>
 	        <td><a href="{% url student_classes child.username %}">view classes</a></td>
 	        <td><a href="{% url student_messages child.username %}">view messages</a></td>
-	        <td><a href="{% url tutors child.username %}">view messages</a></td>
+	        <td><a href="{% url tutors child.username %}">view tutors</a></td>
 	        <td>{{child_profile.credit}} credit{{child_profile.credit|pluralize}}</td>
 	        <td>
 			    <a class="button" href="javascript:;" data-reveal-id="modal-topup" onclick="topup_account('{% url topup_cart child.username %}');"><span class="icon credits">Top Up Credits</span></a>
