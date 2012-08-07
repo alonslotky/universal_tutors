@@ -90,7 +90,7 @@
 	    shorten : function(e) {
 	        e.preventDefault();
 	        var url = tutor_rated_url;
-	        BitlyClient.shorten(url, 'TweetThisLink.response');
+	        BitlyClient.shorten(url, TweetThisLink.response);
 	    },
 	    
 	    response : function(data) {
@@ -99,19 +99,22 @@
 	            bitly_link = data.results[r]['shortUrl']; 
 	            break;
 	        }
-	        var tweet_text = 'I rated tutor with '+ $('#student-rate-tutor-star .star.on').length +' of 5 stars: '+ $('#modal-review-tutor-name').html()
-	        document.location = "http://twitter.com/home?status=" + encodeURIComponent(tweet_text + ' ' + bitly_link);
+	        var tweet_text = 'I rated my tutor '+$('#modal-review-tutor-name').html()+' with '+ $('#student-rate-tutor-star .star.on').length +' out of 5 stars on @UniversalTutors ';
+	        window.open("http://twitter.com/home?status=" + encodeURIComponent(tweet_text + ' ' + bitly_link), 'universal_tutors_tweet');
 	    }
 	}
 			
-	$("#share-twitter").bind('click', TweetThisLink.shorten);
+	$("#share-twitter").bind('click', function(e){
+        window.open('', 'universal_tutors_tweet');
+		TweetThisLink.shorten(e);
+	});
 	
 	$("#share-facebook").click(function(e){
 		e.preventDefault();
 		var val = $('#student-rate-tutor-text').val();
 		var stars = $('#student-rate-tutor-star .star.on');
 		if (stars.length > 0) {
-			val += '\n(Rated ' + length + ' out of 5)';
+			val += '\n(Rated ' + stars.length + ' out of 5)';
 		}
 		FB.ui(
 		  {

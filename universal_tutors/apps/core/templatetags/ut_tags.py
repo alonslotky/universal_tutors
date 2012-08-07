@@ -1,7 +1,7 @@
 from django import template
 from django.conf import settings
 
-from apps.core.models import Quote, Video
+from apps.core.models import Quote, Video, Document
 from apps.classes.models import Class
 
 import datetime, random
@@ -69,3 +69,9 @@ def get_total_users(item, position):
     else:
         return len(item[position])
 
+@register.simple_tag
+def get_document(slug):
+    try:
+        return Document.objects.get(slug=slug).file.url
+    except Document.DoesNotExist:
+        return ''

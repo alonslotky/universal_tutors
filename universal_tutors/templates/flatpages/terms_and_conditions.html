@@ -1,0 +1,53 @@
+{% extends "ui/layouts/base.html" %}
+{% load common_tags uni_form_tags flatblock_tags ut_tags %}
+
+{% block title %}{{flatpage.title}}{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block extra_head %}
+<script type="text/javascript">
+	var goto_terms = function(id){
+		var destination = id?$(id).offset().top:0;
+		$("html:not(:animated),body:not(:animated)").animate({ scrollTop: destination-20}, 500, 'easeOutExpo');
+	}
+</script>
+{% endblock %}
+
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+	    	<h1>{{ flatpage.title }}</h1>	
+	  	</div>
+	</section>
+	
+	<div class="hide-on-phones">
+      {% include 'profile/fragments/_timer.html' %}
+     </div>	
+     
+	<div class="row">
+		<div class="columns four"><strong>Terms and conditions for Tutors</strong></div>
+		<div class="columns eight"><a href="javascript:;" onclick="goto_terms('#tutor-terms');">view</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% get_document 'terms_and_conditions_tutor' %}" target='_blank'>download</a></div>
+ 	</div>
+	<div class="row">
+		<div class="columns four"><strong>Terms and conditions for Students</strong></div>
+		<div class="columns eight"><a href="javascript:;" onclick="goto_terms('#student-terms');">view</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% get_document 'terms_and_conditions_student' %}" target='_blank'>download</a></div>
+ 	</div>
+	
+	<hr/>
+	
+	<div id="tutor-terms" class="row">
+		<h1>Tutor</h1>
+    	{% flatblock "terms_and_conditions_tutor" %}	
+ 	</div>
+ 	<div class="row space"><a href="javascript:;" onclick="goto_terms();">Back to top</a></div>
+	
+	<hr/>
+
+	<div id="student-terms" class="row">
+		<h1>Student</h1>
+    	{% flatblock "terms_and_conditions_student" %}	
+ 	</div>
+ 	<div class="row space"><a href="javascript:;" onclick="goto_terms();">Back to top</a></div>
+{% endblock %}
