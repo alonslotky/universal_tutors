@@ -64,3 +64,4 @@ django-allauth
 -e git+git://github.com/rawjam/django-pagination.git#egg=django-pagination
 
 django-mailchimp==0.1.30
+minidetector
