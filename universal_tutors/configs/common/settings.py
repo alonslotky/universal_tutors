@@ -205,12 +205,12 @@ CACHE_COUNT_TIMEOUT = 60
 JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_universal_tutors'
 
 # EMAIL SETTINGS
-DEFAULT_FROM_EMAIL = 'noreply@rawjam.co.uk'
+DEFAULT_FROM_EMAIL = 'info@universaltutors.com'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'noreply@rawjam.co.uk'
-EMAIL_HOST_PASSWORD = '2M5394'
+EMAIL_HOST_USER = 'info@universaltutors.com'
+EMAIL_HOST_PASSWORD = 'ntsa2223'
 
 EMAIL_MANAGER = ['ben@rawjam.co.uk',]
 
