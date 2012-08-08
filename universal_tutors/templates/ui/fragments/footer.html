@@ -7,7 +7,7 @@
 	      <ul class="centered">
 	        <li><a href="/student-guide/">Student Guide</a></li>
 	        <li><a href="/tutor-guide/">Tutor Guide</a></li>
-	        <li><a href="{% url search %}">Advanced Search</a></li>
+	        <li><a href="{% url search %}">{% if not is_authenticated %}Advanced {% endif %}Search</a></li>
 	        {% if not is_authenticated %}
 	        <li><a data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();" href="javascript:;">Sign Up</a></li>
 	        {% else %}
