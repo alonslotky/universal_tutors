@@ -16,11 +16,11 @@ def production():
     """
     env.settings = 'production'
     env.user = 'rawjam'
-    env.hosts = ['184.107.250.82']
+    env.hosts = ['50.112.59.162']
     env.path = '/home/rawjam/sites/%(project_name)s' % env
     env.env_path = '%(path)s/env' % env    
     env.repo_path = '%(path)s/repository' % env
-    env.site_packages_path = '%(env_path)s/lib/python2.6/site-packages' % env    
+    env.site_packages_path = '%(env_path)s/lib/python2.7/site-packages' % env    
 
 def staging():
     """
