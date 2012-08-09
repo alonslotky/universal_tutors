@@ -21,6 +21,7 @@ def production():
     env.env_path = '%(path)s/env' % env    
     env.repo_path = '%(path)s/repository' % env
     env.site_packages_path = '%(env_path)s/lib/python2.7/site-packages' % env    
+    env.python = 'python2.7'
 
 def staging():
     """
