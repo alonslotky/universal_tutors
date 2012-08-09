@@ -7,9 +7,10 @@ TEMPLATE_DEBUG = DEBUG
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'universal_tutors',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': 'universaltutors',
+        'USER': 'universaltutors',
+        'PASSWORD': 'uT18@GhAS#11',
+        'HOST': 'localhost',
     }
 }
 
@@ -19,8 +20,8 @@ ACCOUNT_ACTIVATION_ADMINS = ['ben@rawjam.co.uk']
 CACHE_BACKEND = 'johnny.backends.memcached://127.0.0.1:11211'
 
 # Project settings and active names
-PROJECT_SITE_DOMAIN = 'universal_tutors.com'
-PROJECT_INFO_EMAIL_ADDRESS = 'info@universal_tutors.com'
+PROJECT_SITE_DOMAIN = 'universaltutors.com'
+PROJECT_INFO_EMAIL_ADDRESS = 'info@universaltutors.com'
 
 # If you want to use Django Debug Toolbar, you need to list your IP address here
 INTERNAL_IPS = ('0.0.0.0')
