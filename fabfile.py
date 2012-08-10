@@ -16,7 +16,7 @@ def production():
     """
     env.settings = 'production'
     env.user = 'rawjam'
-    env.hosts = ['50.112.59.162']
+    env.hosts = ['ec2-50-112-59-162.us-west-2.compute.amazonaws.com']
     env.path = '/home/rawjam/sites/%(project_name)s' % env
     env.env_path = '%(path)s/env' % env    
     env.repo_path = '%(path)s/repository' % env
