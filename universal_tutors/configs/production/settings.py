@@ -7,9 +7,10 @@ TEMPLATE_DEBUG = DEBUG
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'universal_tutors',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'NAME': 'universaltutors',
+        'USER': 'universaltutors',
+        'PASSWORD': 'uT18@GhAS#11',
+        'HOST': 'localhost',
     }
 }
 
@@ -19,8 +20,8 @@ ACCOUNT_ACTIVATION_ADMINS = ['ben@rawjam.co.uk']
 CACHE_BACKEND = 'johnny.backends.memcached://127.0.0.1:11211'
 
 # Project settings and active names
-PROJECT_SITE_DOMAIN = 'universal_tutors.com'
-PROJECT_INFO_EMAIL_ADDRESS = 'info@universal_tutors.com'
+PROJECT_SITE_DOMAIN = 'universaltutors.com'
+PROJECT_INFO_EMAIL_ADDRESS = 'info@universaltutors.com'
 
 # If you want to use Django Debug Toolbar, you need to list your IP address here
 INTERNAL_IPS = ('0.0.0.0')
@@ -29,6 +30,15 @@ INTERNAL_IPS = ('0.0.0.0')
 ADMINS = ('support@rawjam.co.uk',)
 SENTRY_ADMINS = ADMINS
 MANAGERS = ('Raw Jam Support', 'support@rawjam.co.uk'),
+
+# Paypal
+PAYPAL_SENDER_EMAIL = "nick@universaltutors.com"
+PAYPAL_RECEIVER_EMAIL = "nick@universaltutors.com"
+PAYPAL_API_APPLICATION_ID = "APP-84A464572K648181W"
+PAYPAL_API_USERNAME = "nick_api1.universaltutors.com"
+PAYPAL_API_PASSWORD = "N86TYAFKUS34AU4B"
+PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7bLYNJ-VWMgxPgU.mcP.bGCu5cR"
+PAYPAL_TEST = False
 
 # logging
 import logging.config
