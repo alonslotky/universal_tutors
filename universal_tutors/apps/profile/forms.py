@@ -400,7 +400,7 @@ class TutorSignupForm(SignupForm):
                 'tutor': user,
                 'profile': profile,
                 'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
-            }, [settings.PROJECT_INFO_EMAIL_ADDRESS])
+            }, [settings.SUPPORT_EMAIL])
         except EmailTemplate.DoesNotExist:
             pass
         
@@ -571,7 +571,7 @@ class TutorSocialSignupForm(GenericSocialSignupForm):
                 'tutor': user,
                 'profile': profile,
                 'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
-            }, [settings.PROJECT_INFO_EMAIL_ADDRESS])
+            }, [settings.SUPPORT_EMAIL])
         except EmailTemplate.DoesNotExist:
             pass
 
