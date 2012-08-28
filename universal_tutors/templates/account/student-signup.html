@@ -330,6 +330,9 @@
 		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
+	
+	$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
+	$('#id_timezone').load('{% url get_timezones %}'+ $('#id_country').val() +'/');
 
 	$('#id_referral').change(function(){
 		if( $(this).val() == '20' ) {

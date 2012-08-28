@@ -418,6 +418,9 @@
 		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
+	
+	$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
+	$('#id_timezone').load('{% url get_timezones %}'+ $('#id_country').val() +'/');
 
 	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
   		$(".four.columns.photo").hide();

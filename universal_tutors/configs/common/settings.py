@@ -34,7 +34,7 @@ USE_L10N = True
 USE_TZ = False
 
 # Media
-STATIC_ROOT = os.path.join(SITE_ROOT, 'apps/common/static')
+STATIC_ROOT = os.path.join(SITE_ROOT, 'static')
 STATIC_URL = "/static/"
 ADMIN_MEDIA_PREFIX = "/static/grappelli/"
 
