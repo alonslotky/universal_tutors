@@ -1,1 +1,1 @@
-from helpers import pay
+from helpers import mass_payment, adaptive_payment
