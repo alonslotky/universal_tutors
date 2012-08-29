@@ -6,19 +6,36 @@ from django.conf import settings
 
 from apps.core.models import Currency
 from apps.profile.models import Tutor, WithdrawItem, Message
-from paypal2.standart.ap import pay
+from paypal.standard.ap import adaptive_payment
 
-def mass_payments():
+try:
+    from collections import OrderedDict
+except:
+    from ordereddict import OrderedDict
+
+
+def mass_payments(single_tutor = None):
     notify_url = 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')),
+    
     for currency in Currency.objects.all():
         credit_value = currency.credit_value()
-        tutors = Tutor.objects.select_related().filter(
-                    profile__currency = currency, 
-                    profile__income__gt = 0, 
-                    profile__paypal_email__isnull=False,
-                ).exclude(profile__paypal_email = '')
+        
+        if single_tutor:
+            tutors = Tutor.objects.select_related().filter(
+                        id = single_tutor.id,
+                        profile__currency = currency, 
+                        profile__income__gt = 0, 
+                        profile__paypal_email__isnull=False,
+                    ).exclude(profile__paypal_email = '')
+        else:
+            tutors = Tutor.objects.select_related().filter(
+                        profile__currency = currency, 
+                        profile__income__gt = 0, 
+                        profile__paypal_email__isnull=False,
+                    ).exclude(profile__paypal_email = '')
         
         receivers = []
+        
         for user in tutors:
             profile = user.profile
             credits = profile.income
@@ -34,17 +51,27 @@ def mass_payments():
             withdraw.save()
         
             receivers.append({
-                'email': email, 
+                'email': email,
+                'name': user.get_full_name(),
                 'amount': '%.2f' % amount,
-                'unique_id': 'wd-%s' % withdraw.id,
+                'invoiceId': 'WD-%s' % withdraw.id,
+                'customId': 'WD-%s' % withdraw.id,
             })
-        
+
         if receivers:
-            pay({
-                'notify_url': notify_url,
+            payment = {
                 'currencyCode': currency.acronym,
-                'receivers': receivers,
-            })
+                'feesPayer': 'EACHRECEIVER' if single_tutor else 'SENDER',
+                'memo': 'Universal Tutors Payment',
+            }
+
+            for i, receiver in enumerate(receivers):
+                payment['receiverList.receiver(%s).amount' % i] = receiver['amount']
+                payment['receiverList.receiver(%s).email' % i] = receiver['email']
+                payment['receiverList.receiver(%s).name' % i] = receiver['name']
+                payment['receiverList.receiver(%s).invoiceId' % i] = receiver['invoiceId']
+    
+            adaptive_payment(payment)
 
 
 def check_crb(user_thread=True):

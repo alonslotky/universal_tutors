@@ -27,7 +27,6 @@ django-model-utils==1.1.0
 django-mptt==0.4.2
 -e git://github.com/rawjam/django-pagination.git@0d767e5050104fe03db1fcc46c86bf50dbf1a4a1#egg=django_pagination-dev
 django-paging==0.2.4
-django-paypal==0.1.2
 django-reversion==1.6.0
 django-sekizai==0.5
 django-sentry==1.13.5

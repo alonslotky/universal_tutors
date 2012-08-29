@@ -39,6 +39,7 @@ PAYPAL_API_USERNAME = "nick_api1.universaltutors.com"
 PAYPAL_API_PASSWORD = "N86TYAFKUS34AU4B"
 PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7bLYNJ-VWMgxPgU.mcP.bGCu5cR"
 PAYPAL_TEST = False
+PAYPAL_IMAGE = 'https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif'
 
 # logging
 import logging.config
