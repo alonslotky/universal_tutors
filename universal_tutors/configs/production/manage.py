@@ -13,6 +13,11 @@ python_path = os.path.join(
 apps_path = os.path.join(
     os.path.realpath(os.path.dirname(__file__)), '../../'
 )
+# paypal
+paypal_path = os.path.join(
+    os.path.realpath(os.path.dirname(__file__)), '../../../paypal'
+)
+
 # we have have a local externals directory
 # which saves you having to install a load of
 # python modules locally and get into a versioning
@@ -24,6 +29,7 @@ apps_path = os.path.join(
 # we add them first to avoid any collisions
 sys.path.insert(0, python_path)
 sys.path.insert(0, apps_path)
+sys.path.insert(0, paypal_path)
 #sys.path.insert(0, ext_path)
 
 from django.core.management import execute_manager

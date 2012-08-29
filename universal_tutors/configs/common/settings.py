@@ -150,7 +150,6 @@ INSTALLED_APPS = (
     'apps.classes',
     
     'paypal.standard.ipn',
-    'paypal2.standart.ap',
     
     'mailchimp',
     

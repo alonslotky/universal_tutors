@@ -15,7 +15,7 @@ from django.template import Template, Context
 
 import re, unicodedata, random, string, datetime, os, pytz, threading, urlparse
 
-from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged
+from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged, adaptivepayment_was_successful
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
@@ -1498,9 +1498,6 @@ def topup_successful(sender, **kwargs):
                 paypal_error(type='topup_hacked')
         except TopUpItem.DoesNotExist:
             paypal_error()
-
-    elif ipn_obj.txn_type.lower() == 'masspay':
-        withdraw_complete(sender, **kwargs)
     
 def topup_flagged(sender, **kwargs):
     ipn_obj = sender
@@ -1514,10 +1511,6 @@ def topup_flagged(sender, **kwargs):
                 paypal_error(type='topup_hacked')
         except TopUpItem.DoesNotExist:
             paypal_error()
-            
-    elif ipn_obj.txn_type.lower() == 'masspay':
-        withdraw_complete(sender, **kwargs)
-
 
 def withdraw_complete(sender, **kwargs):
     ipnobj = sender
@@ -1532,19 +1525,13 @@ def withdraw_complete(sender, **kwargs):
 
         try:
             withdraw = WithdrawItem.objects.get(id = unique_id)
-            if withdraw.value == float(amount):
-                if status=='complete' or status=='pending':
-                    if status == 'complete':
-                        withdraw.complete()
-                    else:
-                        withdraw.pending()
+            if not amount and not status: break
+            if status=='completed' or status=='pending':
+                if status == 'completed':
+                    withdraw.complete()
                 else:
-                    withdraw.error()
-                    paypal_error(type='withdraw_error', email=email)
-            else:
-                withdraw.set_as_hacked()
-                paypal_error(type='withdraw_hacked', email=email)
-                             
+                    withdraw.pending()
+            
         except WithdrawItem.DoesNotExist:
             paypal_error(type='withdraw_invalid', email=email)
 
@@ -1581,4 +1568,4 @@ def paypal_error(type='topup_invalid', email=None):
 
 payment_was_successful.connect(topup_successful, dispatch_uid='topup_successful')
 payment_was_flagged.connect(topup_flagged, dispatch_uid='topup_flagged')
-
+adaptivepayment_was_successful.connect(withdraw_complete, dispatch_uid='withdraw_complete')

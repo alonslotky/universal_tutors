@@ -6,7 +6,7 @@ from django.conf import settings
 
 from apps.core.models import Currency
 from apps.profile.models import Tutor, WithdrawItem, Message
-from paypal2.standart.ap import adaptive_payment
+from paypal.standard.ap import adaptive_payment
 
 try:
     from collections import OrderedDict
@@ -16,6 +16,7 @@ except:
 
 def mass_payments(single_tutor = None):
     notify_url = 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')),
+    
     for currency in Currency.objects.all():
         credit_value = currency.credit_value()
         
@@ -56,7 +57,7 @@ def mass_payments(single_tutor = None):
                 'invoiceId': 'WD-%s' % withdraw.id,
                 'customId': 'WD-%s' % withdraw.id,
             })
-        
+
         if receivers:
             payment = {
                 'currencyCode': currency.acronym,
