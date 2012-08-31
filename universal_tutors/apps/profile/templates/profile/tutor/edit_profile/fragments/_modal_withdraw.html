@@ -22,16 +22,24 @@
 			<strong>{{available_withdraw.credits}} credits</strong>
 		  </div>	  
 		</div>
+	  	{% with user_profile.currency as currency %}
 		<div class="row">
 		  <div class="eight columns">        
 		    <label>Value</label>
 		  </div>
 		  <div class="four columns">
-		  	{% with user_profile.currency as currency %}
 			<strong>{{currency.symbol}} {{available_withdraw.income|in_currency:currency|floatformat:2}}</strong>
-			{% endwith %}
 		  </div>	  
 		</div>
+		<div class="row">
+		  <div class="eight columns">        
+		    <label>Fee</label>
+		  </div>
+		  <div class="four columns">
+			<strong>2.9% + {{currency.symbol}}{% from_currency_to_currency 'USD' currency.acronym 0.3 %}</strong>
+		  </div>	  
+		</div>
+		{% endwith %}
 		<div class="row">&nbsp;</div>
 	  	<div class="row">
 		    <input type="submit" class="small button" value="Withdraw">
