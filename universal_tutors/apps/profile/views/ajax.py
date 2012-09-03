@@ -607,6 +607,15 @@ def book_class(request, tutor_id):
 
     return http.HttpResponse("Done.")
 
+
+@login_required
+def set_class_language(request, language):
+    profile = request.user.profile
+    profile.class_language = language
+    profile.save()
+    
+    return http.HttpResponse('Done.')
+
 @csrf_exempt
 def send_parent_request(request):
     if request.POST:

@@ -11,15 +11,18 @@
 {% endblock %}
 
 {% block extra_js %}
+<script type="text/javascript" src="http://media.muchosmedia.com/scribblar/scripts/includes.js"></script>
 <script type="text/javascript">
 	$(window).ready(function(){
 		var targetID = "scribblar";
 		
 		var flashvars = {
-			'userid': "{{user.profile.scribblar_id}}",
+			{% with user.profile as profile %}
+			'userid': "{{profile.scribblar_id}}",
 			'roomid': "{{class.scribblar_id}}",
-			'preferredLocales': "en_US",
+			'preferredLocales': "{{profile.class_language}}",
 			'username': "{{user.get_full_name}}"
+			{% endwith %}
 		};
 	
 		var params = {
@@ -107,6 +110,13 @@
 	
 		checkStatus();
 		checkFlash();
+		
+		$('#id_class_language').change(function(){
+			var language = $(this).val();
+			thisMovie('scribblar').setLocale(language);
+			$.get('{% url set_class_language %}'+ language +'/');
+		});
+		
 	});
 
 
@@ -195,9 +205,19 @@
 	  	{% endif %}
 
 		<div class="class-info">
-			<div class="subject"><strong>Subject: </strong>{{class}}</div>
-			{% if user != tutor %}<div class="tutor"><strong>Tutor: </strong>{{tutor.get_full_name}}</div>{% endif %}
-			{% if user != student %}<div class="tutor"><strong>Student: </strong>{{student.get_full_name}}</div>{% endif %}
+			<form class="nice">
+				<select id="id_class_language">
+					{% for language in CLASS_LANGUAGES %}
+					<option value="{{language.1}}" {% if language.1 == profile.class_language %}selected="selected"{% endif %}>{{language.0}}</option>
+					{% endfor %}
+				</select>
+			</form>
+		</div>
+
+		<div class="class-info">
+			<div class="subject" title="{{class}}"><strong>Subject: </strong>{{class|truncatechars:20}}</div>
+			{% if user != tutor %}<div class="tutor" title="{{tutor.get_full_name}}"><strong>Tutor: </strong>{{tutor.get_full_name|truncatechars:20}}</div>{% endif %}
+			{% if user != student %}<div class="tutor" title="{{student.get_full_name}}"><strong>Student: </strong>{{student.get_full_name|truncatechars:20}}</div>{% endif %}
 		</div>
 	  </header>
 	  

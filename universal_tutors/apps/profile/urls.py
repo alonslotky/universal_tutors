@@ -131,6 +131,9 @@ urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)activate_discount/$', 'activate_discount', {}, name="activate_discount"),
     url(r'^(?i)preview_profile_image/$', 'preview_profile_image', {}, name="preview_profile_image"),
     url(r'^(?i)preview_profile_image_delete/$', 'preview_profile_image_delete', {}, name="preview_profile_image_delete"),
+
+    url(r'^(?i)set_class_language/$', 'set_class_language', {}, name="set_class_language"),
+    url(r'^(?i)set_class_language/(?P<language>[\w\_]+)/$', 'set_class_language', {}, name="set_class_language"),
 )
 
 urlpatterns += patterns('apps.profile.views.topup',
