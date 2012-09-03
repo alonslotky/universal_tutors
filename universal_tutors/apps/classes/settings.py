@@ -33,3 +33,26 @@ COMMISSION_WITHDRAW_PERCENTAGE = 0 # represents 3.4%
 # REFERRAL COMMISSION
 REFERRAL_CREDITS = 5
 
+
+CLASS_LANGUAGES = (
+    ('English', 'en_US'),
+    ('Chinese', 'zh_CN'),
+    ('Czech', 'cs_CZ'),
+    ('Dutch', 'nl_NL'),
+    ('Espanol', 'es_ES'),
+    ('Espanol (Argentinian)', 'es_AR'),
+    ('Filippino', 'en_PH'),
+    ('Francais', 'fr_FR'),
+    ('Deutsch', 'de_DE'),
+    ('Greek', 'el_GR'),
+    ('Hindi', 'hi_IN'),
+    ('Italiano', 'it_IT'),
+    ('Korean', 'ko_KR'),
+    ('Norwegian', 'nb_NO'),
+    ('Portuguese', 'pt_PT'),
+    ('Portuguese (Brazil)', 'pt_BR'),
+    ('Russian', 'ru_RU'),
+    ('Serbian', 'sr_SP_Latn'),
+    ('Slovenian', 'sl_SI'),
+    ('Turkish', 'tr_TR'),
+)

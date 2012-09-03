@@ -185,6 +185,7 @@ class UserProfile(BaseModel):
     gender = models.PositiveSmallIntegerField(verbose_name=_('Gender'), choices=GENDER_TYPES.get_choices(), default=GENDER_TYPES.MALE)
     timezone = models.CharField(verbose_name=_('Phone Timezone'), max_length=50, default=pytz.tz)
     favorite = models.ManyToManyField(User, verbose_name=_('Favorite'), related_name='favorites', null=True, blank=True)
+    class_language = models.CharField(verbose_name=_('Class language'), max_length=10, default='en_US')
     # interests = models.ManyToManyField(ClassSubject, related_name='students', null=True, blank=True)
     
     video = models.CharField(verbose_name=_('Video'), max_length=200, null=True, blank=True)
