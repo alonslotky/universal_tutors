@@ -18,7 +18,7 @@
 		var flashvars = {
 			'userid': "{{user.profile.scribblar_id}}",
 			'roomid': "{{user.profile.get_test_class_id}}",
-			'preferredLocales': "en_US",
+			'preferredLocales': "{{profile.class_language}}",
 			'username': "{{user.get_full_name}}"
 		};
 	
