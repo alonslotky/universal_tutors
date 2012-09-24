@@ -210,7 +210,7 @@ DEFAULT_FROM_EMAIL = 'Universal Tutors <info@universaltutors.com>'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'Universal Tutors <info@universaltutors.com>'
+EMAIL_HOST_USER = 'info@universaltutors.com'
 EMAIL_HOST_PASSWORD = 'ntsa2223'
 
 EMAIL_MANAGER = ['ben@rawjam.co.uk',]
