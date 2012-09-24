@@ -8,7 +8,7 @@
 	var open_general_video = function() {
 		var width = $('div#modal-video-frame-container').width();
 		var height = parseInt(width * 9 / 16.0);
-		$("div#modal-video-frame-container").html('<iframe id="video-frame" width="'+ width +'" height="'+ height +'" src="http://www.youtube.com/embed/{{ video.get_video_id }}" frameborder="0" allowfullscreen></iframe>');
+		$("div#modal-video-frame-container").html('<iframe id="video-frame" width="'+ width +'" height="'+ height +'" src="http://www.youtube.com/embed/{{ video.get_video_id }}?[s]rel=0[/s]" frameborder="0" allowfullscreen></iframe>');
 	}
 	$("#modal-video").bind('reveal:close', 	function(){
 		setTimeout(function(){
