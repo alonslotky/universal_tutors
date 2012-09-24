@@ -172,8 +172,8 @@ INSTALLED_APPS = (
 # MISC PROJECT SETTINGS
 PROJECT_NAME = "Universal Tutors"
 PROJECT_SITE_DOMAIN = '127.0.0.1:8000'
-PROJECT_INFO_EMAIL_ADDRESS = 'info@universaltutors.com'
-CONTACT_EMAIL = "info@universaltutors.com"
+PROJECT_INFO_EMAIL_ADDRESS = 'Universal Tutors <info@universaltutors.com>'
+CONTACT_EMAIL = "Universal Tutors <info@universaltutors.com>"
 SUPPORT_EMAIL = "support@universaltutors.com"
 
 GOOGLE_ANALYTICS_CODE = None
@@ -206,11 +206,11 @@ CACHE_COUNT_TIMEOUT = 60
 JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_universal_tutors'
 
 # EMAIL SETTINGS
-DEFAULT_FROM_EMAIL = 'info@universaltutors.com'
+DEFAULT_FROM_EMAIL = 'Universal Tutors <info@universaltutors.com>'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'info@universaltutors.com'
+EMAIL_HOST_USER = 'Universal Tutors <info@universaltutors.com>'
 EMAIL_HOST_PASSWORD = 'ntsa2223'
 
 EMAIL_MANAGER = ['ben@rawjam.co.uk',]
