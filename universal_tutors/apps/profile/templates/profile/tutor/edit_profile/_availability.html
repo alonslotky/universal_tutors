@@ -5,7 +5,10 @@
 
 	{% with profile.get_default_week as default_week %}
 	<div class="hide-on-phones">
-		<p><a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a></p>
+		<p>
+			<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a><br/>
+			<span>(or click and drag cursor in calendar below)</span>
+		</p>
 		<div id="new-schedule-container" class="new-schedule-calendar">
 			<div class="new-schedule-calendar-header">
 				<div class="new-schedule-calendar-time first">&nbsp;</div>
