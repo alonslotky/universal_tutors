@@ -89,4 +89,5 @@
       
       {% include "profile/tutor/edit_profile/fragments/_modal_withdraw.html" %}
       {% include "profile/tutor/edit_profile/fragments/_modal_add_availability.html" %}
+      {% if is_new %}{% include "profile/tutor/edit_profile/fragments/_modal_next_steps.html" %}{% endif %}
 {% endblock %}

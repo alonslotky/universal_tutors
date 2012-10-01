@@ -215,7 +215,7 @@ class UserProfile(BaseModel):
     activated = models.BooleanField(default=False)
     activation_date = models.DateTimeField(null=True, blank=True, default=None)
     featured = models.BooleanField(default=False)
-
+    is_new = models.BooleanField(default=True)
 
     income_without_commission = models.FloatField(default=0)
 
