@@ -143,6 +143,13 @@ def edit_tutor_profile(request):
         if success:
             return http.HttpResponseRedirect(reverse('edit_profile'))
 
+
+    is_new = False
+    if profile.is_new:
+        is_new = True
+        profile.is_new = False
+        profile.save()
+
     return {
         'MINIMUM_CREDITS_PER_HOUR': MINIMUM_CREDITS_PER_HOUR,
         'profile':profile,
@@ -152,6 +159,7 @@ def edit_tutor_profile(request):
         'timezones': pytz.common_timezones,
         'date': datetime.date.today(),
         'class_subjects': ClassSubject.objects.all(),
+        'is_new': is_new,
     }
 
 
