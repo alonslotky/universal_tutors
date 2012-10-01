@@ -1,0 +1,22 @@
+{% load classes_tags %}
+
+<div id="modal-next-steps" class="reveal-modal message review">
+	<h4>Congratulations you are now signed up to Universal Tutors</h4>
+    <div id="modal-next-steps-container">
+		<p><br/>	
+			You now just need to do two things for students to be able to start finding you:<br/>
+			&rsaquo; Add the subjects that you want to teach<br/>
+			&rsaquo; Add your availability to our calendar so students know when to book a session<br/><br/>
+			Then it'll be time to start tutoring!
+		</p>
+		<div style="padding-right: 13px;">
+		  <a onclick="$('#modal-next-steps-close').click();" class="button" href="javascript:;"><span class="icon thumb-up">Close</span></a>
+		</div>					
+    </div>
+  	<a id="modal-next-steps-close" class="close-reveal-modal">&#215;</a>
+</div>
+<script>
+	$(window).ready(function(){
+		$('#modal-next-steps').reveal();
+	});
+</script>
