@@ -37,4 +37,3 @@ def pay(options):
     
     http = httplib2.Http()
     response, content = http.request(url, 'POST', urlencode(data))
-    

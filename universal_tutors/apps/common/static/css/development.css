@@ -130,3 +130,11 @@ header .class-info strong { color: #fff; }
 .help-on-title { display: inline; line-height: inherit; text-align: center; }
 
 #id_profile_image_preview input[type="file"] { max-width: none !important; }
+
+.beta-tag {
+	position: absolute;
+	top: 42px;
+	left: 136px;
+	color: #7E7E7E;
+	font-size: 13px;
+}
