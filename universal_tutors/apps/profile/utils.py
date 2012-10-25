@@ -35,6 +35,7 @@ def mass_payments(single_tutor = None):
                     ).exclude(profile__paypal_email = '')
         
         receivers = []
+        withdraws = []
         
         for user in tutors:
             profile = user.profile
@@ -49,6 +50,7 @@ def mass_payments(single_tutor = None):
                 currency = currency,
             )
             withdraw.save()
+            withdraws.append(withdraw)
         
             receivers.append({
                 'email': email,
@@ -71,8 +73,10 @@ def mass_payments(single_tutor = None):
                 payment['receiverList.receiver(%s).name' % i] = receiver['name']
                 payment['receiverList.receiver(%s).invoiceId' % i] = receiver['invoiceId']
     
-            adaptive_payment(payment)
-
+            if not adaptive_payment(payment).get('paykey', None):
+                for withdraw in withdraws:
+                    withdraw.cancel()
+            
 
 def check_crb(user_thread=True):
     for tutor in Tutor.objects.select_related().filter(profile__crb_expiry_date__isnull = False):
