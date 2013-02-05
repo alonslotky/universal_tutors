@@ -39,15 +39,15 @@
               <input id="id_last_name" name="last_name" type="text" class="input-text clear" {% if form.last_name.value %}value{% else %}placeholder{% endif %}="{{form.last_name.value}}">
             </div>
           </div>
-          
+
           {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
           <div class="row space">
           	<div class="twelve columns">
 	          <label>Description <span>(max 300 characters)</span></label>
-	          <textarea id="id_about" name="about" class="user stretch">{{form.about.value}}</textarea>          		
+	          <textarea id="id_about" name="about" class="user stretch">{{form.about.value}}</textarea>
           	</div>
           </div>
-          
+
           {% if form.video.errors %}<div class="formError">{{ form.video.errors }}</div>{% endif %}
           <div class="row user space">
             <div class="three columns phone-one">
@@ -86,9 +86,9 @@
                   <select id="id_dob_year" class="stretch"></select>
                 </div>
               </div>
-            </div>  
+            </div>
           </div>
-          
+
          {% if form.gender.errors %}<div class="formError">{{ form.gender.errors }}</div>{% endif %}
           <div class="row user space">
             <div class="three columns phone-one">
@@ -100,9 +100,9 @@
 	                <option value="{{value}}" {% if profile.gender == value %}selected="selected"{% endif %}>{{name}}</option>
               	{% endfor %}
               </select>
-            </div>  
+            </div>
           </div>
-          
+
           {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
           <div class="row user">
             <div class="three columns phone-one">
@@ -110,7 +110,7 @@
             </div>
             <div class="nine columns phone-three">
               {{form.country}}
-            </div>  
+            </div>
           </div>
 
           {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
@@ -124,9 +124,9 @@
 	                <option value="{{tz}}" {% if profile.timezone == tz %}selected="selected"{% endif %}>{{tz}}</option>
               	{% endfor %}
               </select>
-            </div>  
+            </div>
           </div>
-          
+
           {% if form.crb.errors %}<div class="formError">{{ form.crb.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns phone-one">
@@ -135,9 +135,9 @@
             <div class="nine columns phone-three checkbox-container">
               <div class="row">{{ form.crb }}</div>
               <div class="row">To apply for a CRB <a href="{% url crb_form %}" target="_blank">click here</a>.</div>
-            </div>  
+            </div>
           </div>
-          
+
           {% if form.crb_file.errors %}<div class="formError">{{ form.crb_file.errors }}</div>{% endif %}
           <div class="row date_of_birth">
             <div class="three columns phone-one">
@@ -145,19 +145,19 @@
             </div>
             <div class="nine columns phone-three">
               {{ form.crb_file }}
-            </div>  
+            </div>
           </div>
-          
+
       </div>
     </div>
-    
+
   </li>
 
 <script type="text/javascript">
 	var today = new Date();
 	var today_year = today.getFullYear();
-	
-	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'September', 'August', 'October', 'November', 'December'];
 
 	for(i=1; i<=31; i++)
 		$('#id_dob_day').append('<option value="'+ i +'">'+ i +'</option>');
@@ -167,15 +167,15 @@
 
 	for(i=today_year; i>today_year-100; i--)
 		$('#id_dob_year').append('<option value="'+ i +'">'+ i +'</option>');
-		
+
 	$('#id_dob_day').val({{profile.date_of_birth.day}});
 	$('#id_dob_month').val({{profile.date_of_birth.month}});
 	$('#id_dob_year').val({{profile.date_of_birth.year}});
-	
+
 	$('#profile-form').submit(function(){
 		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
 	});
-	
+
 	$('#id_profile_image').live('change', function(){
         var input = $(this)[0]
         if (input.files && input.files[0]) {
@@ -186,18 +186,18 @@
             }
 
             reader.readAsDataURL(input.files[0]);
-        }		
+        }
 	});
 
 	$('#id_country').live("change", function(){
 		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
-	
+
 	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
   		$("input[name=profile_image]").parent().hide();
   	}
-	
+
 </script>
 <script type="text/javascript">
 	$(window).ready(function(){
@@ -219,7 +219,7 @@
 				$('#remove-image').removeClass('hidden');
 	       }
         });
-        
+
   	}
   	window.onload = createUploader;
 

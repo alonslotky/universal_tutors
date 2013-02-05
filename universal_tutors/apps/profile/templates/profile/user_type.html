@@ -33,7 +33,7 @@
 				<div class="row">
 					<div class="three columns">
 		  				<div class="button stretch"><input type="submit" class="icon rocket stretch" value="Sign Up"></div>
-					</div>	
+					</div>
 				</div>
 			</div>
 			<div id="model-signup-under16-container" class="hidden formError">
@@ -47,12 +47,12 @@
 		var today_year = today.getFullYear();
 		var signup_dob = null;
 		var signup_type = null;
-		
-		var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
-	
+
+		var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
 		for(i=1; i<=31; i++)
 			$('#signup_day').append('<option value="'+ i +'">'+ i +'</option>');
-	
+
 		for(i=0; i<months.length; i++)
 			$('#signup_month').append('<option value="'+ (i+1) +'">'+ months[i] +'</option>');
 
@@ -63,7 +63,7 @@
 		var check_over16 = function(year, month, day){
 			var age_date = new Date(year+16, month, day);
 			var today = new Date();
-			
+
 			if(today >= age_date) {
 				$('#model-signup-type-container').removeClass('hidden');
 				$('#model-signup-under16-container').addClass('hidden');
@@ -78,7 +78,7 @@
 		$('#modal-signup-form').submit(function(e){
 			e.preventDefault();
 			var is_valid = true;
-			
+
 			var day = parseInt($('#signup_day').val());
 			var month = parseInt($('#signup_month').val());
 			var year = parseInt($('#signup_year').val());
@@ -87,24 +87,24 @@
 
 			signup_type = parseInt($('#signup_user_type').val());
 			signup_dob = year +'-'+ month +'-'+ day;
-			
+
 			if(signup_type) {
 				$('#signup-user-type-errors').addClass('hidden');
 			} else {
 				$('#signup-user-type-errors').removeClass('hidden');
 				is_valid = false;
 			}
-			
+
 			if (str_date == signup_dob) {
 				$('#signup-dob-errors').addClass('hidden');
 				if(!check_over16(year, month-1, day)) {
-					is_valid = false;						
+					is_valid = false;
 				}
 			} else {
 				$('#signup-dob-errors').removeClass('hidden');
 				is_valid = false;
-			}			
-			
+			}
+
 			if(is_valid) {
 				$('#modal-signup-form-container').fadeOut(function(){
 					$('#modal-signup-form-loading').fadeIn(function(){
@@ -122,7 +122,7 @@
 				});
 			}
 		});
-		
+
 		$('.signup_dob').change(function(e){
 			var day = parseInt($('#signup_day').val());
 			var month = parseInt($('#signup_month').val());
@@ -131,7 +131,7 @@
 			var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
 			var input_date = year +'-'+ month +'-'+ day;
 
-			if(str_date == input_date) {			
+			if(str_date == input_date) {
 				check_over16(year, month-1, day);
 			}
 		});
