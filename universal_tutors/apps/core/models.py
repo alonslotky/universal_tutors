@@ -61,6 +61,7 @@ class Video(models.Model):
         super(self.__class__, self).save(*args, **kwargs)
 
     def get_video_id(self):
+	video_id = None
         try:
             parsed = urlparse.urlparse(self.url)
             video_id = urlparse.parse_qs(parsed.query)['v'][0]

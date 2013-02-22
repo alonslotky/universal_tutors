@@ -394,13 +394,13 @@ class TutorSignupForm(SignupForm):
         profile.save()
         
         try:
-            email = EmailTemplate.objects.get(type=UserProfile.NOTIFICATIONS_TYPES.NEW_TUTOR)
+            email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
             email.send_email({
                 'user': user,
                 'tutor': user,
                 'profile': profile,
                 'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
-            }, [settings.PROJECT_INFO_EMAIL_ADDRESS])
+            }, [settings.SUPPORT_EMAIL])
         except EmailTemplate.DoesNotExist:
             pass
         
@@ -563,6 +563,17 @@ class TutorSocialSignupForm(GenericSocialSignupForm):
         profile.webcam = self.cleaned_data.get('webcam', False)
         profile.type = profile.TYPES.TUTOR
         profile.save()
+
+        try:
+            email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
+            email.send_email({
+                'user': user,
+                'tutor': user,
+                'profile': profile,
+                'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+            }, [settings.SUPPORT_EMAIL])
+        except EmailTemplate.DoesNotExist:
+            pass
 
         return user
 

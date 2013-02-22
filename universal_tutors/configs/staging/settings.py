@@ -1,6 +1,6 @@
 from universal_tutors.configs.common.settings import *
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # Database
@@ -32,6 +32,18 @@ MANAGERS = (
 
 # GOOGLE
 GOOGLE_ANALYTICS_CODE = None
+
+
+# Paypal
+PAYPAL_SENDER_EMAIL = "nick@universaltutors.com"
+PAYPAL_RECEIVER_EMAIL = "nick@universaltutors.com"
+PAYPAL_API_APPLICATION_ID = "APP-9G278759L8342450A"
+PAYPAL_API_USERNAME = "nick_api1.universaltutors.com"
+PAYPAL_API_PASSWORD = "N86TYAFKUS34AU4B"
+PAYPAL_API_SIGNATURE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7bLYNJ-VWMgxPgU.mcP.bGCu5cR"
+PAYPAL_TEST = False
+PAYPAL_IMAGE = 'https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif'
+
 
 
 # logging
