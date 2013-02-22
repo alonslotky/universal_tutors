@@ -108,7 +108,7 @@ def search(request):
     
     if tutors and (day>=0 or time>=0):
         date = datetime.datetime.combine(first_day_of_week(datetime.datetime.now()).date(), datetime.time(time if time>0 else 0, 0))
-        gtz = user.profile.timezone if user.is_authenticated else pytz.tz
+        gtz = user.profile.timezone if user.is_authenticated() else pytz.tz
         filtered_tutors = []
         
         for tutor in tutors:
