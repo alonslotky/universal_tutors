@@ -1,3 +1,0 @@
-[submodule "paypal"]
-	path = paypal
-	url = git://github.com/rawjam/django-paypal.git
