@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
+from apps.common.utils.date_utils import convert_datetime, first_day_of_week
 from apps.profile.models import *
 from apps.classes.models import *
 from apps.core.models import Video, Currency
@@ -15,7 +16,7 @@ from apps.core.utils import *
 from apps.core.views.xls import *
 
 from ordereddict import OrderedDict
-import datetime, random
+import datetime, random, pytz, operator
 
 
 @main_render(template='core/home.html')
@@ -105,13 +106,25 @@ def search(request):
     if price_to:
         tutors = tutors.filter(Q(subjects__credits__lte=price_to))
     
-    if day >= 0 and time >=0:
-        tutors = tutors.filter(week_availability__weekday=day, week_availability__begin__lte=datetime.time(time,0), week_availability__end__gte=datetime.time(time,0))
-    else:
-        if day >= 0:
-            tutors = tutors.filter(week_availability__weekday=day)    
-        if time >= 0:
-            tutors = tutors.filter(week_availability__begin=datetime.time(time,0))
+    if tutors and (day>=0 or time>=0):
+        date = datetime.datetime.combine(first_day_of_week(datetime.datetime.now()).date(), datetime.time(time if time>0 else 0, 0))
+        gtz = user.profile.timezone if user.is_authenticated else pytz.tz
+        filtered_tutors = []
+        
+        for tutor in tutors:
+            tutor_date = convert_datetime(date, gtz, tutor.profile.timezone)
+            tutor_time = tutor_date.time()
+            print tutor_time
+            if day>=0 and time>=0:
+                filtered_tutors.append(Q(id=tutor.id, week_availability__weekday=tutor_date.weekday(), week_availability__begin__lte=tutor_time, week_availability__end__gt=tutor_time))
+            elif day>=0:
+                filtered_tutors.append(Q(id=tutor.id, week_availability__weekday=tutor_date.weekday()))
+            else:
+                filtered_tutors.append(Q(id=tutor.id, week_availability__begin__lte=tutor_time, week_availability__end__gt=tutor_time))                
+        
+        print filtered_tutors, tutors.count()
+        tutors = tutors.filter(reduce(operator.or_, filtered_tutors))
+        print tutors.count()
 
     if sort == 'price':
         tutors = tutors.annotate(price = Max('subjects__credits')).order_by('price')
