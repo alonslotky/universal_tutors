@@ -22,6 +22,8 @@ CACHE_BACKEND = 'johnny.backends.memcached://127.0.0.1:11211'
 # Project settings and active names
 PROJECT_SITE_DOMAIN = 'universaltutors.com'
 PROJECT_INFO_EMAIL_ADDRESS = 'info@universaltutors.com'
+GOOGLE_ANALYTICS_CODE = 'UA-33011254-1'
+
 
 # If you want to use Django Debug Toolbar, you need to list your IP address here
 INTERNAL_IPS = ('0.0.0.0')

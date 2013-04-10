@@ -1,0 +1,31 @@
+{% load classes_tags %}
+
+<div id="modal-withdraw-item" class="reveal-modal message">
+	<h4>Make a manual payment</h4>
+    <div id="modal-withdraw-item-loading" class="modal-loading"></div>
+    <div id="modal-withdraw-item-container">
+    	
+    </div>
+  	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	$('#modal-withdraw-item-container').hide();
+	
+	var withdraw_item = function(url){
+		$('#modal-withdraw-item-container').fadeOut(function(){
+			$('#modal-withdraw-item-loading').fadeIn(function(){
+				$.ajax({
+					'type': 'get',
+					'url': url,
+					'success': function(response) {
+						$('#modal-withdraw-item-container').html(response);
+						$('#modal-withdraw-item-loading').fadeOut(function(){
+							$('#modal-withdraw-item-container').fadeIn();
+						});				
+					}
+				});
+			});
+		});
+	};
+</script>

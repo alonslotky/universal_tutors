@@ -233,3 +233,15 @@ class Document(models.Model):
     
     def __unicode__(self):
         return self.slug
+
+
+### WITHDRAW MONTLY ##########################################################
+class MassWithdraw(BaseModel):
+    class Meta:
+        ordering = ['-created']
+    
+    currency = models.ForeignKey(Currency, null=True, blank=True)
+    items = models.ManyToManyField('profile.WithdrawItem', null=True, blank=True)
+    
+    def __unicode__(self):
+        return '%s Mass Withdraw on ' % (self.currency, self.created)

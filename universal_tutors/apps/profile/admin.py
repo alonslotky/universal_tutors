@@ -14,6 +14,8 @@ class AdminUserAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, AdminUserAdmin)
 
+def profile_email(obj):
+    return '%s' % obj.user.email
 
 class TutorProfileAdmin(admin.ModelAdmin):
     fieldsets = (
@@ -36,7 +38,7 @@ class TutorProfileAdmin(admin.ModelAdmin):
     )
     readonly_fields = ['subjects_list', 'paypal_email', 'activation_date', 'activated']
     
-    list_display = ('__unicode__', 'title', 'activated', 'crb_expiry_date', 'featured', 'profile_image_approved', 'about_approved', 'video_approved', 'qualification_documents_approved', 'avg_rate', 'no_reviews', 'classes_given', 'min_credits', 'max_credits', 'income', 'currency',)
+    list_display = ('__unicode__', profile_email, 'title', 'activated', 'crb_expiry_date', 'featured', 'profile_image_approved', 'about_approved', 'video_approved', 'qualification_documents_approved', 'avg_rate', 'no_reviews', 'classes_given', 'min_credits', 'max_credits', 'income', 'currency',)
     list_filter = ['activated', 'crb_expiry_date', 'featured', 'currency']
     list_editable = ['crb_expiry_date', 'featured', 'profile_image_approved', 'about_approved', 'video_approved', 'qualification_documents_approved']
 admin.site.register(TutorProfile, TutorProfileAdmin)
@@ -52,7 +54,7 @@ class ParentProfileAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('__unicode__', 'country', 'date_of_birth')
+    list_display = ('__unicode__', profile_email, 'country', 'date_of_birth')
     list_filter = ['country']
     list_editable = []
 admin.site.register(ParentProfile, ParentProfileAdmin)
@@ -91,7 +93,7 @@ class StudentProfileAdmin(admin.ModelAdmin):
         }),
     )
 
-    list_display = ('__unicode__', 'type', email_addy, date_of_birth_and_age, 'gender', 'currency', 'country', 'timezone', student_interests)
+    list_display = ('__unicode__', profile_email, 'type', email_addy, date_of_birth_and_age, 'gender', 'currency', 'country', 'timezone', student_interests)
     list_filter = ['type', 'country']
     list_editable = []
     #inlines = [StudentInterestInline,]
@@ -118,15 +120,15 @@ admin.site.register(ReportedTutor, ReportAdmin)
 admin.site.register(ReportedStudent, ReportAdmin)
 
 class TopUpItemAdmin(admin.ModelAdmin):
-    list_display = ('user', 'credits', 'value', 'currency', 'status', 'created')
+    list_display = ('invoice', 'user', 'credits', 'value', 'currency', 'status', 'created')
     list_filter = ('user', 'status', 'currency')
-    search_fields = ('user', 'user__first_name', 'user__last_name')
+    search_fields = ('invoice', 'user', 'user__first_name', 'user__last_name')
 admin.site.register(TopUpItem, TopUpItemAdmin)
 
 class WithdrawItemAdmin(admin.ModelAdmin):
-    list_display = ('user', 'credits', 'value', 'currency', 'status', 'created')
+    list_display = ('invoice', 'user', 'credits', 'value', 'currency', 'status', 'created')
     list_filter = ('user', 'status', 'currency')
-    search_fields = ('user', 'user__first_name', 'user__last_name')
+    search_fields = ('invoice', 'user', 'user__first_name', 'user__last_name')
 admin.site.register(WithdrawItem, WithdrawItemAdmin)
 
 class UserProfileAdmin(admin.ModelAdmin):

@@ -17,7 +17,7 @@
   <section class="blue feature-box"><div class="inner">
     <h1>Sign Up as a Tutor</h1>
   </div></section>
-  
+
   <section>
 
     <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
@@ -27,14 +27,14 @@
           <h3>Personal Details</h3>
         </div>
       </div>
-    
+
      {% if form.password1 and form.first_name.errors %}<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>{% endif %}
      {% if form.password1 and form.last_name.errors %}<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>{% endif %}
       <div class="row">
         <div class="eight columns">
           {% if form.password1 %}
           <label>Name*</label>
-          
+
           <div class="row space">
             <div class="six columns">
               <input name="first_name" type="text" class="input-text" placeholder="First Name" value="{{form.first_name.value}}">
@@ -44,7 +44,7 @@
             </div>
           </div>
           {% endif %}
-          
+
           {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
@@ -63,12 +63,12 @@
               {{form.gender}}
             </div>
           </div>
-          
+
           <div class="row space">
             <div class="three columns">
               <label>D.O.B*</label>
             </div>
-            
+
           {% if form.date_of_birth.errors %}<div class="formError">{{ form.date_of_birth.errors }}</div>{% endif %}
             <div class="nine columns">
               <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
@@ -88,7 +88,7 @@
               </div>
             </div>
           </div>
-          
+
           {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
           <div class="row date_of_birth">
             <div class="three columns phone-one">
@@ -96,7 +96,7 @@
             </div>
             <div class="nine columns phone-three">
               {{form.country}}
-            </div>  
+            </div>
           </div>
 
           {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
@@ -106,7 +106,7 @@
             </div>
             <div class="nine columns phone-three">
               	{{form.timezone}}
-            </div>  
+            </div>
           </div>
 
           <div class="row">
@@ -116,9 +116,9 @@
             <div class="nine columns phone-three">
               	<div class="">{{form.webcam}}</div>
               	{{ form.webcam.help_text }}
-            </div> 
+            </div>
           </div>
-          
+
           <hr class="inside">
 
 	      <div class="row">
@@ -136,7 +136,7 @@
               <input type="text" id="id_username" name="username" value="{{ form.username.value }}" class="input-text stretch" />
             </div>
           </div>
-          
+
 		  {% if form.email.errors %}<div class="formError">{{ form.email.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
@@ -179,9 +179,9 @@
               	<div class="">{{form.crb}}</div>
               	<div id="id_crb_apply" class="{% if form.crb.value %}hidden{% endif %}">To apply for a CRB <a href="{% url crb_form %}" target="_blank">click here</a>.</div>
 		        <div id="id_div_crb_document" class="{% if not form.crb.value %}hidden{% endif %}">You need to upload your CRB Document after you Sign Up.</div>
-            </div> 
+            </div>
           </div>
-          
+
           <hr class="inside">
 
 	      <div class="row">
@@ -189,7 +189,7 @@
 	          <h3>Financial Information</h3>
 	        </div>
 	      </div>
-	      
+
 	      {% if form.paypal_email.errors %}<div class="formError">{{ form.paypal_email.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
@@ -206,7 +206,7 @@
             </div>
             <div class="nine columns phone-three">
               	{{form.currency}}
-            </div>  
+            </div>
           </div>
 
           <hr class="inside">
@@ -224,7 +224,7 @@
             </div>
             <div class="nine columns no-margin">
               	{{form.referral}}
-            </div>  
+            </div>
           </div>
 
 		  {% if form.referral_other.errors %}<div id="id_div_referral_other_errors" class="formError">{{ form.referral_other.errors }}</div>{% endif %}
@@ -236,7 +236,7 @@
               <input type="text" id="id_referral_other" name="referral_other" value="{% if form.referral_other.value %}{{ form.referral_other.value }}{% endif %}" class="input-text stretch" />
             </div>
           </div>
-          
+
 		  {% if form.referral_key.errors %}<div class="formError">{{ form.referral_key.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
@@ -246,7 +246,7 @@
               <input type="text" id="id_referral_key" name="referral_key" value="{% if form.referral_key.value %}{{ form.referral_key.value }}{% endif %}" class="input-text stretch" />
             </div>
           </div>
-          
+
           <hr class="inside">
           {% get_scribblar_speed_test %}
           <div class="row">
@@ -258,9 +258,9 @@
 	          </p>
 	        </div>
 	      </div>
-	      
+
 	      <hr class="inside">
-	      
+
 	      <div class="row">
 	        <div class="twelve columns">
 	      	<h3>Key post-registration to-do's</h3>
@@ -269,7 +269,7 @@
 	      	</p>
 	        </div>
 	      </div>
-          
+
           <hr class="inside">
 
 	      <div class="row">
@@ -290,14 +290,14 @@
           </div>
 
           <hr class="inside">
-          
+
 		  <div id="model-signup-button" class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
 		  <div id="model-signup-under16-container2" class="hidden formError">
 				Under 16? Your parent need to create a account for you. <br />
-		  </div>          
-          
+		  </div>
+
         </div>
-        
+
 	    <div class="four columns photo">
 	    	<div class="row">
 		  		<img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
@@ -312,18 +312,18 @@
 		      	<a id="remove-image" href="javascript:;" class="hidden">Remove Image</a>
 	    	</div>
 	    </div>
-        
+
       </div>
-	   
+
     </form>
-    
+
   </section>
-  
+
 <script type="text/javascript">
 	var today = new Date();
 	var today_year = today.getFullYear();
-	
-	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 	function getQueryVariable(variable) {
        var query = window.location.search.substring(1);
@@ -334,10 +334,10 @@
        }
        return '';
 	}
-	
+
 	var dob_date = getQueryVariable('date');
 	dob_date = dob_date.split('-');
-	
+
 	var dob_year = parseInt(dob_date[0]);
 	var dob_month = parseInt(dob_date[1]);
 	var dob_day = parseInt(dob_date[2]);
@@ -350,15 +350,15 @@
 
 	for(i=today_year; i>today_year-100; i--)
 		$('#id_dob_year').append('<option value="'+ i +'" '+ (i==dob_year?'selected=selected':'') +'>'+ i +'</option>');
-		
+
 	$('.signup_dob2').change(function(e){
 		check_over16_2();
 	});
-	
+
 	$('#student-signup-form').submit(function(){
 		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
 	});
-		
+
 	var check_over16_2 = function(){
 		var day = parseInt($('#id_dob_day').val());
 		var month = parseInt($('#id_dob_month').val());
@@ -367,10 +367,10 @@
 		var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
 		var input_date = year +'-'+ month +'-'+ day;
 
-		if(str_date == input_date) {			
+		if(str_date == input_date) {
 			var age_date = new Date(year+16, month, day);
 			var today = new Date();
-			
+
 			if(today >= age_date) {
 				$('#model-signup-button').removeClass('hidden');
 				$('#model-signup-under16-container2').addClass('hidden');
@@ -381,10 +381,10 @@
 				return false;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	$('#student-signup-form').submit(function(e){
 		if(!check_over16_2()){
 			e.preventDefault();
@@ -418,7 +418,7 @@
 		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
-	
+
 	$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 	$('#id_timezone').load('{% url get_timezones %}'+ $('#id_country').val() +'/');
 
@@ -426,7 +426,7 @@
   		$(".four.columns.photo").hide();
   	}
 
-	
+
 
 </script>
 
@@ -472,7 +472,7 @@
 				$('#remove-image').removeClass('hidden');
 	       }
         });
-        
+
   	}
   	window.onload = createUploader;
 
@@ -487,7 +487,7 @@
 			$('#id_profile_image_old').append('<input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">')
 		}
 		$("#remove-image").addClass('hidden');
-    });	
+    });
 
 	if($.browser.msie) {
 		$('#id_profile_image_old').removeClass('hidden');
@@ -504,7 +504,7 @@
             }
 
             reader.readAsDataURL(input.files[0]);
-        }		
+        }
 	});
 </script>
 

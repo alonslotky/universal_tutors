@@ -18,9 +18,9 @@
   <section class="blue feature-box"><div class="inner">
     <h1>Add a Child</h1>
   </div></section>
-  
+
   <section>
-  
+
     <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
 	{% csrf_token %}
       <div class="row">
@@ -28,13 +28,13 @@
           <h3>Personal Details</h3>
         </div>
       </div>
-    
+
      {% if form.first_name.errors %}<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>{% endif %}
      {% if form.last_name.errors %}<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>{% endif %}
       <div class="row">
         <div class="eight columns">
           <label>Name*</label>
-          
+
           <div class="row space">
             <div class="six columns">
               <input name="first_name" type="text" class="input-text" placeholder="First Name" value="{{form.first_name.value}}">
@@ -43,7 +43,7 @@
               <input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{form.last_name.value}}">
             </div>
           </div>
-          
+
           <div class="row space">
             <div class="three columns">
               <label>Gender</label>
@@ -52,12 +52,12 @@
               {{form.gender}}
             </div>
           </div>
-          
+
           <div class="row space">
             <div class="three columns">
               <label>D.O.B*</label>
             </div>
-            
+
           {% if form.date_of_birth.errors %}<div class="formError">{{ form.date_of_birth.errors }}</div>{% endif %}
             <div class="nine columns">
               <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
@@ -77,7 +77,7 @@
               </div>
             </div>
           </div>
-          
+
           {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
           <div class="row date_of_birth">
             <div class="three columns phone-one">
@@ -85,7 +85,7 @@
             </div>
             <div class="nine columns phone-three">
               {{form.country}}
-            </div>  
+            </div>
           </div>
 
           {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
@@ -95,9 +95,9 @@
             </div>
             <div class="nine columns phone-three">
               	{{form.timezone}}
-            </div>  
+            </div>
           </div>
-          
+
           <hr class="inside">
 
 	      <div class="row">
@@ -115,7 +115,7 @@
               <input type="text" id="id_username" name="username" value="{{ form.username.value }}" class="input-text stretch" />
             </div>
           </div>
-          
+
 		  {% if form.email.errors %}<div class="formError">{{ form.email.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
@@ -139,7 +139,7 @@
               <input type="password" id="id_password2" name="password2" placeholder="Confirm Password" value="" class="input-text stretch" />
             </div>
           </div>
-          
+
           <hr class="inside">
 
 	      <div class="row">
@@ -155,7 +155,7 @@
             </div>
             <div class="nine columns phone-three">
               	{{form.referral}}
-            </div>  
+            </div>
           </div>
 
 		  {% if form.referral_other.errors %}<div class="formError">{{ form.referral_other.errors }}</div>{% endif %}
@@ -167,7 +167,7 @@
               <input type="text" id="id_referral_other" name="referral_other" value="{% if form.referral_other.value %}{{ form.referral_other.value }}{% endif %}" class="input-text stretch" />
             </div>
           </div>
-          
+
 		  {% if form.referral_key.errors %}<div class="formError">{{ form.referral_key.errors }}</div>{% endif %}
           <div class="row space">
             <div class="three columns">
@@ -177,9 +177,9 @@
               <input type="text" id="id_referral_key" name="referral_key" value="{% if form.referral_key.value %}{{ form.referral_key.value }}{% endif %}" class="input-text stretch" />
             </div>
           </div>
-          
+
           <hr class="inside">
-          
+
 	      <div class="row">
 	        <div class="twelve columns">
 	          <h3>Interested subjects <span id="tooltip-interests">[?]</span></h3>
@@ -189,7 +189,7 @@
 		  <input id="id_interests-TOTAL_FORMS" type="hidden" value="1" name="interests-TOTAL_FORMS">
 		  <input id="id_interests-INITIAL_FORMS" type="hidden" value="1" name="interests-INITIAL_FORMS">
 		  <input id="id_interests-MAX_NUM_FORMS" type="hidden" name="interests-MAX_NUM_FORMS">
-			
+
 		    <table id="interests-table" class="stretch">
 		      <tr>
 		        <th>Subject</th>
@@ -205,7 +205,7 @@
 				  	{% endfor %}
 				  </select>
 			    </td>
-				<td>			
+				<td>
 				  <select id="id_interests-0-system" name="interests-0-system" class="stretch interests-select-systems">
 				  	<option value="" selected="selected">Any system</option>
 				  </select>
@@ -218,7 +218,7 @@
 		      </tr>
 		    </table>
 			<a id="add-subject-link" href="javascript:;">+ add subject</a>
-          
+
           <hr class="inside">
 
 	      <div class="row">
@@ -236,16 +236,16 @@
               {{form.agreement}}
 			  <span>I have read and accepted the Terms and Conditions from the box above.</span>
           </div>
-          
+
           <hr class="inside">
-          
+
 		  <div id="model-signup-button" class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
 		  <div id="model-signup-under16-container2" class="hidden formError">
 				Under 16? Your parent need to create a account for you. <br />
-		  </div>          
-          
+		  </div>
+
         </div>
-        
+
 	    <div class="four columns photo">
 	    	<div class="row">
 		  		<img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
@@ -257,17 +257,17 @@
 		      	<a id="remove-image" href="javascript:;" class="hidden">Remove Image</a>
 	    	</div>
 	    </div>
-        
+
       </div>
-    
+
     </form>
   </section>
-  
+
 <script type="text/javascript">
 	var today = new Date();
 	var today_year = today.getFullYear();
-	
-	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 	for(i=1; i<=31; i++)
 		$('#id_dob_day').append('<option value="'+ i +'">'+ i +'</option>');
@@ -277,7 +277,7 @@
 
 	for(i=today_year; i>today_year-100; i--)
 		$('#id_dob_year').append('<option value="'+ i +'">'+ i +'</option>');
-		
+
 	$('#student-signup-form').submit(function(){
 		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
 	});
@@ -289,7 +289,7 @@
 			$('#id_div_referral_other').addClass('hidden');
 		}
 	});
-	
+
 	$('#id_referral').change(function(){
 		if( $(this).val() == '20' ) {
 			$('#id_div_referral_other').removeClass('hidden');
@@ -301,7 +301,7 @@
 </script>
 <script type="text/javascript">
   	var id_subject = 1;
-  
+
   	$('.interests-select-subjects').live('change', function(){
   		var self_value = $(this).val();
   		var self_id = $(this).attr('id');
@@ -328,10 +328,10 @@
 		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
 	});
-	
+
 	$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
 	$('#id_timezone').load('{% url get_timezones %}'+ $('#id_country').val() +'/');
-  
+
   	$('#add-subject-link').click(function(){
   		if (parseInt($('#id_interests-TOTAL_FORMS').val()) > 11) {
   			$(this).remove();
@@ -369,7 +369,7 @@
 			title: 'Interests',
 			content: 'Let us know what subjects you are interested in furthering your education in so that we can tailor our offers and services to you'
 		});
-		
+
 		$('#tooltip-referral').{% if request.mobile %}clickover{% else %}popover{% endif %}({
 			title: 'Referral Key',
 			content: 'If you have been referred by another user of the site then please enter the code here to receive your special offer'
@@ -389,7 +389,7 @@
 				$('#remove-image').removeClass('hidden');
 	       }
         });
-        
+
   	}
   	window.onload = createUploader;
 
@@ -404,7 +404,7 @@
 			$('#id_profile_image_old').append('<input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">')
 		}
 		$("#remove-image").addClass('hidden');
-    });	
+    });
 
 	if($.browser.msie) {
 		$('#id_profile_image_old').removeClass('hidden');
@@ -421,7 +421,7 @@
             }
 
             reader.readAsDataURL(input.files[0]);
-        }		
+        }
 	});
 
 </script>

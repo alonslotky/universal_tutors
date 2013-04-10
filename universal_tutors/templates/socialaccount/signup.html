@@ -2,18 +2,18 @@
 
 {% load fb_versions common_tags flatblock_tags %}
 
-{% block title %}Sigh Up{% endblock %}
+{% block title %}Sign Up{% endblock %}
 {% block body_class %}tutors{% endblock %}
 
 {% block content %}
   <section class="blue feature-box"><div class="inner">
     <h1>Sign Up</h1>
   </div></section>
-  
+
   <section>
     <form action="" id="social-signup-form" method="post" class="nice" enctype="multipart/form-data">
 	{% csrf_token %}
-    
+
       <div class="row">
         <div class="two columns">&nbsp;</div>
         <div class="six columns">
@@ -29,7 +29,7 @@
             <div class="three columns">
               <label>D.O.B</label>
             </div>
-            
+
             <div class="nine columns">
               <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
               <div class="row">
@@ -51,13 +51,13 @@
               </div>
             </div>
           </div>
-          
+
           <div id="signup-user-type-errors2" class="formError hidden">Please, choose on of the options bellow</div>
           <div class="row space">
             <div class="three columns">
               <label>Who I am</label>
             </div>
-            
+
             <div class="nine columns">
               <div class="row">
                 <div class="four columns phone-one">
@@ -75,7 +75,7 @@
           </div>
 
           <hr class="inside">
-          
+
 		  <div id="model-signup-button" class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
 		  <div id="model-signup-under16-container2" class="hidden formError">
 			Under 16? Your parent need to create a account for you. <br />
@@ -88,7 +88,7 @@
 				<div class="button"><input type="button" id="send-parent-request2" class="icon rocket" value="Send" /></div>
 			</form>
 			{% endcomment %}
-		  </div>          
+		  </div>
 		</div>
 		<div class="columns four">&nbsp;</div>
 	  </div>
@@ -98,8 +98,8 @@
 	var today = new Date();
 	var today_year = today.getFullYear();
 	var signup_type = null;
-	
-	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'October', 'November', 'December'];
+
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 	function getQueryVariable(variable) {
        var query = window.location.search.substring(1);
@@ -110,10 +110,10 @@
        }
        return '';
 	}
-	
+
 	var dob_date = getQueryVariable('date');
 	dob_date = dob_date.split('-');
-	
+
 	var dob_year = parseInt(dob_date[0]);
 	var dob_month = parseInt(dob_date[1]);
 	var dob_day = parseInt(dob_date[2]);
@@ -126,15 +126,15 @@
 
 	for(i=today_year; i>today_year-100; i--)
 		$('#id_dob_year').append('<option value="'+ i +'" '+ (i==dob_year?'selected=selected':'') +'>'+ i +'</option>');
-		
+
 	$('.signup_dob2').change(function(e){
 		check_over16_2();
 	});
-	
+
 	$('#student-signup-form').submit(function(){
 		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
 	});
-		
+
 	var check_over16_2 = function(){
 		var day = parseInt($('#id_dob_day').val());
 		var month = parseInt($('#id_dob_month').val());
@@ -144,10 +144,10 @@
 		var input_date = year +'-'+ month +'-'+ day;
 		var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 
-		if(str_date == input_date) {			
+		if(str_date == input_date) {
 			var age_date = new Date(year+16, month, day);
 			var today = new Date();
-			
+
 			if(today >= age_date) {
 				$('#model-signup-button').removeClass('hidden');
 				$('#model-signup-under16-container2').addClass('hidden');
@@ -158,13 +158,13 @@
 				return false;
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	$('#social-signup-form').submit(function(e){
 		e.preventDefault();
-		
+
 		signup_type = parseInt($('#signup_user_type2').val());
 		if(signup_type) {
 			$('#signup-user-type-errors2').addClass('hidden');
@@ -173,13 +173,13 @@
 				var month = parseInt($('#id_dob_month').val());
 				var year = parseInt($('#id_dob_year').val());
 				var date = year +'-'+ month +'-'+ day;
-	
+
 				if (day>0 && month>=0 && year>0) {
 					$('#id_dob_errors').addClass('hidden');
 					window.location.href +='?date='+ date +'&user_type='+ signup_type;
 				} else {
 					$('#id_dob_errors').removeClass('hidden');
-				}		
+				}
 			}
 		} else {
 			$('#signup-user-type-errors2').removeClass('hidden');
@@ -208,7 +208,7 @@
 				}
 			});
 	   	}
-		
+
 	});
 
 </script>
