@@ -19,6 +19,7 @@ from apps.core.views.xls import *
 from paypal.standard.forms import PayPalPaymentsForm
 
 from ordereddict import OrderedDict
+from itertools import chain
 import datetime, random, pytz, operator
 
 
@@ -615,9 +616,11 @@ def withdraws_manual(request):
             withdraw.email = email
             withdraw.save()
 
+    pending = WithdrawItem.objects.filter(monthly_payment=False, status=WithdrawItem.STATUS_TYPES.PENDING).select_related().order_by('created')
+    done = WithdrawItem.objects.filter(monthly_payment=False, status=WithdrawItem.STATUS_TYPES.DONE).select_related().order_by('-created')
+
     return {
-        'withdraws': WithdrawItem.objects.filter(monthly_payment=False, status__in=[WithdrawItem.STATUS_TYPES.PENDING, WithdrawItem.STATUS_TYPES.DONE])
-                            .select_related().order_by('status','created')
+        'withdraws': list(chain(pending, done))
     }
     
 
