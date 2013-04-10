@@ -180,6 +180,24 @@ class CustomIndexDashboard(Dashboard):
             ]
         ))
 
+        # append another link list module for "support".
+        self.children.append(modules.LinkList(
+            _('Tutors Withdraw'),
+            column=2,
+            children=[
+                {
+                    'title': _('Monthly withdraw'),
+                    'url': reverse('withdraws_monthly'),
+                    'external': True,
+                },
+                {
+                    'title': _('Requested withdraws'),
+                    'url': reverse('withdraws_manual'),
+                    'external': True,
+                },
+            ]
+        ))
+
         # append a feed module
         self.children.append(modules.Feed(
             _('Latest Raw Jam News'),

@@ -28,6 +28,12 @@ urlpatterns = patterns('apps.core.views.main',
     url(r'^(?i)monitoring/(?P<class_id>\d+)/$', 'monitoring_class', name='monitoring_class'),
 
     url(r'^(?i)waiting_for_approval/$', 'waiting_approval', name='waiting_approval'),
+
+    url(r'^(?i)withdraws/manual/$', 'withdraws_manual', name='withdraws_manual'),
+    url(r'^(?i)withdraws/manual/payment/(?P<withdraw_id>\d+)/$', 'withdraws_manual_payment', name='withdraws_manual_payment'),
+    url(r'^(?i)withdraws/monthly/$', 'withdraws_monthly', name='withdraws_monthly'),
+    url(r'^(?i)withdraws/monthly/payment/(?P<currency_acronym>\w+)/$', 'withdraws_monthly_payment', name='withdraws_monthly_payment'),
+
 )
 
 # Ajax

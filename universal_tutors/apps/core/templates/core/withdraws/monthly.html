@@ -1,0 +1,77 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags classes_tags pagination_tags %}
+
+{% block title %}Monthly payments{% endblock %}
+{% block body_class %}app tutor{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+			<h1>Monthly payments <span>List of</span></h1>
+		</div>
+	</section>
+      
+	<div class="row space">
+	{% for currency, total, tutors in tutors_per_currency %}
+		<div class="four columns">
+			<h2>{{currency}}</h2>
+			<table class="stretch">
+				<tr>
+					<th>Tutor</th>
+					<th>Amount</th>
+				</tr>
+				{% for tutor in tutors %}
+				{% with tutor.profile as tutor_profile %}
+					<tr>
+						<td>{{tutor.get_full_name}}</td>
+						<td>{{currency.symbol}} {{tutor_profile.income|in_currency:currency|floatformat:2}}</td>
+					</tr>
+					{% if forloop.last %}
+					<tr><td colspan="2" style="text-align: center;">
+						<a class="button stretch center" href="javascript:;" data-reveal-id="modal-mass-withdraw" onclick="mass_withdraw('{% url withdraws_monthly_payment currency.acronym %}');">
+							<span class="icon credits">Make {{currency.acronym}} payment</span>
+						</a>	
+					</td></tr>
+					{% endif %}
+				{% endwith %}
+				{% empty %}
+					<tr><td colspan="2">There are no payments to perfome for this currency.</td></tr>
+				{% endfor %}
+			</table>
+		</div>
+	{% endfor %}
+	</div>
+	
+	{% comment %}
+	<div class="row">
+		<div class="twelve columns">
+			<h2>Previous payments</h2>
+			<table class="stretch">
+				<tr>
+					<th>Date</th>
+					<th>Currency</th>
+					<th>Amount</th>
+					<th>Commission</th>
+				</tr>
+				{% autopaginate withdraws 30 %}
+				{% for item in withdraws %}
+				<tr>
+					<td>{{item.created|date:"D, d M Y"}}</td>
+					<td>{{item.currency}}</td>
+					<td>{{item.currency.symbol}} {{item.value|in_currency:item.currency|floatformat:2}}</td>
+					<td>{{item.commission}}</td>
+				</tr>
+				{% empty %}
+				<tr><td colspan="4">No previous payments has been made before.</td></tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		{% ajax_paginate 'reviews-container' %}
+	</div>
+	{% endcomment %}
+	
+	{% include "core/withdraws/_modal_monthly_withdraw.html" %}
+{% endblock %}

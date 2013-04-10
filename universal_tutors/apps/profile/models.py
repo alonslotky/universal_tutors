@@ -12,10 +12,9 @@ from django.core.mail import EmailMessage, get_connection
 from django.template.loader import render_to_string
 from django.template import Template, Context
 
-
 import re, unicodedata, random, string, datetime, os, pytz, threading, urlparse
 
-from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged
+from paypal.standard.ipn.signals import payment_was_successful, payment_was_flagged, adaptivepayment_was_successful
 from filebrowser.fields import FileBrowseField
 from apps.common.utils.fields import AutoOneToOneField, CountryField
 from apps.common.utils.abstract_models import BaseModel
@@ -27,7 +26,6 @@ from apps.classes.models import Class, ClassSubject, ClassLevel, EducationalSyst
 from apps.core.models import Currency, Bundle, DiscountUser
 from apps.classes.settings import *
 
-from paypal2.standart.ap import pay
 from scribblar import users, rooms
 
 import mailchimp
@@ -159,6 +157,7 @@ class UserProfile(BaseModel):
         (11, 'CANCELED_BY_SYSTEM', 'Class canceled by the system'),
         (12, 'REFERRAL', 'User referral'),
         (13, 'NEW_TUTOR', 'New tutor'),
+        (14, 'NEW_MANUAL_WITHDRAW', 'New manual withdraw request'),
     ))
     
     UPLOAD_IMAGES_PATH = 'uploads/profiles/profile_images'
@@ -802,7 +801,7 @@ class UserProfile(BaseModel):
 
     def available_withdraw(self):
         user = self.user
-        in_process = user.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PROCESSING)\
+        in_process = user.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PENDING)\
                         .aggregate(sum_credits=models.Sum('credits'), sum_commission=models.Sum('commission') )
 
         free_to_withdraw = self.income - (in_process['sum_credits'] or 0) - (in_process['sum_commission'] or 0)
@@ -818,7 +817,7 @@ class UserProfile(BaseModel):
     def process_manual_withdraw(self):
         if self.type == self.TYPES.TUTOR:
             user = self.user
-            in_process = user.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PROCESSING)\
+            in_process = user.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PENDING)\
                             .aggregate(sum_credits=models.Sum('credits'), sum_commission=models.Sum('commission') )
             
             free_to_withdraw = self.income - (in_process['sum_credits'] or 0) - (in_process['sum_commission'] or 0)
@@ -838,18 +837,19 @@ class UserProfile(BaseModel):
                 commission = commission,
             )
             withdraw.save()
-        
-            receivers = [{
-                'email': email, 
-                'amount': '%.2f' % amount,
-                'unique_id': 'wd-%s' % withdraw.id,
-            }]
-        
-            pay({
-                'notify_url': 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')),
-                'currencyCode': currency.acronym,
-                'receivers': receivers,
-            })
+
+            from apps.core.models import EmailTemplate
+            try:
+                email = EmailTemplate.objects.get(type=UserProfile.NOTIFICATIONS_TYPES.NEW_MANUAL_WITHDRAW)
+                email.send_email({
+                    'user': user,
+                    'tutor': user,
+                    'profile': self,
+                    'withdraw': withdraw,
+                    'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+                }, [settings.PROJECT_INFO_EMAIL_ADDRESS])
+            except EmailTemplate.DoesNotExist:
+                pass
             
             return True
 
@@ -1017,7 +1017,7 @@ class TopUpItem(BaseModel):
     def save(self, *args, **kwargs):
         if not self.invoice:
             while True:
-                self.invoice = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(20))
+                self.invoice = 'UTTU%s' % ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(15))
                 if not TopUpItem.objects.filter(invoice=self.invoice).exclude(id=self.id):
                     break
         super(self.__class__, self).save(*args, **kwargs)
@@ -1061,27 +1061,27 @@ class WithdrawItem(BaseModel):
         ordering = ['-created']
 
     STATUS_TYPES = get_namedtuple_choices('WITHDRAW_STATUS_TYPES', (
-        (0, 'PROCESSING', 'Processing'),
-        (1, 'CANCELED', 'Canceled'),
-        (2, 'PENDING', 'Pending'),
-        (3, 'HACKED', 'HACKED! The amount received were changed'),
-        (99, 'DONE', 'Done'),
+        (0, 'PENDING', 'Pending'),
+        (1, 'DONE', 'Done'),
+        (2, 'HACKED', 'HACKED! The amount received were changed'),
+        (3, 'CANCELED', 'Canceled'),
     ))
     
     user = models.ForeignKey(User, related_name = 'withdraws')
     currency = models.ForeignKey(Currency, related_name='withdraws')
     value = models.FloatField()
     credits = models.FloatField()
-    status = models.PositiveSmallIntegerField(choices = STATUS_TYPES.get_choices(), default = STATUS_TYPES.PROCESSING)
+    status = models.PositiveSmallIntegerField(choices = STATUS_TYPES.get_choices(), default = STATUS_TYPES.PENDING)
     invoice = models.CharField(max_length = 20, null=True, blank=True)
     commission = models.FloatField(default=0)
     email = models.EmailField()
+    monthly_payment = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.invoice:
             while True:
-                self.invoice = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(20))
-                if not TopUpItem.objects.filter(invoice=self.invoice).exclude(id=self.id):
+                self.invoice = 'UTWD%s' % ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(15))
+                if not WithdrawItem.objects.filter(invoice=self.invoice).exclude(id=self.id):
                     break
         super(self.__class__, self).save(*args, **kwargs)
     
@@ -1089,27 +1089,18 @@ class WithdrawItem(BaseModel):
         return u"[%s] %s: %s" % (self.user, self.get_status_display(), self.credits)
 
     def complete(self):
-        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
+        if self.status != self.STATUS_TYPES.DONE:
             self.status = self.STATUS_TYPES.DONE
             super(self.__class__, self).save()
             self.user.profile.withdraw_account(self.credits + self.commission)
-        elif self.status == self.STATUS_TYPES.PENDING:
-            self.status = self.STATUS_TYPES.DONE
-            super(self.__class__, self).save()
-    
-    def pending(self):
-        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
-            self.status = self.STATUS_TYPES.PENDING
-            super(self.__class__, self).save()
-            self.user.profile.withdraw_account(self.credits)
 
     def cancel(self):
-        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
+        if self.status != self.STATUS_TYPES.DONE:
             self.status = self.STATUS_TYPES.CANCELED
             self.save()
 
     def set_as_hacked(self):
-        if self.status != self.STATUS_TYPES.DONE and self.status != self.STATUS_TYPES.PENDING:
+        if self.status != self.STATUS_TYPES.DONE:
             self.status = self.STATUS_TYPES.HACKED
             self.save()
 
@@ -1521,68 +1512,49 @@ class UploadProfileImage(models.Model):
 #### TOPUP CREDITS #######################################################
 def topup_successful(sender, **kwargs):
     ipn_obj = sender
-    if ipn_obj.txn_type.lower() == 'web_accept':         
-        try:
-            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-            if topup.value == float(ipn_obj.mc_gross):
-                topup.topup()
-            else:
-                topup.set_as_hacked()
-                paypal_error(type='topup_hacked')
-        except TopUpItem.DoesNotExist:
-            paypal_error()
+    if ipn_obj.txn_type.lower() == 'web_accept':  
+        if ipn_obj.invoice[:4] == 'UTTU':       
+            try:
+                topup = TopUpItem.objects.get(id=ipn_obj.item_number)
+                if topup.value == float(ipn_obj.mc_gross):
+                    topup.topup()
+                else:
+                    topup.set_as_hacked()
+                    paypal_error(type='topup_hacked')
+            except TopUpItem.DoesNotExist:
+                paypal_error(type='topup_invalid')
+                
+        elif ipn_obj.invoice[:4] == 'UTWD':
+            try:
+                withdraw = WithdrawItem.objects.get(id=ipn_obj.item_number)
+                if round(withdraw.value, 2) == float(ipn_obj.mc_gross):
+                    withdraw.complete()
+                else:
+                    withdraw.error(type='withdraw_error', email=withdraw.email)        
+            except WithdrawItem.DoesNotExist:
+                paypal_error(type='withdraw_error')
 
     elif ipn_obj.txn_type.lower() == 'masspay':
         withdraw_complete(sender, **kwargs)
     
-def topup_flagged(sender, **kwargs):
-    ipn_obj = sender
-    if ipn_obj.txn_type.lower() == 'web_accept':         
-        try:
-            topup = TopUpItem.objects.get(id = ipn_obj.item_number)
-            if topup.value == float(ipn_obj.mc_gross):
-                topup.flagged()
-            else:
-                topup.set_as_hacked()
-                paypal_error(type='topup_hacked')
-        except TopUpItem.DoesNotExist:
-            paypal_error()
-            
-    elif ipn_obj.txn_type.lower() == 'masspay':
-        withdraw_complete(sender, **kwargs)
 
 
 def withdraw_complete(sender, **kwargs):
     ipnobj = sender
     query = urlparse.parse_qs(ipnobj.query)
 
-    i = 1
+    i = 0
     while True:
-        gross = query.get('mc_gross_%s' % i, [''])[0]
-        status = query.get('status_%s' % i, [''])[0].lower()
-        variable, unique_id = query.get('unique_id_%s' % i, ['wd-0'])[0].split('-')
-        email = query.get('receiver_email_%s' % i, [''])[0]
-        if not gross and not status:
-            break
-        
-        try:
-            withdraw = WithdrawItem.objects.get(id = unique_id)
-            if withdraw.value == float(gross):
-                if status=='completed' or status=='pending':
-                    if status == 'completed':
-                        withdraw.complete()
-                    else:
-                        withdraw.pending()
-                else:
-                    withdraw.error()
-                    paypal_error(type='withdraw_error', email=email)
-            else:
-                withdraw.set_as_hacked()
-                paypal_error(type='withdraw_hacked', email=email)
-                             
-        except WithdrawItem.DoesNotExist:
-            paypal_error(type='withdraw_invalid', email=email)
+        status = query.get('transaction[%s].status' % i, [''])[0].lower()
+        invoice = query.get('transaction[%s].invoiceId' % i, [''])[0]
 
+        if not status: break
+        if status in ['completed', 'pending']:
+            try:
+                withdraw_item = WithdrawItem.objects.get(invoice=invoice)
+                withdraw_item.complete()
+            except WithdrawItem.DoesNotExist:
+                paypal_error(type='withdraw_error')
         i += 1
 
 
@@ -1615,5 +1587,5 @@ def paypal_error(type='topup_invalid', email=None):
 
 
 payment_was_successful.connect(topup_successful, dispatch_uid='topup_successful')
-payment_was_flagged.connect(topup_flagged, dispatch_uid='topup_flagged')
-
+payment_was_flagged.connect(topup_successful, dispatch_uid='topup_flagged')
+adaptivepayment_was_successful.connect(withdraw_complete, dispatch_uid='withdraw_complete')
