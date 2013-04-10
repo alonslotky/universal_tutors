@@ -117,6 +117,7 @@ def search(request):
         for tutor in tutors:
             tutor_date = convert_datetime(date, gtz, tutor.profile.timezone)
             tutor_time = tutor_date.time()
+
             if day>=0 and time>=0:
                 filtered_tutors.append(Q(id=tutor.id, week_availability__weekday=tutor_date.weekday(), week_availability__begin__lte=tutor_time, week_availability__end__gt=tutor_time))
             elif day>=0:
@@ -124,6 +125,7 @@ def search(request):
             else:
                 filtered_tutors.append(Q(id=tutor.id, week_availability__begin__lte=tutor_time, week_availability__end__gt=tutor_time))                
         
+
         tutors = tutors.filter(reduce(operator.or_, filtered_tutors))
 
     if sort == 'price':
