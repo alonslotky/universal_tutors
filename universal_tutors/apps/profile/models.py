@@ -1546,16 +1546,13 @@ def withdraw_complete(sender, **kwargs):
 
     i = 0
     while True:
-        status = query.get('transaction[%s].status' % i, [''])[0].lower()
         invoice = query.get('transaction[%s].invoiceId' % i, [''])[0]
-
-        if not status: break
-        if status in ['completed', 'pending']:
-            try:
-                withdraw_item = WithdrawItem.objects.get(invoice=invoice)
-                withdraw_item.complete()
-            except WithdrawItem.DoesNotExist:
-                paypal_error(type='withdraw_error')
+        if not invoice: break
+        try:
+            withdraw_item = WithdrawItem.objects.get(invoice=invoice)
+            withdraw_item.complete()
+        except WithdrawItem.DoesNotExist:
+            paypal_error(type='withdraw_error')
         i += 1
 
 
