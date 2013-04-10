@@ -8,20 +8,12 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Deleting field 'UserProfile.class_language'
-        db.delete_column('profile_userprofile', 'class_language')
-
         # Adding field 'WithdrawItem.monthly_payment'
         db.add_column('profile_withdrawitem', 'monthly_payment',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
                       keep_default=False)
 
     def backwards(self, orm):
-        # Adding field 'UserProfile.class_language'
-        db.add_column('profile_userprofile', 'class_language',
-                      self.gf('django.db.models.fields.CharField')(default='en_US', max_length=10),
-                      keep_default=False)
-
         # Deleting field 'WithdrawItem.monthly_payment'
         db.delete_column('profile_withdrawitem', 'monthly_payment')
 
@@ -290,6 +282,7 @@ class Migration(SchemaMigration):
             'activation_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
             'address': ('django.db.models.fields.CharField', [], {'max_length': '150', 'null': 'True', 'blank': 'True'}),
             'avg_rate': ('django.db.models.fields.FloatField', [], {'default': '0'}),
+            'class_language': ('django.db.models.fields.CharField', [], {'default': "'en_US'", 'max_length': '10'}),
             'classes_given': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'country': ('apps.common.utils.fields.CountryField', [], {'max_length': '2', 'null': 'True', 'blank': 'True'}),
             'crb': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
