@@ -816,8 +816,6 @@ class UserProfile(BaseModel):
         }
 
     def process_manual_withdraw(self):
-        from apps.profile.utils import mass_payments
-
         if self.type == self.TYPES.TUTOR:
             user = self.user
             in_process = user.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PENDING)\
