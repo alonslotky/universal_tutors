@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block extra_head %}
+<script type="text/javascript" src="http://media.muchosmedia.com/scribblar/scripts/includes.js"></script>
 <script type="text/javascript">
 	$(window).ready(function(){
 		var targetID = "scribblar";
@@ -17,7 +18,7 @@
 		var flashvars = {
 			'userid': "{{user.profile.scribblar_id}}",
 			'roomid': "{{user.profile.get_test_class_id}}",
-			'preferredLocales': "en_US",
+			'preferredLocales': "{{profile.class_language}}",
 			'username': "{{user.get_full_name}}"
 		};
 	
@@ -57,6 +58,12 @@
 				}
 			});				
 		}, 60 * 1000);
+		
+		$('#id_class_language').change(function(){
+			var language = $(this).val();
+			thisMovie('scribblar').setLocale(language);
+			$.get('{% url set_class_language %}'+ language +'/');
+		});
 	});
 </script>
 {% endblock %}
@@ -64,7 +71,18 @@
 {% block full_content %}
   <header>
     <div class="logo alt ir left"><a>Universal Tutors</a></div>
+
     <a id="exit-class-button" class="right button" href="{% url edit_tutor_profile %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
+
+	<div class="class-info">
+		<form class="nice">
+			<select id="id_class_language">
+				{% for language in CLASS_LANGUAGES %}
+				<option value="{{language.1}}" {% if language.1 == profile.class_language %}selected="selected"{% endif %}>{{language.0}}</option>
+				{% endfor %}
+			</select>
+		</form>
+	</div>
   </header>
   
   <div id="alternate-container" class="main scribblar-container">

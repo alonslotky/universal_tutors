@@ -20,7 +20,7 @@ from apps.common.utils.decorators import over16_required
 from apps.profile.models import UserProfile, NewsletterSubscription
 from apps.profile.forms import *
 from apps.classes.models import *
-from apps.classes.settings import MINIMUM_CREDITS_PER_HOUR
+from apps.classes.settings import MINIMUM_CREDITS_PER_HOUR, CLASS_LANGUAGES
 
 import pytz, datetime
 
@@ -281,6 +281,7 @@ def test_class(request):
     
     return {
         'profile': profile,
+        'CLASS_LANGUAGES': CLASS_LANGUAGES,
     }
 
 

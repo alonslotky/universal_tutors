@@ -5,6 +5,7 @@ from django.db.models import Q, Sum, Max
 from django.template import RequestContext, Context, loader
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 
 from apps.common.utils.view_utils import main_render
@@ -15,7 +16,10 @@ from apps.core.models import Video, Currency
 from apps.core.utils import *
 from apps.core.views.xls import *
 
+from paypal.standard.forms import PayPalPaymentsForm
+
 from ordereddict import OrderedDict
+from itertools import chain
 import datetime, random, pytz, operator
 
 
@@ -114,7 +118,7 @@ def search(request):
         for tutor in tutors:
             tutor_date = convert_datetime(date, gtz, tutor.profile.timezone)
             tutor_time = tutor_date.time()
-            print tutor_time
+
             if day>=0 and time>=0:
                 filtered_tutors.append(Q(id=tutor.id, week_availability__weekday=tutor_date.weekday(), week_availability__begin__lte=tutor_time, week_availability__end__gt=tutor_time))
             elif day>=0:
@@ -122,9 +126,8 @@ def search(request):
             else:
                 filtered_tutors.append(Q(id=tutor.id, week_availability__begin__lte=tutor_time, week_availability__end__gt=tutor_time))                
         
-        print filtered_tutors, tutors.count()
+
         tutors = tutors.filter(reduce(operator.or_, filtered_tutors))
-        print tutors.count()
 
     if sort == 'price':
         tutors = tutors.annotate(price = Max('subjects__credits')).order_by('price')
@@ -519,27 +522,6 @@ def reports_financial(request, xls=0):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### MONITORING ############################################################
 ###########################################################################
 @main_render('core/monitoring/classes.html')
@@ -609,4 +591,176 @@ def waiting_approval(request):
                     Q(profile__video_approved=False) |
                     Q(profile__qualification_documents_approved=False)
                 ).distinct(),
+    }
+    
+
+
+
+
+### WITHDRAW ##############################################################
+###########################################################################
+@csrf_exempt
+@main_render('core/withdraws/manual.html')
+def withdraws_manual(request):
+    """
+    list of pending manual withdraw
+    """
+    user = request.user
+
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+
+    for withdraw in WithdrawItem.objects.filter(monthly_payment=False, email__isnull=True).select_related():
+        email = withdraw.user.profile.paypal_email
+        if email:
+            withdraw.email = email
+            withdraw.save()
+
+    pending = WithdrawItem.objects.filter(monthly_payment=False, status=WithdrawItem.STATUS_TYPES.PENDING).select_related().order_by('created')
+    done = WithdrawItem.objects.filter(monthly_payment=False, status=WithdrawItem.STATUS_TYPES.DONE).select_related().order_by('-created')
+
+    return {
+        'withdraws': list(chain(pending, done))
+    }
+    
+
+@main_render('core/withdraws/_modal_manual_withdraw_form.html')
+def withdraws_manual_payment(request, withdraw_id=0):
+    user = request.user
+
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+
+    try:
+        withdraw = WithdrawItem.objects.select_related().get(id=withdraw_id, status=WithdrawItem.STATUS_TYPES.PENDING)
+    except WithdrawItem.DoesNotExist:
+        raise http.Http404()
+    
+    person = withdraw.user
+    profile = user.profile
+    currency = withdraw.currency
+    form = PayPalPaymentsForm(initial = {
+        "business": profile.paypal_email,
+        "item_name": "Withdraw %s's account" % (person.get_full_name(), ),
+        "item_number": withdraw.id,
+        "invoice": withdraw.invoice,
+        "notify_url": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')), 
+        "return_url": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_manual')),
+        "cancel_return": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_manual')),
+        "amount": round(withdraw.value, 2),
+        "currency_code": currency.acronym,
+    })
+   
+    return {
+        'form': form,
+        'currency': currency,
+        'withdraw': withdraw,
+        'person': person,
+    }
+
+
+@main_render('core/withdraws/monthly.html')
+def withdraws_monthly(request, withdraw_id=0):
+    user = request.user
+
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+
+    for withdraw in WithdrawItem.objects.filter(email__isnull=True).select_related():
+        email = withdraw.user.profile.paypal_email
+        if email:
+            withdraw.email = email
+            withdraw.save()
+
+    currencies = Currency.objects.all()
+    tutors_per_currency = []
+    for currency in currencies: 
+        tutors = Tutor.objects.select_related().filter(
+            profile__currency = currency, 
+            profile__income__gt = 0, 
+            profile__paypal_email__isnull=False,
+        ).exclude(profile__paypal_email = '')
+        total = (round(tutors.aggregate(total_income=Sum('profile__income')).get('total_income', 0) or 0) * currency.credit_value(), 2)
+
+        tutors_per_currency.append((currency, total, tutors))
+
+    return {
+        'tutors_per_currency': tutors_per_currency,
+        'withdraws': MassWithdraw.objects.select_related(),
+    }
+
+
+@main_render('core/withdraws/_modal_monthly_withdraw_form.html')
+def withdraws_monthly_payment(request, currency_acronym):
+    user = request.user
+
+    if not user.is_authenticated() or not user.is_superuser:
+        raise http.Http404()
+
+    try:
+        currency = Currency.objects.get(acronym=currency_acronym)
+    except Currency.DoesNotExist:
+        raise http.Http404()
+
+    receiverList = OrderedDict()
+    today = datetime.date.today()
+
+    tutors = Tutor.objects.select_related().filter(
+                profile__currency = currency, 
+                profile__income__gt = 0, 
+                profile__paypal_email__isnull=False,
+            ).exclude(profile__paypal_email = '')
+    
+    total = 0
+    for tutor in tutors:
+        map(lambda w: w.cancel(), tutor.withdraws.filter(status=WithdrawItem.STATUS_TYPES.PENDING))
+        
+        profile = tutor.profile
+        credits = profile.income
+        amount = round(credits * currency.credit_value(), 2)
+        email = profile.paypal_email
+        withdraw = WithdrawItem(
+            user = tutor,
+            value = amount,
+            credits = credits, 
+            email = email,
+            currency = currency,
+            monthly_payment = True,
+        )
+        withdraw.save()
+
+        receiverList[tutor.id] = {
+            'amount': amount,
+            'email': email,
+            'name': u'%s' % tutor.get_full_name(),
+            'invoiceId': withdraw.invoice,
+            'customId': 'UTWD-%s' % withdraw.id,
+        }
+        
+        total += amount
+
+    
+    payment = OrderedDict({
+        'currencyCode': currency.acronym,
+        'ipnNotificationUrl': 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ap-ipn')),
+        'cancelUrl': "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_monthly')),
+        'returnUrl': "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_monthly')),
+        'startingDate': today,
+        'endingDate': today + datetime.timedelta(days=1),
+        'options': OrderedDict({'displayOptions.businessName': settings.PROJECT_NAME}),
+    })
+
+    for i, (id, receiver) in enumerate(receiverList.iteritems()):
+        payment['receiverList.receiver(%s).amount' % i] = '%2f' % receiver['amount']
+        payment['receiverList.receiver(%s).email' % i] = receiver['email']
+        payment['receiverList.receiver(%s).name' % i] = receiver['name']
+        payment['receiverList.receiver(%s).invoiceId' % i] = receiver['invoiceId']
+        payment['options']['receiverOptions(%s).receiver.email' % (i)] = receiver['email']
+        payment['options']['receiverOptions(%s).description' % (i)] = receiver['name']
+        payment['options']['receiverOptions(%s).customId' % (i)] = receiver['invoiceId']    
+    
+    return {
+        'payment': payment,
+        'currency': currency,
+        'total': total,
     }

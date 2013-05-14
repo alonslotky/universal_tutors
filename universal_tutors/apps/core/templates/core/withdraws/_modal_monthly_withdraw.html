@@ -1,0 +1,31 @@
+{% load classes_tags %}
+
+<div id="modal-mass-withdraw" class="reveal-modal message">
+	<h4>Make a monthly payment</h4>
+    <div id="modal-mass-withdraw-loading" class="modal-loading"></div>
+    <div id="modal-mass-withdraw-container">
+    	
+    </div>
+  	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	$('#modal-mass-withdraw-container').hide();
+	
+	var mass_withdraw = function(url){
+		$('#modal-mass-withdraw-container').fadeOut(function(){
+			$('#modal-mass-withdraw-loading').fadeIn(function(){
+				$.ajax({
+					'type': 'get',
+					'url': url,
+					'success': function(response) {
+						$('#modal-mass-withdraw-container').html(response);
+						$('#modal-mass-withdraw-loading').fadeOut(function(){
+							$('#modal-mass-withdraw-container').fadeIn();
+						});				
+					}
+				});
+			});
+		});
+	};
+</script>

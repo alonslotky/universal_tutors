@@ -1,0 +1,33 @@
+{% load classes_tags common_tags %}
+
+<div class="row">&nbsp;</div>
+<div class="row">
+  <div class="four columns">        
+    <label>Tutor</label>
+  </div>
+  <div class="eight columns">
+	<strong>{{person.get_full_name}}</strong>
+  </div>	  
+</div>
+<div class="row">
+  <div class="four columns">        
+    <label>Credits</label>
+  </div>
+  <div class="eight columns">
+	<strong>{{withdraw.credits}} credits</strong>
+  </div>	  
+</div>
+<div class="row">
+  <div class="four columns">        
+    <label>Value</label>
+  </div>
+  <div class="eight columns">
+	<strong>{{currency.symbol}} {{withdraw.value|floatformat:2}}</strong>
+  </div>	  
+</div>
+
+<div class="row">&nbsp;</div>
+<div class="row center">
+  {% if settings.DEBUG %}{{form.sandbox}}{% else %}{{form.render}}{% endif %}
+</div>
+

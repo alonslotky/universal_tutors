@@ -1,0 +1,58 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags tutor_tags classes_tags pagination_tags %}
+
+{% block title %}Requested withdraws{% endblock %}
+{% block body_class %}app tutor{% endblock %}
+
+{% block content %}
+	<section class="blue feature-box">
+		<div class="inner">
+			<h1>Requested Withdraws <span>List of</span></h1>
+		</div>
+	</section>
+      
+	<div class="row">
+		<div class="twelve columns">
+			<table class="stretch">
+				<tr>
+					<th>Date</th>
+					<th>Tutor</th>
+					<th>Email</th>
+					<th>Credits</th>
+					<th>Amount</th>
+					<th>Commission</th>
+					<th>Status</th>
+					<th>&nbsp;</th>
+				</tr>
+				{% autopaginate withdraws 30 %}
+				{% for item in withdraws %}
+				<tr>
+					<td>{{item.created|date:"D, d M Y"}}</td>
+					{% with item.user as item_user %}
+					<td><a href="{% url profile item_user.username %}">{{item_user.get_full_name}}</a></td>
+					<td>{{item_user.profile.paypal_email}}</td>
+					{% endwith %}
+					<td>{{item.credits}}</td>
+					<td>{{item.currency.symbol}} {{item.value|in_currency:item.currency|floatformat:2}}</td>
+					<td>{{item.commission}}</td>
+					<td>{{item.get_status_display}}</td>
+					<td>
+						{% if item.status == item.STATUS_TYPES.PENDING %}
+						<a class="button" href="javascript:;" data-reveal-id="modal-withdraw-item" onclick="withdraw_item('{% url withdraws_manual_payment item.id %}');">
+							<span class="icon credits">Withdraw</span>
+						</a>
+						{% endif %}
+					</td>
+				</tr>
+				{% empty %}
+				<tr><td colspan="8">There is no withdraw request.</td></tr>
+				{% endfor %}
+			</table>
+		</div>
+	</div>
+	<div class="row">
+		{% paginate %}
+	</div>
+	{% include "core/withdraws/_modal_manual_withdraw.html" %}
+{% endblock %}

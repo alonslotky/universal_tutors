@@ -1,0 +1,25 @@
+{% load classes_tags common_tags paypal_ap_tags %}
+
+<div class="row">&nbsp;</div>
+<div class="row">
+  <div class="four columns">        
+    <label>Currency</label>
+  </div>
+  <div class="eight columns">
+	<strong>{{currency}}</strong>
+  </div>	  
+</div>
+<div class="row">
+  <div class="four columns">        
+    <label>Total Amount</label>
+  </div>
+  <div class="eight columns">
+	<strong>{{currency.symbol}} {{total|floatformat:2}}</strong>
+  </div>	  
+</div>
+
+<div class="row">&nbsp;</div>
+<div class="row center">
+  {% paypal_adaptive_button payment %}
+</div>
+

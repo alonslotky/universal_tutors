@@ -61,6 +61,7 @@ class Video(models.Model):
         super(self.__class__, self).save(*args, **kwargs)
 
     def get_video_id(self):
+	video_id = None
         try:
             parsed = urlparse.urlparse(self.url)
             video_id = urlparse.parse_qs(parsed.query)['v'][0]
@@ -232,3 +233,15 @@ class Document(models.Model):
     
     def __unicode__(self):
         return self.slug
+
+
+### WITHDRAW MONTLY ##########################################################
+class MassWithdraw(BaseModel):
+    class Meta:
+        ordering = ['-created']
+    
+    currency = models.ForeignKey(Currency, null=True, blank=True)
+    items = models.ManyToManyField('profile.WithdrawItem', null=True, blank=True)
+    
+    def __unicode__(self):
+        return '%s Mass Withdraw on ' % (self.currency, self.created)

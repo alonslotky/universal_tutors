@@ -40,7 +40,6 @@ recaptcha-client
 python-twitter
 pygeoip
 django-fancy-autocomplete==0.1a1
-django-paypal
 #M2Crypto
 ordereddict
 xlwt

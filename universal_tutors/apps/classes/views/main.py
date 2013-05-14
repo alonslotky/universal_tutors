@@ -13,6 +13,7 @@ from apps.common.utils.view_utils import main_render
 from apps.common.utils.decorators import over16_required
 
 from apps.classes.models import Class
+from apps.classes.settings import CLASS_LANGUAGES
 import datetime
 
 
@@ -63,6 +64,7 @@ def detail(request, class_id):
         'after': after,
         'material': material,
         'recordings': recordings,
+        'CLASS_LANGUAGES': CLASS_LANGUAGES,
     }
 
 @login_required
