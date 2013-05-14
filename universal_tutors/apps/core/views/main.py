@@ -751,7 +751,7 @@ def withdraws_monthly_payment(request, currency_acronym):
     })
 
     for i, (id, receiver) in enumerate(receiverList.iteritems()):
-        payment['receiverList.receiver(%s).amount' % i] = '%.2f' % receiver['amount']
+        payment['receiverList.receiver(%s).amount' % i] = receiver['amount']
         payment['receiverList.receiver(%s).email' % i] = receiver['email']
         payment['receiverList.receiver(%s).name' % i] = receiver['name']
         payment['receiverList.receiver(%s).invoiceId' % i] = receiver['invoiceId']
