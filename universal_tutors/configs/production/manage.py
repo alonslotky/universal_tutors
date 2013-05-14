@@ -15,7 +15,7 @@ apps_path = os.path.join(
 )
 # paypal
 paypal_path = os.path.join(
-    os.path.realpath(os.path.dirname(__file__)), '../../../paypal'
+    os.path.realpath(os.path.dirname(__file__)), '../../../django-paypal'
 )
 
 # we have have a local externals directory
