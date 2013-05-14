@@ -647,7 +647,7 @@ def withdraws_manual_payment(request, withdraw_id=0):
         "notify_url": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ipn')), 
         "return_url": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_manual')),
         "cancel_return": "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_manual')),
-        "amount": round(withdraw.value, 2),
+        "amount": '%.2f' % round(withdraw.value, 2),
         "currency_code": currency.acronym,
     })
    
@@ -730,7 +730,7 @@ def withdraws_monthly_payment(request, currency_acronym):
         withdraw.save()
 
         receiverList[tutor.id] = {
-            'amount': amount,
+            'amount': '%.2f' % amount,
             'email': email,
             'name': u'%s' % tutor.get_full_name(),
             'invoiceId': withdraw.invoice,
@@ -745,13 +745,13 @@ def withdraws_monthly_payment(request, currency_acronym):
         'ipnNotificationUrl': 'http://%s%s' % (settings.PROJECT_SITE_DOMAIN, reverse('paypal-ap-ipn')),
         'cancelUrl': "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_monthly')),
         'returnUrl': "http://%s%s" % (settings.PROJECT_SITE_DOMAIN, reverse('withdraws_monthly')),
-        'startingDate': today,
-        'endingDate': today + datetime.timedelta(days=1),
+        'startingDate': today.strftime('%Y-%m-%d'),
+        'endingDate': (today + datetime.timedelta(days=1)).strftime('%Y-%m-%d'),
         'options': OrderedDict({'displayOptions.businessName': settings.PROJECT_NAME}),
     })
 
     for i, (id, receiver) in enumerate(receiverList.iteritems()):
-        payment['receiverList.receiver(%s).amount' % i] = '%2f' % receiver['amount']
+        payment['receiverList.receiver(%s).amount' % i] = '%.2f' % receiver['amount']
         payment['receiverList.receiver(%s).email' % i] = receiver['email']
         payment['receiverList.receiver(%s).name' % i] = receiver['name']
         payment['receiverList.receiver(%s).invoiceId' % i] = receiver['invoiceId']
