@@ -91,6 +91,96 @@ def tutor_signup(request, *args, **kwargs):
     return allauth_signup(request, *args, **kwargs)
 
 
+def step1(request, *args, **kwargs):
+    form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
+
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/step1.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs)
+
+def step2(request, *args, **kwargs):
+    form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
+
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/step2.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs)
+
+def step3(request, *args, **kwargs):
+    form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
+
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/step3.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs)
+
+def step4(request, *args, **kwargs):
+    form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
+
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/step4.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs) 
+       
+def step5(request, *args, **kwargs):
+    form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
+
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/step5.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs)
+
+def step6(request, *args, **kwargs):
+    form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
+
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/step6.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs) 
+
 def parent_signup(request, *args, **kwargs):
     form = ParentSignupForm
     next_url = reverse('edit_parent_profile')
