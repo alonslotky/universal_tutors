@@ -169,7 +169,9 @@ class UserProfile(BaseModel):
         return os.path.join(UserProfile.UPLOAD_IMAGES_PATH, new_filename)
 
     user = AutoOneToOneField(User, related_name="profile")
-
+    
+    #Adding the zipcode attribute
+    zipcode = models.PositiveIntegerField(default=0)
     about = models.CharField(verbose_name=_('Description'), max_length=500, null=True, blank=True)
     title = models.CharField(verbose_name=_('Title'), max_length=100, null=True, blank=True)
     profile_image = models.ImageField(verbose_name=_('Profile image'), upload_to=get_upload_to, default=settings.DEFAULT_PROFILE_IMAGE)

@@ -198,7 +198,9 @@ class SignupForm(forms.ModelForm):
     email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
     password1 = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
-
+    
+    #Adding the zipcode attribute 
+    zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
