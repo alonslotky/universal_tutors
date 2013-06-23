@@ -285,6 +285,7 @@ class SignupForm(forms.ModelForm):
         profile.timezone = self.cleaned_data.get('timezone', None)
         profile.currency = Currency.objects.get(id=self.cleaned_data.get('currency', 1))
         profile.date_of_birth = self.cleaned_data['date_of_birth']
+        profile.zipcode = self.cleaned_data.get('zipcode', 0)    
 
         if image:
             profile.profile_image = image
