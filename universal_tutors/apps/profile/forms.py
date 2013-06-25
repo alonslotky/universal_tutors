@@ -199,6 +199,7 @@ class SignupForm(forms.ModelForm):
     password1 = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
 
+    zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='',widget=forms.TextInput)
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
@@ -278,6 +279,7 @@ class SignupForm(forms.ModelForm):
         profile.other_referral = self.cleaned_data.get('referral_other', None)
         profile.referral_key = self.cleaned_data.get('referral_key', None)
         profile.gender = self.cleaned_data.get('gender', 0)
+        profile.zipcode = self.cleaned_data.get('zipcode', 0)
         profile.newsletters = self.cleaned_data.get('newsletter', False)
         profile.partners_newsletters = self.cleaned_data.get('partners_newsletter', None)
         profile.timezone = self.cleaned_data.get('timezone', None)
