@@ -1,4 +1,4 @@
-from django.db import models
+pfrom django.db import models
 from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -132,6 +132,11 @@ class UserProfile(BaseModel):
         (1, 'FEMALE', 'Female'),
     ))
 
+    TUTORING_TYPES = get_namedtuple_choices('USER_TYPE', (
+        (0, 'in_person', 'in_person'),
+        (1, 'online', 'online'),
+    ))
+
     REFERRAL_TYPES = get_namedtuple_choices('USER_REFERRAL_TYPES', (
         (0, 'SEARCH', 'Search engines'),
         (1, 'FACEBOOK', 'Facebook'),
@@ -231,6 +236,9 @@ class UserProfile(BaseModel):
     paypal_email = models.EmailField(null=True, blank=True)
 
     classes_given = models.PositiveIntegerField(default=0)
+
+    ###TUTORING TYPES
+    tutoring_types = models.PositiveSmallIntegerField(verbose_name=_('tutoring_types'), choices=TUTORING_TYPES.get_choices(), default=TUTORING_TYPES.online)    
 
 
     # RECEIVE NOTIFICATIONS
