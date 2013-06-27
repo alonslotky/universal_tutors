@@ -3,15 +3,18 @@ from django.conf import settings
 from django.views.generic.simple import redirect_to
 from django.contrib import admin
 
+#to be used when using different templates for the tutors signupwizard!
+from apps.profile.views.login import TutorSignupWizard, TUTOR_SIGNUP_FORMS
+from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep2, MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
+                       MultiPartSignupFormStep5, MultiPartSignupFormStep6
+
 # Registration/Login views
 urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
-    url(r"^(?i)account/signup/step1/$", 'step1',  name="tutor_signup_step1"),
-    url(r"^(?i)account/signup/step2/$", 'step2',  name="tutor_signup_step2"),
-    url(r"^(?i)account/signup/step3/$", 'step3',  name="tutor_signup_step3"),
-    url(r"^(?i)account/signup/step4/$", 'step4',  name="tutor_signup_step4"),
-    url(r"^(?i)account/signup/step5/$", 'step5',  name="tutor_signup_step5"),
-    url(r"^(?i)account/signup/step6/$", 'step6',  name="tutor_signup_step6"),
+    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS)),
+#    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view([MultiPartSignupFormStep1, MultiPartSignupFormStep2, \
+#                                                             MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
+#                                                             MultiPartSignupFormStep5, MultiPartSignupFormStep6])),    
     url(r"^(?i)account/signup/student/$", 'student_signup',  name="student_signup"),
     url(r"^(?i)account/signup/parent/$", 'parent_signup',  name="parent_signup"),
     url(r"^(?i)account/signup/$", 'signup',  name="signup"),

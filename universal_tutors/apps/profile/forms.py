@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.forms.models import inlineformset_factory
+from django.contrib.formtools.wizard import FormWizard
 
 from uni_form.helpers import FormHelper, Submit, Reset, Button
 from uni_form.helpers import Layout, Fieldset, Row, HTML, Div
@@ -357,7 +358,6 @@ class Under16SignupForm(StudentSignupForm):
         return user
 
 
-
 class ParentSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(ParentSignupForm, self).__init__(*args, **kwargs)
@@ -370,6 +370,40 @@ class ParentSignupForm(SignupForm):
         
         return user
 
+class MultiPartSignupFormStep1(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email')
+    
+
+class MultiPartSignupFormStep2(forms.ModelForm):
+    class Meta:
+        model = User
+        
+
+class MultiPartSignupFormStep3(forms.ModelForm):
+    class Meta:
+        model = User
+
+class MultiPartSignupFormStep4(forms.ModelForm):
+    class Meta:
+        model = User
+
+class MultiPartSignupFormStep5(forms.ModelForm):
+    class Meta:
+        model = User
+
+class MultiPartSignupFormStep6(forms.ModelForm):
+    class Meta:
+        model = User
+
+class TutorSignupWizard(FormWizard):
+    
+    
+    def done(self, request, form_list):
+        return render_to_response('done.html', {
+            'form_data': [form.cleaned_data for form in form_list],
+        })
 
 class TutorSignupForm(SignupForm):
     about = forms.CharField(label=_('Description'), initial='')
