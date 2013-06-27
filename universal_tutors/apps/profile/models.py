@@ -1,4 +1,4 @@
-pfrom django.db import models
+from django.db import models
 from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -30,6 +30,7 @@ from scribblar import users, rooms
 
 import mailchimp
 from mailchimp.chimpy.chimpy import ChimpyException
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 ### MANAGERS ######################################################
@@ -109,7 +110,13 @@ class Parent(User):
         verbose_name = 'Parent'
         proxy = True
 
+#####################Categories###################
+class Genre(MPTTModel):
+    name = models.CharField(max_length=50, unique=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
 ### MODELS #############################################
 class UserProfile(BaseModel):
@@ -238,13 +245,19 @@ class UserProfile(BaseModel):
     classes_given = models.PositiveIntegerField(default=0)
 
     ###TUTORING TYPES
-    tutoring_types = models.PositiveSmallIntegerField(verbose_name=_('tutoring_types'), choices=TUTORING_TYPES.get_choices(), default=TUTORING_TYPES.online)    
-
-
+    #tutoring_types = models.PositiveSmallIntegerField(verbose_name=_('tutoring_types'), choices=TUTORING_TYPES.get_choices(), default=TUTORING_TYPES.online)    
+    #tutoring_types1 = models.PositiveIntegerField(default=0)
+    genre = models.ManyToManyField(Genre)
+    #genre = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    
     # RECEIVE NOTIFICATIONS
     notifications_messages = models.BooleanField(default=True)
     notifications_classes = models.BooleanField(default=True)
     notifications_other = models.BooleanField(default=True)
+
+    #online_tutoring = models.BooleanField(default=True)
+    #in_person_tutoring = models.BooleanField(default=True)
+    #check = models.PositiveIntegerField(default=0)
 
     @property
     def age(self):
