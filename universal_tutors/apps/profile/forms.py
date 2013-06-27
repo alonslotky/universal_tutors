@@ -26,6 +26,13 @@ from apps.core.models import Currency, EmailTemplate, Country, Timezone
 import urllib2
 import urlparse
 import simplejson
+from mptt.models import MPTTModel, TreeForeignKey
+
+from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
+from mptt.forms import *
+
+
 
 class TutorSubjectForm(forms.ModelForm):
     class Meta:
@@ -216,6 +223,9 @@ class SignupForm(forms.ModelForm):
     newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
     partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
     
+    online_tutoring = forms.BooleanField(required = True, initial=True)
+    in_person_tutoring = forms.BooleanField(required = True, initial=True)
+        
     def clean_agreement(self):
         agreement = self.cleaned_data.get('agreement', False)
         if not agreement:
@@ -411,7 +421,9 @@ class TutorSignupForm(SignupForm):
     webcam = forms.BooleanField(label='I have a WebCam', required=False)#, help_text='Users will need at least a 500kbps internet connection in order to use the classroom functionality')
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
     paypal_email = forms.EmailField(label=_('PayPal Email'), max_length = 255, initial='', required=False)
-        
+    #tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
+    genre = TreeNodeChoiceField(queryset=Genre.tree.all(),level_indicator=u'+--')
+
     def __init__(self, *args, **kwargs):
         super(TutorSignupForm, self).__init__(*args, **kwargs)
 
@@ -428,6 +440,7 @@ class TutorSignupForm(SignupForm):
         profile.webcam = self.cleaned_data.get('webcam', False)
         profile.type = profile.TYPES.TUTOR
         profile.paypal_email = self.cleaned_data.get('paypal_email', None)
+        profile.tutoring_type = self.cleaned_data.get('tutoring_type', 0)
         profile.save()
         
         try:

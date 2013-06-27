@@ -63,6 +63,35 @@
               {{form.gender}}
             </div>
           </div>
+<!--
+          <div class="row space">
+            <div class="three columns">
+              <label>Genre*</label>
+            </div>
+            <div class="nine columns">
+              {{form.genre}}
+            </div>
+          </div>          
+
+          <div class="row space">
+            <div class="three columns">
+              <label>tutoring_type*</label>
+            </div>
+            <div class="nine columns">
+              {{form.online_tutoring}} online_tutoring </div>
+            <div class="nine columns">  
+              {{form.in_person_tutoring}} in_person_tutoring</div>
+            
+          </div>
+-->
+          <div class="row space">
+            <div class="three columns">
+              <label>Zipcode*</label>
+            </div>
+            <div class="nine columns">
+              <input type="text" id="id_zipcode" name="Zipcode" value="{{ form.zipcode.value }}" class="input-text stretch" />
+            </div>
+          </div> 
 
           <div class="row space">
             <div class="three columns">
