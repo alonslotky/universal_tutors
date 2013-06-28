@@ -18,9 +18,9 @@ ACCOUNT_ACTIVATION_ADMINS = ['ben@rawjam.co.uk',]
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'universal_tutors',
-        'USER': 'localuser',
-        'PASSWORD': 'localuser',
+        'NAME': 'universaltutors',
+        'USER': 'universaltutors',
+        'PASSWORD': 'uT18@GhAS#11',
         'HOST': 'localhost',
     }
 }
@@ -119,6 +119,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'django.contrib.humanize',
     'flatblocks',
+	'django.contrib.formtools',
     
     # Utilities & Helper Apps
     'south',

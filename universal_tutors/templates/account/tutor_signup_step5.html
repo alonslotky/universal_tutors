@@ -1,0 +1,100 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% load fb_versions common_tags %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+	<script type="text/javascript" src="{{STATIC_URL}}js/availability.js"></script>
+	<script type="text/javascript">
+		var EDIT_WEEK_PERIOD_URL = '{% url user_edit_week_period %}';
+		var DELETE_WEEK_PERIOD_URL = '{% url user_delete_week_period %}';
+	
+		setInterval(function(){
+			$('#new-schedule-container').css('width', '100%');
+			var width = $('#new-schedule-container').width();
+	  		width = width - (width % 25);
+			$('#new-schedule-container, #new-schedule-container .new-schedule-calendar-day').css('width', width+'px');
+		}, 200);
+	
+		setInterval(function(){
+			$('#new-class-schedule-container').css('width', '100%');
+			var width = $('#new-class-schedule-container').width();
+	  		width = width - (width % 25);
+			$('#new-class-schedule-container, #new-class-schedule-container .new-schedule-calendar-day').css('width', width+'px');
+		}, 200);
+	</script>
+{% endblock %}
+
+{% block content %}
+  <section class="blue feature-box">
+	  <div class="inner">
+		<h1>Sign Up as a tutors</h1>
+		<h4>Step 4 of {{ wizard.steps.count }}</h4>
+	  </div>
+  </section>
+
+  <section>
+
+    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
+		
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	
+		
+	<div class="hide-on-phones">
+		{% include 'profile/fragments/_timer.html' %}
+	</div>
+
+      
+	<dl class="nice contained tabs hide-on-phones">
+        <dd><a href="#availability">Availability</a></dd>        
+    </dl>
+      
+     <dl class="nice contained vertical tabs show-on-phones">
+        <dd><a href="#availability">Availability</a></dd>
+     </dl>
+  	{% csrf_token %}
+    <ul class="nice tabs-content contained">
+		{% include "account/_availability.html" %}
+    </ul>
+  	
+  	{% include "account/availability/_modal_add_availability.html" %}
+	
+	<hr class="inside">
+	
+	<div name="button">
+	{% if wizard.steps.prev %}
+		<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
+	{% endif %}
+	
+	{% if wizard.steps.next %}
+		<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
+	{% else %}
+		<input type="submit" value="{% trans "submit" %}"/>	
+	{% endif %}
+	
+	<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+		{{ previous_fields|safe }}
+		</div>
+	</form>
+
+  </section>
+  
+{% endblock %}
+

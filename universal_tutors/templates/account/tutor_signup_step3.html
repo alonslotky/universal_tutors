@@ -1,0 +1,74 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+{% endblock %}
+
+{% block content %}
+  <section class="blue feature-box">
+	  <div class="inner">
+		<h1>Sign Up as a tutors</h1>
+		<h4>Step 3 of {{ wizard.steps.count }}</h4>
+	  </div>
+  </section>
+
+  <section>
+
+    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
+		
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	
+	<div class="row">	
+		<div class="eight columns">
+			<div class="row space" name="name">
+				<div class="three columns">
+					<label>This is where Sid will Add the Add Subjects Stuff</label>
+				</div>
+			</div>
+				
+			<hr class="inside">
+		
+			<div name="button">
+			{% if wizard.steps.prev %}
+				<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
+			{% endif %}
+			
+			{% if wizard.steps.next %}
+				<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
+			{% else %}
+				<input type="submit" value="{% trans "submit" %}"/>	
+			{% endif %}
+			
+			<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+		{{ previous_fields|safe }}
+		</div>
+		
+		</div>
+        
+        
+		
+    </div>
+	</form>
+
+  </section>
+  
+
+
+{% endblock %}

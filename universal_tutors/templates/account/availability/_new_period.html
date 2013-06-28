@@ -1,0 +1,12 @@
+{% load common_tags tutor_tags %}
+
+<div id="schedule-period_{{period.id}}" class="new-schedule-period" style="{{period|get_new_schedule_period_size}}">
+	<div class="left">&laquo;</div>
+	<div class="right">&raquo;</div>
+	<div class="options">
+		<span>&nbsp;-&nbsp;</span>
+		<div class="options-container hidden">
+			<div class="option-item new-schedule-delete-period">Delete</div>
+		</div>
+	</div>
+</div>
