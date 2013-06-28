@@ -389,6 +389,19 @@ class MultiPartSignupFormStep1(forms.ModelForm):
 class MultiPartSignupFormStep2(forms.ModelForm):
     class Meta:
         model = User
+        fields = ('date_of_birth', 'gender', 'zipcode',)
+        
+    email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
+    
+    #Adding the zipcode attribute 
+    zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
+
+    online_tutoring = forms.BooleanField(required = True, initial=True)
+    in_person_tutoring = forms.BooleanField(required = True, initial=True)
+    
+    date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
+    gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
+
         
 
 class MultiPartSignupFormStep3(forms.ModelForm):
@@ -398,10 +411,17 @@ class MultiPartSignupFormStep3(forms.ModelForm):
 class MultiPartSignupFormStep4(forms.ModelForm):
     class Meta:
         model = User
+        #fields = ('profile.currency')
+        
+    price_per_hour = forms.DecimalField(initial=0)
+    currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
 
 class MultiPartSignupFormStep5(forms.ModelForm):
     class Meta:
         model = User
+        
+    default_week = [('Monday', 0, []), ('Tuesday', 1, []), ('Wednesday', 2, []), ('Thursday', 3, []), ('Friday', 4, []), ('Saturday', 5, []), ('Sunday', 6, [])]
+    
 
 class MultiPartSignupFormStep6(forms.ModelForm):
     class Meta:

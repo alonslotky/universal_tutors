@@ -1,0 +1,67 @@
+{% load common_tags %}
+
+  <li id="availabilityTab">
+    <h2 class="clear">Availability</h2>
+
+	{% with wizard.form.default_week as default_week %}
+	<div class="hide-on-phones">
+		<p>
+			<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a><br/>
+			<span>(or click and drag cursor in calendar below)</span>
+		</p>
+		<div id="new-schedule-container" class="new-schedule-calendar">
+			<div class="new-schedule-calendar-header">
+				<div class="new-schedule-calendar-time first">&nbsp;</div>
+				{% for hour in 0|range_to:24 %}
+				<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">{% if forloop.counter0 < 10 %}0{% endif %}{{hour}}h</div>
+				{% endfor %}
+			</div>
+
+			{% for day, weekday, periods in default_week %}
+				<div id="new-schedule-calendar-day_{{weekday}}" class="new-schedule-calendar-day">
+					<div class="new-schedule-calendar-background">
+						<div class="new-schedule-calendar-time first day">{{day|slice:"3"}}</div>
+						{% for hour in 0|range_to:24 %}
+						<div class="new-schedule-calendar-time {% if forloop.last %}last{% endif %}">&nbsp;</div>
+						{% endfor %}
+					</div>
+					{% for period in periods %}
+						{% include "account/availability/_new_period.html" %}
+					{% endfor %}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="show-on-phones">
+		<div class="list-week">
+			{% for day, weekday, periods in default_week %}
+				<div class="list-week-day">{{day}}</div>
+				{% for period in periods %}
+					<div id="list-week-availability-item-{{period.id}}" class="list-week-item">
+						<div class="text">from {{period.begin|time:"H:i"}} to {{period.end|time:"H:i"}}</div>
+						<div class="actions">
+							<a id="availability-delete-{{period.id}}" href="javascript:;" onclick="delete_list_availability_item({{period.id}});">delete</a>
+						</div>
+					</div>
+				{% endfor %}
+				<div class="list-week-item">
+					<div class="actions">
+						<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear({{weekday}});">+ add availability</a>
+					</div>
+				</div>
+			{% endfor %}		
+		</div>
+	</div>
+	<script type="text/javascript">
+		var delete_list_availability_item = function(id) {
+			$('#schedule-week-period-dropbox-'+ id).remove();
+			$('#schedule-week-period_'+ id).remove();
+			$('#list-week-availability-item-'+ id).fadeOut(function(){
+				$(this).remove();
+			});
+			$.get('{% url user_delete_week_period %}'+ id +'/');
+		}
+	</script>
+	{% endwith %}
+  </li>

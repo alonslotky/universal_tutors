@@ -119,6 +119,7 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'django.contrib.humanize',
     'flatblocks',
+	'django.contrib.formtools',
     
     # Utilities & Helper Apps
     'south',

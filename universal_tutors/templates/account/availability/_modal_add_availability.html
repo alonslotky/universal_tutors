@@ -1,0 +1,186 @@
+{% load classes_tags %}
+
+<div id="modal-add-availability" class="reveal-modal message">
+	<h4>Availability</h4>
+    <div id="modal-add-availability-loading" class="modal-loading"></div>
+    <div id="modal-add-availability-container">
+	  <form id="modal-add-availability-form" class="nice">
+	  	{% csrf_token %}
+		<div class="row">&nbsp;</div>
+		<div id="add-availability-errors" class="formError"></div>
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>Weekday</label>
+		  </div>
+		  <div class="eight columns phone-three">
+			<select id="add-availability-weekday" name="weekday" class="stretch">
+				<option value="-1">Select weekday</option>
+				<option value="0">Monday</option>
+				<option value="1">Tuesday</option>
+				<option value="2">Wednesday</option>
+				<option value="3">Thursday</option>
+				<option value="4">Friday</option>
+				<option value="5">Saturday</option>
+				<option value="6">Sunday</option>
+			</select>
+		  </div>	  
+		</div>
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>From</label>
+		  </div>
+		  <div class="eight columns phone-three">
+		  	<div class="six columns phone-two">
+			  	<select id="add-availability-from-hour" name="from-hour" class="stretch">
+			  		<option value="-1">Select hour</option>
+			  		<option value="0">00</option>
+			  		<option value="1">01</option>
+			  		<option value="2">02</option>
+			  		<option value="3">03</option>
+			  		<option value="4">04</option>
+			  		<option value="5">05</option>
+			  		<option value="6">06</option>
+			  		<option value="7">07</option>
+			  		<option value="8">08</option>
+			  		<option value="9">09</option>
+			  		<option value="10">10</option>
+			  		<option value="11">11</option>
+			  		<option value="12">12</option>
+			  		<option value="13">13</option>
+			  		<option value="14">14</option>
+			  		<option value="15">15</option>
+			  		<option value="16">16</option>
+			  		<option value="17">17</option>
+			  		<option value="18">18</option>
+			  		<option value="19">19</option>
+			  		<option value="20">20</option>
+			  		<option value="21">21</option>
+			  		<option value="22">22</option>
+			  		<option value="23">23</option>
+			  	</select>
+		  	</div>
+		  	<div class="six columns phone-two">
+			  	<select id="add-availability-from-minute" name="from-minute" class="stretch">
+			  		<option value="-1">Select minutes</option>
+			  		<option value="0">00</option>
+			  		<option value="15">15</option>
+			  		<option value="30">30</option>
+			  		<option value="45">45</option>
+			  	</select>
+		  	</div>
+		  </div>	  
+		</div>
+		<div class="row">
+		  <div class="four columns phone-one">        
+		    <label>To</label>
+		  </div>
+		  <div class="eight columns phone-three">
+		  	<div class="six columns phone-two">
+			  	<select id="add-availability-to-hour" name="to-hour" class="stretch">
+			  		<option value="-1">Select hour</option>
+			  		<option value="0">00</option>
+			  		<option value="1">01</option>
+			  		<option value="2">02</option>
+			  		<option value="3">03</option>
+			  		<option value="4">04</option>
+			  		<option value="5">05</option>
+			  		<option value="6">06</option>
+			  		<option value="7">07</option>
+			  		<option value="8">08</option>
+			  		<option value="9">09</option>
+			  		<option value="10">10</option>
+			  		<option value="11">11</option>
+			  		<option value="12">12</option>
+			  		<option value="13">13</option>
+			  		<option value="14">14</option>
+			  		<option value="15">15</option>
+			  		<option value="16">16</option>
+			  		<option value="17">17</option>
+			  		<option value="18">18</option>
+			  		<option value="19">19</option>
+			  		<option value="20">20</option>
+			  		<option value="21">21</option>
+			  		<option value="22">22</option>
+			  		<option value="23">23</option>
+			  	</select>
+		  	</div>
+		  	<div class="six columns phone-two">
+			  	<select id="add-availability-to-minute" name="to-minute" class="stretch">
+			  		<option value="-1">Select minutes</option>
+			  		<option value="0">00</option>
+			  		<option value="15">15</option>
+			  		<option value="30">30</option>
+			  		<option value="45">45</option>
+			  	</select>		  		
+		  	</div>
+		  </div>	  
+		</div>
+		<div class="row">&nbsp;</div>
+	  	<div class="row">
+		    <input type="submit" class="small button" value="Add availability">
+		</div>
+	  </form>
+      	
+    </div>
+  	<a class="close-reveal-modal">&#215;</a>
+</div>
+
+<script type="text/javascript">
+	$('#modal-add-availability-loading').hide();
+	
+	$('#modal-add-availability-form').submit(function(e){
+		e.preventDefault();
+		
+		var weekday = parseInt($('#add-availability-weekday').val());
+		var from_hour = parseInt($('#add-availability-from-hour').val());
+		var from_minute = parseInt($('#add-availability-from-minute').val());
+		var to_hour = parseInt($('#add-availability-to-hour').val());
+		var to_minute = parseInt($('#add-availability-to-minute').val());
+		
+		if(!(weekday>=0 && from_hour>=0 && from_minute>=0 && to_hour>=0 && to_minute>=0)) {
+			$('#add-availability-errors').html('Please fill all the fields below');
+			$('#add-availability-errors').removeClass('hidden');
+			return false;
+		}
+		
+		if( (to_hour<from_hour || (to_hour==from_hour && to_minute <= from_minute)) && !(to_hour==0 && to_minute==0) ) {
+			$('#add-availability-errors').html('"From" value must be higher than "To".');
+			$('#add-availability-errors').removeClass('hidden');
+			return false;			
+		}
+		
+		var begin = from_hour +'-'+ from_minute;
+		var end = to_hour +'-'+ to_minute;
+		
+		$('#modal-add-availability-container').fadeOut(function(){
+			$('#modal-add-availability-loading').fadeIn(function(){
+				$.ajax({
+					type: 'post',
+					url: '{% url user_edit_week_period %}0/'+ begin +'/'+ end +'/'+ weekday +'/',
+					data: $('#modal-add-availability-form').serialize(),
+					success: function(response) {
+						window.location.reload();			
+					},
+					error: function(){
+						$('#add-availability-errors').html('It is not possible to create availability between '+ 
+							(from_hour<10?'0'+from_hour:from_hour) +':'+ (from_minute<10?'0'+from_minute:from_minute) +' and '+ 
+							(to_hour<10?'0'+to_hour:to_hour) +':'+ (to_minute<10?'0'+to_minute:to_minute) +'.');
+						$('#add-availability-errors').removeClass('hidden');
+						
+						$('#modal-add-availability-loading').fadeOut(function(){
+							$('#modal-add-availability-container').fadeIn();
+						});
+					}
+				});
+			});
+		});
+		$('#id_credits_errors').removeClass('hidden');
+	});
+	
+	var add_availability_clear = function(weekday){
+		$('select').val('-1');
+		$('#add-availability-weekday').val((!isNaN(weekday))?weekday:'');
+		$('#add-availability-errors').html('');
+		$('#add-availability-errors').addClass('hidden');
+	}
+</script>

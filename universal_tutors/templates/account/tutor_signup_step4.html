@@ -1,0 +1,96 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+{% endblock %}
+
+{% block content %}
+  <section class="blue feature-box">
+	  <div class="inner">
+		<h1>Sign Up as a tutors</h1>
+		<h4>Step 4 of {{ wizard.steps.count }}</h4>
+	  </div>
+  </section>
+
+  <section>
+
+    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
+		
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	
+	<div class="row space">	
+		<div class="three columns">
+              <label>Price per tutoring hour:</label>
+        </div>
+		<div class="nine columns">
+			<input id="id_date_of_birth" class="input-text clear hidden" type="text" value="" name="date_of_birth"></input>				
+			<div class="row" name="price_per_hour">
+				
+				<div class="three columns">					
+					<input id="id_price_per_hour" name="id_price_per_hour" type="text" class="input-text" placeholder="Price" />					
+				</div>
+								
+				<div class="six columns">
+					{{wizard.form.currency}}				
+				</div>
+								
+				
+			</div>
+
+		</div>
+				
+			<hr class="inside">
+		
+			<div name="button">
+			{% if wizard.steps.prev %}
+				<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
+			{% endif %}
+			
+			{% if wizard.steps.next %}
+				<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
+			{% else %}
+				<input type="submit" value="{% trans "submit" %}"/>	
+			{% endif %}
+			
+			<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+		{{ previous_fields|safe }}
+		</div>
+		
+		</div>
+        
+        
+		
+    </div>
+	</form>
+
+  </section>
+  
+
+<script type="text/javascript" name="append_currency">
+	var currency_size = {{wizard.form.currency.1}}
+	
+	for(i=0; i< 3; i++)
+		$('#id_currency_select').append('<option value="'+ (i+1) +' " ' +'>'+ wizard.form.currency.i +'</option>');
+
+	
+
+</script>
+
+{% endblock %}
