@@ -153,7 +153,7 @@ INSTALLED_APPS = (
     'paypal.standard.ap',
     
     'mailchimp',
-    
+    'mptt',
     # CMS
 #    'cms',
 #    'mptt',

@@ -115,8 +115,13 @@ class Genre(MPTTModel):
     name = models.CharField(max_length=50, unique=True)
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
+    def __unicode__(Self):
+        return Self.name
+
     class MPTTMeta:
         order_insertion_by = ['name']
+
+
 
 ### MODELS #############################################
 class UserProfile(BaseModel):

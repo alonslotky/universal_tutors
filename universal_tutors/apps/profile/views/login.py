@@ -25,6 +25,11 @@ from apps.classes.models import ClassSubject
 from apps.profile.forms import *
 
 
+def show_genres(request):
+    return render_to_response("account/genres.html",
+                          {'nodes':Genre.objects.all()},
+                          context_instance=RequestContext(request))
+    
 def logout_view(request):
     logout(request)
     return http.HttpResponseRedirect(reverse('home'))
