@@ -513,7 +513,15 @@ class TutorSignupForm(SignupForm):
     #tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
     #genre = forms.ModelMultipleChoiceField(choices=Genre.tree.all(), widget=forms.FilteredSelectMultiple)
     #genre = MPTTFilteredSelectMultiple(queryset=Genre.tree.all())
-    genre=TreeNodeChoiceField(queryset=Genre.tree.all())
+    History = Genre.objects.get(name='History')
+    genre1=TreeNodeChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
+    Computer_Science = Genre.objects.get(name='Computer Science')
+    genre2=TreeNodeChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
+    #genre2=forms.ChoiceField(choices=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
+        
+
+    #genre2=TreeNodeChoiceField(queryset=UserProfile.genre2.tree.all(),widget=forms.CheckboxSelectMultiple)
+    
     #genre = MPTTModelMultipleChoiceField(
                     #Genre.tree.all(),widget = forms.CheckboxSelectMultiple)
     #class Meta:
