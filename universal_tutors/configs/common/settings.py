@@ -157,7 +157,7 @@ INSTALLED_APPS = (
     'mptt',
     # CMS
 #    'cms',
-#    'mptt',
+    'mptt',
 #    'menus',
 #    'cms.plugins.text',
 #    'cms.plugins.picture',
