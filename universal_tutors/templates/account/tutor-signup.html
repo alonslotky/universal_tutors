@@ -1,3 +1,6 @@
+
+
+
 {% extends "ui/layouts/base.html" %}
 
 {% load fb_versions common_tags flatblock_tags ut_tags %}
@@ -65,18 +68,81 @@
             </div>
           </div>
 
-          <div class="row space">
-            <div class="three columns">
-              <label>Subjects*</label>
-            </div>
-            <div class="nine columns">
-              History
-              {{form.genre1}}
-              Computer Science
-              {{form.genre2}}
+<style type="text/css">
+      body { font-size: 80%; font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif; }
+      .accordionItem h2 { margin: 0; font-size: 2.5em;  color: #000000 ; border-bottom: 1px ;text-align:left }
+      .accordionItem h2:hover { cursor: pointer; }
+      .accordionItem div { margin: 0; padding: 1em 0.4em;  border-bottom: 1px  }
+      .accordionItem.hide h2 { color: #000;  }
+      .accordionItem.hide div { display: none; }
+    </style>
 
-            </div>
-          </div> 
+<body >
+
+    <h1>Subjects</h1>
+
+    <div class="accordionItem">
+      <h2 >+  {{form.cat.0}}</h2>
+      <h3>{{form.subcat.0.1}} <h3>
+      <div>
+        {{form.genre2}}
+      </div>
+    </div>
+
+    <div class="accordionItem">
+      <h2>+ History</h2>
+      <div>
+        {{form.genre1}}
+      </div>
+    </div>
+
+    
+</body>  
+<script>
+var accordionItems = [];
+
+function toggleItem() {
+    var itemClass = this.parentNode.className;
+
+    // Hide all items
+    for (var i = 0; i < accordionItems.length; i++) {
+        accordionItems[i].className = 'accordionItem hide';
+    }
+
+    // Show this item if it was previously hidden
+    if (itemClass == 'accordionItem hide') {
+        this.parentNode.className = 'accordionItem';
+    }
+}
+
+function getFirstChildWithTagName(element, tagName) {
+    for (var i = 0; i < element.childNodes.length; i++) {
+        if (element.childNodes[i].nodeName == tagName) return element.childNodes[i];
+    }
+}
+
+function init() {
+
+    // Grab the accordion items from the page
+    var divs = document.getElementsByTagName('div');
+    for (var i = 0; i < divs.length; i++) {
+        if (divs[i].className == 'accordionItem') accordionItems.push(divs[i]);
+    }
+
+    // Assign onclick events to the accordion item headings
+    for (var i = 0; i < accordionItems.length; i++) {
+        var h2 = getFirstChildWithTagName(accordionItems[i], 'H2');
+        h2.onclick = toggleItem;
+    }
+
+    // Hide all accordion item bodies except the first
+    for (var i = 1; i < accordionItems.length; i++) {
+        accordionItems[i].className = 'accordionItem hide';
+    }
+}
+
+init();
+</script>
 
                  
 
@@ -464,39 +530,8 @@
 
 
 
-</script>
 
-<script type="text/javascript">
-	$(window).ready(function(){
-		$('#tooltip-description').{% if request.mobile %}clickover{% else %}popover{% endif %}({
-			title: 'Description',
-			content: 'This is one of the first things students will see in the search results, so make sure you tell them the interesting bits about you'
-		});
-
-		$('#tooltip-webcam').{% if request.mobile %}clickover{% else %}popover{% endif %}({
-			title: 'Webcam',
-			content: 'Our classrooms include the optional use of video communication, your chances of getting booked for classes are far better if you have a webcam'
-		});
-
-		$('#tooltip-crb').{% if request.mobile %}clickover{% else %}popover{% endif %}({
-			title: 'CRB',
-			content: 'If you would like to teach under 16’s then we strongly recommend that you provide a CRB check from within the last 2 years or purchase a new one as we advise all under 16’s and their parents only to use CRB checked tutors'
-		});
-
-		$('#tooltip-paypal').{% if request.mobile %}clickover{% else %}popover{% endif %}({
-			title: 'Paypal Email',
-			content: 'This is required in order for Universal Tutors to transfer your earnings to you'
-		});
-
-		$('#tooltip-referral').{% if request.mobile %}clickover{% else %}popover{% endif %}({
-			title: 'Referral Key',
-			content: 'If you have been referred by another user of the site then please enter the code here to receive your special offer'
-		});
-	});
-
-</script>
-
-<script type="text/javascript">
+//<script type="text/javascript">
 	function createUploader(){
         var photoUpload = new qq.FileUploaderBasic({
             button: document.getElementById('id_profile_image_preview'),
@@ -672,5 +707,11 @@ var SelectBox = {
         }
     }
 }
+
+
+    
+
+
 </script>
+</html>
 {% endblock %}

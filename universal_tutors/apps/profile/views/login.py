@@ -120,7 +120,20 @@ def tutor_signup(request, *args, **kwargs):
     
     return allauth_signup(request, *args, **kwargs)
 
+def tutor_signup1(request, *args, **kwargs):
+    form = TutorSignupForm
+    next_url = reverse('edit_tutor_profile')
 
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/tutor3.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs)
 
 def parent_signup(request, *args, **kwargs):
     form = ParentSignupForm

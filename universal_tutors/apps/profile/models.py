@@ -254,6 +254,7 @@ class UserProfile(BaseModel):
     #tutoring_types = models.PositiveSmallIntegerField(verbose_name=_('tutoring_types'), choices=TUTORING_TYPES.get_choices(), default=TUTORING_TYPES.online)    
     #tutoring_types1 = models.PositiveIntegerField(default=0)
     genre = models.ManyToManyField(Genre)
+    #subject1 = models.ManyToManyField(Genre)
     #genre2 = TreeForeignKey(Genre)
     #genre = TreeForeignKey('self', null=True, blank=True, related_name='children')
     
