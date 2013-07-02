@@ -547,11 +547,21 @@ class TutorSignupForm(SignupForm):
     for x in range(0, len(cat)):
         subcat[x]=cat[x].get_children()
 
-    genre=range(0,2)    
-    genre[0]=forms.ModelMultipleChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
-    Computer_Science = Genre.objects.get(name='Computer Science')
-    genre[1]=forms.ModelMultipleChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
-        
+    
+
+    genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_0_1=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_1_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_5_0=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_5_1=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_5_2=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_5_3=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_5_4=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_5_5=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple)
+                      
 
 
 

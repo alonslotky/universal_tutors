@@ -26,47 +26,7 @@
 
     <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
   {% csrf_token %}
-      <div class="row">
-        <div class="twelve columns">
-          <h3>Personal Details</h3>
-        </div>
-      </div>
-
-     {% if form.password1 and form.first_name.errors %}<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>{% endif %}
-     {% if form.password1 and form.last_name.errors %}<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>{% endif %}
-      <div class="row">
-        <div class="eight columns">
-          {% if form.password1 %}
-          <label>Name*</label>
-
-          <div class="row space">
-            <div class="six columns">
-              <input name="first_name" type="text" class="input-text" placeholder="First Name" value="{{form.first_name.value}}">
-            </div>
-            <div class="six columns">
-              <input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{form.last_name.value}}">
-            </div>
-          </div>
-          {% endif %}
-
-          {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
-          <div class="row space">
-            <div class="three columns">
-            <label>Description* <span id="tooltip-description">[?]</span><br/><span>(max 300 characters)</span></label>
-        </div>
-            <div class="nine columns">
-            <textarea id="id_about" name="about" class="user">{{form.about.value}}</textarea>
-        </div>
-      </div>
-
-          <div class="row space">
-            <div class="three columns">
-              <label>Gender*</label>
-            </div>
-            <div class="nine columns">
-              {{form.gender}}
-            </div>
-          </div>
+      
 
 <style type="text/css">
       body { font-size: 80%; font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif; }
@@ -116,84 +76,235 @@
 </table>
 -->
 
-
+<font size="8">SUBJECTS </font>
     <div class="accordionItem">
-      <h2 >+  {{form.cat.0}}</h2>
+      <h2>+  {{form.cat.0}}</h2>
       
-      <div>
-        <table><tr>
-{% for  field1,field2 in form.genrex.field.widget.choices %}
-   <td> <input value="{{field1}}" type="checkbox">{{field2}}
-   {% if forloop.last %}
-     </tr>
-   {% else %}
-     {% if forloop.counter|divisibleby:"3" %}
-       </tr><tr>
-     {% endif %}
-   {% endif %}
-{% endfor %}
-</table>
-      </div>
-    </div>
-
-
-
-    <div class="accordionItem">
-      <h2>+ History</h2>
-      <div>
-        <table><tr>
-{% for  field1,field2 in form.genrex.field.widget.choices %}
-   <td> <input value="{{field}}" type="checkbox">{{field2}}
-   {% if forloop.last %}
-     </tr>
-   {% else %}
-     {% if forloop.counter|divisibleby:"3" %}
-       </tr><tr>
-     {% endif %}
-   {% endif %}
-{% endfor %}
-</table>
-      </div>
-    </div>
-===================================================================
-  <div class="accordionItem">
-    <h2 >+  {{form.cat.0}}</h2>
       
-      <div>
-        <table border="3">
-          <tr>
-            {% for  field1,field2 in form.genrex.field.widget.choices %}
-              <td> <input value="{{field1}}" type="checkbox">{{field2}}
-                   {% if forloop.last %}
-              </td>     
-        
-                          {% else %}
-                            {% if forloop.counter|divisibleby:"2" %}
-             <tr>
-          
-                            {% endif %}
-                        {% endif %}
-            {% endfor %}
-           
+      <div><h5 color:#000000 > {{form.cat.0.get_children.0}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_0_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
         </table>
       </div>
-  </div> 
-####################################################################
-#####################################################################
-#######################################################################  
-  <div>
-    <table>
-      {% for subcat in form.subcat %}
-      <tr>
-        {{ subcat }}
-        
-      </tr> 
-      {% endfor   %}
-    </table>  
-  </div>  
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.0.get_children.1}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_0_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+      <!--  End of Part1 -->
+
+      <!--  Part2 -->
+    <div class="accordionItem"> 
+      <h2>+  {{form.cat.1}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.1.get_children.0}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_1_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.1.get_children.1}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_1_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+      <!--  End of Part2 -->
+
+      <!--  Part4 -->
+     <div class="accordionItem"> 
+      <h2>+  {{form.cat.4}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.4.get_children.0}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_4_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.4.get_children.1}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_4_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+
+ <!--  End of Part4 -->
+
+      <!--  Part5 -->
+     <div class="accordionItem"> 
+      <h2>+  {{form.cat.5}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.5.get_children.0}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_5_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.5.get_children.1}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_5_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.5.get_children.2}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_5_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.5.get_children.3}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_5_3.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+      <div><h5 color:#000000 > {{form.cat.5.get_children.4}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_5_4.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.5.get_children.1}}</h5>
+        <table><tr>
+          {% for  field1,field2 in form.genre_5_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"3" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    </div>
 
 
-=======================================================================     
+
+    
+   
 </body>  
 <script>
 var accordionItems = [];
@@ -243,274 +354,6 @@ init();
 
                  
 
-          <div class="row space">
-            <div class="three columns">
-              <label>tutoring_type*</label>
-            </div>
-            <div class="nine columns">
-              {{form.online_tutoring}} online_tutoring </div>
-            <div class="nine columns">  
-              {{form.in_person_tutoring}} in_person_tutoring</div>
-            
-          </div>
-
-          <div class="row space">
-            <div class="three columns">
-              <label>Zipcode*</label>
-            </div>
-            <div class="nine columns">
-              <input type="text" id="id_zipcode" name="Zipcode" value="{{ form.zipcode.value }}" class="input-text stretch" />
-            </div>
-          </div> 
-
-          <div class="row space">
-            <div class="three columns">
-              <label>D.O.B*</label>
-            </div>
-
-          {% if form.date_of_birth.errors %}<div class="formError">{{ form.date_of_birth.errors }}</div>{% endif %}
-            <div class="nine columns">
-              <input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{form.date_of_birth.value}}">
-              <div class="row">
-                <div class="four columns phone-one">
-                  <select id="id_dob_day" class="stretch">
-                  </select>
-                </div>
-                <div class="four columns phone-one">
-                  <select id="id_dob_month" class="stretch">
-                  </select>
-                </div>
-                <div class="four columns phone-two">
-                  <select id="id_dob_year" class="stretch">
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {% if form.country.errors %}<div class="formError">{{ form.country.errors }}</div>{% endif %}
-          <div class="row date_of_birth">
-            <div class="three columns phone-one">
-              <label>Country*</label>
-            </div>
-            <div class="nine columns phone-three">
-              {{form.country}}
-            </div>
-          </div>
-
-          {% if form.timezone.errors %}<div class="formError">{{ form.timezone.errors }}</div>{% endif %}
-          <div class="row date_of_birth space">
-            <div class="three columns phone-one">
-              <label>Timezone*</label>
-            </div>
-            <div class="nine columns phone-three">
-                {{form.timezone}}
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="three columns phone-one">
-              <label>I have a Webcam <span id="tooltip-webcam">[?]</span></label>
-            </div>
-            <div class="nine columns phone-three">
-                <div class="">{{form.webcam}}</div>
-                {{ form.webcam.help_text }}
-            </div>
-          </div>
-
-          <hr class="inside">
-
-        <div class="row">
-          <div class="twelve columns">
-            <h3>Account details</h3>
-          </div>
-        </div>
-
-      {% if form.username.errors %}<div class="formError">{{ form.username.errors }}</div>{% endif %}
-          <div class="row space">
-            <div class="three columns">
-              <label>Username*</label>
-            </div>
-            <div class="nine columns">
-              <input type="text" id="id_username" name="username" value="{{ form.username.value }}" class="input-text stretch" />
-            </div>
-          </div>
-
-      {% if form.email.errors %}<div class="formError">{{ form.email.errors }}</div>{% endif %}
-          <div class="row space">
-            <div class="three columns">
-              <label>Email*</label>
-            </div>
-            <div class="nine columns">
-              <input type="text" id="id_email" name="email" value="{{ form.email.value }}" class="input-text stretch" />
-            </div>
-          </div>
-
-      {% if form.password1 %}
-        {% if form.password1.errors %}<div class="formError">{{ form.password1.errors }}</div>{% endif %}
-        {% if form.password2.errors %}<div class="formError">{{ form.password2.errors }}</div>{% endif %}
-            <div class="row">
-              <div class="three columns">
-                <label>Account Password*</label>
-              </div>
-              <div class="four columns">
-                <input type="password" id="id_password1" name="password1" placeholder="Password" value="" class="input-text stretch" />
-              </div>
-              <div class="four columns">
-                <input type="password" id="id_password2" name="password2" placeholder="Confirm Password" value="" class="input-text stretch" />
-              </div>
-            </div>
-        {% endif %}
-
-          <hr class="inside">
-
-        <div class="row">
-          <div class="twelve columns">
-            <h3>Criminal Records Bureau (CRB) check (UK only)</h3>
-          </div>
-        </div>
-
-          <div class="row date_of_birth">
-            <div class="three columns phone-one">
-              <label>I have a CRB check <span id="tooltip-crb">[?]</span></label>
-            </div>
-            <div class="nine columns phone-three">
-                <div class="">{{form.crb}}</div>
-                <div id="id_crb_apply" class="{% if form.crb.value %}hidden{% endif %}">To apply for a CRB <a href="{% url crb_form %}" target="_blank">click here</a>.</div>
-            <div id="id_div_crb_document" class="{% if not form.crb.value %}hidden{% endif %}">You need to upload your CRB Document after you Sign Up.</div>
-            </div>
-          </div>
-
-          <hr class="inside">
-
-        <div class="row">
-          <div class="twelve columns">
-            <h3>Financial Information</h3>
-          </div>
-        </div>
-
-        {% if form.paypal_email.errors %}<div class="formError">{{ form.paypal_email.errors }}</div>{% endif %}
-          <div class="row space">
-            <div class="three columns">
-              <label>Paypal Email <span id="tooltip-paypal">[?]</span></label>
-            </div>
-            <div class="nine columns">
-              <input type="text" id="id_email" name="paypal_email" value="{{ form.paypal_email.value }}" class="input-text stretch" />
-            </div>
-          </div>
-
-          <div class="row date_of_birth">
-            <div class="three columns phone-one">
-              <label>Currency*</label>
-            </div>
-            <div class="nine columns phone-three">
-                {{form.currency}}
-            </div>
-          </div>
-
-          <hr class="inside">
-
-        <div class="row">
-          <div class="twelve columns">
-            <h3>Referral</h3>
-          </div>
-        </div>
-
-          {% if form.referral.errors %}<div class="formError">{{ form.referral.errors }}</div>{% endif %}
-          <div class="row date_of_birth">
-            <div class="three columns special">
-              <label>How did you hear about us?*</label>
-            </div>
-            <div class="nine columns no-margin">
-                {{form.referral}}
-            </div>
-          </div>
-
-      {% if form.referral_other.errors %}<div id="id_div_referral_other_errors" class="formError">{{ form.referral_other.errors }}</div>{% endif %}
-          <div id="id_div_referral_other" class="row space {% if not form.referral_other.errors and not form.referral_other.value %}hidden{% endif %}">
-            <div class="three columns">
-              <label>Other option</label>
-            </div>
-            <div class="nine columns">
-              <input type="text" id="id_referral_other" name="referral_other" value="{% if form.referral_other.value %}{{ form.referral_other.value }}{% endif %}" class="input-text stretch" />
-            </div>
-          </div>
-
-      {% if form.referral_key.errors %}<div class="formError">{{ form.referral_key.errors }}</div>{% endif %}
-          <div class="row space">
-            <div class="three columns">
-              <label>Referral Key <span id="tooltip-referral">[?]</span></label>
-            </div>
-            <div class="nine columns">
-              <input type="text" id="id_referral_key" name="referral_key" value="{% if form.referral_key.value %}{{ form.referral_key.value }}{% endif %}" class="input-text stretch" />
-            </div>
-          </div>
-
-          <hr class="inside">
-          {% get_scribblar_speed_test %}
-          <div class="row">
-          <div class="twelve columns">
-            <h3>Broadband Check</h3>
-            <p>
-              To be able to use the class room facility you will need to have a broadband speed of at least {{ scribblar_speed }}.<br />
-              To check your speed click <a href="{{ speed_test_link }}" target="_blank">here</a>.
-            </p>
-          </div>
-        </div>
-
-        <hr class="inside">
-
-        <div class="row">
-          <div class="twelve columns">
-          <h3>Key post-registration to-do's</h3>
-          <p>
-            To ensure that students are able to find you through our search engine, after you have signed-up, please take a bit of time to add some detail on the subjects you would like to teach and the times you are available to teach them
-          </p>
-          </div>
-        </div>
-
-          <hr class="inside">
-
-        <div class="row">
-          <div class="twelve columns">
-            <h3>Terms and conditions</h3>
-          </div>
-        </div>
-
-          <div class="row space">
-      <div class="sign-up-terms-and-conditions">{% flatblock "terms_and_conditions_tutor" %}</div>
-          </div>
-
-      {% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
-          <div class="row space">
-              <div>{{form.agreement}} <span>{{form.agreement.help_text}}</span></div>
-              <div>{{form.newsletter}} <span>{{form.newsletter.help_text}}</span></div>
-              <div>{{form.partners_newsletter}} <span>{{form.partners_newsletter.help_text}}</span></div>
-          </div>
-
-          <hr class="inside">
-
-      <div id="model-signup-button" class="large button"><input type="submit" class="icon rocket" value="Create My Account" /></div>
-      <div id="model-signup-under16-container2" class="hidden formError">
-        Under 16? Your parent need to create a account for you. <br />
-      </div>
-
-        </div>
-
-      <div class="four columns photo">
-        <div class="row">
-          <img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
-        </div>
-        <div id="id_profile_image_old" class="row space hidden">
-          <input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">
-        </div>
-        <div id="id_profile_image_preview" class="row">
-          <a href="javascript:;">Choose image</a>
-        </div>
-        <div class="row">
-            <a id="remove-image" href="javascript:;" class="hidden">Remove Image</a>
-        </div>
-      </div>
 
       </div>
 
@@ -518,297 +361,5 @@ init();
 
   </section>
 
-<script type="text/javascript">
-  var today = new Date();
-  var today_year = today.getFullYear();
-
-  var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-  function getQueryVariable(variable) {
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return '';
-  }
-
-  var dob_date = getQueryVariable('date');
-  dob_date = dob_date.split('-');
-
-  var dob_year = parseInt(dob_date[0]);
-  var dob_month = parseInt(dob_date[1]);
-  var dob_day = parseInt(dob_date[2]);
-
-  for(i=1; i<=31; i++)
-    $('#id_dob_day').append('<option value="'+ i +'" '+ (i==dob_day?'selected=selected':'') +'>'+ i +'</option>');
-
-  for(i=0; i<months.length; i++)
-    $('#id_dob_month').append('<option value="'+ (i+1) +'" '+ (i==dob_month-1?'selected=selected':'') +'>'+ months[i] +'</option>');
-
-  for(i=today_year; i>today_year-100; i--)
-    $('#id_dob_year').append('<option value="'+ i +'" '+ (i==dob_year?'selected=selected':'') +'>'+ i +'</option>');
-
-  $('.signup_dob2').change(function(e){
-    check_over16_2();
-  });
-
-  $('#student-signup-form').submit(function(){
-    $('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
-  });
-
-  var check_over16_2 = function(){
-    var day = parseInt($('#id_dob_day').val());
-    var month = parseInt($('#id_dob_month').val());
-    var year = parseInt($('#id_dob_year').val());
-    var date = new Date(year, month-1, day);
-    var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
-    var input_date = year +'-'+ month +'-'+ day;
-
-    if(str_date == input_date) {
-      var age_date = new Date(year+16, month, day);
-      var today = new Date();
-
-      if(today >= age_date) {
-        $('#model-signup-button').removeClass('hidden');
-        $('#model-signup-under16-container2').addClass('hidden');
-        return true;
-      } else {
-        $('#model-signup-button').addClass('hidden');
-        $('#model-signup-under16-container2').removeClass('hidden');
-        return false;
-      }
-    }
-
-    return false;
-  }
-
-  $('#student-signup-form').submit(function(e){
-    if(!check_over16_2()){
-      e.preventDefault();
-    }
-  });
-
-  $('#id_referral').change(function(){
-    if( $(this).val() == '20' ) {
-      $('#id_div_referral_other').removeClass('hidden');
-      $('#id_div_referral_other_errors').removeClass('hidden');
-    } else {
-      $('#id_div_referral_other').addClass('hidden');
-      $('#id_div_referral_other_errors').addClass('hidden');
-      $('#id_referral_other').val('');
-    }
-  });
-
-  $('#id_crb').click(function(){
-    if( $(this).attr('checked') == 'checked' ) {
-      $('#id_div_crb_document').removeClass('hidden');
-      $('#id_div_crb_document_errors').removeClass('hidden');
-      $('#id_crb_apply').addClass('hidden');
-    } else {
-      $('#id_div_crb_document').addClass('hidden');
-      $('#id_div_crb_document_errors').addClass('hidden');
-      $('#id_crb_apply').removeClass('hidden');
-    }
-  });
-
-  $('#id_country').live("change", function(){
-    $('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
-    $('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
-  });
-
-  $('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
-  $('#id_timezone').load('{% url get_timezones %}'+ $('#id_country').val() +'/');
-
-  if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
-      $(".four.columns.photo").hide();
-    }
-
-
-
-
-//<script type="text/javascript">
-  function createUploader(){
-        var photoUpload = new qq.FileUploaderBasic({
-            button: document.getElementById('id_profile_image_preview'),
-            action: "{% url preview_profile_image %}",
-            multiple: false,
-            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
-      onComplete: function( id, fileName, responseJSON ) {
-        $('#id_image_preview').attr('src', responseJSON.url);
-        $('#remove-image').removeClass('hidden');
-         }
-        });
-
-    }
-    window.onload = createUploader;
-
-    $('#remove-image').click(function(){
-    if(!$.browser.msie) {
-        $(this).addClass('hidden');
-        $('#id_image_preview').attr('src', '{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}');
-        $.get('{% url preview_profile_image_delete %}');
-    } else {
-      $('#id_image_preview').attr('src', "{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}");
-      $('#id_profile_image').remove();
-      $('#id_profile_image_old').append('<input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">')
-    }
-    $("#remove-image").addClass('hidden');
-    });
-
-  if($.browser.msie) {
-    $('#id_profile_image_old').removeClass('hidden');
-    $('#id_profile_image_preview').addClass('hidden');
-  }
-
-  $('#id_profile_image').live('change', function(){
-        var input = $(this)[0]
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#id_image_preview').attr('src', e.target.result);
-            }
-
-            reader.readAsDataURL(input.files[0]);
-        }
-  });
-
-
-var SelectBox = {
-    cache: new Object(),
-    init: function(id) {
-        var box = document.getElementById(id);
-        var node;
-        SelectBox.cache[id] = new Array();
-        var cache = SelectBox.cache[id];
-        for (var i = 0; (node = box.options[i]); i++) {
-            cache.push({value: node.value, text: node.text, displayed: 1, tree_id: node.getAttribute('data-tree-id'), left_val: node.getAttribute('data-left-value')});
-        }
-    },
-    redisplay: function(id) {
-        // Repopulate HTML select box from cache
-        var box = document.getElementById(id);
-        
-        // for some reason both these steps are neccessary to get browsers to work properly...
-        for (i = 0; i < box.options.length; i++) {
-            box.options[0] = null;
-        }
-        box.options.length = 0;
-        
-        SelectBox.sort(id);
-        for (var i = 0, j = SelectBox.cache[id].length; i < j; i++) {
-            var node = SelectBox.cache[id][i];
-            if (node.displayed) {
-                newOpt = new Option(node.text, node.value, false, false);
-                newOpt.setAttribute('data-tree-id', node.tree_id);
-                newOpt.setAttribute('data-left-value', node.left_val);
-                box.options[box.options.length] = newOpt;
-            }
-        }
-    },
-    filter: function(id, text) {
-        // Redisplay the HTML select box, displaying only the choices containing ALL
-        // the words in text. (It's an AND search.)
-        var tokens = text.toLowerCase().split(/\s+/);
-        var node, token;
-        for (var i = 0; (node = SelectBox.cache[id][i]); i++) {
-            node.displayed = 1;
-            for (var j = 0; (token = tokens[j]); j++) {
-                if (node.text.toLowerCase().indexOf(token) == -1) {
-                    node.displayed = 0;
-                }
-            }
-        }
-        SelectBox.redisplay(id);
-    },
-    delete_from_cache: function(id, value) {
-        var node, delete_index = null;
-        for (var i = 0; (node = SelectBox.cache[id][i]); i++) {
-            if (node.value == value) {
-                delete_index = i;
-                break;
-            }
-        }
-        var j = SelectBox.cache[id].length - 1;
-        for (var i = delete_index; i < j; i++) {
-            SelectBox.cache[id][i] = SelectBox.cache[id][i+1];
-        }
-        SelectBox.cache[id].length--;
-    },
-    add_to_cache: function(id, option) {
-        // in this case option is an anonymous object, not an html element
-        SelectBox.cache[id].push({value: option.value, text: option.text, displayed: 1, tree_id: option.tree_id, left_val: option.left_val});
-    },
-    cache_contains: function(id, value) {
-        // Check if an item is contained in the cache
-        var node;
-        for (var i = 0; (node = SelectBox.cache[id][i]); i++) {
-            if (node.value == value) {
-                return true;
-            }
-        }
-        return false;
-    },
-    move: function(from, to) {
-        var from_box = document.getElementById(from);
-        var to_box = document.getElementById(to);
-        var option;
-        for (var i = 0; (option = from_box.options[i]); i++) {
-            if (option.selected && SelectBox.cache_contains(from, option.value)) {
-                SelectBox.add_to_cache(to, {value: option.value, text: option.text, displayed: 1, tree_id: option.getAttribute('data-tree-id'), left_val: option.getAttribute('data-left-value')});
-                SelectBox.delete_from_cache(from, option.value);
-            }
-        }
-        SelectBox.redisplay(from);
-        SelectBox.redisplay(to);
-    },
-    move_all: function(from, to) {
-        var from_box = document.getElementById(from);
-        var to_box = document.getElementById(to);
-        var option;
-        for (var i = 0; (option = from_box.options[i]); i++) {
-            if (SelectBox.cache_contains(from, option.value)) {
-                SelectBox.add_to_cache(to, {value: option.value, text: option.text, displayed: 1, tree_id: option.getAttribute('data-tree-id'), left_val: option.getAttribute('data-left-value')});
-                SelectBox.delete_from_cache(from, option.value);
-            }
-        }
-        SelectBox.redisplay(from);
-        SelectBox.redisplay(to);
-    },
-    sort: function(id) {
-        SelectBox.cache[id].sort( function(a, b) {
-            a_tree_id = parseInt(a.tree_id);
-            b_tree_id = parseInt(b.tree_id);
-            a_left_val = parseInt(a.left_val);
-            b_left_val = parseInt(b.left_val);
-            try {
-                if (a_tree_id > b_tree_id) return 1;
-                if (a_tree_id < b_tree_id) return -1;
-                if (a_tree_id == b_tree_id) {
-                    if (a_left_val > b_left_val) return 1;
-                    if (a_left_val < b_left_val) return -1;
-                }
-            }
-            catch (e) {
-                // silently fail on IE 'unknown' exception
-            }
-            return 0;
-        } );
-    },
-    select_all: function(id) {
-        var box = document.getElementById(id);
-        for (var i = 0; i < box.options.length; i++) {
-            box.options[i].selected = 'selected';
-        }
-    }
-}
-
-
-    
-
-
-</script>
 </html>
 {% endblock %}
