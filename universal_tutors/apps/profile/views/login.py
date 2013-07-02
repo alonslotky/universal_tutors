@@ -87,7 +87,8 @@ TUTOR_SIGNUP_FORMS = [("step1", forms.MultiPartSignupFormStep1),
          ("step3", forms.MultiPartSignupFormStep3),
          ("step4", forms.MultiPartSignupFormStep4),
          ("step5", forms.MultiPartSignupFormStep5),
-         ("step6", forms.MultiPartSignupFormStep6)]
+         #("step6", forms.MultiPartSignupFormStep6),
+         ]
 
 TUTOR_SIGNUP_TEMPLATES = {"step1": "account/tutor_signup_step1.html",
              "step2": "account/tutor_signup_step2.html",
