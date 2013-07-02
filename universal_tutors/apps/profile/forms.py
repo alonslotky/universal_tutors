@@ -534,7 +534,9 @@ class TutorSignupForm(SignupForm):
         #model= ProductCategory
 
     #genre=MPTTModelChoiceIterator(queryset=Genre.tree.all()) 
-    
+    genrex=forms.ModelMultipleChoiceField(queryset=Genre.tree.filter(level=1),widget=forms.CheckboxSelectMultiple)
+    subcat=Genre.tree.filter(level=1)
+
  #############################subjects############################
 
     cat=range(0,Genre.tree.filter(level=0).count())

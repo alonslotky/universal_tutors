@@ -130,7 +130,7 @@ def tutor_signup1(request, *args, **kwargs):
     kwargs.update({
         'form_class': form,
         'success_url': next_url,
-        'template_name': 'account/tutor3.html',
+        'template_name': 'account/tutor-subjects.html',
     })
     
     return allauth_signup(request, *args, **kwargs)

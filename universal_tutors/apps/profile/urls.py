@@ -11,7 +11,7 @@ from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep
 # Registration/Login views
 urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
-    url(r"^(?i)account/signup/tutor3/$", 'tutor_signup1',  name="tutor_signup1"),
+    url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
     (r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS)),
 #    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view([MultiPartSignupFormStep1, MultiPartSignupFormStep2, \
 #                                                             MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
