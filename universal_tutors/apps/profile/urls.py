@@ -10,9 +10,9 @@ from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep
 
 # Registration/Login views
 urlpatterns = patterns('apps.profile.views.login',
-    url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
+    #url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
     url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
-    
+    url(r'^account/signup/tutor/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
     url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
 #    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view([MultiPartSignupFormStep1, MultiPartSignupFormStep2, \
 #                                                             MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
@@ -32,7 +32,7 @@ urlpatterns = patterns('apps.profile.views.login',
 urlpatterns += patterns('apps.profile.views.main',
     url(r"^(?i)dashboard/$", 'edit_profile', name="dashboard"),
     url(r'^(?i)profile/$', 'profile', {}, name = "profile"),
-    url(r'^(?i)profile/(?P<username>[\w\-\_]+)/$', 'profile', {}, name = "profile"),
+    url(r'^(?i)profile/(?P<username>[\w.@+-]+)/$', 'profile', {}, name = "profile"),
     url(r'^(?i)edit_profile/$', 'edit_profile', {}, name = "edit_profile"),
 
     url(r'^(?i)tutor/profile/edit/$', 'edit_tutor_profile', {}, name = "edit_tutor_profile"),
@@ -40,7 +40,7 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)parent/profile/edit/$', 'edit_parent_profile', {}, name = "edit_parent_profile"),
 
     url(r'^(?i)history/$', 'history', {}, name = "history"),
-    url(r'^(?i)history/(?P<username>[\w\-\_]+)/$', 'history', {}, name = "history"),
+    url(r'^(?i)history/(?P<username>[\w.@+-]+)/$', 'history', {}, name = "history"),
 )
 
 # Tutors
@@ -49,8 +49,8 @@ urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)tutor/messages/$', 'tutor_messages', {}, name = "tutor_messages"),
     url(r'^(?i)tutor/crb_form/$', 'crb_form', {}, name = "crb_form"),
 
-    url(r'^(?i)book-class/(?P<username>[\w\-\_]+)/$', 'book_class', {}, name = "book_class"),
-    url(r'^(?i)report/(?P<username>[\w\-\_]+)/$', 'report', {}, name = "report"),
+    url(r'^(?i)book-class/(?P<username>[\w.@+-]+)/$', 'book_class', {}, name = "book_class"),
+    url(r'^(?i)report/(?P<username>[\w.@+-]+)/$', 'report', {}, name = "report"),
     
     url(r'^(?i)tutor/test/class/$', 'test_class', {}, name = "tutor_test_class"),
 )
@@ -85,8 +85,8 @@ urlpatterns += patterns('apps.profile.views.ajax',
 
     url(r'^(?i)confirm-book-class/(?P<tutor_id>\d+)/$', 'book_class', {}, name = "confirm_book_class"),
  
-    url(r'^(?i)ajax-book-class/(?P<username>[\w\-\_]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
-    url(r'^(?i)ajax-book-class/(?P<username>[\w\-\_]+)/(?P<date>[\d\-]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
+    url(r'^(?i)ajax-book-class/(?P<username>[\w.@+-]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
+    url(r'^(?i)ajax-book-class/(?P<username>[\w.@+-]+)/(?P<date>[\d\-]+)/$', 'ajax_book_class', {}, name = "ajax_book_class"),
 
     url(r'^(?i)test_class/status/$', 'check_tutor_class_status', {}, name = "check_tutor_class_status"),
 )
@@ -100,11 +100,11 @@ urlpatterns += patterns('apps.profile.views.main',
 # Students
 urlpatterns += patterns('apps.profile.views.main',
     url(r'^(?i)student/classes/$', 'student_classes', {}, name = "student_classes"),
-    url(r'^(?i)student/classes/(?P<username>[\w\-\_]+)/$', 'student_classes', {}, name = "student_classes"),
+    url(r'^(?i)student/classes/(?P<username>[\w.@+-]+)/$', 'student_classes', {}, name = "student_classes"),
     url(r'^(?i)student/messages/$', 'student_messages', {}, name = "student_messages"),
-    url(r'^(?i)student/messages/(?P<username>[\w\-\_]+)/$', 'student_messages', {}, name = "student_messages"),
+    url(r'^(?i)student/messages/(?P<username>[\w.@+-]+)/$', 'student_messages', {}, name = "student_messages"),
     url(r'^(?i)student/tutors/$', 'tutors', {}, name = "tutors"),
-    url(r'^(?i)student/tutors/(?P<username>[\w\-\_]+)/$$', 'tutors', {}, name = "tutors"),
+    url(r'^(?i)student/tutors/(?P<username>[\w.@+-]+)/$$', 'tutors', {}, name = "tutors"),
 )
 
 urlpatterns += patterns('apps.profile.views.ajax',
@@ -130,10 +130,12 @@ urlpatterns += patterns('apps.profile.views.main',
 urlpatterns += patterns('apps.profile.views.ajax',
     url(r'^(?i)add_newsletter_subscription/$', 'add_newsletter_subscription', name = "add_newsletter_subscription"),
 
-    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
-    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
-    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
-    url(r'^(?i)view_modal_messages/(?P<username>[\w\-\_]+)/(?P<to>\d+)/(?P<class_id>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    
+    url(r'^(?i)view_modal_messages/(?P<username>[\w.@+-]+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    #url(r'^(?i)view_modal_messages/(?P<username>[\w.@+-]+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<username>[\w.@+-]+)/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<username>[\w.@+-]+)/(?P<to>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
+    url(r'^(?i)view_modal_messages/(?P<username>[\w.@+-]+)/(?P<to>\d+)/(?P<class_id>\d+)/$', 'view_modal_messages', {}, name = "view_modal_messages"),
 
     url(r'^(?i)send_modal_message/$', 'send_modal_message', {}, name = "send_modal_message"),
     url(r'^(?i)send_modal_message/(?P<to>\d+)/$', 'send_modal_message', {}, name = "send_modal_message"),
@@ -156,10 +158,10 @@ urlpatterns += patterns('apps.profile.views.ajax',
 
 urlpatterns += patterns('apps.profile.views.topup',
     url(r'^(?i)topup/cart/$', 'topup_cart', name = "topup_cart"),
-    url(r'^(?i)topup/cart/(?P<username>[\w\-\_]+)/$', 'topup_cart', name = "topup_cart"),
-    url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/$', 'topup_cancel', name = "topup_cancel"),
-    url(r'^(?i)topup/cancel/(?P<username>[\w\-\_]+)/(?P<ajax>\d)/$', 'topup_cancel', name = "topup_cancel"),
-    url(r'^(?i)topup/successful/(?P<username>[\w\-\_]+)/$', 'topup_successful', name = "topup_successful"),
+    url(r'^(?i)topup/cart/(?P<username>[\w.@+-]+)/$', 'topup_cart', name = "topup_cart"),
+    url(r'^(?i)topup/cancel/(?P<username>[\w.@+-]+)/$', 'topup_cancel', name = "topup_cancel"),
+    url(r'^(?i)topup/cancel/(?P<username>[\w.@+-]+)/(?P<ajax>\d)/$', 'topup_cancel', name = "topup_cancel"),
+    url(r'^(?i)topup/successful/(?P<username>[\w.@+-]+)/$', 'topup_successful', name = "topup_successful"),
     url(r'^(?i)withdraw/manual/$', 'withdraw', name = "withdraw"),
 )
 

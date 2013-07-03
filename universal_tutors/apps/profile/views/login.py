@@ -141,7 +141,7 @@ class TutorSignupWizard(SessionWizardView):
             user.set_unusable_password()
         
         user.is_active = True
-        user.username = form_data[0]['email'] #temp maybe add user field??
+        user.username = (form_data[0]['email']) #temp maybe add user field??
         user.first_name = form_data[0]['first_name']
         user.last_name = form_data[0]['last_name']
         user.email = form_data[0]['email']
@@ -174,6 +174,10 @@ class TutorSignupWizard(SessionWizardView):
         if image:
             profile.profile_image = image
         
+        for p in self.request.FILES.getlist('profile_image'):
+            profile.profile_image.save(p.name, p)
+            profile.save()
+    
         #profile.crb = self.cleaned_data.get('crb', False)
         
         if session_key:
@@ -181,7 +185,7 @@ class TutorSignupWizard(SessionWizardView):
             UploadProfileImage.objects.filter(key=session_key).delete()        
         
         #TODO send_email_confirmation
-        #send_email_confirmation(user, request=request)
+        #send_email_confirmation(user, request=self.request)
         
         #profile.about = self.cleaned_data.get('about', '')
         #profile.crb = self.cleaned_data.get('crb', False)
@@ -192,7 +196,7 @@ class TutorSignupWizard(SessionWizardView):
         #TODO save tutoring type
         #TODO add currency
         profile.save()
-        
+         
 #         try:
 #             email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
 #             email.send_email({
@@ -203,7 +207,7 @@ class TutorSignupWizard(SessionWizardView):
 #             }, [settings.SUPPORT_EMAIL])
 #         except EmailTemplate.DoesNotExist:
 #             pass
-#         
+#          
         return user
     
     def done(self, form_list, **kwargs):
