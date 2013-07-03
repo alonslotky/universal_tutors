@@ -542,43 +542,6 @@ class TutorSignupForm(SignupForm):
     webcam = forms.BooleanField(label='I have a WebCam', required=False)#, help_text='Users will need at least a 500kbps internet connection in order to use the classroom functionality')
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
     paypal_email = forms.EmailField(label=_('PayPal Email'), max_length = 255, initial='', required=False)
-    #tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
-    #genre = forms.ModelMultipleChoiceField(choices=Genre.tree.all(), widget=forms.FilteredSelectMultiple)
-    #genre = MPTTFilteredSelectMultiple(queryset=Genre.tree.all())
-<<<<<<< HEAD
-    #History = Genre.objects.get(name='History')
-    #genre1=TreeNodeChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
-    #genre1=forms.ModelMultipleChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
-    #Computer_Science = Genre.objects.get(name='Computer Science')
-    #genre2=forms.ModelMultipleChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
-    #genre2=forms.ChoiceField(choices=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
-=======
-#     History = Genre.objects.get(name='History')
-#     genre1=TreeNodeChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
-#     Computer_Science = Genre.objects.get(name='Computer Science')
-#     genre2=TreeNodeChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
-#     #genre2=forms.ChoiceField(choices=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
->>>>>>> dff49ba7739d2ce89d16afc7758d11ef37732d4b
-        
-    #genre2=TreeNodeChoiceField(queryset=UserProfile.genre2.tree.all(),widget=forms.CheckboxSelectMultiple)
-    
-    #genre = MPTTModelMultipleChoiceField(
-                    #Genre.tree.all(),widget = forms.CheckboxSelectMultiple)
-    #class Meta:
-        #   model= Genre
-    #categories = MPTTModelMultipleChoiceField(
-                    #ProductCategory.objects.all(),
-                    #widget = MPTTFilteredSelectMultiple("Categories",False,attrs={'rows':'10'})
-                #)
-    #class Meta:
-        #model= ProductCategory
-
-    #genre=MPTTModelChoiceIterator(queryset=Genre.tree.all()) 
-    ##genrex=forms.ModelMultipleChoiceField(queryset=Genre.tree.filter(level=1),widget=forms.CheckboxSelectMultiple)
-    #subcat=Genre.tree.filter(level=1)
-
- #############################subjects############################
-
     cat=range(0,Genre.tree.filter(level=0).count())
     for x in range(0, len(cat)):
         cat[x]=Genre.tree.filter(level=0)[x]
@@ -587,13 +550,12 @@ class TutorSignupForm(SignupForm):
     for x in range(0, len(cat)):
         subcat[x]=cat[x].get_children()
 
-<<<<<<< HEAD
     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     
     genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_2_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_3_2=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_4_3=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_1_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_1_2=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_1_3=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
     
 
     genre_2_0=forms.ModelMultipleChoiceField(queryset=cat[2].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
@@ -608,8 +570,8 @@ class TutorSignupForm(SignupForm):
     genre_3_6=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[6].get_children(),widget=forms.CheckboxSelectMultiple)
     
     
-    genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_4_2=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
     
     genre_5_0=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
@@ -653,26 +615,8 @@ class TutorSignupForm(SignupForm):
     
     genre_9_0=forms.ModelMultipleChoiceField(queryset=cat[9].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     
-    genre_14_0=forms.ModelMultipleChoiceField(queryset=cat[10].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_10_0=forms.ModelMultipleChoiceField(queryset=cat[10].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     
-=======
-    
-# 
-#     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_0_1=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_1_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_5_0=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_5_1=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_5_2=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_5_3=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_5_4=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
-#     genre_5_5=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple)
-#                       
->>>>>>> dff49ba7739d2ce89d16afc7758d11ef37732d4b
-
     genre_11_0=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_11_1=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_11_2=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)

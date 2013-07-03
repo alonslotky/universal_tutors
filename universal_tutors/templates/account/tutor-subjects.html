@@ -29,25 +29,59 @@
 
 <style type="text/css">
       body { font-size: 80%; font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif; }
-      .accordionItem h2 { margin: 0; font-size: 2.5em;  color: #000000 ; border-bottom: 1px ;text-align:left }
+      .accordionItem h2 { margin: 0; font-size: 2.5em;  color: #000000;padding:0 ; border-bottom: 0px ;text-align:left }
+      .accordionItem table { margin: 0; font-size: 2.5em;  color: #000000;padding:0 ; border-bottom: 0px ;text-align:left }
       .accordionItem h2:hover { cursor: pointer; }
-      .accordionItem div { margin: 0; padding: 1em 0.4em;  border-bottom: 1px  }
+      .accordionItem div { margin: -10px; padding: 0;  border-bottom: 0px;
+        margin-bottom:0px; margin-top:0px;padding-left: 30px;
+  }
       .accordionItem.hide h2 { color: #000;  }
       .accordionItem.hide div { display: none; }
+
     table#sample
     {
     background-color:#FFFFFF;
     border: solid #000 0px;
     width: 1100px;
       }
-    table#sample td
+    table {
+      margin:0;
+    }  
+    table#sample tbody tr td
     {
     width:25%;
-    height:2px;
+    height:0.5px
+    font-size:0.05em;
+    padding:0px;
+    margin:0px;
     }
     table#sample tr{
-      line-height: 1px;
+      /*line-height: 1px;*/
     }
+    div div{
+   margin-bottom:0px;
+   margin-top:0px;
+}
+div div{
+   margin-bottom:0px;
+}
+div div:last-of-type{
+   margin-bottom:0;
+}
+
+div#checkit
+{
+display: inline-block;
+padding:0;
+margin:0;
+}
+/*.mar{
+   padding: 0px;
+    margin-bottom: none;
+    margin-top: none;
+    margin:0px;
+    background-color:#c00;
+}*/
     </style>
     
 
@@ -60,7 +94,7 @@
       <h2>+  {{form.cat.0}}</h2>
       
       
-      <div><h5 color:#000000 > {{form.cat.0.get_children.0}}</h5>
+      <div ><h5 color:#000000 > {{form.cat.0.get_children.0}}</h5>
         <table id="sample"><tr>
           {% for  field1,field2 in form.genre_0_0.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
@@ -83,9 +117,7 @@
     <!--PArt1-->
     <div class="accordionItem">
       <h2>+  {{form.cat.1}}</h2>
-      
-      
-      <div><h5 color:#000000 > {{form.cat.1.get_children.0}}</h5>
+      <div class="mar"><h5 color:#000000 > {{form.cat.1.get_children.0}}</h5>
         <table id="sample"><tr>
           {% for  field1,field2 in form.genre_1_0.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
@@ -98,12 +130,7 @@
           {% endif %}
           {% endfor %}
         </table>
-      </div>
-
-            
-      
-      
-      <div><h5 color:#000000 > {{form.cat.1.get_children.1}}</h5>
+      </div><div class="mar"><h5 color:#000000 > {{form.cat.1.get_children.1}}</h5>
         <table id="sample"><tr>
           {% for  field1,field2 in form.genre_1_1.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
@@ -116,10 +143,7 @@
           {% endif %}
           {% endfor %}
         </table>
-      </div>
-
-
-      <div><h5 color:#000000 > {{form.cat.1.get_children.2}}</h5>
+      </div><div class="mar"><h5 color:#000000 > {{form.cat.1.get_children.2}}</h5>
         <table id="sample"><tr>
           {% for  field1,field2 in form.genre_1_2.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
@@ -132,12 +156,7 @@
           {% endif %}
           {% endfor %}
         </table>
-      </div>
-
-            
-      
-      
-      <div><h5 color:#000000 > {{form.cat.1.get_children.3}}</h5>
+      </div><div class="mar"><h5 color:#000000 > {{form.cat.1.get_children.3}}</h5>
         <table id="sample"><tr>
           {% for  field1,field2 in form.genre_1_3.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
@@ -150,8 +169,7 @@
           {% endif %}
           {% endfor %}
         </table>
-      </div>
-      
+      </div> 
     </div>
 
         <!--End of Part1-->
@@ -328,7 +346,7 @@
       <h2>+  {{form.cat.4}}</h2>
       
       
-      <div><h5 color:#000000 > {{form.cat.4.get_children.1}}</h5>
+      <div><h5 color:#000000 > {{form.cat.4.get_children.0}}</h5>
         <table id="sample"><tr>
           {% for  field1,field2 in form.genre_4_0.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
@@ -346,7 +364,7 @@
             
       
       
-      <div><h5 color:#000000 > {{form.cat.4.get_children.0}}</h5>
+      <div><h5 color:#000000 > {{form.cat.4.get_children.1}}</h5>
         <table id="sample"><tr>
           {% for  field1,field2 in form.genre_4_1.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
@@ -992,30 +1010,7 @@
 
     <!--End of Part9-->
 
-    <!--PArt10-->
-
-<div class="accordionItem">
-      <h2>+  {{form.cat.10}}</h2>
-      
-      
-      <div><h5 color:#000000 > {{form.cat.10.get_children.0}}</h5>
-        <table id="sample"><tr>
-          {% for  field1,field2 in form.genre_10_0.field.widget.choices %}
-          <td> <input value="{{field1}}" type="checkbox">{{field2}}
-            {% if forloop.last %}
-          </tr>
-          {% else %}
-            {% if forloop.counter|divisibleby:"4" %}
-          </tr><tr>
-          {% endif %}
-          {% endif %}
-          {% endfor %}
-        </table>
-      </div>
- </div>
-
-
-    <!--End of Part10-->
+    
     <!--PArt11-->
 
 <div class="accordionItem">
@@ -1471,6 +1466,31 @@
        
 </div>
 <!--end of part14--> 
+<!--PArt10-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.10}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.10.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_10_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+ </div>
+
+
+    <!--End of Part10-->
+
 </body>  
 <script>
 var accordionItems = [];
