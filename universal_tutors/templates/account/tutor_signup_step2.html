@@ -20,13 +20,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="blue feature-box">
-	  <div class="inner">
-		<h1>Sign Up as a tutors</h1>
-		<h4>Step 2 of {{ wizard.steps.count }}</h4>
-	  </div>
-  </section>
-
+ {% include 'account/tutor_signup_header.html' %}
   <section>
 
     <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
@@ -34,10 +28,19 @@
 		
 	{{ wizard.management_form }}
 	{{ wizard.form.management_form }}
-	
+	{% with wizard.form as form %}	
 	<div class="row">	
 		<div class="eight columns">
+			<div name="name_errors">
+				{% if form.first_name.errors %}
+					<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>
+				{% endif %}
+				{% if form.last_name.errors %}
+					<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>
+				{% endif %}
+			</div>
 			<div class="row space" name="name">
+				
 				<div class="three columns">
 					<label>Name*</label>
 				</div>
@@ -81,21 +84,23 @@
 				</div>
 			</div>
 			
+			{% if wizard.form.zipcode.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.zipcode.errors }}</li></ul></div>{% endif %}
 			<div class="row space" name = "zipcode">
 				<div class="three columns">
 					<label>Zipcode*</label>
+				</div>				
+     			<div class="six columns">
+					<input type="text" id="id_zipcode" name="zipcode" value="{{ form.zipcode.value }}" class="input-text stretch" />
 				</div>
-				<div class="nine columns">
-					<input type="text" id="id_zipcode" name="Zipcode" value="{{ form.zipcode.value }}" class="input-text stretch" />
-				</div>
+				
 			</div>
 									
+			{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
 			<div class="row space" name="email">
-			
 				<div class="three columns">
 					<label>Email*</label>
 				</div>
-				<div class="nine columns">
+				<div class="six columns">
 				  <input type="text" id="id_email" name="email" value="{{ wizard.form.email.value }}" class="input-text stretch" />
 				</div>
 			 </div>
@@ -106,29 +111,17 @@
 					<label>tutoring_type*</label>
 				</div>
 				<div class="nine columns">
-					{{wizard.form.online_tutoring}} online_tutoring </div>
-				<div class="nine columns">  
-					{{wizard.form.in_person_tutoring}} in_person_tutoring</div>
-				
+					{{wizard.form.tutoring_type}}
+				</div>	
 			</div>
 			
 			<hr class="inside">
 		
-			<div name="button">
-			{% if wizard.steps.prev %}
-				<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
-			{% endif %}
-			
-			{% if wizard.steps.next %}
-				<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
-			{% else %}
-				<input type="submit" value="{% trans "submit" %}"/>	
-			{% endif %}
-			
-			<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-		{{ previous_fields|safe }}
-		</div>
-		
+			{% include 'account/tutor_signup_navigation.html' %}
+			<div id="model-signup-under16-container2" class="hidden formError">
+				Under 16? Your parent need to create a account for you. <br />
+			</div>
+
 		</div>
         
         <div class="four columns photo">
@@ -145,9 +138,9 @@
 		      	<a id="remove-image" href="javascript:;" class="hidden">Remove Image</a>
 	    	</div>
 	    </div>  
-		
-		
+				
     </div>
+    {%endwith%}
 	</form>
 
   </section>

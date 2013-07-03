@@ -449,35 +449,74 @@ class ParentSignupForm(SignupForm):
         
         return user
 
-class MultiPartSignupFormStep1(forms.ModelForm):
+class MultiPartSignupFormStep1(forms.Form):
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email')
+        #fields = ('username', 'first_name', 'last_name', 'email')
     
+    #Do we have username in the first one???
+    #username = forms.SlugField(label=_('Username'), min_length=5, max_length=25, initial='')
+    first_name = forms.CharField(label=_('First name'), max_length = 25, initial='')
+    last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='')
+    email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
+    password1 = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
+    password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
 
-class MultiPartSignupFormStep2(forms.ModelForm):
+#     def clean_username(self):
+#         username = self.cleaned_data['username']
+#         if User.objects.filter(username__iexact=username).count() > 0:
+#             raise forms.ValidationError(_(u"This username is already used."))
+# 
+#         return username
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError(_(u"This email is already registered."))
+
+        return email
+
+    def clean_password2(self):
+        passwd1 = self.cleaned_data['password1']
+        passwd2 = self.cleaned_data['password2']
+        if passwd1 != passwd2:
+            raise forms.ValidationError(_(u'Passwords should match'))
+
+        return passwd1
+
+
+
+
+class MultiPartSignupFormStep2(forms.Form):
     class Meta:
         model = User
         fields = ('date_of_birth', 'gender', 'zipcode',)
         
-    email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
+    first_name = forms.CharField(label=_('First name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    email = forms.EmailField(label=_('Email'), max_length = 255, initial='', widget=forms.TextInput(attrs={'readonly':'readonly', 'disabled':True}))
     
     #Adding the zipcode attribute 
     zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
-
-    online_tutoring = forms.BooleanField(required = True, initial=True)
-    in_person_tutoring = forms.BooleanField(required = True, initial=True)
+    tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
+    #online_tutoring = forms.BooleanField(required = True, initial=True)
+    #in_person_tutoring = forms.BooleanField(required = True, initial=True)
     
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
 
-        
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError(_(u"This email is already registered."))
 
-class MultiPartSignupFormStep3(forms.ModelForm):
+        return email
+
+class MultiPartSignupFormStep3(forms.Form):
     class Meta:
         model = User
 
-class MultiPartSignupFormStep4(forms.ModelForm):
+class MultiPartSignupFormStep4(forms.Form):
     class Meta:
         model = User
         #fields = ('profile.currency')
@@ -485,24 +524,17 @@ class MultiPartSignupFormStep4(forms.ModelForm):
     price_per_hour = forms.DecimalField(initial=0)
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
 
-class MultiPartSignupFormStep5(forms.ModelForm):
+class MultiPartSignupFormStep5(forms.Form):
     class Meta:
         model = User
         
     default_week = [('Monday', 0, []), ('Tuesday', 1, []), ('Wednesday', 2, []), ('Thursday', 3, []), ('Friday', 4, []), ('Saturday', 5, []), ('Sunday', 6, [])]
+    availability = forms.CharField(widget=forms.HiddenInput())
+        
     
-
 class MultiPartSignupFormStep6(forms.ModelForm):
     class Meta:
         model = User
-
-class TutorSignupWizard(FormWizard):
-    
-    
-    def done(self, request, form_list):
-        return render_to_response('done.html', {
-            'form_data': [form.cleaned_data for form in form_list],
-        })
 
 class TutorSignupForm(SignupForm):
     about = forms.CharField(label=_('Description'), initial='')
@@ -513,12 +545,20 @@ class TutorSignupForm(SignupForm):
     #tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
     #genre = forms.ModelMultipleChoiceField(choices=Genre.tree.all(), widget=forms.FilteredSelectMultiple)
     #genre = MPTTFilteredSelectMultiple(queryset=Genre.tree.all())
+<<<<<<< HEAD
     #History = Genre.objects.get(name='History')
     #genre1=TreeNodeChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
     #genre1=forms.ModelMultipleChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
     #Computer_Science = Genre.objects.get(name='Computer Science')
     #genre2=forms.ModelMultipleChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
     #genre2=forms.ChoiceField(choices=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
+=======
+#     History = Genre.objects.get(name='History')
+#     genre1=TreeNodeChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
+#     Computer_Science = Genre.objects.get(name='Computer Science')
+#     genre2=TreeNodeChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
+#     #genre2=forms.ChoiceField(choices=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
+>>>>>>> dff49ba7739d2ce89d16afc7758d11ef37732d4b
         
     #genre2=TreeNodeChoiceField(queryset=UserProfile.genre2.tree.all(),widget=forms.CheckboxSelectMultiple)
     
@@ -547,6 +587,7 @@ class TutorSignupForm(SignupForm):
     for x in range(0, len(cat)):
         subcat[x]=cat[x].get_children()
 
+<<<<<<< HEAD
     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     
     genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
@@ -614,6 +655,23 @@ class TutorSignupForm(SignupForm):
     
     genre_14_0=forms.ModelMultipleChoiceField(queryset=cat[10].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     
+=======
+    
+# 
+#     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_0_1=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_1_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_5_0=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_5_1=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_5_2=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_5_3=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_5_4=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
+#     genre_5_5=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple)
+#                       
+>>>>>>> dff49ba7739d2ce89d16afc7758d11ef37732d4b
 
     genre_11_0=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_11_1=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)

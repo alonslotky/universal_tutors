@@ -20,13 +20,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="blue feature-box">
-	  <div class="inner">
-		<h1>Sign Up as a tutors</h1>
-		<h4>Step 3 of {{ wizard.steps.count }}</h4>
-	  </div>
-  </section>
-
+  {% include 'account/tutor_signup_header.html' %}
   <section>
 
     <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
@@ -34,7 +28,7 @@
 		
 	{{ wizard.management_form }}
 	{{ wizard.form.management_form }}
-	
+	{% with wizard.form as form %}	
 	<div class="row">	
 		<div class="eight columns">
 			<div class="row space" name="name">
@@ -44,27 +38,15 @@
 			</div>
 				
 			<hr class="inside">
+			
+			{% include 'account/tutor_signup_navigation.html' %}
 		
-			<div name="button">
-			{% if wizard.steps.prev %}
-				<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
-			{% endif %}
-			
-			{% if wizard.steps.next %}
-				<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
-			{% else %}
-				<input type="submit" value="{% trans "submit" %}"/>	
-			{% endif %}
-			
-			<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-		{{ previous_fields|safe }}
-		</div>
 		
 		</div>
-        
         
 		
     </div>
+    {% endwith %}
 	</form>
 
   </section>

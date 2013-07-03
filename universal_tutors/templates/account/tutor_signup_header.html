@@ -1,0 +1,12 @@
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+<section class="blue feature-box">
+	  <div class="inner">
+		<h1>Sign Up as a Tutor</h1>
+		<h4>Step {{wizard.steps.step1}} of {{ wizard.steps.count }}</h4>
+	  </div>
+</section>
