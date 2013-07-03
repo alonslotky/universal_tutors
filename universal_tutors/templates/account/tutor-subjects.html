@@ -1,6 +1,5 @@
 
 
-
 {% extends "ui/layouts/base.html" %}
 
 {% load fb_versions common_tags flatblock_tags ut_tags %}
@@ -35,60 +34,40 @@
       .accordionItem div { margin: 0; padding: 1em 0.4em;  border-bottom: 1px  }
       .accordionItem.hide h2 { color: #000;  }
       .accordionItem.hide div { display: none; }
+    table#sample
+    {
+    background-color:#FFFFFF;
+    border: solid #000 0px;
+    width: 1100px;
+      }
+    table#sample td
+    {
+    width:25%;
+    height:2px;
+    }
+    table#sample tr{
+      line-height: 1px;
+    }
     </style>
+    
 
 <body >
 
-   <!-- <h1>Subjects</h1>
-
-    <table>
- <tr>
-    <td>
-     {% for field in form.genrex %} 
-     ^^^^Or whatever you called it when you passed to template 
-      
-     {% if forloop.counter == 10 %}
-     
-     </td><td>{{field}}
-     {% elif forloop.counter == 20 %}
-  
-     </td><td>
-     {% endif %}
-
-     {{ field }} 
-
-      {% endfor %}
-      </td>
-   </tr>
-   </table>-->
-<!--
-<table><tr>
-{% for  choice_id,choice_label in form.genrex.field.widget.choices %}
-   <td> <input type="checkbox" name="vehicle" value="Bike">{{ choice_label }} </td>
-   {% if forloop.last %}
-     </tr>
-   {% else %}
-     {% if forloop.counter|divisibleby:"3" %}
-       </tr><tr>
-     {% endif %}
-   {% endif %}
-{% endfor %}
-</table>
--->
-
 <font size="8">SUBJECTS </font>
+<!--Part0-->
+
     <div class="accordionItem">
       <h2>+  {{form.cat.0}}</h2>
       
       
       <div><h5 color:#000000 > {{form.cat.0.get_children.0}}</h5>
-        <table><tr>
+        <table id="sample"><tr>
           {% for  field1,field2 in form.genre_0_0.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
@@ -97,38 +76,23 @@
       </div>
 
             
-      
-      
-      <div><h5 color:#000000 > {{form.cat.0.get_children.1}}</h5>
-        <table><tr>
-          {% for  field1,field2 in form.genre_0_1.field.widget.choices %}
-          <td> <input value="{{field1}}" type="checkbox">{{field2}}
-            {% if forloop.last %}
-          </tr>
-          {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
-          </tr><tr>
-          {% endif %}
-          {% endif %}
-          {% endfor %}
-        </table>
       </div>
-    </div>
-      <!--  End of Part1 -->
 
-      <!--  Part2 -->
-    <div class="accordionItem"> 
+
+    <!--End of Part0-->
+    <!--PArt1-->
+    <div class="accordionItem">
       <h2>+  {{form.cat.1}}</h2>
       
       
       <div><h5 color:#000000 > {{form.cat.1.get_children.0}}</h5>
-        <table><tr>
+        <table id="sample"><tr>
           {% for  field1,field2 in form.genre_1_0.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
@@ -140,35 +104,29 @@
       
       
       <div><h5 color:#000000 > {{form.cat.1.get_children.1}}</h5>
-        <table><tr>
+        <table id="sample"><tr>
           {% for  field1,field2 in form.genre_1_1.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
           {% endfor %}
         </table>
       </div>
-    </div>
-      <!--  End of Part2 -->
 
-      <!--  Part4 -->
-     <div class="accordionItem"> 
-      <h2>+  {{form.cat.4}}</h2>
-      
-      
-      <div><h5 color:#000000 > {{form.cat.4.get_children.0}}</h5>
-        <table><tr>
-          {% for  field1,field2 in form.genre_4_0.field.widget.choices %}
+
+      <div><h5 color:#000000 > {{form.cat.1.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_1_2.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
@@ -179,37 +137,264 @@
             
       
       
-      <div><h5 color:#000000 > {{form.cat.4.get_children.1}}</h5>
-        <table><tr>
-          {% for  field1,field2 in form.genre_4_1.field.widget.choices %}
+      <div><h5 color:#000000 > {{form.cat.1.get_children.3}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_1_3.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
           {% endfor %}
         </table>
       </div>
+      
     </div>
 
- <!--  End of Part4 -->
+        <!--End of Part1-->
+    <!--PArt2-->
+    <div class="accordionItem">
+      <h2>+  {{form.cat.2}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.2.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_2_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
 
-      <!--  Part5 -->
-     <div class="accordionItem"> 
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.2.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_2_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      
+
+    
+    </div>
+
+    <!--End of Part2-->
+    <!--PArt3-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.3}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.3.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_3_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.3.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_3_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.3.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_3_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.3.get_children.3}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_3_3.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    
+    
+      
+      <div><h5 color:#000000 > {{form.cat.3.get_children.4}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_3_4.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.3.get_children.5}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_3_5.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.3.get_children.6}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_3_6.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+    
+    </div>
+
+
+    <!--End of Part3-->
+    <!--PArt4-->
+    <div class="accordionItem">
+      <h2>+  {{form.cat.4}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.4.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_4_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.4.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_4_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.4.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_4_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+     
+    </div>
+
+
+    <!--End of Part4-->
+
+    <!--PArt4-->
+    <div class="accordionItem">
       <h2>+  {{form.cat.5}}</h2>
       
       
       <div><h5 color:#000000 > {{form.cat.5.get_children.0}}</h5>
-        <table><tr>
+        <table id="sample"><tr>
           {% for  field1,field2 in form.genre_5_0.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
@@ -221,13 +406,13 @@
       
       
       <div><h5 color:#000000 > {{form.cat.5.get_children.1}}</h5>
-        <table><tr>
+        <table id="sample"><tr>
           {% for  field1,field2 in form.genre_5_1.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
@@ -236,13 +421,13 @@
       </div>
 
       <div><h5 color:#000000 > {{form.cat.5.get_children.2}}</h5>
-        <table><tr>
+        <table id="sample"><tr>
           {% for  field1,field2 in form.genre_5_2.field.widget.choices %}
           <td> <input value="{{field1}}" type="checkbox">{{field2}}
             {% if forloop.last %}
           </tr>
           {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
+            {% if forloop.counter|divisibleby:"4" %}
           </tr><tr>
           {% endif %}
           {% endif %}
@@ -250,61 +435,1042 @@
         </table>
       </div>
 
-            
-      
-      
-      <div><h5 color:#000000 > {{form.cat.5.get_children.3}}</h5>
-        <table><tr>
-          {% for  field1,field2 in form.genre_5_3.field.widget.choices %}
-          <td> <input value="{{field1}}" type="checkbox">{{field2}}
-            {% if forloop.last %}
-          </tr>
-          {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
-          </tr><tr>
-          {% endif %}
-          {% endif %}
-          {% endfor %}
-        </table>
-      </div>
-      <div><h5 color:#000000 > {{form.cat.5.get_children.4}}</h5>
-        <table><tr>
-          {% for  field1,field2 in form.genre_5_4.field.widget.choices %}
-          <td> <input value="{{field1}}" type="checkbox">{{field2}}
-            {% if forloop.last %}
-          </tr>
-          {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
-          </tr><tr>
-          {% endif %}
-          {% endif %}
-          {% endfor %}
-        </table>
-      </div>
-
-            
-      
-      
-      <div><h5 color:#000000 > {{form.cat.5.get_children.1}}</h5>
-        <table><tr>
-          {% for  field1,field2 in form.genre_5_1.field.widget.choices %}
-          <td> <input value="{{field1}}" type="checkbox">{{field2}}
-            {% if forloop.last %}
-          </tr>
-          {% else %}
-            {% if forloop.counter|divisibleby:"3" %}
-          </tr><tr>
-          {% endif %}
-          {% endif %}
-          {% endfor %}
-        </table>
-      </div>
+     
     </div>
 
 
+    <!--End of Part4-->
+    <!--PArt6-->
+
+    <div class="accordionItem">
+      <h2>+  {{form.cat.6}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.6.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_6_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.6.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_6_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+
+     
+    </div>
+
+
+    <!--End of Part6-->
+
+<!--PArt7-->
+    <div class="accordionItem">
+      <h2>+  {{form.cat.7}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.3}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_3.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.4}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_4.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.5}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_5.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.6}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_6.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.7}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_7.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.8}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_8.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.9}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_9.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.10}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_10.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.11}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_11.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+      
 
     
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.12}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_12.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.13}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_13.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.14}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_14.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.15}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_15.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.16}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_16.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.17}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_17.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+      
+
    
+      
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.18}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_18.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.19}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_19.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.20}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_20.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.7.get_children.21}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_21.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.22}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_22.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.7.get_children.23}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_23.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+      
+   
+      
+      
+      <div><h5 color:#000000 > {{form.cat.7.get_children.24}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_7_24.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+</div>
+
+    <!--End of Part7-->
+    <!--PArt8-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.8}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.8.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_8_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.8.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_8_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.8.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_8_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.8.get_children.3}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_8_3.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    
+    
+
+    
+    </div>
+
+
+    <!--End of Part8-->
+
+    <!--PArt13-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.9}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.9.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_9_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+ </div>
+
+
+    <!--End of Part9-->
+
+    <!--PArt10-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.10}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.10.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_10_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+ </div>
+
+
+    <!--End of Part10-->
+    <!--PArt11-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.11}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.11.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_11_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.11.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_11_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.11.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_11_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.11.get_children.3}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_11_3.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    
+    
+      
+      <div><h5 color:#000000 > {{form.cat.11.get_children.4}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_11_4.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+        
+
+    
+    </div>
+
+
+    <!--End of Part11-->
+    <!--PArt12-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.12}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.12.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_12_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.12.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_12_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.12.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_12_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.12.get_children.3}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_12_3.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+    
+    
+
+    
+    </div>
+
+
+    <!--End of Part12-->
+
+<!--PArt13-->
+
+<div class="accordionItem">
+      <h2>+  {{form.cat.13}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.13.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_13_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+ </div>
+
+
+    <!--End of Part13-->
+           
+           <!--PArt14-->
+    <div class="accordionItem">
+      <h2>+  {{form.cat.14}}</h2>
+      
+      
+      <div><h5 color:#000000 > {{form.cat.14.get_children.0}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_0.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.14.get_children.1}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_1.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.14.get_children.2}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_2.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.14.get_children.3}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_3.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.14.get_children.4}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_4.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.14.get_children.5}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_5.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.14.get_children.6}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_6.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.14.get_children.7}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_7.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.14.get_children.8}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_8.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.14.get_children.9}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_9.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.14.get_children.10}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_10.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       <div><h5 color:#000000 > {{form.cat.14.get_children.11}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_11.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+      
+
+    
+      
+      <div><h5 color:#000000 > {{form.cat.14.get_children.12}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_12.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+            
+      
+      
+      <div><h5 color:#000000 > {{form.cat.14.get_children.13}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_13.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.14.get_children.14}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_14.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+      <div><h5 color:#000000 > {{form.cat.14.get_children.15}}</h5>
+        <table id="sample"><tr>
+          {% for  field1,field2 in form.genre_14_15.field.widget.choices %}
+          <td> <input value="{{field1}}" type="checkbox">{{field2}}
+            {% if forloop.last %}
+          </tr>
+          {% else %}
+            {% if forloop.counter|divisibleby:"4" %}
+          </tr><tr>
+          {% endif %}
+          {% endif %}
+          {% endfor %}
+        </table>
+      </div>
+
+       
+</div>
+<!--end of part14--> 
 </body>  
 <script>
 var accordionItems = [];
@@ -362,4 +1528,4 @@ init();
   </section>
 
 </html>
-{% endblock %}
+{% endblock %} 

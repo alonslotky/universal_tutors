@@ -123,6 +123,9 @@ def tutor_signup(request, *args, **kwargs):
 
 def tutor_signup1(request, *args, **kwargs):
     form = TutorSignupForm
+    #fields = list(form)    
+    #part1, part2 = fields[:4], fields[4:]
+    #part1 = form[:4]
     next_url = reverse('edit_tutor_profile')
 
     if request.user.is_authenticated():

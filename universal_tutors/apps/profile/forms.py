@@ -513,11 +513,11 @@ class TutorSignupForm(SignupForm):
     #tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
     #genre = forms.ModelMultipleChoiceField(choices=Genre.tree.all(), widget=forms.FilteredSelectMultiple)
     #genre = MPTTFilteredSelectMultiple(queryset=Genre.tree.all())
-    History = Genre.objects.get(name='History')
+    #History = Genre.objects.get(name='History')
     #genre1=TreeNodeChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
-    genre1=forms.ModelMultipleChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
-    Computer_Science = Genre.objects.get(name='Computer Science')
-    genre2=forms.ModelMultipleChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
+    #genre1=forms.ModelMultipleChoiceField(queryset=History.get_children(),widget=forms.CheckboxSelectMultiple)
+    #Computer_Science = Genre.objects.get(name='Computer Science')
+    #genre2=forms.ModelMultipleChoiceField(queryset=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
     #genre2=forms.ChoiceField(choices=Computer_Science.get_children(),widget=forms.CheckboxSelectMultiple)
         
     #genre2=TreeNodeChoiceField(queryset=UserProfile.genre2.tree.all(),widget=forms.CheckboxSelectMultiple)
@@ -534,8 +534,8 @@ class TutorSignupForm(SignupForm):
         #model= ProductCategory
 
     #genre=MPTTModelChoiceIterator(queryset=Genre.tree.all()) 
-    genrex=forms.ModelMultipleChoiceField(queryset=Genre.tree.filter(level=1),widget=forms.CheckboxSelectMultiple)
-    subcat=Genre.tree.filter(level=1)
+    ##genrex=forms.ModelMultipleChoiceField(queryset=Genre.tree.filter(level=1),widget=forms.CheckboxSelectMultiple)
+    #subcat=Genre.tree.filter(level=1)
 
  #############################subjects############################
 
@@ -547,24 +547,109 @@ class TutorSignupForm(SignupForm):
     for x in range(0, len(cat)):
         subcat[x]=cat[x].get_children()
 
+    genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_2_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_3_2=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_4_3=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
     
 
-    genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_0_1=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_1_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_2_0=forms.ModelMultipleChoiceField(queryset=cat[2].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_2_1=forms.ModelMultipleChoiceField(queryset=cat[2].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_3_0=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_3_1=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_3_2=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_3_3=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_3_4=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_3_5=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_3_6=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[6].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    
+    genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_4_2=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    
     genre_5_0=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_5_1=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_5_2=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_5_3=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_5_4=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
-    genre_5_5=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple)
-                      
+        
+
+    genre_6_0=forms.ModelMultipleChoiceField(queryset=cat[6].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_6_1=forms.ModelMultipleChoiceField(queryset=cat[6].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_7_0=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_1=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_2=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_3=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_4=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_5=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_6=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[6].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_7=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[7].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_8=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[8].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_9=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[9].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_10=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[10].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_11=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[11].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_12=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[12].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_13=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_14=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_15=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_16=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[16].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_17=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[17].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_18=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[18].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_19=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[19].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_20=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[20].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_21=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[21].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_22=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[22].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_23=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[23].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_7_24=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[24].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_8_0=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_8_1=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_8_2=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_8_3=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_9_0=forms.ModelMultipleChoiceField(queryset=cat[9].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_14_0=forms.ModelMultipleChoiceField(queryset=cat[10].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+
+    genre_11_0=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_11_1=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_11_2=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_11_3=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_11_4=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_12_0=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_12_1=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_12_2=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_12_3=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+    genre_13_0=forms.ModelMultipleChoiceField(queryset=cat[13].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    
+
+    genre_14_0=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_1=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_2=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_3=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_4=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_5=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_6=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[6].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_7=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[7].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_8=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[8].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_9=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[9].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_10=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[10].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_11=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[11].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_12=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[12].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_13=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_14=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple)
+    genre_14_15=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple)
+    
 
 
-
+        
+   
 
     def __init__(self, *args, **kwargs):
         super(TutorSignupForm, self).__init__(*args, **kwargs)
@@ -816,3 +901,13 @@ class ParentSocialSignupForm(GenericSocialSignupForm):
         profile.save()
 
         return user
+
+
+#class Genre(SignupForm): 
+    ##cat=range(0,Genre.tree.filter(level=0).count())
+    #for x in range(0, len(cat)):
+        cat[x]=Genre.tree.filter(level=0)[x]
+
+    #subcat=[None]*len(cat)
+    #for x in range(0, len(cat)):
+        #subcat[x]=cat[x].get_children()
