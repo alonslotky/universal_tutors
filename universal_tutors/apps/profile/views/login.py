@@ -126,14 +126,12 @@ class TutorSignupWizard(SessionWizardView):
         image = None
         session_key = ''
         
-        #TODO fix image
-#         if request:
-#             session_key = request.session.session_key
-#             try:
-#                 image = UploadProfileImage.objects.get(key=session_key).image
-#             except UploadProfileImage.DoesNotExist:
-#                 pass
-#             
+        session_key = self.request.session.session_key
+        try:
+            image = UploadProfileImage.objects.get(key=session_key).image
+        except UploadProfileImage.DoesNotExist:
+            pass
+
         user = User()
 
         password = form_data[0]['password1']
@@ -174,6 +172,7 @@ class TutorSignupWizard(SessionWizardView):
         
         if image:
             profile.profile_image = image
+        
         #profile.crb = self.cleaned_data.get('crb', False)
         
         if session_key:
@@ -207,13 +206,10 @@ class TutorSignupWizard(SessionWizardView):
         return user
     
     def done(self, form_list, **kwargs):
-        #TODO see what to do with the data
-        print 'done!!!!'
-        self.save_tutor(form_list)
-        print 'saved tutor!!!'
-        next_url = reverse('edit_tutor_profile')
-        return http.HttpResponseRedirect(next_url)
-    
+        user = self.save_tutor(form_list)
+        success_url = reverse('edit_tutor_profile')
+        return complete_signup(self.request, user, success_url)
+        
     def get_form(self, step=None, data=None, files=None):
         form = super(TutorSignupWizard, self).get_form(step, data, files)
 
@@ -232,6 +228,7 @@ class TutorSignupWizard(SessionWizardView):
         return form
     
 def tutor_signup(request, *args, **kwargs):
+    
     form = TutorSignupForm
     next_url = reverse('edit_tutor_profile')
 

@@ -23,12 +23,7 @@
 {% endblock %}
 
 {% block content %}
-  <section class="blue feature-box">
-	  <div class="inner">
-		<h1>Sign Up as a tutors</h1>
-		<h4>Step 1 of {{ wizard.steps.count }}</h4>
-	  </div>
-  </section>
+  {% include 'account/tutor_signup_header.html' %}
 
   <section>
 	

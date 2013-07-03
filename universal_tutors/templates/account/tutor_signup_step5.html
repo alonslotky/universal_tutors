@@ -41,13 +41,9 @@
 {% endblock %}
 
 {% block content %}
-  <section class="blue feature-box">
-	  <div class="inner">
-		<h1>Sign Up as a tutors</h1>
-		<h4>Step 5 of {{ wizard.steps.count }}</h4>
-	  </div>
-  </section>
 
+	{% include 'account/tutor_signup_header.html' %}	
+  
   <section>
 
     <form action="" id="tutor-signup-form" method="post" class="nice" enctype="multipart/form-data">
