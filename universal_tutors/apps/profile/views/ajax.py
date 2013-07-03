@@ -868,6 +868,7 @@ def activate_discount(request):
 
 @csrf_exempt
 def preview_profile_image(request):
+    
     if not request.method == 'POST':
         raise http.Http404()
     

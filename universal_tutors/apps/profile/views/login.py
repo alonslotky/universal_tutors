@@ -125,7 +125,7 @@ class TutorSignupWizard(SessionWizardView):
         availability_periods = json.loads(form_list[4].data['availability'])
         image = None
         session_key = ''
-        
+
         session_key = self.request.session.session_key
         try:
             image = UploadProfileImage.objects.get(key=session_key).image
@@ -155,6 +155,7 @@ class TutorSignupWizard(SessionWizardView):
         profile.gender = form_data[1].get('gender', 0)
         #profile.timezone = self.cleaned_data.get('timezone', None)
         profile.currency = Currency.objects.get(id=form_data[3].get('currency', 1))
+        profile.price_per_hour = form_data[3].get('price_per_hour', -1)
         profile.date_of_birth = form_data[1].get('date_of_birth')
         profile.zipcode = form_data[1].get('zipcode', 0)    
 

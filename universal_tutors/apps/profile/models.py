@@ -214,7 +214,8 @@ class UserProfile(BaseModel):
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
     currency = models.ForeignKey(Currency, null=True, blank=True)
-
+    price_per_hour = models.FloatField(default=-1)
+    
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
     other_referral = models.CharField(max_length=200, null=True, blank=True)
     referral_key = models.CharField(max_length=30, null=True, blank=True)
