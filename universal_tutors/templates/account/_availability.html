@@ -1,9 +1,7 @@
 {% load common_tags %}
-
-  <li id="availabilityTab">
+  	{% with wizard.form.default_week as default_week %}
     <h2 class="clear">Availability</h2>
-
-	{% with wizard.form.default_week as default_week %}
+	
 	<div class="hide-on-phones">
 		<p>
 			<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a><br/>
@@ -54,14 +52,15 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+			
 		var delete_list_availability_item = function(id) {
 			$('#schedule-week-period-dropbox-'+ id).remove();
 			$('#schedule-week-period_'+ id).remove();
 			$('#list-week-availability-item-'+ id).fadeOut(function(){
 				$(this).remove();
 			});
-			$.get('{% url user_delete_week_period %}'+ id +'/');
 		}
 	</script>
-	{% endwith %}
-  </li>
+	
+	{%endwith%}
+	

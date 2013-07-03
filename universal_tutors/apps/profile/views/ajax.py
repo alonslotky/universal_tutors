@@ -25,7 +25,6 @@ from apps.core.models import Discount
 import pytz, datetime, os, string, random
 import base64
 import cStringIO
-
 try:
     import simplejson
 except ImportError:
@@ -352,6 +351,34 @@ def referral_friend(request):
 
 #### AVAILABILITY ###########################################################
 #############################################################################
+
+@main_render('account/availability/_new_period.html')
+def edit_week_period_signup(request, period_id, begin, end, weekday):
+    """
+    in the signup case, ajax is only used for styling (do db used). it  was faster to implement this way and can be changed to be entirely in js.
+    """
+    
+    availability = WeekAvailability()
+    
+    availability.weekday = int(weekday)
+    new_object = True
+    try:
+        begin_array = begin.split('-')
+        begin_time = datetime.time(int(begin_array[0]), int(begin_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
+        end_array = end.split('-')
+        end_time = datetime.time(int(end_array[0]), int(end_array[1]) / MINIMUM_PERIOD * MINIMUM_PERIOD)
+    except IndexError:
+        raise http.Http404()
+
+    availability.begin = begin_time
+    availability.end = end_time
+    
+    if not int(period_id):
+        period_id = str(random.randint(0,100000000))
+    
+    return { 'period': availability, 'period_id' :period_id}
+
+
 @login_required
 @main_render('profile/tutor/edit_profile/availability/_new_period.html')
 def edit_week_period(request, period_id, begin, end, weekday):

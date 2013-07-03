@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% load fb_versions common_tags flatblock_tags ut_tags %}
+{% load uni_form_tags %}
+{% load account_tags allauth_tags %}
+
 
 {% block title %}Sign Up{% endblock %}
 {% block body_class %}tutors{% endblock %}
@@ -28,20 +31,21 @@
   </section>
 
   <section>
-
+	
     <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
 	{% csrf_token %}
 		
 	{{ wizard.management_form }}
 	{{ wizard.form.management_form }}
+	{% with wizard.form as form %}
 	
-		{% if form.password1 and form.first_name.errors %}
+		{% if wizard.form.password1 and wizard.form.first_name.errors %}
 			<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>
 		{% endif %}
-		{% if form.password1 and form.last_name.errors %}
+		{% if wizard.form.password1 and wizard.form.last_name.errors %}
 			<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>
 		{% endif %}
-	<div class="row">	
+	<div class="row" name="Name">	
 		<div class="eight columns">
 			<div class="row space">
 				<div class="three columns">
@@ -55,31 +59,25 @@
 				</div>
 			</div>
 	
-			{% if form.about.errors %}
-				<div class="formError">{{ form.about.errors }}</div>
-			{% endif %}
-	 
-			{% if form.username.errors %}
-				<div class="formError">{{ form.username.errors }}</div>
+			{% if wizard.form.username.errors %}
+				<div class="formError">{{ wizard.form.username.errors }}</div>
 			{% endif %}
 
-			{% if form.email.errors %}
-				<div class="formError">{{ form.email.errors }}</div>
-			{% endif %}
-			<div class="row space">
+			{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
+			<div class="row space" name="email">
 				<div class="three columns">
 					<label>Email*</label>
 				</div>
 				<div class="nine columns">
-				  <input type="text" id="id_email" name="email" value="{{ form.email.value }}" class="input-text stretch" />
+				  <input type="text" id="id_email" name="email" value="{{ wizard.form.email.value }}" class="input-text stretch" />
 				</div>
 			 </div>
 
 		
-			{% if form.password1.errors %}
+			{% if wizard.form.password1.errors %}
 				<div class="formError">{{ form.password1.errors }}</div>
 			{% endif %}
-			{% if form.password2.errors %}
+			{% if wizard.form.password2.errors %}
 				<div class="formError">{{ form.password2.errors }}</div>
 			{% endif %}
 			<div class="row">
@@ -96,21 +94,12 @@
 		</div>
         <hr class="inside">
           
-		{% if wizard.steps.prev %}
-			<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
-		{% endif %}
+		{% include 'account/tutor_signup_navigation.html' %}
 		
-		{% if wizard.steps.next %}
-			<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
-		{% else %}
-			<input type="submit" value="{% trans "submit" %}"/>	
-		{% endif %}
-		
-		<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-		{{ previous_fields|safe }}
     </div>
+	{%endwith%}
 	</form>
-
+	
   </section>
   
 {% endblock %}

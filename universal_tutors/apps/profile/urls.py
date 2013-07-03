@@ -12,7 +12,8 @@ from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep
 urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
     url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
-    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS)),
+    
+    url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
 #    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view([MultiPartSignupFormStep1, MultiPartSignupFormStep2, \
 #                                                             MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
 #                                                             MultiPartSignupFormStep5, MultiPartSignupFormStep6])),    
@@ -55,6 +56,12 @@ urlpatterns += patterns('apps.profile.views.main',
 )
 
 urlpatterns += patterns('apps.profile.views.ajax',
+    url(r'^(?i)edit_week_period_signup/$', 'edit_week_period_signup', {}, name = "edit_week_period_signup"),
+    url(r'^(?i)edit_week_period_signup/(?P<period_id>\d+)/(?P<begin>[\d\-]+)/(?P<end>[\d\-]+)/(?P<weekday>\d)/$', 'edit_week_period_signup', {}, name = "edit_week_period_signup"), 
+    #url(r'^(?i)delete_week_period_signup/$', 'delete_week_period_signup', {}, name = "delete_week_period_signup"),
+    #url(r'^(?i)delete_week_period_signup/(?P<period_id>\d+)/$', 'delete_week_period_signup', {}, name = "delete_week_period_signup"),
+    
+    
     url(r'^(?i)edit_week_period/$', 'edit_week_period', {}, name = "user_edit_week_period"),
     url(r'^(?i)edit_week_period/(?P<period_id>\d+)/(?P<begin>[\d\-]+)/(?P<end>[\d\-]+)/(?P<weekday>\d)/$', 'edit_week_period', {}, name = "user_edit_week_period"),
     url(r'^(?i)delete_week_period/$', 'delete_week_period', {}, name = "user_delete_week_period"),

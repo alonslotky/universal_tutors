@@ -34,17 +34,20 @@
 		
 	{{ wizard.management_form }}
 	{{ wizard.form.management_form }}
+	{% with wizard.form as form %}	
 	
-	<div class="row space">	
+	{% if form.price_per_hour.errors %}
+		<div class="formError"><ul class="errorlist"><li>{{form.price_per_hour.errors}}</li></ul></div>
+	{% endif %}	
+	<div class="row space" name="price">
 		<div class="three columns">
               <label>Price per tutoring hour:</label>
         </div>
 		<div class="nine columns">
-			<input id="id_date_of_birth" class="input-text clear hidden" type="text" value="" name="date_of_birth"></input>				
 			<div class="row" name="price_per_hour">
 				
 				<div class="three columns">					
-					<input id="id_price_per_hour" name="id_price_per_hour" type="text" class="input-text" placeholder="Price" />					
+					<input id="id_price_per_hour" name="price_per_hour" type="text" class="input-text" placeholder="Price" />					
 				</div>
 								
 				<div class="six columns">
@@ -58,26 +61,10 @@
 				
 			<hr class="inside">
 		
-			<div name="button">
-			{% if wizard.steps.prev %}
-				<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
-			{% endif %}
-			
-			{% if wizard.steps.next %}
-				<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
-			{% else %}
-				<input type="submit" value="{% trans "submit" %}"/>	
-			{% endif %}
-			
-			<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-		{{ previous_fields|safe }}
-		</div>
-		
-		</div>
-        
-        
+		{% include 'account/tutor_signup_navigation.html' %}		
 		
     </div>
+    {% endwith %}
 	</form>
 
   </section>

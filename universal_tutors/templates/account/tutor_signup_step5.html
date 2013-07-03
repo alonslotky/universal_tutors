@@ -19,11 +19,11 @@
 
 {% block extra_js %}
     <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
-	<script type="text/javascript" src="{{STATIC_URL}}js/availability.js"></script>
-	<script type="text/javascript">
-		var EDIT_WEEK_PERIOD_URL = '{% url user_edit_week_period %}';
-		var DELETE_WEEK_PERIOD_URL = '{% url user_delete_week_period %}';
 	
+	<script type="text/javascript">
+		var EDIT_WEEK_PERIOD_URL = '{% url edit_week_period_signup %}';
+		var TUTOR_SIGNUP_URL = '{% url tutor_signup2 %}';
+		
 		setInterval(function(){
 			$('#new-schedule-container').css('width', '100%');
 			var width = $('#new-schedule-container').width();
@@ -44,56 +44,40 @@
   <section class="blue feature-box">
 	  <div class="inner">
 		<h1>Sign Up as a tutors</h1>
-		<h4>Step 4 of {{ wizard.steps.count }}</h4>
+		<h4>Step 5 of {{ wizard.steps.count }}</h4>
 	  </div>
   </section>
 
   <section>
 
-    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+    <form action="" id="tutor-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{{wizard.form.availability}}
 	{% csrf_token %}
 		
 	{{ wizard.management_form }}
 	{{ wizard.form.management_form }}
-	
+	{% with wizard.form as form %}	
 		
 	<div class="hide-on-phones">
 		{% include 'profile/fragments/_timer.html' %}
 	</div>
-
-      
-	<dl class="nice contained tabs hide-on-phones">
-        <dd><a href="#availability">Availability</a></dd>        
-    </dl>
-      
-     <dl class="nice contained vertical tabs show-on-phones">
-        <dd><a href="#availability">Availability</a></dd>
-     </dl>
+    
   	{% csrf_token %}
-    <ul class="nice tabs-content contained">
-		{% include "account/_availability.html" %}
-    </ul>
+	{% include "account/_availability.html" %}
+    
   	
   	{% include "account/availability/_modal_add_availability.html" %}
 	
 	<hr class="inside">
 	
-	<div name="button">
-	{% if wizard.steps.prev %}
-		<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
-	{% endif %}
+	<div class="row">
+		{% include 'account/tutor_signup_navigation.html' %}
+	</div>
 	
-	{% if wizard.steps.next %}
-		<button name="wizard_goto_step" class="icon rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
-	{% else %}
-		<input type="submit" value="{% trans "submit" %}"/>	
-	{% endif %}
+	{% endwith %}
 	
-	<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
-		{{ previous_fields|safe }}
-		</div>
+	<script type="text/javascript" src="{{STATIC_URL}}js/signup_availability.js"></script>
 	</form>
-
   </section>
   
 {% endblock %}
