@@ -23,7 +23,7 @@ from itertools import chain
 import datetime, random, pytz, operator
 
 
-@main_render(template='core/home.html')
+@main_render(template='core/home_new.html')
 def home(request):
     user = request.user
 

@@ -515,6 +515,7 @@ class MultiPartSignupFormStep2(forms.Form):
 class MultiPartSignupFormStep3(forms.Form):
     class Meta:
         model = User
+
     cat=range(0,Genre.tree.filter(level=0).count())
     for x in range(0, len(cat)):
         cat[x]=Genre.tree.filter(level=0)[x]
