@@ -1,0 +1,178 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags %}
+
+{% block title %}Home{% endblock %}
+{% block body_class %}marketing home{% endblock %}
+
+{% block content %}
+      <body>
+      <section class="row">
+
+        <div class="twelve columns">
+          <h1><span>The easiest way to </span>Learn Something New.</h1>
+        </div>
+      </section>
+      
+      <section class="blue feature-box" style="margin-bottom: 20px !important;"><div class="inner">
+        
+        <div class="row">
+        <div class="feature-browser"></div>
+        <div class="feature-phone"></div>
+        </div>
+        
+        <div class="feature-black">
+          <div class="feature-text">
+            <h3>Universal Tutors, revolutionising education for everyone, everywhere</h3>
+            <a href="javascript:;" class="video button" data-reveal-id="modal-video" onclick="open_general_video();"><i class="icon-play-circle2 block text-center full-width text-large"></i>Launch the Video</a>
+          </div>
+        </div>
+      
+      </div></section>
+      
+      <div class="row">
+        <div class="five columns centered text-center">
+      <!-- AddThis Button BEGIN -->
+      <div class="addthis_toolbox addthis_default_style">
+        <a class="addthis_button_facebook_like inline" style="opacity:1;" fb:like:layout="button_count"></a>
+        <a class="addthis_button_tweet inline"></a>
+      </div>
+      <script type="text/javascript">var addthis_config = {"data_track_addressbar":true};</script>
+      <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4fb386b55399dc7b"></script>
+      <!-- AddThis Button END -->
+        </div>
+      </div>
+      
+      <hr class="big" style="margin-top: 10px !important;">
+      
+      <section>
+        <div class="row clear">
+          <div class="twelve columns">
+            <h2><span>Why Universal Tutors is the </span>Best Choice for Learning</h2>
+          </div>
+        </div>
+        
+        <div class="row row-1">
+          <div class="eight columns clear">
+            <div class="row">
+              <div class="twelve columns space">
+                <h3 class="home-1">Unique classroom experience</h3>
+                <p>Universal Tutors provides a classroom that is unrivaled by other tutoring sites. Not only does it offer a choice of communication mediums including Video, Audio, or Instant messenger, but it also provides an interactive whiteboard with the Wolfram Alpha educational search engine built in.</p>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="six columns">
+                <h4 class="home-2">Access to <br>the best Tutors</h4>
+                <p>Access to the best and most innovative tutors – Universal Tutors has attracted some of the most talented tutors from all over the world. Our tutors believe in using online tools to enhance the traditional learning experience.</p>
+                <p>Through our review and rating system you are able to easily select the best and most suitable tutors</p>
+              </div>
+              <div class="six columns">
+                <h4 class="home-3">Superior <br>Student / Tutor Fit</h4>
+                <p>Universal Tutors provides more information on their tutors than any other tutoring agency online or offline, including academic and professional backgrounds, subject and exam level specialties, and video introductions to name a few.</p>
+                <p>This enables students to find the tutor that best suits their individual requirements.</p>
+              </div>
+            </div>
+          </div>
+  
+          <div class="four columns clear">
+            <div class="testimonials">
+              <blockquote><p>"Since I started learning on Universal Tutors I've actually really started to enjoy Biology, and I even finished top of my class in our last exam"</p> <cite>Biology student</cite></blockquote>
+              
+              <blockquote><p>"Thanks to the tutoring Sam received on Universal Tutors he passed his 11+ exams with flying colours and got into the school we'd all been hoping for"</p> <cite>Parent</cite></blockquote>
+              
+              <blockquote><p>"Learning on Universal Tutors is so fun and interactive that I now actually look forward to my weekly Maths class, it also means I no longer have to worry about falling behind in school"</p> <cite>Maths student</cite></blockquote>
+            
+            </div>
+          </div>
+  
+          <!--<div class="four columns testimonials">
+            <p>"Before I started using Universal Tutors I was getting C's for Maths, now since my classes with Nick I have been getting straight A's!"<br>
+            <strong>- GCSE Maths student</strong></p>
+            <p>"Having my tutoring online is much more fun than my old classes. Now we do so much more in the class and my marks have been getting better and better as well"<br>
+            <strong>- 11+ student</strong></p>
+          </div>-->
+        </div>
+        
+        <hr>
+        
+        <div class="row">
+          <div class="four columns">
+            <div class="lock"></div>
+          </div>
+          
+          <div class="eight columns">
+            <div class="row">
+              <div class="twelve columns space">
+                <h3 class="home-4">Parental Oversight</h3>
+                <p>Universal Tutors recognises that the importance of the parents’ role in supervising the education of their children. Parents have therefore been given their own log-in from where they can check the progress of any of their children, communicate with their tutors, add credits to their account etc.</p>
+              </div>
+            </div>
+            
+            <div class="row">
+              <div class="six columns">
+                <h4 class="home-5">Best Possible <br>Rates</h4>
+                <p>By attracting tutors from across the globe and allowing them to set their own prices Universal Tutors has created a competitive market place for private tuition ensuring that you receive the best prices possible</p>
+              </div>
+              <div class="six columns">
+                <h4 class="home-6">Satisfaction <br>Guarantee</h4>
+                <p>Students are given the first 5 minutes of every class they take to decide whether or not they are happy with the service and tutor. If for any reason they are not 100% satisfied they can cancel the class at no cost.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section class="blue"><div class="inner">
+        <div class="row">
+          <div class="twelve columns clear">
+            <h2><span>Check out some of our </span>Featured Tutors</h2>
+          </div>
+        </div>
+        <div class="row">
+        {% for tutor in featured_tutors %}
+        {% with tutor.profile as tutor_profile %}
+          <div class="four columns">
+            <div class="row">
+              <div class="four columns phone-one">
+                <img src="{% version tutor_profile.profile_image.path 'homepage_list_tutors' %}" alt="{{tutor.get_full_name}}">
+              </div>
+              <div class="eight columns phone-three">
+                <a href="{% url profile tutor.username %}"><h5>{{tutor.get_full_name}}</h5></a>
+                <p>{{tutor_profile.about|truncatechars:200}}</p>
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+        {% empty %}
+          <div class="twelve columns clear">
+          <h2><span>There are no featured tutors at moment.</span></h2>
+        </div>
+        {% endfor %}
+        </div>
+      </div></section>
+      
+      {% if not user.is_authenticated %}
+      <section>
+        <div class="row">
+          <div class="seven columns centered text-center">
+            <h2 class="tight"><span>Ready to give us a try?</span></h2>
+            <a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('2'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Student Account</span></a>
+            <p class="faded">If you're a tutor, <a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();">sign up here</a>.</p>
+          </div>
+        </div>
+
+      <script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.4.3.min.js"></script> 
+      <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js"></script>
+      <script type="text/javascript" charset="utf-8" src="js/jquery.tubular.js">
+      $().ready(funciton() {
+      $('body').tubular('8-MlnAJklrM','video'); // where someYTid is the YouTube ID and wrapper is your containing DIV.
+      });
+
+      </script> 
+      </section>
+    </body>
+      {% endif %}
+    
+    {% if video %}{% include "core/fragments/_modal_video.html" %}{% endif %}
+{% endblock %}
