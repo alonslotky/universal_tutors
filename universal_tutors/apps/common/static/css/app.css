@@ -342,18 +342,19 @@
       letter-spacing: -1px;
     }
   }
-    
+ 
+/*    
 /* Header */
-
+/*
   header .logo a {
     background: url("../images/shared/logo-thin.png") no-repeat left center;
     width: 81px;
     height: 24px;
     margin: 0 10px 10px 0;
   }
-  
+  */
    /* x2 Retina */
-  
+ /* 
     @media only screen and (-webkit-min-device-pixel-ratio: 1.5), 
     only screen and (-o-min-device-pixel-ratio: 3/2), 
     only screen and (min-device-pixel-ratio: 1.5) {
@@ -366,7 +367,7 @@
   /* header {
     font-family: 'MyriadProSemibold';
   } */
-  
+ /* 
   header, .main, footer {
     padding: 0 20px;
   }
@@ -433,8 +434,101 @@
       display: inline;
       margin: 20px 0 0 20px;
     }
+  }*/
+
+/* Header new */
+
+  header .logo a {
+    background: url("../images/shared/Wizoku_logo_2.png") no-repeat left center;
+    width: 81px;
+    height: 24px;
+    margin: 0 10px 10px 0;
   }
   
+   /* x2 Retina */
+ 
+    @media only screen and (-webkit-min-device-pixel-ratio: 1.5), 
+    only screen and (-o-min-device-pixel-ratio: 3/2), 
+    only screen and (min-device-pixel-ratio: 1.5) {
+      header .logo a {
+        background: url("../images/shared/Wizoku_logo_2.png") no-repeat left center;
+        background-size: 100%;
+      }
+    }
+   /* header {
+    font-family: 'MyriadProSemibold';
+  } */
+  
+  header, .main, footer {
+    padding: 0 20px;
+  }
+  
+  nav.show-on-phones {
+    padding-top: 8px;
+  }
+  
+  nav.show-on-phones a.right {
+    padding: 4px 0 0;
+  }
+  
+  @media only screen and (min-width: 767px) {
+    header .logo a {
+      background: url("../images/shared/Wizoku_logo_2.png") no-repeat left top;
+      background-size: 152px auto;
+      border-right: 1px solid #e7e7e7;
+      padding-right: 30px;
+      width: 162px;
+      height: 44px;
+      margin: 0 30px 7px 0;
+    }
+    
+    header .logo a:hover {
+      opacity: 0.5;
+    }
+    
+    header li {
+      float: left;
+    }
+    
+    header a {
+      font-size: 16px;
+      display: block;
+      margin: 12px 20px 0 0;
+      color: #717171;
+    }
+    
+    .marketing.students .link-students,
+    .marketing.tutors .link-tutors,
+    .classes .link-classes,
+    .tutors .link-tutors,
+    .messages .link-messages,
+    .profile .link-profile,
+    .search .link-search {
+      background-color: #efefef;
+      padding: 10px;
+      margin-top: 1px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+      border-radius: 4px;
+    }
+    
+    header a:hover {
+      color: #000;
+    }
+    
+    header .user-links {
+      text-align: right;
+      padding-top: 12px;
+    }
+    
+    header .user-links a {
+      display: inline;
+      margin: 20px 0 0 20px;
+    }
+  }
+
+ 
+
 /* Main */
   
   .main {
@@ -554,11 +648,13 @@
 	  }
 	  
 	  footer .logo {
-      background: url("../images/shared/logo-foot.png") no-repeat;
-      width: 42px;
-      height: 30px;
+      /*background: url("../images/shared/logo-foot.png") no-repeat;*/
+      background: url("../images/shared/App_icon_grey_small.png") no-repeat;
+      width: 63px;
+      height: 45px;
       margin-right: 15px;
       margin-left: 15px;
+      margin-top: -10px;
     }
     
     footer a {

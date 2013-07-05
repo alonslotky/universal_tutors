@@ -1,10 +1,15 @@
+<style>
+
+
+</style>
+
 {% with user.profile as profile %}
 {% with user.is_authenticated as authenticated %}
 {% with profile.no_messages as no_messages %}
 <header>
 	<nav class="row hide-on-phones">
       	<div>
-      		<span class="beta-tag">beta</span>
+      		<span class="beta-tag" style = padding-left:20px >beta</span>
 	    	<ul>
 	          	<li class="logo ir"><a href="/">Universal Tutors</a></li>
 	      		{% if authenticated %}
@@ -23,8 +28,8 @@
 				          <li><a class="link-messages" href="{% url parent_messages %}" style="position:relative;">Messages<div id="header-no-new-messages" class="unread {% if not no_messages %}hidden{% endif %}">{{no_messages}}<span> Unread Message</span></div></a></li>
 					{% endif %}			
 				{% else %}
-		  				<li><a class="link-students" href="/student-guide/">Student Guide 1</a></li>
-		 				<li><a class="link-tutors" href="/tutor-guide/">Tutor Guide 1</a></li>
+		  				<li><a class="link-students" href="/student-guide/">Student Guide</a></li>
+		 				<li><a class="link-tutors" href="/tutor-guide/">Tutor Guide</a></li>
 				{% endif %}
 			</ul>
 		</div>
@@ -48,19 +53,19 @@
 			<a class="advanced" href="{% url search %}">Advanced Search</a>
 		</div>
 	</nav>
-	
+
     <nav class="row show-on-phones">
 		<div class="logo"><a class="left ir" href="/">Universal Tutors</a></div>
 		<a class="right" href="#navi">Navigation</a>
 	</nav>
-	
+
 	<script type="text/javascript">
 		{% if user.is_authenticated %}
 		setInterval(function(){
 			$.get('{% url update_header %}', function(data){
 				var no_messages = parseInt(data['no_messages']);
 				var no_classes = parseInt(data['new_classes']);
-				
+
 				$('#header-no-new-messages').html(no_messages);
 				if (no_messages) {
 					$('#header-no-new-messages').removeClass('hidden');
