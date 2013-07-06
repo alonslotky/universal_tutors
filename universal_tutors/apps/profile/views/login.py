@@ -15,6 +15,7 @@ from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 from django.shortcuts import render_to_response
 from django.contrib.formtools.wizard.views import SessionWizardView
+#from django.contrib.formtools.wizard import FormWizard
 from django.contrib.auth.models import User
 
 from allauth.socialaccount import helpers
@@ -103,6 +104,7 @@ TUTOR_SIGNUP_TEMPLATES = {"step1": "account/tutor_signup_step1.html",
              "step6": "account/tutor_signup_step6.html",}
 
 class TutorSignupWizard(SessionWizardView):
+#class TutorSignupWizard(FormWizard):
     
     def get_form_prefix(self, step=None, form=None):
         return ''
