@@ -106,6 +106,8 @@
 			 </div>
 		
 			
+			{% if wizard.form.tutoring_type.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.tutoring_type.errors }}</li></ul></div>{% endif %}
+			
 			<div class="row space" name="tutoring_type">
 				<div class="three columns">
 					<label>tutoring_type*</label>
