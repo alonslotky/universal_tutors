@@ -30,7 +30,7 @@ django-sentry
 # Misc
 django-reversion
 #pygraphviz # Enable this to generate ERD diagrams
-django-mptt==0.5.5
+django-mptt==0.4.2
 django-tagging
 django-tagging-autocomplete
 django-smart-selects
@@ -64,4 +64,3 @@ django-allauth
 
 django-mailchimp==0.1.30
 minidetector
-pytz

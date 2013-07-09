@@ -1,4 +1,4 @@
-{% load account socialaccount %}
+{% load account_tags allauth_tags %}
 
 <div class="sign-in">
 	{% include "socialaccount/snippets/login_extra.html" %}
@@ -6,7 +6,7 @@
 		{% csrf_token %}
 		
 		<div class="row center">
-			<!--used to be a facebook link-->
+			<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
 		</div>
 		<div class="row">&nbsp;</div>
 		<div class="row">

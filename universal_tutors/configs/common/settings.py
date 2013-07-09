@@ -63,8 +63,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "apps.common.utils.context_processors.app_wide_vars",
     "apps.common.context_processors.feedback_questions",
+    "allauth.context_processors.allauth",
     "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
     #'cms.context_processors.media',
     'sekizai.context_processors.sekizai',
     #'admintools_bootstrap.context_processors.site',
@@ -96,17 +96,6 @@ ROOT_URLCONF = 'universal_tutors.configs.common.urls'
 TEMPLATE_DIRS = (
     os.path.join(SITE_ROOT, 'templates')
 )
-
-SOCIALACCOUNT_PROVIDERS = \
-{ 'facebook': 
-    {'SCOPE': ['email'], 'AUTH_PARAMS': {'auth_type': 'reauthenticate'}, 'METHOD': 'oauth2', 'LOCALE_FUNC': lambda request: 'en_US'
-     }
-
-}
-
-ACCOUNT_AUTHENTICATION_METHOD = "username"
-ACOUNT_EMAIL_REQUIRED = True
-
 
 INSTALLED_APPS = (
     # Base Django Apps
@@ -146,14 +135,14 @@ INSTALLED_APPS = (
 #    'haystack',
     
     # Registration, Signin and Account Management
-    #'emailconfirmation',
+    'emailconfirmation',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #'allauth.twitter',
-    #'allauth.openid',
-    #'allauth.facebook',
-    'allauth.socialaccount.providers.facebook',
+    'allauth.twitter',
+    'allauth.openid',
+    'allauth.facebook',
+    
     # Internal Apps
     'apps.common',
     'apps.core',

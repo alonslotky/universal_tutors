@@ -1,6 +1,6 @@
-{% load account socialaccount %}
+{% load allauth_tags %}
 
 {% if allauth.facebook_enabled %}
-<!--used to be fbconnect here-->
+{% fbconnect %}
 {% endif %}
 
