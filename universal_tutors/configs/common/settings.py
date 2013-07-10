@@ -65,6 +65,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "apps.common.context_processors.feedback_questions",
     "allauth.context_processors.allauth",
     "allauth.account.context_processors.account",
+    #"allauth.socialaccount.context_processors.socialaccount",
     #'cms.context_processors.media',
     'sekizai.context_processors.sekizai',
     #'admintools_bootstrap.context_processors.site',
