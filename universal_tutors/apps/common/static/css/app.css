@@ -557,6 +557,11 @@
     padding: 20px 20px;
   }
   
+  .blue .new_inner {
+    background: url("../images/marketing/Joseph&friends.jpg") no-repeat center top;
+    height: 400px;
+    padding: 20px 20px;
+  }
   .blue p {
     color: #e7e7e7;
   }
@@ -792,7 +797,9 @@
   
   .home h1 { margin-bottom: -5px; }
   
-  .blue.feature-box { margin-top: -10px; }
+  .blue.feature-box { 
+    
+    margin-top: -10px; }
   
   .home .blue.feature-box { margin-top: 20px; }
   
@@ -899,7 +906,8 @@
     .home .feature-browser {
       height: 316px;
       width: 95%;
-      background: url("../images/marketing/home-browser.png") no-repeat left top;
+      /*background: url("../images/marketing/home-browser.png") no-repeat left top;*/
+      background: url("../images/marketing/Joseph&friends.jpg") no-repeat left top;
       position: absolute;
       top: 0;
       left: 0;
@@ -915,12 +923,14 @@
       z-index: 1;
     }
     
-    .feature-black { margin: 0 -20px; border-top: 1px solid #439cba; }
+    .feature-black { margin: 0 -20px; 
+      /*border-top: 1px solid #439cba;*/
+       }
     
     .home .feature-black { margin: 310px -20px 0; }
     
     .feature-black {
-      background: #000;
+      /*background: #000;*/
       margin: 0 -20px;
       padding: 20px;
       height: 30px;
@@ -958,6 +968,19 @@
       margin-top: -27px;
     }
     
+  /*new marketing*/
+  
+    .home .new_marketing {
+      height: 316px;
+      width: 100%;
+      /*background: url("../images/marketing/home-browser.png") no-repeat left top;*/
+      background: url("../images/marketing/Joseph&friends.jpg") no-repeat ;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }  
+
+
   /* Lock */
   
     .home .lock {
@@ -1733,5 +1756,16 @@ table hr {
 
 table td {
   overflow: hidden;
+}
+
+
+#simage3{
+  background-image: url("../static/images/shared/signup_steps.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 200px; /*or your image's height*/
+margin: 0;
+padding: 0;
+  
 }
 
