@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'smart_selects',
     'pagination',
 #    'haystack',
+     'shell_plus',	
     
     # Registration, Signin and Account Management
     'emailconfirmation',
