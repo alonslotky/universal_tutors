@@ -5,9 +5,7 @@ Base configuration
 """
 env.project_name = 'universal_tutors'
 env.python = 'python2.6'
-env.repository_url = 'https://github.com/alonslotky/universal_tutors.git'
-#env.key_filename = '/home/rawjam/sites/%(project_name)s/repository/ut_key.pem' % env
-env.key_filename = 'C:/Users/micro/Downloads/ut_key.pem'
+env.repository_url = 'ssh://sls@slsapp.com:1234/rawjam/universal_tutors.git'
 
 """
 Environments
@@ -17,7 +15,7 @@ def production():
     Work on production environment
     """
     env.settings = 'production'
-    env.user = 'ubuntu'
+    env.user = 'rawjam'
     env.hosts = ['54.245.116.64']
     env.path = '/home/rawjam/sites/%(project_name)s' % env
     env.env_path = '%(path)s/env' % env    
@@ -30,8 +28,8 @@ def staging():
     Work on staging environment
     """
     env.settings = 'staging'
-    env.user = 'ubuntu'
-    env.hosts = ['staging.universaltutors.com']
+    env.user = 'rawjam'
+    env.hosts = ['staging.rawjam.co.uk']
     env.path = '/home/rawjam/sites/%(project_name)s' % env
     env.env_path = '%(path)s/env' % env
     env.repo_path = '%(path)s/repository' % env
@@ -122,16 +120,15 @@ def checkout_latest():
     """
     Pull the latest code on the specified branch.
     """
-    sudo('cd %(repo_path)s; git pull origin %(branch)s' % env)
+    run('cd %(repo_path)s; git pull origin %(branch)s' % env)
 
 def install_requirements():
     """
     Install the required packages using pip.
     """
     with prefix('source %(env_path)s/bin/activate' % env):
-        run('pip install -e %(env_path)s -r %(repo_path)s/requirements.txt' % env)
-        #run('pip install -r %(repo_path)s/requirements.txt' % env)
-    
+        run('pip install -E %(env_path)s -r %(repo_path)s/requirements.txt' % env)
+
 def install_apache_conf():
     """
     Install the apache site config file.
