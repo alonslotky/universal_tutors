@@ -113,8 +113,12 @@ class TutorSignupWizard(SessionWizardView):
     def get_template_names(self):
         return [TUTOR_SIGNUP_TEMPLATES[self.steps.current]]        
     
+    def save_genres(self, form_list, user):
+        #get genres from from data and add it to the user!
+        user.profile.genres = Genre.objects.filter(id__in = [int(id) for id in form_list[2].data.getlist('genres')])
+        
     def save_tutor(self, form_list, **kwargs):
-        print 'save_tutor'
+      
         form_data = [form.cleaned_data for form in form_list]
         '''
         [{'password1': u'1234', 'first_name': u'alon', 'last_name': u'slotky', 'email': u'alonslotky@yahoo.com', 'password2': u'1234'}, 
@@ -161,6 +165,8 @@ class TutorSignupWizard(SessionWizardView):
         profile.date_of_birth = form_data[1].get('date_of_birth')
         profile.zipcode = form_data[1].get('zipcode', 0)    
 
+        
+        self.save_genres(form_list, user)
         
         #availability
         for key, val in availability_periods.items():
@@ -219,7 +225,7 @@ class TutorSignupWizard(SessionWizardView):
         
     def get_form(self, step=None, data=None, files=None):
         form = super(TutorSignupWizard, self).get_form(step, data, files)
-
+        
         if step is not None and data is not None:
             # get_form is called for validation by get_cleaned_data_for_step()
             return form
