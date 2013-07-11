@@ -498,7 +498,7 @@ class MultiPartSignupFormStep2(forms.Form):
     
     #Adding the zipcode attribute 
     zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
-    tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
+    tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1])
     #online_tutoring = forms.BooleanField(required = True, initial=True)
     #in_person_tutoring = forms.BooleanField(required = True, initial=True)
     
