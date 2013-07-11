@@ -511,11 +511,10 @@ class MultiPartSignupFormStep2(forms.Form):
             raise forms.ValidationError(_(u"This email is already registered."))
 
         return email
-
+    
 class MultiPartSignupFormStep3(forms.Form):
-    class Meta:
-        model = User
-
+    
+    
     cat=range(0,Genre.tree.filter(level=0).count())
     for x in range(0, len(cat)):
         cat[x]=Genre.tree.filter(level=0)[x]
@@ -523,6 +522,8 @@ class MultiPartSignupFormStep3(forms.Form):
     subcat=[None]*len(cat)
     for x in range(0, len(cat)):
         subcat[x]=cat[x].get_children()
+        
+    genres = forms.ModelMultipleChoiceField(queryset= Genre.objects.all(), widget=forms.CheckboxSelectMultiple, required = False)
 
     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
     

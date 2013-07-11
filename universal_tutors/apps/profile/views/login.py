@@ -92,7 +92,6 @@ TUTOR_SIGNUP_FORMS = [("step1", forms.MultiPartSignupFormStep1),
          ("step2", forms.MultiPartSignupFormStep2),
          ("step3", forms.MultiPartSignupFormStep3),
          ("step4", forms.MultiPartSignupFormStep4),
-         #("step3", forms.MultiPartSignupFormStep3),
          ("step5", forms.MultiPartSignupFormStep5),
          #("step6", forms.MultiPartSignupFormStep6),
          ]
@@ -101,12 +100,8 @@ TUTOR_SIGNUP_TEMPLATES = {"step1": "account/tutor_signup_step1.html",
              "step2": "account/tutor_signup_step2.html",
              "step3": "account/tutor_signup_step3.html",
              "step4": "account/tutor_signup_step4.html",
-             #"step3": "account/tutor_signup_step3.html",
              "step5": "account/tutor_signup_step5.html",
              "step6": "account/tutor_signup_step6.html",}
-#present=request.user
-#global user_id 
-#user_id = request.user.id
 
 class TutorSignupWizard(SessionWizardView):
 #class TutorSignupWizard(FormWizard):
@@ -117,12 +112,13 @@ class TutorSignupWizard(SessionWizardView):
         
     def get_template_names(self):
         return [TUTOR_SIGNUP_TEMPLATES[self.steps.current]]        
- 
-    #present=request.user    
-
-
+    
+    def save_genres(self, form_list, user):
+        #get genres from from data and add it to the user!
+        user.profile.genres = Genre.objects.filter(id__in = [int(id) for id in form_list[2].data.getlist('genres')])
+        
     def save_tutor(self, form_list, **kwargs):
-        print 'save_tutor'
+      
         form_data = [form.cleaned_data for form in form_list]
         '''
         [{'password1': u'1234', 'first_name': u'alon', 'last_name': u'slotky', 'email': u'alonslotky@yahoo.com', 'password2': u'1234'}, 
@@ -143,10 +139,7 @@ class TutorSignupWizard(SessionWizardView):
             pass
 
         user = User()
-        #user1=user.id
-        #global user_id 
-        #user_id = request.user.id
-        
+
         password = form_data[0]['password1']
         if password:
             user.set_password(password)
@@ -159,7 +152,6 @@ class TutorSignupWizard(SessionWizardView):
         user.last_name = form_data[0]['last_name']
         user.email = form_data[0]['email']
         user.save()
-        #id1=user
         
         profile = user.profile        
         #profile.country = self.cleaned_data['country']
@@ -172,26 +164,10 @@ class TutorSignupWizard(SessionWizardView):
         profile.price_per_hour = form_data[3].get('price_per_hour', -1)
         profile.date_of_birth = form_data[1].get('date_of_birth')
         profile.zipcode = form_data[1].get('zipcode', 0)    
-        #profile.genre = form_data[2].save
-        #genre_0_0 = Genre.tree.get(id=form_data[3].get('currency', 1))
-        #genre_0_0 = form_data[2].get('genre_0_0')
-        #profile.genre.m2mfield.add(genre_0_0)
-        #profile.genre.add(genre_0_0)
-        #ended with lists error
 
-        #genre00=form_list[2].data['genre_0_0']
-        #profile.genre.m2mfield.add(genre00)
-
-        #genre0_0 = Genre.get_root(id=form_data[2].get('genre_0_0', 1))
-        #profile.genre.add(genre0_0)
-
-        #genre0_0 = form_data[2].get('genre_0_0', 0)
-        #genre1_0 = form_data[2].get('genre_1_0', 0)
-        #user_id1 = request.user.id
-        #user1=profile(user_id=user_id)
-        #user1.genre.m2mfield.add(*[genre0_0,genre1_0])
-
-
+        
+        self.save_genres(form_list, user)
+        
         #availability
         for key, val in availability_periods.items():
             #val_example = {"begin_hour":6,"begin_minute":15,"end_hour":10,"end_minute":30}
@@ -227,9 +203,8 @@ class TutorSignupWizard(SessionWizardView):
         #tutoring_type = self.cleaned_data.get('tutoring_type', 0)
         #TODO save tutoring type
         #TODO add currency
-        profile.date_of_birth = form_data[1].get('date_of_birth')
         profile.save()
-        #profile.save_m2m() 
+         
 #         try:
 #             email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
 #             email.send_email({
@@ -250,7 +225,7 @@ class TutorSignupWizard(SessionWizardView):
         
     def get_form(self, step=None, data=None, files=None):
         form = super(TutorSignupWizard, self).get_form(step, data, files)
-
+        
         if step is not None and data is not None:
             # get_form is called for validation by get_cleaned_data_for_step()
             return form
