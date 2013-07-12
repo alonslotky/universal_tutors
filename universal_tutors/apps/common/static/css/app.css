@@ -1759,15 +1759,46 @@ table td {
 }
 
 
-#simage3{
-  background-image: url("../static/images/shared/signup_steps.png");
+#tutor_signup_image1{
+  background-image: url("../images/new/tutor_signup_step1.png");
 background-repeat: no-repeat;
 width: auto; /*or your image's width*/
-height: 200px; /*or your image's height*/
-margin: 0;
-padding: 0;
-  
-}
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image2{
+  background-image: url("../images/new/tutor_signup_step2.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image3{
+  background-image: url("../images/new/tutor_signup_step3.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image4{
+  background-image: url("../images/new/tutor_signup_step4.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image5{
+  background-image: url("../images/new/tutor_signup_step5.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
 
 /*All the new rebranding changes*/
 
@@ -1790,8 +1821,8 @@ header .row{
 
 
 .main_image {
-  background: url("../images/shared/wizoku.jpg") repeat top;
-    
+  background: url("../images/rebranding/wizoku_homepage_mai2.jpg") no-repeat top;
+  width: 1600px;  
   height: 600px;
   
   min-width: 100%;
