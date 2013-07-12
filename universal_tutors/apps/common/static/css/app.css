@@ -895,7 +895,8 @@
     
     .feature-box h1 { line-height: 55px; padding-bottom: 40px; }
     
-    .blue.feature-box { margin-top: -25px; }
+    /*.blue.feature-box { margin-top: -25px; }*/
+    .blue.feature-box { margin-top: 5px; }
     
     .home .blue.feature-box { margin-top: 30px; }
     
