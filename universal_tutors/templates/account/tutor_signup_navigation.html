@@ -4,7 +4,18 @@
 {{ wizard.form.media }}
 {% endblock %}
 
+
+
+
 <div name="button">
+	<!-- hidden buttons to capture default Enter  -->
+	{% if wizard.steps.next %}
+		<button name="" class="icon rocket" type="submit" value="{{ wizard.steps.next }}" style="position: absolute; left: -9999px; width: 1px; height: 1px;">{% trans "next" %} </button>
+	{% else %}
+		<input type="submit" value="{% trans "submit" %}" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>	
+	{% endif %}
+	
+	
 	{% if wizard.steps.prev %}
 		<button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
 	{% endif %}
