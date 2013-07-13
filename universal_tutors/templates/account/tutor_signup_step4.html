@@ -55,9 +55,22 @@
 				
 			<hr class="inside">
 		
-		{% include 'account/tutor_signup_navigation.html' %}		
 		
     </div>
+    
+	{% if wizard.form.tutoring_type.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.tutoring_type.errors }}</li></ul></div>{% endif %}
+	
+	<div class="row space" name="tutoring_type">
+		<div class="three columns">
+			<label>Type of Tutoring* <span id="tooltip-description">[?]</span><br/></label>
+		</div>
+		<div class="nine columns">
+			{{wizard.form.tutoring_type}}
+		</div>	
+	</div>
+
+    {% include 'account/tutor_signup_navigation.html' %}		
+		
     {% endwith %}
 	</form>
 

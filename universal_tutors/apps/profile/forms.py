@@ -199,7 +199,6 @@ class ProfileForm(forms.ModelForm):
     
 TutorSubjectFormSet = inlineformset_factory(User, TutorSubject, form=TutorSubjectForm)
 TutorQualificationFormSet = inlineformset_factory(User, TutorQualification)
-
 StudentInterestFormSet = inlineformset_factory(User, StudentInterest, form=StudentInterestForm)
     
 
@@ -498,7 +497,6 @@ class MultiPartSignupFormStep2(forms.Form):
     
     #Adding the zipcode attribute 
     zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
-    tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1])
     #online_tutoring = forms.BooleanField(required = True, initial=True)
     #in_person_tutoring = forms.BooleanField(required = True, initial=True)
     
@@ -633,7 +631,11 @@ class MultiPartSignupFormStep4(forms.Form):
         
     price_per_hour = forms.DecimalField(initial=0)
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
-
+    
+    tutoring_type = forms.MultipleChoiceField(label=_('Type of Tutoring*'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1],
+                                              help_text = 'We are in the process of adding in-person tutoring as a feature on wizoku. Please tick as many boxes as apply (you can always edit this later) and we will let you know once this feature is up and running')
+    
+    
 class MultiPartSignupFormStep5(forms.Form):
     class Meta:
         model = User

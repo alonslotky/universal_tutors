@@ -104,18 +104,6 @@
 				  <input type="text" id="id_email" name="email" value="{{ wizard.form.email.value }}" class="input-text stretch" />
 				</div>
 			 </div>
-		
-			
-			{% if wizard.form.tutoring_type.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.tutoring_type.errors }}</li></ul></div>{% endif %}
-			
-			<div class="row space" name="tutoring_type">
-				<div class="three columns">
-					<label>tutoring_type*</label>
-				</div>
-				<div class="nine columns">
-					{{wizard.form.tutoring_type}}
-				</div>	
-			</div>
 			
 			<hr class="inside">
 		
