@@ -30,8 +30,8 @@
 	{{ wizard.form.management_form }}
 	{% with wizard.form as form %}	
 	<div class="row">	
-		<div class="eight columns">
-			<div name="name_errors">
+		<div class="six columns">
+			<!--<div name="name_errors">
 				{% if form.first_name.errors %}
 					<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>
 				{% endif %}
@@ -50,7 +50,7 @@
 				<div class="four columns">
 					<input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{wizard.form.last_name.value}}">
 				</div>
-			</div>
+			</div> -->
 	
 			<div class="row space" name="date_of_birth">
 				<div class="three columns">
@@ -58,7 +58,7 @@
 				</div>
 
 				{% if wizard.form.date_of_birth.errors %}<div class="formError">{{ wizard.form.date_of_birth.errors }}</div>{% endif %}
-				<div class="nine columns">
+				<div class="eight columns">
 					<input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{wizard.form.date_of_birth.value}}">
 					<div class="row">
 						<div class="four columns phone-one">
@@ -83,7 +83,25 @@
 					{{wizard.form.gender}}
 				</div>
 			</div>
+
+			<!--<div class="row space" name="gender">
+				<div class="three columns">
+					<label>Country*</label>
+				</div>
+				<div class="nine columns">
+					{{wizard.form.country}}
+				</div>
+			</div>-->
 			
+			<div class="row space" name="gender">
+				<div class="three columns">
+					<label>Timezone*</label>
+				</div>
+				<div class="nine columns">
+					{{wizard.form.timezone}}
+				</div>
+			</div>
+
 			{% if wizard.form.zipcode.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.zipcode.errors }}</li></ul></div>{% endif %}
 			<div class="row space" name = "zipcode">
 				<div class="three columns">
@@ -95,7 +113,7 @@
 				
 			</div>
 									
-			{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
+			<!--{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
 			<div class="row space" name="email">
 				<div class="three columns">
 					<label>Email*</label>
@@ -103,7 +121,7 @@
 				<div class="six columns">
 				  <input type="text" id="id_email" name="email" value="{{ wizard.form.email.value }}" class="input-text stretch" />
 				</div>
-			 </div>
+			 </div>-->
 			
 			<hr class="inside">
 		

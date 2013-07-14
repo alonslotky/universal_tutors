@@ -491,9 +491,9 @@ class MultiPartSignupFormStep2(forms.Form):
         model = User
         fields = ('date_of_birth', 'gender', 'zipcode',)
         
-    first_name = forms.CharField(label=_('First name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    email = forms.EmailField(label=_('Email'), max_length = 255, initial='', widget=forms.TextInput(attrs={'readonly':'readonly', 'disabled':True}))
+    #first_name = forms.CharField(label=_('First name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    #last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    #email = forms.EmailField(label=_('Email'), max_length = 255, initial='', widget=forms.TextInput(attrs={'readonly':'readonly', 'disabled':True}))
     
     #Adding the zipcode attribute 
     zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
@@ -502,6 +502,10 @@ class MultiPartSignupFormStep2(forms.Form):
     
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
+    #country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='UTC')
+     
+
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -630,6 +634,7 @@ class MultiPartSignupFormStep4(forms.Form):
         #fields = ('profile.currency')
         
     price_per_hour = forms.DecimalField(initial=0)
+    about = forms.CharField(label=_('Description'), initial='')
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
     
     tutoring_type = forms.MultipleChoiceField(label=_('Type of Tutoring*'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1],

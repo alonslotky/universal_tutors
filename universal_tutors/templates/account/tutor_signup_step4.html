@@ -69,6 +69,14 @@
 		</div>	
 	</div>
 
+	<div class="row space">
+            <div class="three columns">
+	          <label>Description* <span id="tooltip-description">[?]</span><br/><span>(max 300 characters)</span></label>
+    		</div>
+            <div class="nine columns">
+	          <textarea id="id_about" name="about" class="user">{{form.about.value}}</textarea>
+    		</div>
+
     {% include 'account/tutor_signup_navigation.html' %}		
 		
     {% endwith %}
