@@ -96,7 +96,10 @@ TUTOR_SIGNUP_FORMS = [("step1", forms.MultiPartSignupFormStep1),
          #("step6", forms.MultiPartSignupFormStep6),
          ]
 
-TUTOR_SIGNUP_TEMPLATES = {"step1": "account/tutor_signup_step1.html",
+#account/home_tutor_singup.html
+#../apps/core/templates/core/home_new_intg.html
+
+TUTOR_SIGNUP_TEMPLATES = {"step1": "account/home_tutor_signup.html",
              "step2": "account/tutor_signup_step2.html",
              "step3": "account/tutor_signup_step3.html",
              "step4": "account/tutor_signup_step4.html",
@@ -159,12 +162,14 @@ class TutorSignupWizard(SessionWizardView):
         #profile.other_referral = self.cleaned_data.get('referral_other', None)
         #profile.referral_key = self.cleaned_data.get('referral_key', None)
         profile.gender = form_data[1].get('gender', 0)
-        #profile.timezone = self.cleaned_data.get('timezone', None)
+        profile.timezone = form_data[1].get('timezone', None)
         profile.currency = Currency.objects.get(id=form_data[3].get('currency', 1))
         profile.price_per_hour = form_data[3].get('price_per_hour', -1)
         profile.date_of_birth = form_data[1].get('date_of_birth')
-        profile.zipcode = form_data[1].get('zipcode', 0)    
-
+        profile.zipcode = form_data[1].get('zipcode', 0) 
+        profile.about = form_data[3].get('about', 0)   
+        #profile.country
+        #profile.timezone = form_data[1].get('timezone', 0)
         
         self.save_genres(form_list, user)
         
@@ -230,7 +235,7 @@ class TutorSignupWizard(SessionWizardView):
             # get_form is called for validation by get_cleaned_data_for_step()
             return form
 
-        elif step == "step2":
+        elif step == "step1":
             
             data = self.get_cleaned_data_for_step('step1')
             if data is not None:
