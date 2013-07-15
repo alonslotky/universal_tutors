@@ -44,7 +44,7 @@
 
 
 {% block content %}
-      <body>
+      
         <section class="new_home">
           <div class="row main_image">
             <div class="six columns"></div>
@@ -81,9 +81,9 @@
                     {% if wizard.form.password1.errors %}
                       <div class="formError">{{ form.password1.errors }}</div>
                     {% endif %}
-                    {% if wizard.form.password2.errors %}
+                    <!--{% if wizard.form.password2.errors %}
                       <div class="formError">{{ form.password2.errors }}</div>
-                    {% endif %}
+                    {% endif %}-->
                     <input type="password" id="home_tutor_signup" name="password1" placeholder="Password" value="" class="input-text stretch" />  
                     <!--
                     <input type="password" id="home_tutor_signup" name="password2" placeholder="Confirm Password" value="" class="input-text stretch" /> -->   
@@ -127,7 +127,7 @@
         </div>  
       </div> 
       <div class="tagline"><h2>Driven by Wisdom — Powered by Community</h2>
-       <div> 
+       </div> 
       <section class="blue"><div class="inner">
         <div class="row">
           <div class="twelve columns clear">
@@ -166,11 +166,9 @@
             <p class="faded">If you're a tutor, <a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();">sign up here</a>.</p>
           </div>
         </div>
-
-     
       </section>
-    </body>
       {% endif %}
     
+          
     {% if video %}{% include "core/fragments/_modal_video.html" %}{% endif %}
 {% endblock %}

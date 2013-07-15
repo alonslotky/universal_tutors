@@ -459,7 +459,7 @@ class MultiPartSignupFormStep1(forms.Form):
     last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='')
     email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
     password1 = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
-    password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
+    #password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
 
 #     def clean_username(self):
 #         username = self.cleaned_data['username']
@@ -475,13 +475,13 @@ class MultiPartSignupFormStep1(forms.Form):
 
         return email
 
-    def clean_password2(self):
-        passwd1 = self.cleaned_data['password1']
-        passwd2 = self.cleaned_data['password2']
-        if passwd1 != passwd2:
-            raise forms.ValidationError(_(u'Passwords should match'))
+    #def clean_password2(self):
+        #passwd1 = self.cleaned_data['password1']
+        #passwd2 = self.cleaned_data['password2']
+        #if passwd1 != passwd2:
+            #raise forms.ValidationError(_(u'Passwords should match'))
 
-        return passwd1
+        #return passwd1
 
 
 
