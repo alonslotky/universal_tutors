@@ -33,13 +33,85 @@
 {% endblock %}
 
 {% block content %}
+<style>
+  .feature-text .video.button1 {
+    width: 10%;
+      margin-right: 10%;
+      height: 68px;
+      padding-bottom: 8px !important;
+      float: right;
+      margin-top: 7px;
+      
+    }
+.button1 {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: url("../images/shared/button.jpg") repeat-x top #a7dc32;
+    color: #000;
+    font-weight: normal;
+    border: 1px solid #70ac29;
+    padding: 10px;
+  }
+  
+  .button1:hover {
+    color: #000;
+    background-position: 0 -93px;
+  }
+  
+  .button1,
+  .timer .button1 span,
+  .small.button1,
+  .large.button1,
+  .icon {
+    font-size: 23px;
+    font-size: 2.3rem;
+    font-family: "MyriadProCondensed";
+    text-shadow: 0 1px 0 #d0fb82;
+    color: #000;
+    cursor: pointer;
+  }
+  
+  .large.button1 {
+    padding: 10px;
+    background: url("../images/shared/button-large.jpg") top repeat-x;
+  }
+  .large.button1:hover {
+    background-position: 0 -174px;
+  }
+  
+  .button1 .icon {
+    border: none;
+    padding: 0 25px 0 0;
+    margin: 0;
+    background: none;
+  }
+
+  .button1 .rocket { background: url("../images/shared/sprite.png") no-repeat right -39px; }
+  
+  .button1 .rocketdown { background: url("../images/shared/sprite.png") no-repeat right -66px; }
+  
+  .button1 .thumb-up { background: url("../images/shared/sprite.png") no-repeat right -413px; }
+  
+  .button1 .credits { background: url("../images/shared/sprite.png") no-repeat right -501px; }
+  
+  .button1 .history { background: url("../images/shared/sprite.png") no-repeat right -444px; }
+  
+  .button1 .search { background: url("../images/shared/sprite.png") no-repeat right -473px; }
+  
+  .button1 .down { background: url("../images/shared/sprite.png") no-repeat right -91px; }
+  
+  .large.button1 .rocket { background: url("../images/shared/sprite.png") no-repeat right -38px; }
+
+</style>
       <section class="blue feature-box"><div class="inner">
         <h1>Profile <span>View and modify your profile details.</span></h1>
         {% if user_profile.test_class_minutes %}
 	    <div class="feature-black">
 	      <div class="feature-text">
 	        <h3>You have {{user_profile.test_class_minutes}} minute{{user_profile.test_class_minutes|pluralize}} left in your test class</h3>
-	        <a href="{% url tutor_test_class %}" class="video button" style="margin-top: -60px;"><i class="icon-play-circle2 block text-center full-width text-large"></i>Open test class</a>
+	        <!--<a href="{% url tutor_test_class %}" class="video button" style="margin-top: -60px;"><i class="icon-play-circle2 block text-center full-width text-large"></i>Open test class</a>-->
+          <a href="{% url tutor_test_class %}" class="video button1" style="margin-top: -60px;"><i class="icon-play-circle2 block text-center full-width text-large"></i>Open test class</a>
 	      </div>
 	    </div>
 	    {% endif %}
