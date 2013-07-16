@@ -2157,3 +2157,8 @@ FOOTER
   bottom: -1px;
 } 
 
+
+#tutor_signup_photo{
+  position: relative;
+  right:200px;
+}
