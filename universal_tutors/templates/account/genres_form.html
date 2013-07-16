@@ -1,11 +1,20 @@
+<style>
+#subject_note{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  color: #000000;
+  font-size: 20px;
+  font-weight: bold;
+}
+</style>
 
 {% load common_tags %}
 <div class="row" name="Name"> 
 
   <body >
-  <font size="8">SUBJECTS </font>
+  <font size="8">SUBJECTS </font><br>
   <!--Part0-->
-
+  <div id="subject_note">Please add as many subjects as possible as this will <br>improve your chances of being selected for tutoring! </div>
       <div class="accordionItem">
         <h2>+  {{form.cat.0}}</h2>
         
