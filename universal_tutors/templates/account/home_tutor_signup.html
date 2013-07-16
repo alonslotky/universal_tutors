@@ -47,13 +47,15 @@
       
         <section class="new_home">
           <div class="row main_image">
-            <div class="six columns"></div>
+            <div class="six columns"><div id="home_tag">Join our online learning community today!</div></div>
             <div class="six columns">
               <div id="wrapper">
+
                 <form name="login-form" class="login-form" id="student-signup-form" action="" method="post" enctype="multipart/form-data">
                   <div class="header">
-                      <h1>Sign Up as Tutor </h1>
-                      <h1>It's Free </h1>
+                    
+                      <h1>Sign Up as a Tutor </h1>
+                      <h2>It's Free </h2>
                   </div> 
                   {% csrf_token %}
                   {{ wizard.management_form }}
