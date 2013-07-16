@@ -1,12 +1,29 @@
+<style>
+.clear {
+	float: left;
+}
+
+.availability_instructions{
+	font-weight: bold;
+	color: #000000;
+	font-size: 20px;
+}
+</style>
+
 {% load common_tags %}
   	{% with wizard.form.default_week as default_week %}
     <h2 class="clear">Availability</h2>
 	
 	<div class="hide-on-phones">
-		<p>
+		<!--<p>	<span>(or click and drag cursor in calendar below)</span><br/>
 			<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a><br/>
 			<span>(or click and drag cursor in calendar below)</span>
-		</p>
+		</p>-->
+
+		<br><br><br><p class="availability_instructions">	<span>On the calendar, click on a day and time and slide your cursor to the right to indicate your availability
+		</span><br/>
+			<a href="javasctipt:;" data-reveal-id="modal-add-availability" onclick="add_availability_clear();">+ add availability</a><br/>
+		</p>	
 		<div id="new-schedule-container" class="new-schedule-calendar">
 			<div class="new-schedule-calendar-header">
 				<div class="new-schedule-calendar-time first">&nbsp;</div>
