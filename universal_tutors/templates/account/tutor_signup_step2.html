@@ -58,7 +58,7 @@
 				</div>
 
 				{% if wizard.form.date_of_birth.errors %}<div class="formError">{{ wizard.form.date_of_birth.errors }}</div>{% endif %}
-				<div class="eight columns">
+				<div class="nine columns">
 					<input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{wizard.form.date_of_birth.value}}">
 					<div class="row">
 						<div class="four columns phone-one">
@@ -84,14 +84,14 @@
 				</div>
 			</div>
 
-			<!--<div class="row space" name="gender">
+			<div class="row space" name="gender">
 				<div class="three columns">
 					<label>Country*</label>
 				</div>
 				<div class="nine columns">
 					{{wizard.form.country}}
 				</div>
-			</div>-->
+			</div>
 			
 			<div class="row space" name="gender">
 				<div class="three columns">
@@ -107,7 +107,7 @@
 				<div class="three columns">
 					<label>Zipcode*</label>
 				</div>				
-     			<div class="six columns">
+     			<div class="nine columns">
 					<input type="text" id="id_zipcode" name="zipcode" value="{{ form.zipcode.value }}" class="input-text stretch" />
 				</div>
 				

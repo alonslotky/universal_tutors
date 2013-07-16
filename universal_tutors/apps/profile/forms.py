@@ -502,8 +502,8 @@ class MultiPartSignupFormStep2(forms.Form):
     
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
-    #country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
-    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='UTC')
+    country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}),initial='US')
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
      
 
 

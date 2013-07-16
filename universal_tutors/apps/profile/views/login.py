@@ -168,7 +168,7 @@ class TutorSignupWizard(SessionWizardView):
         profile.date_of_birth = form_data[1].get('date_of_birth')
         profile.zipcode = form_data[1].get('zipcode', 0) 
         profile.about = form_data[3].get('about', 0)   
-        #profile.country
+        profile.country = form_data[1].get('country', None)
         #profile.timezone = form_data[1].get('timezone', 0)
         
         self.save_genres(form_list, user)
