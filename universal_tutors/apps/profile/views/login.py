@@ -228,7 +228,12 @@ class TutorSignupWizard(SessionWizardView):
         user = self.save_tutor(form_list)
         success_url = reverse('edit_tutor_profile')
         return complete_signup(self.request, user, success_url)
-        
+    
+    def get_form_kwargs(self, step):
+        if "step2" == step:
+            return {"request": self.request}
+        else:
+            return {}
     def get_form(self, step=None, data=None, files=None):
         form = super(TutorSignupWizard, self).get_form(step, data, files)
         

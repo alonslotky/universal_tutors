@@ -506,6 +506,22 @@ class MultiPartSignupFormStep2(forms.Form):
     timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
      
 
+    image_uploaded = forms.BooleanField(required = False)
+    
+        
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(MultiPartSignupFormStep2, self).__init__(*args, **kwargs)
+
+         
+    def clean_image_uploaded(self):
+        session_key = self.request.session.session_key
+        
+        try:
+            image = UploadProfileImage.objects.get(key=session_key).image
+        except UploadProfileImage.DoesNotExist:
+            raise forms.ValidationError(_(u"Please upload a profile picture"))
+
 
     def clean_email(self):
         email = self.cleaned_data['email']
