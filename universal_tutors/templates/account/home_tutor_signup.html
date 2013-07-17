@@ -127,45 +127,7 @@
       </div> 
       <div class="tagline"><h2>Driven by Wisdom — Powered by Community</h2>
        </div> 
-     <!-- <section class="blue"><div class="inner">
-        <div class="row">
-          <div class="twelve columns clear">
-            <h2><span>Check out some of our </span>Featured Tutors</h2>
-          </div>
-        </div>
-        <div class="row">
-        {% for tutor in featured_tutors %}
-        {% with tutor.profile as tutor_profile %}
-          <div class="four columns">
-            <div class="row">
-              <div class="four columns phone-one">
-                <img src="{% version tutor_profile.profile_image.path 'homepage_list_tutors' %}" alt="{{tutor.get_full_name}}">
-              </div>
-              <div class="eight columns phone-three">
-                <a href="{% url profile tutor.username %}"><h5>{{tutor.get_full_name}}</h5></a>
-                <p>{{tutor_profile.about|truncatechars:200}}</p>
-              </div>
-            </div>
-          </div>
-        {% endwith %}
-        {% empty %}
-          <div class="twelve columns clear">
-          <h2><span>There are no featured tutors at moment.</span></h2>
-        </div>
-        {% endfor %}
-        </div>
-      </div></section>
-      
-      {% if not user.is_authenticated %}
-      <section>
-        <div class="row">
-          <div class="seven columns centered text-center">
-            <h2 class="tight"><span>Ready to give us a try?</span></h2>
-            <a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('2'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Student Account</span></a>
-            <p class="faded">If you're a tutor, <a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();">sign up here</a>.</p>
-          </div>
-        </div>
-      </section>-->
+     
       <section class="blue"><div class="inner">
         <div class="row">
           <div class="twelve columns clear">
@@ -218,8 +180,19 @@
         
         </div>
       </div></section>
+      
+      
+      {% if not user.is_authenticated %}
+      <section>
+        <div class="row">
+          <div class="seven columns centered text-center">
+            <h2 class="tight"><span>Ready to give us a try?</span></h2>
+            <a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('2'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Student Account</span></a>
+            <p class="faded">If you're a tutor, <a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();">sign up here</a>.</p>
+          </div>
+        </div>
+      </section>
       {% endif %}
     
-          
     {% if video %}{% include "core/fragments/_modal_video.html" %}{% endif %}
 {% endblock %}
