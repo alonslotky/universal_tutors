@@ -507,6 +507,32 @@ class MultiPartSignupFormStep2(forms.Form):
      
  
 
+<<<<<<< HEAD
+=======
+    image_uploaded = forms.BooleanField(required = False)
+    
+        
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(MultiPartSignupFormStep2, self).__init__(*args, **kwargs)
+
+         
+    def clean_image_uploaded(self):
+        session_key = self.request.session.session_key
+        
+        try:
+            image = UploadProfileImage.objects.get(key=session_key).image
+        except UploadProfileImage.DoesNotExist:
+            raise forms.ValidationError(_(u"Please upload a profile picture"))
+
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError(_(u"This email is already registered."))
+
+        return email
+>>>>>>> 6177e35764a2302c59bf57ca80721f38909eedfd
     
 class MultiPartSignupFormStep3(forms.Form):
     
