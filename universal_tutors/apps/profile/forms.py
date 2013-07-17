@@ -507,8 +507,8 @@ class MultiPartSignupFormStep2(forms.Form):
      
  
 
-<<<<<<< HEAD
-=======
+#<<<<<<< HEAD
+#=======
     image_uploaded = forms.BooleanField(required = False)
     
         
@@ -532,7 +532,7 @@ class MultiPartSignupFormStep2(forms.Form):
             raise forms.ValidationError(_(u"This email is already registered."))
 
         return email
->>>>>>> 6177e35764a2302c59bf57ca80721f38909eedfd
+#>>>>>>> 6177e35764a2302c59bf57ca80721f38909eedfd
     
 class MultiPartSignupFormStep3(forms.Form):
     
