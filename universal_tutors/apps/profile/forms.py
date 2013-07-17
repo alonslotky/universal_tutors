@@ -505,14 +505,8 @@ class MultiPartSignupFormStep2(forms.Form):
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}),initial='US')
     timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
      
+ 
 
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email).count() > 0:
-            raise forms.ValidationError(_(u"This email is already registered."))
-
-        return email
     
 class MultiPartSignupFormStep3(forms.Form):
     
