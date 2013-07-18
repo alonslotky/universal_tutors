@@ -34,13 +34,17 @@
 
 {% block content %}
 <style>
-  .feature-text .video.button1 {
+#save_button{
+  width: 90px;
+}
+
+.feature-text .video.button1 {
     width: 10%;
-      margin-right: 10%;
-      height: 68px;
-      padding-bottom: 8px !important;
-      float: right;
-      margin-top: 7px;
+    margin-right: 10%;
+    height: 68px;
+    padding-bottom: 8px !important;
+    float: right;
+    margin-top: 7px;
       
     }
 .button1 {
@@ -156,7 +160,7 @@
 			{% include "profile/tutor/edit_profile/_credits.html" %}          
 			{% include "profile/fragments/_referral.html" %}
         </ul>
-        <div class="button"><input type="submit" class="icon thumb-up" value="Save Profile"></div>
+        <div class="button1" id="save_button"><input type="submit" class="icon thumb-up" value="Save Profile"></div>
       </form>
       
       {% include "profile/tutor/edit_profile/fragments/_modal_withdraw.html" %}
