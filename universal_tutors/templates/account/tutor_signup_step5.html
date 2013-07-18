@@ -71,6 +71,9 @@
 	<div class="hide-on-phones">
 		{% include 'profile/fragments/_timer.html' %}
 	</div>
+
+	{% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
+    <div class="row space">
     
   	{% csrf_token %}
 	{% include "account/_availability.html" %}
