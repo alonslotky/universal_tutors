@@ -505,7 +505,10 @@ class MultiPartSignupFormStep2(forms.Form):
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}),initial='US')
     timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
      
+ 
 
+#<<<<<<< HEAD
+#=======
     image_uploaded = forms.BooleanField(required = False)
     
         
@@ -529,6 +532,7 @@ class MultiPartSignupFormStep2(forms.Form):
             raise forms.ValidationError(_(u"This email is already registered."))
 
         return email
+#>>>>>>> 6177e35764a2302c59bf57ca80721f38909eedfd
     
 class MultiPartSignupFormStep3(forms.Form):
     
@@ -663,10 +667,16 @@ class MultiPartSignupFormStep5(forms.Form):
         
     default_week = [('Monday', 0, []), ('Tuesday', 1, []), ('Wednesday', 2, []), ('Thursday', 3, []), ('Friday', 4, []), ('Saturday', 5, []), ('Sunday', 6, [])]
     availability = forms.CharField(widget=forms.HiddenInput())
-    agreement = forms.BooleanField(required = False, help_text='I have read and accepted the Terms and Conditions from the box above.')
+    agreement = forms.BooleanField(required = True, help_text='I have read and accepted the Terms and Conditions from the box above.')
     #newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
     #partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
+    
+    def clean_agreement(self):
+        agreement = self.cleaned_data.get('agreement', False)
+        if not agreement:
+            raise forms.ValidationError(_(u"You need to agree with terms and conditions to Sign Up."))
         
+        return agreement    
     
 class MultiPartSignupFormStep6(forms.ModelForm):
     class Meta:

@@ -69,6 +69,8 @@
 		</div>	
 	</div>
 
+	{% if wizard.form.about.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.about.errors }}</li></ul></div>{% endif %}
+
 	<div class="row space">
             <div class="three columns">
 	          <label>About me* <span id="tooltip-description">[?]</span><br/><span>(min 140 characters)</span></label>
