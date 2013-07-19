@@ -20,7 +20,7 @@ ACCOUNT_ACTIVATION_ADMINS = ['ben@rawjam.co.uk']
 CACHE_BACKEND = 'johnny.backends.memcached://127.0.0.1:11211'
 
 # Project settings and active names
-PROJECT_SITE_DOMAIN = 'universaltutors.com'
+PROJECT_SITE_DOMAIN = 'wizoku.com'
 PROJECT_INFO_EMAIL_ADDRESS = 'info@universaltutors.com'
 GOOGLE_ANALYTICS_CODE = 'UA-33011254-1'
 
