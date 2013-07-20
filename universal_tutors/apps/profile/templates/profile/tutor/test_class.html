@@ -10,27 +10,33 @@
 {% endblock %}
 
 {% block extra_head %}
+<script>
+
+alert("The classroom may not work properly in Chrome. As an alternative, please use Firefox, Internet Explorer, Safari or Opera.");
+
+</script>
 <script type="text/javascript" src="http://media.muchosmedia.com/scribblar/scripts/includes.js"></script>
+
 <script type="text/javascript">
 	$(window).ready(function(){
 		var targetID = "scribblar";
-		
+
 		var flashvars = {
 			'userid': "{{user.profile.scribblar_id}}",
 			'roomid': "{{user.profile.get_test_class_id}}",
 			'preferredLocales': "{{profile.class_language}}",
 			'username': "{{user.get_full_name}}"
 		};
-	
+
 		var params = {
 			'allowscriptaccess': "always"
 		};
-		
+
 		var attributes = {
 			'id': "scribblar",
 			'name': "scribblar"
 		};
-	
+
 		swfobject.embedSWF(
 			"http://media.muchosmedia.com/scribblar/v2/main.swf", 
 			"alternate", 
@@ -41,7 +47,7 @@
 			flashvars, 
 			params, 
 			attributes);
-	
+
 		if(!swfobject.hasFlashPlayerVersion("10")) {
 		  	alert('You need a computer with flash-enabled to test a class');
 			window.location.href = '{% url edit_tutor_profile %}';		  	
@@ -58,7 +64,7 @@
 				}
 			});				
 		}, 60 * 1000);
-		
+
 		$('#id_class_language').change(function(){
 			var language = $(this).val();
 			thisMovie('scribblar').setLocale(language);
@@ -74,7 +80,7 @@
 </style>
 
 {% block full_content %}
-<!--  <header>
+  <header>
     <div class="logo alt ir left"><a>Universal Tutors</a></div>
 
     <a id="exit-class-button" class="right button" href="{% url edit_tutor_profile %}"><span class="icon rocketdown">Exit Classroom</span></a>	  	
@@ -89,7 +95,7 @@
 		</form>
 	</div>
   </header>
--->  
+  
   <div id="alternate-container" class="main scribblar-container">
   	<div id="alternate"></div>
   </div>
