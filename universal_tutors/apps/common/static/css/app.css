@@ -499,6 +499,7 @@
     
     .marketing.students .link-students,
     .marketing.tutors .link-tutors,
+    /*.link-aboutus,*/
     .classes .link-classes,
     .tutors .link-tutors,
     .messages .link-messages,
@@ -2093,7 +2094,7 @@ FOOTER
 }
 
 /* Login button */
-.home_button  #tutor_signup {
+.home_button  #tutor_signup12 {
   float:left;
   width: 150px;
   height: 38px;
