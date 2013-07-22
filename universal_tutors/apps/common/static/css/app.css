@@ -1052,6 +1052,12 @@
       background: url("../images/marketing/time-icon.png") center no-repeat;
       margin-top: 35px;
     }
+
+    .marketing.students .icon-1-new {
+      height: 110px;
+      background: url("../images/rebranding/about_us_name.png") center no-repeat;
+      margin-top: 35px;
+    }
     
     .marketing.students .main .row,
     .marketing.tutors .main .row {
