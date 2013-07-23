@@ -1211,7 +1211,7 @@ class TutorReview(BaseModel):
             })
 
             subject = 'Bad Tutor Review'
-            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+            sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
             to = [settings.CONTACT_EMAIL]
 
             email_message = EmailMessage(subject, html, sender, to)
@@ -1414,7 +1414,7 @@ class Report(BaseModel):
             })
 
             if subject and html:
-                sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+                sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
                 to = [settings.CONTACT_EMAIL]
 
                 email_message = EmailMessage(subject, html, sender, to)
@@ -1470,7 +1470,7 @@ class NewsletterSubscription(BaseModel):
         t = loader.get_template('profile/emails/verify_email.html')
         html = t.render(context)
 
-        msg = EmailMessage('[Universal Tutors] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
+        msg = EmailMessage('[Wizoku] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
         msg.content_subtype = "html"
         msg.send()
 
@@ -1602,7 +1602,7 @@ def paypal_error(type='topup_invalid', email=None):
         subject = 'Withdraw PayPal Error'
         html = 'An error occurred during a payment (withdraw) from email <%s>. Please check if email is from a valid PayPal account.' % email
 
-    sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+    sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
     to = [settings.CONTACT_EMAIL]
 
     email_message = EmailMessage(subject, html, sender, to)
