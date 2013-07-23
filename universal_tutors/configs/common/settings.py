@@ -176,9 +176,9 @@ INSTALLED_APPS = (
 # MISC PROJECT SETTINGS
 PROJECT_NAME = "Universal Tutors"
 PROJECT_SITE_DOMAIN = '127.0.0.1:8000'
-PROJECT_INFO_EMAIL_ADDRESS = 'Universal Tutors <info@universaltutors.com>'
-CONTACT_EMAIL = "Universal Tutors <info@universaltutors.com>"
-SUPPORT_EMAIL = "support@universaltutors.com"
+PROJECT_INFO_EMAIL_ADDRESS = 'Universal Tutors <info@wizoku.com>'
+CONTACT_EMAIL = "Universal Tutors <info@wizoku.com>"
+SUPPORT_EMAIL = "support@Wizoku.com"
 
 GOOGLE_ANALYTICS_CODE = None
 SHARETHIS_PUBLISHER_KEY = "f3129d97-8846-4ead-a850-726b9901d0f1"
