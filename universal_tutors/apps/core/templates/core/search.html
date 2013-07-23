@@ -232,7 +232,7 @@
 			            </p>
 			          </div>
 			          
-			          <div class="four columns">
+			          <div class="six columns">
 			            {% if tutor_profile.get_about %}
 			            <p>{{tutor_profile.get_about|truncatechars:160}}<br/><a href="{% url profile tutor.username %}">Read More</a></p>
 						{% else %}
@@ -240,13 +240,13 @@
 			          	{% endif %}
 			          </div>
 			          
-					  <div class="two columns rating">
+					  <!--<div class="two columns rating">
 		              	{% get_avg_stars tutor_profile.avg_rate %}
 			            <div class="reviews">
 			              <span class="hidden">Rating: {{tutor_profile.avg_rate}}.</span>
 			              <a href="{% url profile tutor.username %}">{{tutor_profile.no_reviews}} review{{tutor_profile.no_reviews|pluralize}} | {{tutor_profile.classes_given}} classes</a>
 			            </div>
-			          </div>
+			          </div>-->
 			          
 			          <div class="two columns action">
 			            {% if tutor_profile.video_approved and tutor_profile.video %}
