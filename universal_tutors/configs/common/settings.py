@@ -28,7 +28,7 @@ DATABASES = {
 # Local time
 TIME_ZONE = 'Europe/London'
 LANGUAGE_CODE = 'en-GB'
-SITE_ID = 1
+SITE_ID = 3
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False
