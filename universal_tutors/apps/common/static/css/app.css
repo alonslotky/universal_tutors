@@ -499,6 +499,7 @@
     
     .marketing.students .link-students,
     .marketing.tutors .link-tutors,
+    .marketing.aboutus .link-aboutus,
     /*.link-aboutus,*/
     .classes .link-classes,
     .tutors .link-tutors,
@@ -1054,7 +1055,7 @@
       margin-top: 35px;
     }
 
-    .marketing.students .icon-1-new {
+    .marketing.aboutus .icon-1-new {
       height: 110px;
       background: url("../images/rebranding/about_us_name.png") center no-repeat;
       margin-top: 35px;

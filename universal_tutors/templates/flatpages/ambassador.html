@@ -1,0 +1,103 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags ut_tags %}
+
+{% block title %}Home{% endblock %}
+{% block body_class %}marketing ambassador{% endblock %}
+
+{% block content %}
+	{% get_video student %}
+
+<style>
+#ambassador_mainimg{
+  border:0px;
+    -moz-box-shadow: 0 1px 1px #dddddd;
+    -webkit-box-shadow: 0 1px 1px #dddddd;
+  margin-bottom: 50px;
+}
+
+
+#ambassador_img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 0px;
+    -moz-box-shadow: 0 1px 1px #dddddd;
+    -webkit-box-shadow: 0 1px 1px #dddddd;
+    /*box-shadow: 0 1px 1px #dddddd;*/
+    margin-bottom: 20px;
+  }
+</style>  
+      <section class="blue feature-box"><div class="inner">
+        
+        <h1>Brand Ambassador Program</h1>
+        
+        <div class="feature-black">
+          <div class="feature-text">
+            <h3>Help us promote shared learning in our online tutoring community!</h3>
+          </div>
+        
+          
+      </div></section>
+      
+      <section>
+        <div class="row">
+          <div class="eight columns">
+            <h3>What is a Campus Ambassador?</h3>
+            <p class="lead"><a href="http://wizoku.com">Wizoku</a> is an online learning community that uses innovative technology to connect students and tutors. Our Campus Ambassadors help us build this community. Effective Ambassadors do this by being active on campus, promoting us on social media, and reaching out to both students and tutors.</p>
+          </div>
+        
+          <div class="four columns">
+            <img id="ambassador_mainimg" src="{{STATIC_URL}}images/new_marketing/ambassador-0.png" alt="Search">
+          </div>
+        </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="four columns">
+            <img id="ambassador_img" src="{{STATIC_URL}}images/new_marketing/ambassador-1.png" alt="Search">
+            <h4>Why should you be interested?</h4>
+            <p>The more tutors and students ambassadors reach, the more money they make. We give Ambassadors their own code that allows us to track their progress and how many hours their recruits are teaching. We also provide them with a guide on how to be a great ambassador for wizoku, to make things easier.</p>
+          </div>
+          
+          <div class="four columns">
+            <img id="ambassador_img" src="{{STATIC_URL}}images/new_marketing/ambassador-2.png" alt="Choose a Tutor">
+            <h4>Who are we looking for?</h4>
+            <p>We are looking for students who are both motivated and involved on campus to help us spread the word. Strong ambassador applicants will be full-time students who are active on their campus, have a strong social media presence, and may also be interested in tutoring.</p>
+          </div>
+          
+          <div class="four columns">
+            <img id="ambassador_img"  src="{{STATIC_URL}}images/new_marketing/ambassador-3.png" alt="Schedule a Class">
+            <h4>How it works?</h4>
+                <li>$1/hour taught by one of your recruited tutors</li>
+
+                <li>$1/lesson hour attended by a recruited student</li>
+
+                <li>$10 bonus for every 50 tutored hours</li>
+
+                <li>$5 for referring an ambassador from your school</li>
+
+                <li>$10 for referring an ambassador from another school</li>
+
+                <li>Monthly rewards for the most active ambassadors</li>
+          </div>
+        </div>
+      </section>
+     
+      
+      <section>
+        <div class="row">
+          <div class="seven columns centered text-center">
+            <h2 class="tight"><span>Join us Today!</span></h2>
+            <a class="large button" href="/ambassador-application/" >Apply Now!</a>
+
+           
+          </div>
+        </div>
+      </section>
+      
+      {% if video %}
+  		{% include "core/fragments/_modal_video.html" %}
+	{% endif %}
+{% endblock %}
