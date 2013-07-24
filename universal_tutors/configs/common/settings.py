@@ -210,7 +210,7 @@ CACHE_COUNT_TIMEOUT = 60
 JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_universal_tutors'
 
 # EMAIL SETTINGS
-DEFAULT_FROM_EMAIL = 'Wizoku <info@wizoku.com>'
+DEFAULT_FROM_EMAIL = 'info@wizoku.com'
 EMAIL_HOST = 'smtp.live.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

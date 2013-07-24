@@ -201,7 +201,7 @@ class TutorSignupWizard(SessionWizardView):
             UploadProfileImage.objects.filter(key=session_key).delete()        
         
         #TODO send_email_confirmation
-        #send_email_confirmation(user, request=self.request)
+        send_email_confirmation(user, request=self.request)
         
         #profile.about = self.cleaned_data.get('about', '')
         #profile.crb = self.cleaned_data.get('crb', False)
