@@ -110,7 +110,7 @@
           {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
           <div class="row space">
           	<div class="twelve columns">
-	          <label>Description <span>(max 300 characters)</span></label>
+	          <label>Description <span>(min 140 characters)</span></label>
 	          <textarea id="id_about" name="about" class="user stretch">{{form.about.value}}</textarea>
           	</div>
           </div>
