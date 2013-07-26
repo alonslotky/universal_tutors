@@ -116,7 +116,7 @@
 		<div class="row">&nbsp;</div>
 		<div class="row center">
 			<p>Or, use your facebook account to connect with Universal Tutors</p>
-			<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
+			<a href="{% provider_login_url 'facebook' method='oauth2' %}" class="facebook_connect_link">facebook</a>
 		</div>
 		{% endif %}
 		
