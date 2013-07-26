@@ -7,7 +7,7 @@
 	      <ul class="centered">
 	        <li><a href="/student-guide/">Student Guide</a></li>
 	        <li><a href="/tutor-guide/">Tutor Guide</a></li>
-	        <li><a href="/abou_us/">About Us</a></li>
+	        <li><a href="/about-us/">About Us</a></li>
 	        <li><a href="{% url search %}">{% if not is_authenticated %}Advanced {% endif %}Search</a></li>
 	        {% if not is_authenticated %}
 	        <li><a data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('0'); $('#signup_user_type').change();" href="javascript:;">Sign Up</a></li>
@@ -18,13 +18,17 @@
 	        {% if not is_authenticated %}
 	        <li><a href="#" data-reveal-id="modal-signin">Log In</a></li>
 	        {% endif %}
-	        <li><a href="blog.wizoku.com">Blog</a></li>
+	        <li><a href="http://blog.wizoku.com">Blog</a></li>
 	        <li><a href="/terms-of-use/">Terms of use</a>
 	        <li><a href="/privacy-policy/">Privacy policy</a>
 	        <li><a href="{% url faq %}">FAQs</a>
 	        <li><a href="/contact-us/">Contact Us</a>
 	      </ul>
 	    </div>
+	    <div class="twelve columns centered text-center" >
+
+	    	<li><a href="/ambassador/">Wizoku ambassador program</a>
+	    </div>	
   	</div>
   
   	<div class="row show-on-phones">

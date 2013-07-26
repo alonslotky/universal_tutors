@@ -183,7 +183,7 @@ class EmailTemplate(models.Model):
         c = Context(context) 
         html = template.render(c)
         
-        sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+        sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
                     
         email_message = EmailMessage(self.subject, html, sender, to_email)
         email_message.content_subtype = 'html'
