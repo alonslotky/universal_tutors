@@ -213,17 +213,17 @@ class TutorSignupWizard(SessionWizardView):
         #TODO add currency
         profile.save()
          
-#         try:
-#             email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
-#             email.send_email({
-#                 'user': user,
-#                 'tutor': user,
-#                 'profile': profile,
-#                 'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
-#             }, [settings.SUPPORT_EMAIL])
-#         except EmailTemplate.DoesNotExist:
-#             pass
-#          
+        try:
+            email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
+            email.send_email({
+                'user': user,
+                'tutor': user,
+                'profile': profile,
+                'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+             }, [settings.SUPPORT_EMAIL])
+         except EmailTemplate.DoesNotExist:
+             pass
+          
         return user
     
     def done(self, form_list, **kwargs):
