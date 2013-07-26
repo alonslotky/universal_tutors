@@ -221,8 +221,8 @@ class TutorSignupWizard(SessionWizardView):
                 'profile': profile,
                 'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
              }, [settings.SUPPORT_EMAIL])
-         except EmailTemplate.DoesNotExist:
-             pass
+        except EmailTemplate.DoesNotExist:
+            pass
           
         return user
     
