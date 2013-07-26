@@ -20,10 +20,10 @@ from django.contrib.auth.models import User
 
 from allauth.socialaccount import helpers
 from allauth.account.views import login
-from allauth.account.utils import get_default_redirect, user_display, complete_signup 
+from allauth.account.utils import get_login_redirect_url, user_display, complete_signup 
 # from allauth.account.views import signup as allauth_signup, login
 from allauth.socialaccount.views import connections
-from allauth.utils import passthrough_login_redirect_url
+
 
 from apps.common.utils.view_utils import handle_uploaded_file
 from apps.classes.models import ClassSubject
@@ -312,7 +312,7 @@ def allauth_signup(request, **kwargs):
     extra_ctx = kwargs.pop("extra_ctx", {})
     
     if success_url is None:
-        success_url = get_default_redirect(request, redirect_field_name)
+        success_url = get_login_redirect_url(request, redirect_field_name)
     
     if request.method == "POST":
         form = form_class(request.POST)
@@ -326,7 +326,7 @@ def allauth_signup(request, **kwargs):
     else:
         form = form_class()
     ctx = {"form": form,
-           "login_url": passthrough_login_redirect_url(request,
+           "login_url": get_login_redirect_url(request,
                                                        reverse("account_login")),
            "redirect_field_name": redirect_field_name,
            "redirect_field_value": request.REQUEST.get(redirect_field_name) }

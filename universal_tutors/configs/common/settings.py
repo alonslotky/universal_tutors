@@ -63,9 +63,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "apps.common.utils.context_processors.app_wide_vars",
     "apps.common.context_processors.feedback_questions",
-    "allauth.context_processors.allauth",
     "allauth.account.context_processors.account",
-    #"allauth.socialaccount.context_processors.socialaccount",
+    "allauth.socialaccount.context_processors.socialaccount",
     #'cms.context_processors.media',
     'sekizai.context_processors.sekizai',
     #'admintools_bootstrap.context_processors.site',
@@ -86,6 +85,13 @@ MIDDLEWARE_CLASSES = (
     #'cms.middleware.page.CurrentPageMiddleware',
     #'cms.middleware.user.CurrentUserMiddleware',
 )
+
+SOCIALACCOUNT_PROVIDERS = \
+    { 'facebook':
+        { 'SCOPE': ['email', 'publish_stream'],
+          'AUTH_PARAMS': { 'auth_type': 'reauthenticate' },
+          'METHOD': 'oauth2' ,
+          'LOCALE_FUNC': 'path.to.callable'} }
 
 if DEBUG:
     TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.debug',)
@@ -136,14 +142,14 @@ INSTALLED_APPS = (
 #    'haystack',
      'shell_plus',	
     
-    # Registration, Signin and Account Management
-    'emailconfirmation',
+    # Registration, Signin and Account Management    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.twitter',
-    'allauth.openid',
-    'allauth.facebook',
+    
+    'allauth.socialaccount.providers.facebook',
+  #  'allauth.socialaccount.providers.google',
+  #  'allauth.socialaccount.providers.openid',
     
     # Internal Apps
     'apps.common',
