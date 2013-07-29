@@ -230,14 +230,18 @@
        }
        return '';
 	}
-
-	var dob_date = getQueryVariable('date');
-	dob_date = dob_date.split('-');
-
-	var dob_year = parseInt(dob_date[0]);
-	var dob_month = parseInt(dob_date[1]);
-	var dob_day = parseInt(dob_date[2]);
-
+	
+	var dob_year = 0
+	var dob_month = 1
+	var dob_day = 1
+	
+	//Is this bad practice to use django template tags here?
+	{%if wizard.form.date_of_birth.value != '' %}
+		var dob_year = {{wizard.form.date_of_birth.value.year}}; //parseInt(dob_date[0]);
+		var dob_month = {{wizard.form.date_of_birth.value.month}}; //parseInt(dob_date[1]);
+		var dob_day = {{wizard.form.date_of_birth.value.day}}; //parseInt(dob_date[2]);
+	{%endif %}
+	   
 	for(i=1; i<=31; i++)
 		$('#id_dob_day').append('<option value="'+ i +'" '+ (i==dob_day?'selected=selected':'') +'>'+ i +'</option>');
 

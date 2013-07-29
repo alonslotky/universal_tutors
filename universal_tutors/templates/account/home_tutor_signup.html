@@ -93,6 +93,10 @@
                       {% include 'account/tutor_signup_navigation.html' %}
                       <!--<input type="submit" name="submit" value="Sign Up" class="button" />-->
                     </div>
+                    <div class="home_button">
+                    	<!--<button type="submit" formmethod="get" formaction="{% provider_login_url 'facebook' method='oauth2' %}" class="icon1 rocket">facebook button</a>-->
+                    	<a href="{% provider_login_url 'facebook' method='oauth2' %}" class="icon1 rocket">facebook</a>
+                    </div>
                   </div>
                   {%endwith%}
                 </form>

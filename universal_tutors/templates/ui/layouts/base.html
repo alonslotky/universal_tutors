@@ -122,9 +122,10 @@
  	{% if user.is_authenticated %}
 	 	 <div id="fb-root"></div>
 		 <script>
+		 var app_id = {{user.socialaccount_set.all.0.uid}} 
 		  window.fbAsyncInit = function() {
 		    FB.init({
-		      appId      : '{% get_facebook_api_id %}',
+		      appId      : app_id,
 		      status     : true, 
 		      cookie     : true, 
 		      xfbml      : true

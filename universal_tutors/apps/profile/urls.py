@@ -14,6 +14,7 @@ urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
     url(r'^account/signup/tutor/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
     url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
+    url(r"^account/signup/tutor_social/$",TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS, condition_dict={'step1': False}), name="social_tutor_signup"),
     # url(r'^account/signup/tutor/$', TutorSignupWizard(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
 
 #    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view([MultiPartSignupFormStep1, MultiPartSignupFormStep2, \
@@ -25,7 +26,7 @@ urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signin/$", 'signin', name="login"),
     url(r"^(?i)account/logout/$", 'logout_view', name="logout"),
     url(r"^(?i)account/successfull/signup/$", 'successfull_signup', name="successfull_signup"),
-    url(r"^(?i)accounts/social/signup/$", 'social_signup', name="socialaccount_signup"),
+    url(r"^(?i)accounts/social/signup/$", 'socialaccount_signup_wizard', name="socialaccount_signup"),
     url(r'^(?i)accounts/genres/$', 'show_genres',name='show_genres'),
     url(r'^(?i)accounts/tutor5/$', 'show_genres',name='show_genres'),
     )

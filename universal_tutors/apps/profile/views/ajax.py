@@ -887,7 +887,7 @@ def preview_profile_image(request):
     success = save_upload( upload, filename, is_raw )
   
     image, created = UploadProfileImage.objects.get_or_create(key=request.session.session_key)
-    image.image = File(open(filename))
+    image.image = File(open(filename, 'rb'))
     image.save()
  
     import json
