@@ -497,6 +497,8 @@ class MultiPartSignupFormStep2(forms.Form):
     
     #Adding the zipcode attribute 
     zipcode = forms.CharField(label=_('zipcode'), min_length = 5, max_length = 10, initial='') 
+    avatar_url = forms.CharField( initial= settings.MEDIA_URL+settings.DEFAULT_PROFILE_IMAGE, required = False) 
+    
     #online_tutoring = forms.BooleanField(required = True, initial=True)
     #in_person_tutoring = forms.BooleanField(required = True, initial=True)
     

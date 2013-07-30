@@ -13,10 +13,12 @@ from django.core.paginator import Paginator, EmptyPage
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.contrib.formtools.wizard.views import SessionWizardView
 #from django.contrib.formtools.wizard import FormWizard
 from django.contrib.auth.models import User
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 from allauth.socialaccount import helpers
 from allauth.account.views import login
@@ -32,6 +34,8 @@ from apps.core.models import Currency
 from apps.profile.models import WeekAvailability
 
 import json
+import requests
+import random
 
 def show_genres(request):
     return render_to_response("account/genres.html",
@@ -198,14 +202,8 @@ class TutorSignupWizard(SessionWizardView):
         except UploadProfileImage.DoesNotExist:
             pass
 
-        
         if image:
             profile.profile_image = image
-        
-        for p in self.request.FILES.getlist('profile_image'):
-            profile.profile_image.save(p.name, p)
-            profile.save()
-    
         
         if session_key:
             UploadProfileImage.objects.filter(key=session_key).update(image=None)
@@ -299,12 +297,31 @@ class TutorSignupWizard(SessionWizardView):
             if self.request.session.get('socialaccount_sociallogin'):
                 
                 social_account = self.request.session.get('socialaccount_sociallogin').account
-                
                 gender = social_account.extra_data.get('gender', '')
                 timezone = social_account.extra_data.get('timezone', '')
                 avatar_url = social_account.get_avatar_url()
                 birthday = social_account.extra_data.get('birthday', '')
-            
+                if avatar_url:
+                    
+                    image, created = UploadProfileImage.objects.get_or_create(key=self.request.session.session_key)
+                    
+                    if created:
+                        form.fields['avatar_url'].initial = avatar_url
+                        
+                        #####################################
+                        # Save avatar profile image   #
+                        #####################################
+                        r = requests.get(avatar_url)
+                        ext = r.headers['content-type'].split('/')[1] #should be jpeg
+                        name = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
+                        new_filename = '%s.%s' % (name, ext.lower())
+                        filename = os.path.join(settings.MEDIA_ROOT, UploadProfileImage.UPLOAD_IMAGES_PATH, new_filename)
+                        
+                        img_temp = NamedTemporaryFile()
+                        img_temp.write(r.content)
+                        img_temp.flush()
+                        image.image.save(filename, File(img_temp), save=True)
+                        
                 form.fields['gender'].initial = '0' if gender=='male' else '1'
                 if birthday:
                     try:

@@ -143,7 +143,8 @@
         <div class="four columns photo" id="tutor_signup_photo">
 	    	{% if wizard.form.image_uploaded.errors %}<div class="formError">{{ wizard.form.image_uploaded.errors }}</div>{% endif %}
 			<div class="row">
-		  		<img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
+		  		<img id="id_image_preview" src="{{wizard.form.avatar_url.value}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
+		  		
 	    	</div>
 		    <div id="id_profile_image_old" class="row space hidden">
 		  	  <input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40" >
