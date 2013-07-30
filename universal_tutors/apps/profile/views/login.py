@@ -42,6 +42,7 @@ try:
     facebook_app_id = SocialApp.objects.get(provider = 'facebook').client_id
 except:
     print 'No facebook app in DB!'
+    facebook_app_id = '293107754037794'
 def show_genres(request):
     return render_to_response("account/genres.html",
                           {'nodes':Genre.objects.all()},
