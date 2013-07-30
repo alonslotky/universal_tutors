@@ -37,6 +37,11 @@ import json
 import requests
 import random
 
+from allauth.socialaccount.models import SocialApp
+try:
+    facebook_app_id = SocialApp.objects.get(provider = 'facebook').client_id
+except:
+    print 'No facebook app in DB!'
 def show_genres(request):
     return render_to_response("account/genres.html",
                           {'nodes':Genre.objects.all()},
@@ -333,6 +338,12 @@ class TutorSignupWizard(SessionWizardView):
         
 
         return form
+    
+    def get_context_data(self, form, **kwargs):
+        context = super(TutorSignupWizard, self).get_context_data(form=form, **kwargs)
+        if self.steps.current == 'step1':
+            context.update({'facebook_app_id': facebook_app_id})
+        return context
     
 def tutor_signup(request, *args, **kwargs):
     
