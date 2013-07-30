@@ -23,12 +23,44 @@ from apps.profile.views.login import TutorSignupWizard, TUTOR_SIGNUP_FORMS
 from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep2, MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
                        MultiPartSignupFormStep5, MultiPartSignupFormStep6
 
+#example
+tutor_forms = (
+    ('contactdata', MultiPartSignupFormStep1),
+    ('leavemessage', MultiPartSignupFormStep2),
+)
+
+contact_wizard = TutorSignupWizard.as_view(tutor_forms,)
+    #url_name='contact_step', done_step_name='finished')
+
+urlpatterns = patterns('apps.profile.views.login',
+    url(r'^contact/(?P<step>.+)/$', contact_wizard, name='contact_step'),
+    url(r'^contact/$', contact_wizard, name='contact'),
+  )
+
+#recreating example
+named_tutor_forms = (
+    ('step1', MultiPartSignupFormStep1),
+    ('step2', MultiPartSignupFormStep2),
+    ('step3', MultiPartSignupFormStep3),
+    ('step4', MultiPartSignupFormStep4),
+    ('step5', MultiPartSignupFormStep5),
+)
+
+#tutor_wizard = TutorSignupWizard.as_view(named_tutor_forms,
+    #url_name='step11', done_step_name='finished')
+
+urlpatterns = patterns('apps.profile.views.login',
+    #url(r'^account/signup/tutor/(?P<step>.+)/$', tutor_wizard,name='step11'),
+    #url(r'^account/signup/tutor/$', tutor_wizard),
+)
+
 # Registration/Login views
 urlpatterns = patterns('apps.profile.views.login',
     #url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
-    url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
+    #url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
     url(r'^$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
-    url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
+    #url(r'^$account/signup/tutor/', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
+    #url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
 )
 # Main
 urlpatterns = patterns('apps.core.views.main',
