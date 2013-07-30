@@ -1,7 +1,7 @@
-{% load allauth_tags %}
+{% load socialaccount %}
 
 {% if allauth.facebook_enabled %}
-<li><a title="Facebook" class="facebook" href="{% facebook_login_url %}">Facebook</a></li>
+<li><a title="Facebook" class="facebook" href="{% provider_login_url 'facebook' method='oauth2' %}">Facebook</a></li>
 {% endif %}
 {% if allauth.twitter_enabled %}
 <li><a title="Twitter" class="twitter" href="{% twitter_login_url %}">Twitter</a></li>

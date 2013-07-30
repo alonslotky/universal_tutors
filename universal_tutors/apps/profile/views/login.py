@@ -13,17 +13,21 @@ from django.core.paginator import Paginator, EmptyPage
 from django.template.context import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
+from django.shortcuts import render_to_response, redirect
+from django.contrib.formtools.wizard.views import SessionWizardView
 from django.shortcuts import render_to_response
 from django.contrib.formtools.wizard.views import SessionWizardView,NamedUrlWizardView
 #from django.contrib.formtools.wizard import FormWizard
 from django.contrib.auth.models import User
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 from allauth.socialaccount import helpers
 from allauth.account.views import login
-from allauth.account.utils import get_default_redirect, user_display, complete_signup 
+from allauth.account.utils import get_login_redirect_url, user_display, complete_signup, send_email_confirmation, perform_login
 # from allauth.account.views import signup as allauth_signup, login
 from allauth.socialaccount.views import connections
-from allauth.utils import passthrough_login_redirect_url
+
 
 from apps.common.utils.view_utils import handle_uploaded_file
 from apps.classes.models import ClassSubject
@@ -32,7 +36,15 @@ from apps.core.models import Currency
 from apps.profile.models import WeekAvailability
 
 import json
+import requests
+import random
 
+from allauth.socialaccount.models import SocialApp
+try:
+    facebook_app_id = SocialApp.objects.get(provider = 'facebook').client_id
+except:
+    print 'No facebook app in DB!'
+    facebook_app_id = '293107754037794'
 def show_genres(request):
     return render_to_response("account/genres.html",
                           {'nodes':Genre.objects.all()},
@@ -106,8 +118,10 @@ TUTOR_SIGNUP_TEMPLATES = {"step1": "account/home_tutor_signup.html",
              "step5": "account/tutor_signup_step5.html",
              "step6": "account/tutor_signup_step6.html",}
 
-class TutorSignupWizard(NamedUrlWizardView):
-#class TutorSignupWizard(SessionWizardView):    
+TUTOR_SIGNUP_STEP_INDICES = {
+                             }
+
+class TutorSignupWizard(SessionWizardView):
 #class TutorSignupWizard(FormWizard):
     
     def get_form_prefix(self, step=None, form=None):
@@ -117,22 +131,76 @@ class TutorSignupWizard(NamedUrlWizardView):
     def get_template_names(self):
         return [TUTOR_SIGNUP_TEMPLATES[self.steps.current]]        
     
-    def save_genres(self, form_list, user):
+    def save_genres(self, genres_form, user):
         #get genres from from data and add it to the user!
-        user.profile.genres = Genre.objects.filter(id__in = [int(id) for id in form_list[2].data.getlist('genres')])
+        user.profile.save()
+        user.profile.genres = Genre.objects.filter(id__in = [int(id) for id in genres_form.data.getlist('genres')])
         
-    def save_tutor(self, form_list, **kwargs):
-      
+    def save_tutor(self, form_list, is_social_signup, **kwargs):
+        
         form_data = [form.cleaned_data for form in form_list]
+        i = 0 if is_social_signup else 1
+        form_data_indices = {"step1": 0, "step2": i, "step3": i+1, "step4": i+2, "step5": i+3}
         '''
         [{'password1': u'1234', 'first_name': u'alon', 'last_name': u'slotky', 'email': u'alonslotky@yahoo.com', 'password2': u'1234'}, 
          {'first_name': u'alon', 'last_name': u'slotky', 'gender': u'0', 'in_person_tutoring': True, 'zipcode': 1231, 'date_of_birth': datetime.date(1974, 1, 1), 'email': u'alonslotky@yahoo.com', 'online_tutoring': True}, 
          {},
         {'currency': u'3', 'price_per_hour': Decimal('150')}, 
          None]
+         {"82618670":{"weekday":"2","begin_hour":6,"begin_minute":15,"end_hour":10,"end_minute":30}}
         '''
-        {"82618670":{"weekday":"2","begin_hour":6,"begin_minute":15,"end_hour":10,"end_minute":30}}
-        availability_periods = json.loads(form_list[4].data['availability'])
+        
+        #########################################################################
+        #  get basic details from Step 1 or from social account ################
+        #######################################################################
+         
+        if is_social_signup:
+            
+            social_account = self.request.session.get('socialaccount_sociallogin').account
+            user = social_account.user
+            user.first_name = social_account.extra_data.get('first_name', '')
+            user.last_name = social_account.extra_data.get('last_name', '')
+            user.email = social_account.extra_data.get('email', '')
+            user.username = social_account.extra_data.get('username', '')
+            try:
+                user.save()
+            except Exception, e:
+                #TODO render proper response, right?
+                import traceback
+                traceback.print_exc()
+                
+                    
+        else: #In this case we take the information from the first step form and not from the social account        
+            user = User()
+            user.is_active = True
+            step1_data = form_data[form_data_indices["step1"]]
+            user.username = step1_data['email'] 
+            user.first_name = step1_data['first_name']
+            user.last_name = step1_data['last_name']
+            user.email = step1_data['email']
+        
+            #only used in case the signup is not social
+            password = step1_data['password1']
+            if password:
+                user.set_password(password)
+            else:
+                user.set_unusable_password()
+            
+            user.save()
+        
+        profile = user.profile        
+ 
+        #########################################################################
+        #  get additional info from Step 2                      ################
+        #######################################################################
+        step2_data = form_data[form_data_indices["step2"]]
+        profile.gender = step2_data.get('gender', 0)
+        profile.timezone = step2_data.get('timezone', None)
+        profile.date_of_birth = step2_data.get('date_of_birth')
+        profile.zipcode = step2_data.get('zipcode', 0) 
+        profile.country = step2_data.get('country', None)
+        
+        #image handling
         image = None
         session_key = ''
 
@@ -142,40 +210,37 @@ class TutorSignupWizard(NamedUrlWizardView):
         except UploadProfileImage.DoesNotExist:
             pass
 
-        user = User()
-
-        password = form_data[0]['password1']
-        if password:
-            user.set_password(password)
-        else:
-            user.set_unusable_password()
+        if image:
+            profile.profile_image = image
         
-        user.is_active = True
-        user.username = (form_data[0]['email']) #temp maybe add user field??
-        user.first_name = form_data[0]['first_name']
-        user.last_name = form_data[0]['last_name']
-        user.email = form_data[0]['email']
-        user.save()
+        if session_key:
+            UploadProfileImage.objects.filter(key=session_key).update(image=None)
+            UploadProfileImage.objects.filter(key=session_key).delete()
         
-        profile = user.profile        
-        #profile.country = self.cleaned_data['country']
-        #profile.referral = int(self.cleaned_data.get('referral', 0))
-        #profile.other_referral = self.cleaned_data.get('referral_other', None)
-        #profile.referral_key = self.cleaned_data.get('referral_key', None)
-        profile.gender = form_data[1].get('gender', 0)
-        profile.timezone = form_data[1].get('timezone', None)
-        profile.currency = Currency.objects.get(id=form_data[3].get('currency', 1))
-        profile.price_per_hour = form_data[3].get('price_per_hour', -1)
-        profile.date_of_birth = form_data[1].get('date_of_birth')
-        profile.zipcode = form_data[1].get('zipcode', 0) 
-        profile.about = form_data[3].get('about', 0)   
-        profile.country = form_data[1].get('country', None)
-        profile.agreement = form_data[4].get('agreement', None)
-        profile.newsletter = form_data[4].get('newsletter', None)
-        profile.partners_newsletter = form_data[4].get('partners_newsletter', None)
-        #profile.timezone = form_data[1].get('timezone', 0)
+        #########################################################################
+        #  get genres from Step 3                               ################
+        #######################################################################
         
-        self.save_genres(form_list, user)
+        self.save_genres(form_list[form_data_indices["step3"]], user)
+        
+        #########################################################################
+        #  get additional info from Step 4                      ################
+        #######################################################################
+        step4_data = form_data[form_data_indices["step4"]]
+        profile.currency = Currency.objects.get(id=step4_data.get('currency', 1))
+        profile.price_per_hour = step4_data.get('price_per_hour', -1)
+        profile.about = step4_data.get('about', 0)   
+        
+        #########################################################################
+        #  get additional info from Step 5                      ################
+        #######################################################################
+        step5_data = form_data[form_data_indices["step5"]]
+        
+        profile.agreement = step5_data.get('agreement', None)
+        profile.newsletter = step5_data.get('newsletter', None)
+        profile.partners_newsletter = step5_data.get('partners_newsletter', None)
+        
+        availability_periods = json.loads(step5_data['availability'])
         
         #availability
         for key, val in availability_periods.items():
@@ -188,30 +253,15 @@ class TutorSignupWizard(NamedUrlWizardView):
             availability.end = datetime.time(hour = val['end_hour'], minute = val['end_minute'])
             user.week_availability.add(availability)
         
-        if image:
-            profile.profile_image = image
+                
         
-        for p in self.request.FILES.getlist('profile_image'):
-            profile.profile_image.save(p.name, p)
-            profile.save()
-    
-        #profile.crb = self.cleaned_data.get('crb', False)
+        #########################################################################
+        #  Wrap Up                                              ################
+        #######################################################################
         
-        if session_key:
-            UploadProfileImage.objects.filter(key=session_key).update(image=None)
-            UploadProfileImage.objects.filter(key=session_key).delete()        
+        send_email_confirmation(self.request, user)
         
-        #TODO send_email_confirmation
-        send_email_confirmation(user, request=self.request)
-        
-        #profile.about = self.cleaned_data.get('about', '')
-        #profile.crb = self.cleaned_data.get('crb', False)
-        #profile.webcam = self.cleaned_data.get('webcam', False)
         profile.type = profile.TYPES.TUTOR
-        #profile.paypal_email = self.cleaned_data.get('paypal_email', None)
-        #tutoring_type = self.cleaned_data.get('tutoring_type', 0)
-        #TODO save tutoring type
-        #TODO add currency
         profile.save()
          
         try:
@@ -223,14 +273,24 @@ class TutorSignupWizard(NamedUrlWizardView):
                 'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
              }, [settings.SUPPORT_EMAIL])
         except EmailTemplate.DoesNotExist:
+            print 'Email Template does not exist!'
             pass
           
         return user
     
     def done(self, form_list, **kwargs):
-        user = self.save_tutor(form_list)
+        is_social_signup = bool(self.request.session.get('socialaccount_sociallogin')) #This means social signup was attempted
+        
+        user = self.save_tutor(form_list, is_social_signup)
         success_url = reverse('edit_tutor_profile')
-        return complete_signup(self.request, user, success_url)
+        
+        if is_social_signup:
+            sociallogin = self.request.session.get('socialaccount_sociallogin')
+            sociallogin.connect(self.request, user)
+            return complete_signup(self.request, user, settings.ACCOUNT_EMAIL_VERIFICATION, success_url, signal_kwargs={'sociallogin': sociallogin})
+            
+                           
+        return complete_signup(self.request, user, settings.ACCOUNT_EMAIL_VERIFICATION, success_url)
     
     def get_form_kwargs(self, step):
         if "step2" == step:
@@ -238,21 +298,55 @@ class TutorSignupWizard(NamedUrlWizardView):
         else:
             return {}
     def get_form(self, step=None, data=None, files=None):
+        
         form = super(TutorSignupWizard, self).get_form(step, data, files)
         
-        if step is not None and data is not None:
-            # get_form is called for validation by get_cleaned_data_for_step()
-            return form
-
-        elif step == "step1":
-            
-            data = self.get_cleaned_data_for_step('step1')
-            if data is not None:
-                form.fields['first_name'].initial = data.get('first_name')
-                form.fields['last_name'].initial = data.get('last_name')
-                form.fields['email'].initial = data.get('email')
+        if type(form) == forms.MultiPartSignupFormStep2:
+            if self.request.session.get('socialaccount_sociallogin'):
+                
+                social_account = self.request.session.get('socialaccount_sociallogin').account
+                gender = social_account.extra_data.get('gender', '')
+                timezone = social_account.extra_data.get('timezone', '')
+                avatar_url = social_account.get_avatar_url()
+                birthday = social_account.extra_data.get('birthday', '')
+                if avatar_url:
+                    
+                    image, created = UploadProfileImage.objects.get_or_create(key=self.request.session.session_key)
+                    
+                    if created:
+                        form.fields['avatar_url'].initial = avatar_url
+                        
+                        #####################################
+                        # Save avatar profile image   #
+                        #####################################
+                        r = requests.get(avatar_url)
+                        ext = r.headers['content-type'].split('/')[1] #should be jpeg
+                        name = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
+                        new_filename = '%s.%s' % (name, ext.lower())
+                        filename = os.path.join(settings.MEDIA_ROOT, UploadProfileImage.UPLOAD_IMAGES_PATH, new_filename)
+                        
+                        img_temp = NamedTemporaryFile()
+                        img_temp.write(r.content)
+                        img_temp.flush()
+                        image.image.save(filename, File(img_temp), save=True)
+                        
+                form.fields['gender'].initial = '0' if gender=='male' else '1'
+                if birthday:
+                    try:
+                        form.fields['date_of_birth'].initial = datetime.datetime.strptime(birthday, '%m/%d/%Y').date()
+                    except ValueError:
+                        #TODO logger logger
+                        print 'Warning: Cannot parse facebook birthday'
+                
+        
 
         return form
+    
+    def get_context_data(self, form, **kwargs):
+        context = super(TutorSignupWizard, self).get_context_data(form=form, **kwargs)
+        if self.steps.current == 'step1':
+            context.update({'facebook_app_id': facebook_app_id})
+        return context
     
 def tutor_signup(request, *args, **kwargs):
     
@@ -313,7 +407,7 @@ def allauth_signup(request, **kwargs):
     extra_ctx = kwargs.pop("extra_ctx", {})
     
     if success_url is None:
-        success_url = get_default_redirect(request, redirect_field_name)
+        success_url = get_login_redirect_url(request, redirect_field_name)
     
     if request.method == "POST":
         form = form_class(request.POST)
@@ -327,7 +421,7 @@ def allauth_signup(request, **kwargs):
     else:
         form = form_class()
     ctx = {"form": form,
-           "login_url": passthrough_login_redirect_url(request,
+           "login_url": get_login_redirect_url(request,
                                                        reverse("account_login")),
            "redirect_field_name": redirect_field_name,
            "redirect_field_value": request.REQUEST.get(redirect_field_name) }
@@ -360,6 +454,17 @@ def signup(request, *args, **kwargs):
     
     return allauth_signup(request, *args, **kwargs)
 
+def socialaccount_signup_wizard(request, *args, **kwargs):
+    
+    if request.session['socialaccount_sociallogin'].is_existing:
+        
+        sociallogin = request.session.get('socialaccount_sociallogin')
+        return perform_login(request, request.session['socialaccount_sociallogin'].account.user, 'none',
+                  redirect_url= reverse('edit_tutor_profile'), signal_kwargs={"sociallogin": sociallogin},
+                  signup=False)
+    
+    #TODO make sure it's tutor signup!
+    return redirect('/account/signup/tutor_social/')
 
 def socialaccount_signup(request, *args, **kwargs):
     if request.user.is_authenticated():
@@ -373,6 +478,7 @@ def socialaccount_signup(request, *args, **kwargs):
     data = signup['data']
     extra_ctx = kwargs.pop("extra_ctx", {})
     if request.method == "POST":
+        print 'socialaccount_signup POST'
         form = form_class(request.POST)
         if form.is_valid():
             user = form.save(request=request)

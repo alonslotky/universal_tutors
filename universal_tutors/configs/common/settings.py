@@ -63,9 +63,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "apps.common.utils.context_processors.app_wide_vars",
     "apps.common.context_processors.feedback_questions",
-    "allauth.context_processors.allauth",
     "allauth.account.context_processors.account",
-    #"allauth.socialaccount.context_processors.socialaccount",
+    "allauth.socialaccount.context_processors.socialaccount",
     #'cms.context_processors.media',
     'sekizai.context_processors.sekizai',
     #'admintools_bootstrap.context_processors.site',
@@ -86,6 +85,13 @@ MIDDLEWARE_CLASSES = (
     #'cms.middleware.page.CurrentPageMiddleware',
     #'cms.middleware.user.CurrentUserMiddleware',
 )
+
+SOCIALACCOUNT_PROVIDERS = \
+    { 'facebook':
+        { 'SCOPE': ['email', 'user_birthday', 'publish_stream'],
+        
+          'METHOD': 'oauth2' ,
+          'LOCALE_FUNC': lambda reuqest:'en_US'} }
 
 if DEBUG:
     TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.debug',)
@@ -136,14 +142,14 @@ INSTALLED_APPS = (
 #    'haystack',
      'shell_plus',	
     
-    # Registration, Signin and Account Management
-    'emailconfirmation',
+    # Registration, Signin and Account Management    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.twitter',
-    'allauth.openid',
-    'allauth.facebook',
+    
+    'allauth.socialaccount.providers.facebook',
+  #  'allauth.socialaccount.providers.google',
+  #  'allauth.socialaccount.providers.openid',
     
     # Internal Apps
     'apps.common',
@@ -226,13 +232,14 @@ LOGIN_REDIRECT_URL = "/edit_profile/"
 UNDER16_URL = '/account/under16/'
 TYPE_URL = '/account/type/'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = False
-ACCOUNT_EMAIL_AUTHENTICATION = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 SOCIALACCOUNT_QUERY_EMAIL = True
 SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_AVATAR_SUPPORT = False
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 EMAIL_CONFIRMATION_DAYS = 99
 FACEBOOK_ENABLED = True
 TWITTER_ENABLED = True

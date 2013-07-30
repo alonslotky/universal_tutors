@@ -10,9 +10,9 @@ from django.conf import settings
 from django.db.models import Max
 from itertools import chain
 
-from allauth.facebook.models import FacebookAccount
-from allauth.twitter.models import TwitterAccount
-from allauth.openid.models import OpenIDAccount
+# from allauth.facebook.models import FacebookAccount
+# from allauth.twitter.models import TwitterAccount
+# from allauth.openid.models import OpenIDAccount
 from allauth.socialaccount.forms import DisconnectForm
 
 from apps.common.utils.view_utils import main_render
