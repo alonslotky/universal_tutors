@@ -14,7 +14,7 @@ from django.template.context import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 from django.shortcuts import render_to_response
-from django.contrib.formtools.wizard.views import SessionWizardView
+from django.contrib.formtools.wizard.views import SessionWizardView,NamedUrlWizardView
 #from django.contrib.formtools.wizard import FormWizard
 from django.contrib.auth.models import User
 
@@ -106,7 +106,8 @@ TUTOR_SIGNUP_TEMPLATES = {"step1": "account/home_tutor_signup.html",
              "step5": "account/tutor_signup_step5.html",
              "step6": "account/tutor_signup_step6.html",}
 
-class TutorSignupWizard(SessionWizardView):
+class TutorSignupWizard(NamedUrlWizardView):
+#class TutorSignupWizard(SessionWizardView):    
 #class TutorSignupWizard(FormWizard):
     
     def get_form_prefix(self, step=None, form=None):

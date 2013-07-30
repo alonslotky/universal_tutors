@@ -17,8 +17,11 @@
 
 {% block extra_js %}
     <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js">
-
-    $(".icon").text("Signup");
+    document.getElementsByClassName('icon1').value = 'Save'; 
+    //function() {
+    //var icon1 = getElementsByClassName('icon1');
+    //icon1.replace("signup");
+  }
     </script>
 {% endblock %}
 
@@ -33,10 +36,9 @@
 
 
 <!-- Tutor signup page -->
- <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
- <script>
+ <script src="http://code.jquery.com/jquery-1.9.1.js">
       $(document).ready(function(){
-        $('.icon').text("Signup");
+        $('.icon1').text("Signup");
       )};
       </script> 
       
