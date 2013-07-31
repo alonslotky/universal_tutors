@@ -7,9 +7,9 @@ TEMPLATE_DEBUG = DEBUG
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'universaltutors',
-        'USER': 'universaltutors',
-        'PASSWORD': 'uT18@GhAS#11',
+        'NAME': 'wizoku',
+        'USER': 'postgres',
+        'PASSWORD': 'wizokuwizoku',
         'HOST': 'localhost',
     }
 }
