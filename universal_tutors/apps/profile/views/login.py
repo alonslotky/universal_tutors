@@ -15,6 +15,7 @@ from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 from django.shortcuts import render_to_response
 from django.contrib.formtools.wizard.views import SessionWizardView
+#from django.contrib.formtools.wizard import FormWizard
 from django.contrib.auth.models import User
 
 from allauth.socialaccount import helpers
@@ -95,7 +96,10 @@ TUTOR_SIGNUP_FORMS = [("step1", forms.MultiPartSignupFormStep1),
          #("step6", forms.MultiPartSignupFormStep6),
          ]
 
-TUTOR_SIGNUP_TEMPLATES = {"step1": "account/tutor_signup_step1.html",
+#account/home_tutor_singup.html
+#../apps/core/templates/core/home_new_intg.html
+
+TUTOR_SIGNUP_TEMPLATES = {"step1": "account/home_tutor_signup.html",
              "step2": "account/tutor_signup_step2.html",
              "step3": "account/tutor_signup_step3.html",
              "step4": "account/tutor_signup_step4.html",
@@ -103,6 +107,7 @@ TUTOR_SIGNUP_TEMPLATES = {"step1": "account/tutor_signup_step1.html",
              "step6": "account/tutor_signup_step6.html",}
 
 class TutorSignupWizard(SessionWizardView):
+#class TutorSignupWizard(FormWizard):
     
     def get_form_prefix(self, step=None, form=None):
         return ''
@@ -111,8 +116,12 @@ class TutorSignupWizard(SessionWizardView):
     def get_template_names(self):
         return [TUTOR_SIGNUP_TEMPLATES[self.steps.current]]        
     
+    def save_genres(self, form_list, user):
+        #get genres from from data and add it to the user!
+        user.profile.genres = Genre.objects.filter(id__in = [int(id) for id in form_list[2].data.getlist('genres')])
+        
     def save_tutor(self, form_list, **kwargs):
-        print 'save_tutor'
+      
         form_data = [form.cleaned_data for form in form_list]
         '''
         [{'password1': u'1234', 'first_name': u'alon', 'last_name': u'slotky', 'email': u'alonslotky@yahoo.com', 'password2': u'1234'}, 
@@ -153,12 +162,19 @@ class TutorSignupWizard(SessionWizardView):
         #profile.other_referral = self.cleaned_data.get('referral_other', None)
         #profile.referral_key = self.cleaned_data.get('referral_key', None)
         profile.gender = form_data[1].get('gender', 0)
-        #profile.timezone = self.cleaned_data.get('timezone', None)
+        profile.timezone = form_data[1].get('timezone', None)
         profile.currency = Currency.objects.get(id=form_data[3].get('currency', 1))
         profile.price_per_hour = form_data[3].get('price_per_hour', -1)
         profile.date_of_birth = form_data[1].get('date_of_birth')
-        profile.zipcode = form_data[1].get('zipcode', 0)    
-
+        profile.zipcode = form_data[1].get('zipcode', 0) 
+        profile.about = form_data[3].get('about', 0)   
+        profile.country = form_data[1].get('country', None)
+        profile.agreement = form_data[4].get('agreement', None)
+        profile.newsletter = form_data[4].get('newsletter', None)
+        profile.partners_newsletter = form_data[4].get('partners_newsletter', None)
+        #profile.timezone = form_data[1].get('timezone', 0)
+        
+        self.save_genres(form_list, user)
         
         #availability
         for key, val in availability_periods.items():
@@ -185,7 +201,7 @@ class TutorSignupWizard(SessionWizardView):
             UploadProfileImage.objects.filter(key=session_key).delete()        
         
         #TODO send_email_confirmation
-        #send_email_confirmation(user, request=self.request)
+        send_email_confirmation(user, request=self.request)
         
         #profile.about = self.cleaned_data.get('about', '')
         #profile.crb = self.cleaned_data.get('crb', False)
@@ -197,32 +213,37 @@ class TutorSignupWizard(SessionWizardView):
         #TODO add currency
         profile.save()
          
-#         try:
-#             email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
-#             email.send_email({
-#                 'user': user,
-#                 'tutor': user,
-#                 'profile': profile,
-#                 'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
-#             }, [settings.SUPPORT_EMAIL])
-#         except EmailTemplate.DoesNotExist:
-#             pass
-#          
+        try:
+            email = EmailTemplate.objects.get(type=profile.NOTIFICATIONS_TYPES.NEW_TUTOR)
+            email.send_email({
+                'user': user,
+                'tutor': user,
+                'profile': profile,
+                'PROJECT_SITE_DOMAIN': settings.PROJECT_SITE_DOMAIN,
+             }, [settings.SUPPORT_EMAIL])
+        except EmailTemplate.DoesNotExist:
+            pass
+          
         return user
     
     def done(self, form_list, **kwargs):
         user = self.save_tutor(form_list)
         success_url = reverse('edit_tutor_profile')
         return complete_signup(self.request, user, success_url)
-        
+    
+    def get_form_kwargs(self, step):
+        if "step2" == step:
+            return {"request": self.request}
+        else:
+            return {}
     def get_form(self, step=None, data=None, files=None):
         form = super(TutorSignupWizard, self).get_form(step, data, files)
-
+        
         if step is not None and data is not None:
             # get_form is called for validation by get_cleaned_data_for_step()
             return form
 
-        elif step == "step2":
+        elif step == "step1":
             
             data = self.get_cleaned_data_for_step('step1')
             if data is not None:

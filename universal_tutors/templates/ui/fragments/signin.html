@@ -5,9 +5,9 @@
 	<form class="nice" action="{% url login %}" method="post">
 		{% csrf_token %}
 		
-		<div class="row center">
+		<!--<div class="row center">
 			<a href="{% facebook_login_url %}" class="facebook_connect_link">facebook</a>
-		</div>
+		</div>-->
 		<div class="row">&nbsp;</div>
 		<div class="row">
 			<div class="two columns">
@@ -15,7 +15,7 @@
 			</div>
   
 			<div class="four columns">
-  				<input name="email" type="text" class="input-text oversize stretch" placeholder="Username">
+  				<input name="email" type="text" class="input-text oversize stretch" placeholder="Email address">
 			</div>
 
 			<div class="four columns">
@@ -51,9 +51,9 @@
 	    </div>
 	</form>
 	<div class="row">&nbsp;</div>
-    <div class="row text-center">
+    <!--<div class="row text-center">
 		<a href="javascript:FB_login()" class="sigin-popup facebook_connect_link">facebook</a>
-	</div>
+	</div>-->
 	<a class="close-reveal-modal">&#215;</a>
 </div>
 

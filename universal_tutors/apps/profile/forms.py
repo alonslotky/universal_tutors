@@ -199,7 +199,6 @@ class ProfileForm(forms.ModelForm):
     
 TutorSubjectFormSet = inlineformset_factory(User, TutorSubject, form=TutorSubjectForm)
 TutorQualificationFormSet = inlineformset_factory(User, TutorQualification)
-
 StudentInterestFormSet = inlineformset_factory(User, StudentInterest, form=StudentInterestForm)
     
 
@@ -277,7 +276,7 @@ class SignupForm(forms.ModelForm):
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
     
     #Adding the zipcode attribute 
-    zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
+    zipcode = forms.CharField(label=_('zipcode'), min_length = 5, max_length = 10, initial='') 
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
@@ -460,7 +459,7 @@ class MultiPartSignupFormStep1(forms.Form):
     last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='')
     email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
     password1 = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
-    password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
+    #password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
 
 #     def clean_username(self):
 #         username = self.cleaned_data['username']
@@ -476,13 +475,13 @@ class MultiPartSignupFormStep1(forms.Form):
 
         return email
 
-    def clean_password2(self):
-        passwd1 = self.cleaned_data['password1']
-        passwd2 = self.cleaned_data['password2']
-        if passwd1 != passwd2:
-            raise forms.ValidationError(_(u'Passwords should match'))
+    #def clean_password2(self):
+        #passwd1 = self.cleaned_data['password1']
+        #passwd2 = self.cleaned_data['password2']
+        #if passwd1 != passwd2:
+            #raise forms.ValidationError(_(u'Passwords should match'))
 
-        return passwd1
+        #return passwd1
 
 
 
@@ -492,18 +491,40 @@ class MultiPartSignupFormStep2(forms.Form):
         model = User
         fields = ('date_of_birth', 'gender', 'zipcode',)
         
-    first_name = forms.CharField(label=_('First name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    email = forms.EmailField(label=_('Email'), max_length = 255, initial='', widget=forms.TextInput(attrs={'readonly':'readonly', 'disabled':True}))
+    #first_name = forms.CharField(label=_('First name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    #last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='', widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    #email = forms.EmailField(label=_('Email'), max_length = 255, initial='', widget=forms.TextInput(attrs={'readonly':'readonly', 'disabled':True}))
     
     #Adding the zipcode attribute 
-    zipcode = forms.IntegerField(label=_('zipcode'),min_value=0, max_value=10000000000, initial='') 
-    tutoring_type = forms.MultipleChoiceField(label=_('tutoring_type'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple)
+    zipcode = forms.CharField(label=_('zipcode'), min_length = 5, max_length = 10, initial='') 
     #online_tutoring = forms.BooleanField(required = True, initial=True)
     #in_person_tutoring = forms.BooleanField(required = True, initial=True)
     
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
+    country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}),initial='US')
+    timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
+     
+ 
+
+#<<<<<<< HEAD
+#=======
+    image_uploaded = forms.BooleanField(required = False)
+    
+        
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(MultiPartSignupFormStep2, self).__init__(*args, **kwargs)
+
+         
+    def clean_image_uploaded(self):
+        session_key = self.request.session.session_key
+        
+        try:
+            image = UploadProfileImage.objects.get(key=session_key).image
+        except UploadProfileImage.DoesNotExist:
+            raise forms.ValidationError(_(u"Please upload a profile picture"))
+
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -511,11 +532,11 @@ class MultiPartSignupFormStep2(forms.Form):
             raise forms.ValidationError(_(u"This email is already registered."))
 
         return email
-
+#>>>>>>> 6177e35764a2302c59bf57ca80721f38909eedfd
+    
 class MultiPartSignupFormStep3(forms.Form):
-    class Meta:
-        model = User
-
+    
+    
     cat=range(0,Genre.tree.filter(level=0).count())
     for x in range(0, len(cat)):
         cat[x]=Genre.tree.filter(level=0)[x]
@@ -523,6 +544,8 @@ class MultiPartSignupFormStep3(forms.Form):
     subcat=[None]*len(cat)
     for x in range(0, len(cat)):
         subcat[x]=cat[x].get_children()
+        
+    genres = forms.ModelMultipleChoiceField(queryset= Genre.objects.all(), widget=forms.CheckboxSelectMultiple, required = False)
 
     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     
@@ -631,15 +654,29 @@ class MultiPartSignupFormStep4(forms.Form):
         #fields = ('profile.currency')
         
     price_per_hour = forms.DecimalField(initial=0)
+    about = forms.CharField(label=_('Description'), initial='')
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
-
+    
+    tutoring_type = forms.MultipleChoiceField(label=_('Type of Tutoring*'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1],
+                                              help_text = 'We are in the process of adding in-person tutoring as a feature on wizoku. Please tick as many boxes as apply (you can always edit this later) and we will let you know once this feature is up and running')
+    
+    
 class MultiPartSignupFormStep5(forms.Form):
     class Meta:
         model = User
         
     default_week = [('Monday', 0, []), ('Tuesday', 1, []), ('Wednesday', 2, []), ('Thursday', 3, []), ('Friday', 4, []), ('Saturday', 5, []), ('Sunday', 6, [])]
     availability = forms.CharField(widget=forms.HiddenInput())
+    agreement = forms.BooleanField(required = True, help_text='I have read and accepted the Terms and Conditions from the box above.')
+    newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
+    partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
+    
+    def clean_agreement(self):
+        agreement = self.cleaned_data.get('agreement', False)
+        if not agreement:
+            raise forms.ValidationError(_(u"You need to agree with terms and conditions to Sign Up."))
         
+        return agreement    
     
 class MultiPartSignupFormStep6(forms.ModelForm):
     class Meta:

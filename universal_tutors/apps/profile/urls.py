@@ -14,6 +14,8 @@ urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
     url(r'^account/signup/tutor/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
     url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
+    # url(r'^account/signup/tutor/$', TutorSignupWizard(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
+
 #    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view([MultiPartSignupFormStep1, MultiPartSignupFormStep2, \
 #                                                             MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
 #                                                             MultiPartSignupFormStep5, MultiPartSignupFormStep6])),    

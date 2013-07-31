@@ -21,8 +21,12 @@
 
 {% block content %}
  {% include 'account/tutor_signup_header.html' %}
-  <section>
 
+<style>
+
+</style> 
+  <section>
+  	<div "row"  id="tutor_signup_image2"></div>
     <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
 	{% csrf_token %}
 		
@@ -30,8 +34,8 @@
 	{{ wizard.form.management_form }}
 	{% with wizard.form as form %}	
 	<div class="row">	
-		<div class="eight columns">
-			<div name="name_errors">
+		<div class="six columns">
+			<!--<div name="name_errors">
 				{% if form.first_name.errors %}
 					<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>
 				{% endif %}
@@ -50,8 +54,11 @@
 				<div class="four columns">
 					<input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{wizard.form.last_name.value}}">
 				</div>
+			</div> -->
+			<div id="model-signup-under16-container2" class="hidden formError">
+				Under 16? Your parent needs to create a account for you. <br />
 			</div>
-	
+
 			<div class="row space" name="date_of_birth">
 				<div class="three columns">
 				  <label>D.O.B*</label>
@@ -83,19 +90,37 @@
 					{{wizard.form.gender}}
 				</div>
 			</div>
+
+			<div class="row space" name="gender">
+				<div class="three columns">
+					<label>Country*</label>
+				</div>
+				<div class="nine columns">
+					{{wizard.form.country}}
+				</div>
+			</div>
 			
+			<div class="row space" name="gender">
+				<div class="three columns">
+					<label>Timezone*</label>
+				</div>
+				<div class="nine columns">
+					{{wizard.form.timezone}}
+				</div>
+			</div>
+
 			{% if wizard.form.zipcode.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.zipcode.errors }}</li></ul></div>{% endif %}
 			<div class="row space" name = "zipcode">
 				<div class="three columns">
 					<label>Zipcode*</label>
 				</div>				
-     			<div class="six columns">
+     			<div class="nine columns">
 					<input type="text" id="id_zipcode" name="zipcode" value="{{ form.zipcode.value }}" class="input-text stretch" />
 				</div>
 				
 			</div>
 									
-			{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
+			<!--{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
 			<div class="row space" name="email">
 				<div class="three columns">
 					<label>Email*</label>
@@ -103,33 +128,25 @@
 				<div class="six columns">
 				  <input type="text" id="id_email" name="email" value="{{ wizard.form.email.value }}" class="input-text stretch" />
 				</div>
-			 </div>
-		
-			
-			<div class="row space" name="tutoring_type">
-				<div class="three columns">
-					<label>tutoring_type*</label>
-				</div>
-				<div class="nine columns">
-					{{wizard.form.tutoring_type}}
-				</div>	
-			</div>
+			 </div>-->
 			
 			<hr class="inside">
 		
 			{% include 'account/tutor_signup_navigation.html' %}
-			<div id="model-signup-under16-container2" class="hidden formError">
+			<!--<div id="model-signup-under16-container2" class="hidden formError">
 				Under 16? Your parent need to create a account for you. <br />
-			</div>
+			</div>-->
 
 		</div>
         
-        <div class="four columns photo">
-	    	<div class="row">
+        
+        <div class="four columns photo" id="tutor_signup_photo">
+	    	{% if wizard.form.image_uploaded.errors %}<div class="formError">{{ wizard.form.image_uploaded.errors }}</div>{% endif %}
+			<div class="row">
 		  		<img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
 	    	</div>
 		    <div id="id_profile_image_old" class="row space hidden">
-		  	  <input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">
+		  	  <input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40" >
 		    </div>
 	    	<div id="id_profile_image_preview" class="row">
 	  			<a href="javascript:;">Choose image</a>

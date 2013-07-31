@@ -188,7 +188,7 @@ class UserProfile(BaseModel):
     user = AutoOneToOneField(User, related_name="profile")
     
     #Adding the zipcode attribute
-    zipcode = models.PositiveIntegerField(default=0)
+    zipcode = models.CharField(verbose_name=_('Zipcode'), max_length=10, null=True, blank=True)
     about = models.CharField(verbose_name=_('Description'), max_length=500, null=True, blank=True)
     title = models.CharField(verbose_name=_('Title'), max_length=100, null=True, blank=True)
     profile_image = models.ImageField(verbose_name=_('Profile image'), upload_to=get_upload_to, default=settings.DEFAULT_PROFILE_IMAGE)
@@ -254,7 +254,7 @@ class UserProfile(BaseModel):
     ###TUTORING TYPES
     #tutoring_types = models.PositiveSmallIntegerField(verbose_name=_('tutoring_types'), choices=TUTORING_TYPES.get_choices(), default=TUTORING_TYPES.online)    
     #tutoring_types1 = models.PositiveIntegerField(default=0)
-    genre = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(Genre)
     #subject1 = models.ManyToManyField(Genre)
     #genre2 = TreeForeignKey(Genre)
     #genre = TreeForeignKey('self', null=True, blank=True, related_name='children')
@@ -1211,7 +1211,7 @@ class TutorReview(BaseModel):
             })
 
             subject = 'Bad Tutor Review'
-            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+            sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
             to = [settings.CONTACT_EMAIL]
 
             email_message = EmailMessage(subject, html, sender, to)
@@ -1414,7 +1414,7 @@ class Report(BaseModel):
             })
 
             if subject and html:
-                sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+                sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
                 to = [settings.CONTACT_EMAIL]
 
                 email_message = EmailMessage(subject, html, sender, to)
@@ -1470,7 +1470,7 @@ class NewsletterSubscription(BaseModel):
         t = loader.get_template('profile/emails/verify_email.html')
         html = t.render(context)
 
-        msg = EmailMessage('[Universal Tutors] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
+        msg = EmailMessage('[Wizoku] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
         msg.content_subtype = "html"
         msg.send()
 
@@ -1602,7 +1602,7 @@ def paypal_error(type='topup_invalid', email=None):
         subject = 'Withdraw PayPal Error'
         html = 'An error occurred during a payment (withdraw) from email <%s>. Please check if email is from a valid PayPal account.' % email
 
-    sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+    sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
     to = [settings.CONTACT_EMAIL]
 
     email_message = EmailMessage(subject, html, sender, to)

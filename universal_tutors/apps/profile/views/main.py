@@ -108,7 +108,7 @@ def edit_tutor_profile(request):
 
 
     form = ProfileForm(request.POST or None, request.FILES or None, initial=data, instance = profile)
-    subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
+    #subject_formset = TutorSubjectFormSet(request.POST or None, request.FILES or None, instance=user)
     qualifications_formset = TutorQualificationFormSet(request.POST or None, request.FILES or None, instance=user)
     if request.POST:
         success = True
@@ -130,10 +130,10 @@ def edit_tutor_profile(request):
         else:
             success = False
 
-        if subject_formset.is_valid():
-            subject_formset.save()
-        else:
-            success = False
+#         if subject_formset.is_valid():
+#             subject_formset.save()
+#         else:
+#             success = False
 
         if qualifications_formset.is_valid():
             qualifications_formset.save()
@@ -154,7 +154,7 @@ def edit_tutor_profile(request):
         'MINIMUM_CREDITS_PER_HOUR': MINIMUM_CREDITS_PER_HOUR,
         'profile':profile,
         'form': form,
-        'subject_formset': subject_formset,
+        #'subject_formset': subject_formset,
         'qualifications_formset': qualifications_formset,
         'timezones': pytz.common_timezones,
         'date': datetime.date.today(),

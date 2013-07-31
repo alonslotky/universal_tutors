@@ -3,9 +3,15 @@
 {% with user.subjects.all as subjects %}
 {% with subjects.count as no_subjects %}
 {% with profile.currency as currency %}
+<style>
+.button{
+	display: none;
+}
+</style>
   <li id="subjectsTab">
-    <h2 class="clear">Subjects <span id="tooltip-subjects" class="help-on-title">[?]</span></h2>
-    <label>Maximum of 12 subjects allowed</label>
+    <h2 class="clear">Subjects <span id="tooltip-subjects" class="help-on-title"><!--[?]--></span></h2>
+    <h3>Coming Soon!</h3>
+    <!--<label>Maximum of 12 subjects allowed</label>
 	
 	<input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
 	<input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
@@ -218,7 +224,7 @@
 			content: 'In order for students to find the tutor best suited to their needs we ask you to be, where appropriate, quite specific about the subjects, levels and curriculums you teach'
 		});
 	});
-</script>
+</script>-->
 {% endwith %}
 {% endwith %}
 {% endwith %}

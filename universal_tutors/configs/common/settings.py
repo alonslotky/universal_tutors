@@ -28,7 +28,7 @@ DATABASES = {
 # Local time
 TIME_ZONE = 'Europe/London'
 LANGUAGE_CODE = 'en-GB'
-SITE_ID = 1
+SITE_ID = 3
 USE_I18N = True
 USE_L10N = True
 USE_TZ = False
@@ -65,6 +65,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "apps.common.context_processors.feedback_questions",
     "allauth.context_processors.allauth",
     "allauth.account.context_processors.account",
+    #"allauth.socialaccount.context_processors.socialaccount",
     #'cms.context_processors.media',
     'sekizai.context_processors.sekizai',
     #'admintools_bootstrap.context_processors.site',
@@ -133,6 +134,7 @@ INSTALLED_APPS = (
     'smart_selects',
     'pagination',
 #    'haystack',
+     'shell_plus',	
     
     # Registration, Signin and Account Management
     'emailconfirmation',
@@ -172,11 +174,11 @@ INSTALLED_APPS = (
 )
 
 # MISC PROJECT SETTINGS
-PROJECT_NAME = "Universal Tutors"
+PROJECT_NAME = "Wizoku"
 PROJECT_SITE_DOMAIN = '127.0.0.1:8000'
-PROJECT_INFO_EMAIL_ADDRESS = 'Universal Tutors <info@universaltutors.com>'
-CONTACT_EMAIL = "Universal Tutors <info@universaltutors.com>"
-SUPPORT_EMAIL = "support@universaltutors.com"
+PROJECT_INFO_EMAIL_ADDRESS = 'Universal Tutors <info@wizoku.com>'
+CONTACT_EMAIL = "Wizoku <info@wizoku.com>"
+SUPPORT_EMAIL = "support@Wizoku.com"
 
 GOOGLE_ANALYTICS_CODE = None
 SHARETHIS_PUBLISHER_KEY = "f3129d97-8846-4ead-a850-726b9901d0f1"
@@ -208,12 +210,12 @@ CACHE_COUNT_TIMEOUT = 60
 JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_universal_tutors'
 
 # EMAIL SETTINGS
-DEFAULT_FROM_EMAIL = 'Universal Tutors <info@universaltutors.com>'
-EMAIL_HOST = 'smtp.gmail.com'
+DEFAULT_FROM_EMAIL = 'info@wizoku.com'
+EMAIL_HOST = 'smtp.live.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'info@universaltutors.com'
-EMAIL_HOST_PASSWORD = 'ntsa2223'
+EMAIL_HOST_USER = 'info@wizoku.com'
+EMAIL_HOST_PASSWORD = 'wizoku'
 
 EMAIL_MANAGER = ['ben@rawjam.co.uk',]
 

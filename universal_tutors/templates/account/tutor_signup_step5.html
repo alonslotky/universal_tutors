@@ -43,9 +43,23 @@
 {% block content %}
 
 	{% include 'account/tutor_signup_header.html' %}	
-  
-  <section>
+ 
+<style>
+.sign-up-terms-and-conditions{
+	margin-top: 10px;
+}
+#TC{
+	margin-top: 40px;
+}
 
+#TC h3{
+	color: #000000;
+	font-weight: bold;
+}	
+
+</style>  
+  <section>
+  	<div "row"  id="tutor_signup_image5"></div>
     <form action="" id="tutor-signup-form" method="post" class="nice" enctype="multipart/form-data">
 	{{wizard.form.availability}}
 	{% csrf_token %}
@@ -57,12 +71,28 @@
 	<div class="hide-on-phones">
 		{% include 'profile/fragments/_timer.html' %}
 	</div>
+
+	{% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
+    <div class="row space">
     
   	{% csrf_token %}
 	{% include "account/_availability.html" %}
     
   	
   	{% include "account/availability/_modal_add_availability.html" %}
+
+  	<div class="row space" id="TC">
+  		<h3>Terms & Conditions</h3>
+		<div class="sign-up-terms-and-conditions">{% flatblock "terms_and_conditions_tutor" %}</div>
+    </div>
+
+	{% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
+    <div class="row space">
+        <div>{{form.agreement}} <span>{{form.agreement.help_text}}</span></div>
+        <div>{{form.newsletter}} <span>{{form.newsletter.help_text}}</span></div>
+         <div>{{form.partners_newsletter}} <span>{{form.partners_newsletter.help_text}}</span></div>
+     </div>
+   		
 	
 	<hr class="inside">
 	
