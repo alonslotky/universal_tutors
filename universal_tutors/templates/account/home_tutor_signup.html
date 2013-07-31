@@ -1,0 +1,198 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+{% load uni_form_tags %}
+{% load account_tags allauth_tags %}
+
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js">
+
+    $(".icon").text("Signup");
+    </script>
+{% endblock %}
+
+<!--actual page-->
+
+
+{% load fb_versions common_tags %}
+
+{% block title %}Home{% endblock %}
+{% block body_class %}marketing home{% endblock %}
+
+
+
+<!-- Tutor signup page -->
+ <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+ <script>
+      $(document).ready(function(){
+        $('.icon').text("Signup");
+      )};
+      </script> 
+      
+
+
+
+{% block content %}
+      
+        <section class="new_home">
+          <div class="row main_image">
+            <div class="six columns"><div id="home_tag">Join our online learning community today!</div></div>
+            <div class="six columns">
+              <div id="wrapper">
+
+                <form name="login-form" class="login-form" id="student-signup-form" action="" method="post" enctype="multipart/form-data">
+                  <div class="header">
+
+                      <h1>Sign Up as a Tutor </h1>
+                      <h2>It's Free </h2>
+                  </div> 
+                  {% csrf_token %}
+                  {{ wizard.management_form }}
+                  {{ wizard.form.management_form }}
+                  {% with wizard.form as form %}                                    
+                  {% if wizard.form.password1 and wizard.form.first_name.errors %}
+                    <div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>
+                  {% endif %}
+                  {% if wizard.form.password1 and wizard.form.last_name.errors %}
+                    <div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>
+                  {% endif %} 
+
+                  <div class="content">
+                    <input name="first_name" id="name" type="text"  placeholder="First Name" value="{{form.first_name.value}}" />
+                    <input name="last_name" id="name" type="text"  placeholder="Last Name" value="{{form.last_name.value}}" />
+                    {% if wizard.form.username.errors %}
+                      <div class="formError">{{ wizard.form.username.errors }}</div>
+                    {% endif %}
+
+                    {% if wizard.form.email.errors %}
+                      <div class="formError">{{ wizard.form.email.errors }}
+                      </div>
+                    {% endif %}
+                    <input type="text" id="home_tutor_signup" name="email" placeholder="Your email address" value="{{ wizard.form.email.value }}" class="input-text stretch" />
+                    {% if wizard.form.password1.errors %}
+                      <div class="formError">{{ form.password1.errors }}</div>
+                    {% endif %}
+                    <!--{% if wizard.form.password2.errors %}
+                      <div class="formError">{{ form.password2.errors }}</div>
+                    {% endif %}-->
+                    <input type="password" id="home_tutor_signup" name="password1" placeholder="Password" value="" class="input-text stretch" />  
+                    <!--
+                    <input type="password" id="home_tutor_signup" name="password2" placeholder="Confirm Password" value="" class="input-text stretch" /> -->   
+                    <div class="home_button">           
+                      {% include 'account/tutor_signup_navigation.html' %}
+                      <!--<input type="submit" name="submit" value="Sign Up" class="button" />-->
+                    </div>
+                  </div>
+                  {%endwith%}
+                </form>
+
+              </div>
+              <div class="gradient"></div>
+            </div>
+          </div>
+        </section> 
+
+       
+      <div class="row new_home_info">
+        <div class="four columns" id="new_home_info_left">
+          <img src="{{STATIC_URL}}images/rebranding/home_page_image_1.png" alt="Search">
+            <h4>Our Values</h4>
+          <p>All students deserve access to the tools and learning that will allow them to succeed. We believe that an open, collaborative community has the power to encourage learning opportunities everywhere. At Wizoku, we are committed to the idea that knowledge is a resource to which everyone should have access.</p>
+          
+        
+ 
+        </div>
+        <div class="four columns">
+        <img src="{{STATIC_URL}}images/rebranding/Elephant_only_lightblue.png" alt="Search">
+            <h4>Our Approach</h4>
+          <p>Our goal is to put the focus of tutoring on quality personal relationships. By building an educational community of driven individuals, wizoku has created a new way to think about online education. Our belief in shared learning inspires our commitment to providing a dynamic educational resource.</p>
+          </div>
+        
+        <div class="four columns" id="new_home_info_right">
+          <img src="{{STATIC_URL}}images/rebranding/laptop_community.png" alt="Search">
+            <h4>Our Offering</h4>
+          <p>Our online community offers a unique platform for shared learning. The strength of this community is supported by great technology. Whether learning in-person with a tutor in your town, or in our online classroom with someone on the other side of the world, our intuitive interface makes payment and scheduling easy. Please sign up now and check out all of our great features! </p>
+        </div>  
+      </div> 
+      <div class="tagline"><h2>Driven by Wisdom — Powered by Community</h2>
+       </div> 
+     
+      <section class="blue"><div class="inner">
+        <div class="row">
+          <div class="twelve columns clear">
+            <h2><span>Check out some of our </span>Featured Tutors</h2>
+          </div>
+        </div>
+        <div class="row">
+        
+        
+          <div class="four columns">
+            <div class="row">
+              <div class="four columns phone-one">
+                <img src="{{STATIC_URL}}images/temp_featured_tutors/Jade.png" alt="Mackenzie Jones">
+              </div>
+              <div class="eight columns phone-three">
+                <a href="/profile/JadeL/"><h5>Jade L</h5></a>
+                <p>I am a Harvard University (college) and Columbia University (graduate school) alum who loves learning. I offer both online and in-person tutoring. Feel free to contact me with any questions on...</p>
+              </div>
+            </div>
+          </div>
+        
+        
+        
+          <div class="four columns">
+            <div class="row">
+              <div class="four columns phone-one">
+                <img src="{{STATIC_URL}}images/temp_featured_tutors/Melissa.png" alt="Harry Wright">
+              </div>
+              <div class="eight columns phone-three">
+                <a href="/profile/melissabethk/"><h5>Melissa K</h5></a>
+                <p>Proficient and dedicated tutor in literature, language arts, creative writing, history, social sciences, and Spanish.  Ivy league student about to graduate with a Bachelor's Degree </p>
+              </div>
+            </div>
+          </div>
+        
+        
+        
+          <div class="four columns">
+            <div class="row">
+              <div class="four columns phone-one">
+                <img src="{{STATIC_URL}}images/temp_featured_tutors/Anu.jpg" alt="Anu-Raga Mahalingashetty">
+              </div>
+              <div class="eight columns phone-three">
+                <a href="/profile/AnuragaMPH/"><h5>Anu-Raga Mahalingashetty</h5></a>
+                <p>I am a graduate from Columbia University in NYC. I have experience tutoring in Algebra, Calculus, Geometry and Trigonometry. I can also offer assistance with college applications and essays.    </p>
+              </div>
+            </div>
+          </div>
+        
+        
+        </div>
+      </div></section>
+      
+      
+      {% if not user.is_authenticated %}
+      <section>
+        <div class="row">
+          <div class="seven columns centered text-center">
+            <h2 class="tight"><span>Ready to give us a try?</span></h2>
+            <a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('2'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Student Account</span></a>
+            <!--<p class="faded">If you're a tutor, <a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();">sign up here</a>.</p>-->
+          </div>
+        </div>
+      </section>
+      {% endif %}
+    
+    {% if video %}{% include "core/fragments/_modal_video.html" %}{% endif %}
+{% endblock %}

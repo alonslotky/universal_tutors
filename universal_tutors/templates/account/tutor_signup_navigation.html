@@ -1,0 +1,66 @@
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+<style>
+#tutor_signup12{
+	-webkit-align-items: flex-start;
+	text-align: center;
+	cursor: default;
+	color: buttontext;
+	padding: 2px 6px 3px;
+	border: 2px outset buttonface;
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+	background-color: buttonface;
+	box-sizing: border-box;
+	width:50px;
+	height:20px;
+}
+
+#tutor_signup13{
+	-webkit-align-items: flex-start;
+	text-align: center;
+	cursor: default;
+	color: buttontext;
+	padding: 2px 6px 3px;
+	border: 2px outset buttonface;
+	border-image-source: initial;
+	border-image-slice: initial;
+	border-image-width: initial;
+	border-image-outset: initial;
+	border-image-repeat: initial;
+	background-color: buttonface;
+	box-sizing: border-box;
+	width:40px;
+	height:20px;
+}
+</style>
+
+<div name="button">
+	<!-- hidden buttons to capture default Enter  -->
+	{% if wizard.steps.next %}
+		<button name="" id="tutor_signup12" class="icon1 rocket" type="submit" value="{{ wizard.steps.next }}" style="position: absolute; left: -9999px; width: 1px; height: 1px;">{% trans "next" %} </button>
+	{% else %}
+		<input type="submit" id="tutor_signup"  value="{% trans "submit" %}" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>	
+	{% endif %}
+	
+	
+	{% if wizard.steps.prev %}
+		<button name="wizard_goto_step" id="tutor_signup13" type="submit" value="{{ wizard.steps.prev }}">{% trans "back" %}</button>
+	{% endif %}
+	
+	{% if wizard.steps.next %}
+		<button name="" id="tutor_signup12" class="icon1 rocket" type="submit" value="{{ wizard.steps.next }}">{% trans "next" %}</button>
+	{% else %}
+		<input type="submit" value="{% trans "submit" %}"/>	
+	{% endif %}
+	
+	<input type="hidden" name="{{ step_field }}" value="{{ step0 }}" />
+	{{ previous_fields|safe }}
+</div>

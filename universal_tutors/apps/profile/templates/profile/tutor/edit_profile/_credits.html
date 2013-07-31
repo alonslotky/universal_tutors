@@ -1,3 +1,69 @@
+<style>
+/* Buttons */
+
+  .button8 {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: url("../images/shared/button.jpg") repeat-x top #a7dc32;
+    color: #000;
+    font-weight: normal;
+    border: 1px solid #70ac29;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .button8:hover {
+    color: #000;
+    background-position: 0 -93px;
+  }
+  
+  .button8,
+  .timer .button8 span,
+  .small.button8,
+  .large.button8,
+  .icon {
+    font-size: 23px;
+    font-size: 2.3rem;
+    font-family: "MyriadProCondensed";
+    text-shadow: 0 1px 0 #d0fb82;
+    color: #000;
+    cursor: pointer;
+  }
+  
+  .large.button8 {
+    padding: 10px;
+    background: url("../images/shared/button-large.jpg") top repeat-x;
+  }
+  .large.button8:hover {
+    background-position: 0 -174px;
+  }
+  
+  .button8 .icon {
+    border: none;
+    padding: 0 25px 0 0;
+    margin: 0;
+    background: none;
+  }
+
+  .button8 .rocket { background: url("../images/shared/sprite.png") no-repeat right -39px; }
+  
+  .button8 .rocketdown { background: url("../images/shared/sprite.png") no-repeat right -66px; }
+  
+  .button8 .thumb-up { background: url("../images/shared/sprite.png") no-repeat right -413px; }
+  
+  .button .credits { background: url("../images/shared/sprite.png") no-repeat right -501px; }
+  
+  .button8 .history { background: url("../images/shared/sprite.png") no-repeat right -444px; }
+  
+  .button8 .search { background: url("../images/shared/sprite.png") no-repeat right -473px; }
+  
+  .button8 .down { background: url("../images/shared/sprite.png") no-repeat right -91px; }
+  
+  .large.button8 .rocket { background: url("../images/shared/sprite.png") no-repeat right -38px; }
+  
+</style> 
+
   {% load common_tags %}
   <li id="creditsTab">
     <h2 class="clear">Credits Overview</h2>
@@ -11,7 +77,7 @@
     </div>
     <div class="row">
       <div class="five columns">
-        <label>Commission due to Universal Tutors</label>
+        <label>Commission due to Wizoku</label>
       </div>
       <div class="seven columns">
         	{{profile.income_without_commission|sub:profile.income}} credit(s)<br/>
@@ -27,8 +93,8 @@
     </div>
 
 	<div class="row">
-	    <a class="button" href="javascript:;" data-reveal-id="modal-withdraw"><span class="icon credits">Withdraw Credits</span></a>
-	    <a class="button" href="{% url history %}"><span class="icon history">View History</span></a>		
+	    <a class="button8" href="javascript:;" data-reveal-id="modal-withdraw"><span class="icon credits">Withdraw Credits</span></a>
+	    <a class="button8" href="{% url history %}"><span class="icon history">View History</span></a>		
 	</div>    
 
     <div class="row space">&nbsp;</div>
@@ -55,7 +121,7 @@
 	      </div>
 	    </div>
 	    <div class="row">
-		    <a class="button" href="javascript:;" id="active-discount-button"><span class="icon rocket">Activate discount&nbsp;</span></a>
+		    <a class="button8" href="javascript:;" id="active-discount-button"><span class="icon rocket">Activate discount&nbsp;</span></a>
 	    </div>
       {% endif %}
     {% endwith %}

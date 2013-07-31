@@ -30,6 +30,7 @@ from scribblar import users, rooms
 
 import mailchimp
 from mailchimp.chimpy.chimpy import ChimpyException
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 ### MANAGERS ######################################################
@@ -109,6 +110,17 @@ class Parent(User):
         verbose_name = 'Parent'
         proxy = True
 
+#####################Categories###################
+class Genre(MPTTModel):
+    name = models.CharField(max_length=50, unique=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+
+    def __unicode__(Self):
+        return Self.name
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
 
 
 ### MODELS #############################################
@@ -130,6 +142,11 @@ class UserProfile(BaseModel):
     GENDER_TYPES = get_namedtuple_choices('USER_TYPE', (
         (0, 'MALE', 'Male'),
         (1, 'FEMALE', 'Female'),
+    ))
+
+    TUTORING_TYPES = get_namedtuple_choices('USER_TYPE', (
+        (0, 'in_person', 'in_person'),
+        (1, 'online', 'online'),
     ))
 
     REFERRAL_TYPES = get_namedtuple_choices('USER_REFERRAL_TYPES', (
@@ -169,7 +186,9 @@ class UserProfile(BaseModel):
         return os.path.join(UserProfile.UPLOAD_IMAGES_PATH, new_filename)
 
     user = AutoOneToOneField(User, related_name="profile")
-
+    
+    #Adding the zipcode attribute
+    zipcode = models.CharField(verbose_name=_('Zipcode'), max_length=10, null=True, blank=True)
     about = models.CharField(verbose_name=_('Description'), max_length=500, null=True, blank=True)
     title = models.CharField(verbose_name=_('Title'), max_length=100, null=True, blank=True)
     profile_image = models.ImageField(verbose_name=_('Profile image'), upload_to=get_upload_to, default=settings.DEFAULT_PROFILE_IMAGE)
@@ -195,7 +214,8 @@ class UserProfile(BaseModel):
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
     currency = models.ForeignKey(Currency, null=True, blank=True)
-
+    price_per_hour = models.FloatField(default=-1)
+    
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
     other_referral = models.CharField(max_length=200, null=True, blank=True)
     referral_key = models.CharField(max_length=30, null=True, blank=True)
@@ -231,11 +251,22 @@ class UserProfile(BaseModel):
 
     classes_given = models.PositiveIntegerField(default=0)
 
-
+    ###TUTORING TYPES
+    #tutoring_types = models.PositiveSmallIntegerField(verbose_name=_('tutoring_types'), choices=TUTORING_TYPES.get_choices(), default=TUTORING_TYPES.online)    
+    #tutoring_types1 = models.PositiveIntegerField(default=0)
+    genres = models.ManyToManyField(Genre)
+    #subject1 = models.ManyToManyField(Genre)
+    #genre2 = TreeForeignKey(Genre)
+    #genre = TreeForeignKey('self', null=True, blank=True, related_name='children')
+    
     # RECEIVE NOTIFICATIONS
     notifications_messages = models.BooleanField(default=True)
     notifications_classes = models.BooleanField(default=True)
     notifications_other = models.BooleanField(default=True)
+
+    #online_tutoring = models.BooleanField(default=True)
+    #in_person_tutoring = models.BooleanField(default=True)
+    #check = models.PositiveIntegerField(default=0)
 
     @property
     def age(self):
@@ -1180,7 +1211,7 @@ class TutorReview(BaseModel):
             })
 
             subject = 'Bad Tutor Review'
-            sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+            sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
             to = [settings.CONTACT_EMAIL]
 
             email_message = EmailMessage(subject, html, sender, to)
@@ -1383,7 +1414,7 @@ class Report(BaseModel):
             })
 
             if subject and html:
-                sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+                sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
                 to = [settings.CONTACT_EMAIL]
 
                 email_message = EmailMessage(subject, html, sender, to)
@@ -1439,7 +1470,7 @@ class NewsletterSubscription(BaseModel):
         t = loader.get_template('profile/emails/verify_email.html')
         html = t.render(context)
 
-        msg = EmailMessage('[Universal Tutors] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
+        msg = EmailMessage('[Wizoku] Verify Email Address', html, settings.DEFAULT_FROM_EMAIL, to=[self.email])
         msg.content_subtype = "html"
         msg.send()
 
@@ -1571,7 +1602,7 @@ def paypal_error(type='topup_invalid', email=None):
         subject = 'Withdraw PayPal Error'
         html = 'An error occurred during a payment (withdraw) from email <%s>. Please check if email is from a valid PayPal account.' % email
 
-    sender = 'Universal Tutors <%s>' % settings.DEFAULT_FROM_EMAIL
+    sender = 'Wizoku <%s>' % settings.DEFAULT_FROM_EMAIL
     to = [settings.CONTACT_EMAIL]
 
     email_message = EmailMessage(subject, html, sender, to)

@@ -342,18 +342,19 @@
       letter-spacing: -1px;
     }
   }
-    
+ 
+/*    
 /* Header */
-
+/*
   header .logo a {
     background: url("../images/shared/logo-thin.png") no-repeat left center;
     width: 81px;
     height: 24px;
     margin: 0 10px 10px 0;
   }
-  
+  */
    /* x2 Retina */
-  
+ /* 
     @media only screen and (-webkit-min-device-pixel-ratio: 1.5), 
     only screen and (-o-min-device-pixel-ratio: 3/2), 
     only screen and (min-device-pixel-ratio: 1.5) {
@@ -366,7 +367,7 @@
   /* header {
     font-family: 'MyriadProSemibold';
   } */
-  
+ /* 
   header, .main, footer {
     padding: 0 20px;
   }
@@ -433,20 +434,115 @@
       display: inline;
       margin: 20px 0 0 20px;
     }
+  }*/
+
+/* Header Rebranding */
+
+  header .logo a {
+    background: url("../images/shared/Wizoku_logo_2.png") no-repeat left center;
+    width: 81px;
+    height: 24px;
+    margin: 0 10px 10px 0;
   }
   
-/* Main */
+   /* x2 Retina */
+ 
+    @media only screen and (-webkit-min-device-pixel-ratio: 1.5), 
+    only screen and (-o-min-device-pixel-ratio: 3/2), 
+    only screen and (min-device-pixel-ratio: 1.5) {
+      header .logo a {
+        background: url("../images/shared/Wizoku_logo_2.png") no-repeat left center;
+        background-size: 100%;
+      }
+    }
+   /* header {
+    font-family: 'MyriadProSemibold';
+  } */
   
-  .main {
+  header, .main, footer {
+    padding: 0 20px;
+  }
+  
+  nav.show-on-phones {
+    padding-top: 8px;
+  }
+  
+  nav.show-on-phones a.right {
+    padding: 4px 0 0;
+  }
+  
+  @media only screen and (min-width: 767px) {
+    header .logo a {
+      background: url("../images/shared/Wizoku_logo_2.png") no-repeat left top;
+      background-size: 152px auto;
+      border-right: 1px solid #e7e7e7;
+      padding-right: 30px;
+      width: 162px;
+      height: 44px;
+      margin: 0 30px 7px 0;
+    }
+    
+    header .logo a:hover {
+      opacity: 0.5;
+    }
+    
+    header li {
+      float: left;
+    }
+    
+    header a {
+      font-size: 16px;
+      display: block;
+      margin: 12px 20px 0 0;
+      color: #717171;
+    }
+    
+    .marketing.students .link-students,
+    .marketing.tutors .link-tutors,
+    .marketing.aboutus .link-aboutus,
+    /*.link-aboutus,*/
+    .classes .link-classes,
+    .tutors .link-tutors,
+    .messages .link-messages,
+    .profile .link-profile,
+    .search .link-search {
+      background-color: #efefef;
+      padding: 10px;
+      margin-top: 1px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+      border-radius: 4px;
+    }
+    
+    header a:hover {
+      color: #000;
+    }
+    
+    header .user-links {
+      text-align: right;
+      padding-top: 12px;
+    }
+    
+    header .user-links a {
+      display: inline;
+      margin: 20px 0 0 20px;
+    }
+  }
+
+ 
+
+/*Main 
+  
+ .main {
     background: url("../images/shared/hr.png") top repeat-x;
-    padding-top: 10px;
+      padding-top: 10px;
   }
   
   @media only screen and (min-width: 767px) {
     .main {
       padding-top: 25px;
     }
-  }
+  }*/
   
 /* Blue */
   
@@ -463,6 +559,11 @@
     padding: 20px 20px;
   }
   
+  .blue .new_inner {
+    background: url("../images/marketing/Joseph&friends.jpg") no-repeat center top;
+    height: 400px;
+    padding: 20px 20px;
+  }
   .blue p {
     color: #e7e7e7;
   }
@@ -554,11 +655,14 @@
 	  }
 	  
 	  footer .logo {
-      background: url("../images/shared/logo-foot.png") no-repeat;
-      width: 42px;
-      height: 30px;
+      /*background: url("../images/shared/logo-foot.png") no-repeat;*/
+      background: url("../images/rebranding/footer_icon.png") no-repeat;
+      width: 63px;
+      height: 45px;
       margin-right: 15px;
-      margin-left: 15px;
+      margin-left: 35px;
+      position: relative;
+      bottom: 15px;
     }
     
     footer a {
@@ -696,7 +800,9 @@
   
   .home h1 { margin-bottom: -5px; }
   
-  .blue.feature-box { margin-top: -10px; }
+  .blue.feature-box { 
+    
+    margin-top: -10px; }
   
   .home .blue.feature-box { margin-top: 20px; }
   
@@ -792,7 +898,8 @@
     
     .feature-box h1 { line-height: 55px; padding-bottom: 40px; }
     
-    .blue.feature-box { margin-top: -25px; }
+    /*.blue.feature-box { margin-top: -25px; }*/
+    .blue.feature-box { margin-top: 5px; }
     
     .home .blue.feature-box { margin-top: 30px; }
     
@@ -803,7 +910,8 @@
     .home .feature-browser {
       height: 316px;
       width: 95%;
-      background: url("../images/marketing/home-browser.png") no-repeat left top;
+      /*background: url("../images/marketing/home-browser.png") no-repeat left top;*/
+      background: url("../images/marketing/Joseph&friends.jpg") no-repeat left top;
       position: absolute;
       top: 0;
       left: 0;
@@ -819,12 +927,14 @@
       z-index: 1;
     }
     
-    .feature-black { margin: 0 -20px; border-top: 1px solid #439cba; }
+    .feature-black { margin: 0 -20px; 
+      /*border-top: 1px solid #439cba;*/
+       }
     
     .home .feature-black { margin: 310px -20px 0; }
     
     .feature-black {
-      background: #000;
+      /*background: #000;*/
       margin: 0 -20px;
       padding: 20px;
       height: 30px;
@@ -862,6 +972,19 @@
       margin-top: -27px;
     }
     
+  /*new marketing*/
+  
+    .home .new_marketing {
+      height: 316px;
+      width: 100%;
+      /*background: url("../images/marketing/home-browser.png") no-repeat left top;*/
+      background: url("../images/marketing/Joseph&friends.jpg") no-repeat ;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }  
+
+
   /* Lock */
   
     .home .lock {
@@ -929,6 +1052,12 @@
     .marketing.students .icon-1 {
       height: 110px;
       background: url("../images/marketing/time-icon.png") center no-repeat;
+      margin-top: 35px;
+    }
+
+    .marketing.aboutus .icon-1-new {
+      height: 110px;
+      background: url("../images/rebranding/about_us_name.png") center no-repeat;
       margin-top: 35px;
     }
     
@@ -1621,8 +1750,13 @@
       padding-top: 13px;
     }
     
-    .classroom header .logo a {
+    /*.classroom header .logo a {
       background: url("../images/shared/logo-classroom.png") no-repeat left top;
+      border-right: none;
+    }*/
+
+    .classroom header .logo a {
+      background: url("../images/rebranding/classroom_logo.png") no-repeat left top;
       border-right: none;
     }
     
@@ -1639,3 +1773,400 @@ table td {
   overflow: hidden;
 }
 
+
+#tutor_signup_image1{
+  background-image: url("../images/new/tutor_signup_step1.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image2{
+  background-image: url("../images/new/tutor_signup_step2.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image3{
+  background-image: url("../images/new/tutor_signup_step3.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image4{
+  background-image: url("../images/new/tutor_signup_step4.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+#tutor_signup_image5{
+  background-image: url("../images/new/tutor_signup_step5.png");
+background-repeat: no-repeat;
+width: auto; /*or your image's width*/
+height: 100px; /*or your image's height*/
+margin-left: 100px;
+  }
+
+
+/*All the new rebranding changes*/
+
+.main {
+    background: url("../images/shared/hr.png") top repeat-x;
+    /*padding-top: 10px;*/
+  }
+  
+  @media only screen and (min-width: 767px) {
+    .main {
+      /*padding-top: 10px;*/
+    }
+  }
+
+
+header .row{
+  height: 80px;
+}
+
+
+
+.main_image {
+  background: url("../images/rebranding/wizoku_homepage_mai2.jpg") no-repeat top;
+  width: 1600px;  
+  height: 570px;
+  
+  min-width: 100%;
+  padding:0px;
+ 
+  }
+
+
+.new_home{
+  
+  margin: 0px -20px;
+}
+
+.new_home_info img{
+  /*position: absolute;*/
+    /*top: 0; bottom:0; left: 0; right:0;*/
+    margin: auto;
+    -moz-box-shadow: 0 0px 0px #dddddd;
+    -webkit-box-shadow: 0 0px 0px #dddddd;
+    box-shadow: 0 0px 0px #dddddd;
+    border:0px;
+    width: 100px;
+    height:90px;
+    position:absolute; /* Required */
+  left:0;right:0; 
+  margin-top: -120px;
+}
+
+.new_home_info{
+  margin-top: 160px;
+}
+
+.tagline{
+  line-height: 20px;
+  vertical-align:middle;
+  text-align: center;
+  height:60px;
+  margin-top: 20px;
+  color: #3366CC;
+}
+ 
+/*Home page tutor login form design*/
+
+.login-form {
+  width: 400px;
+  height: 280px;
+  margin: 0 auto;
+  position: relative;
+  z-index:5;
+  left:25px;
+  top:20px;
+  /*background: #f3f3f3;*/
+  background-color:rgba(5,0,0,0.5);
+  /*border: 1px solid #fff;*/
+  border-radius: 5px;
+  padding-top: 30px;
+  
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/*******************
+HEADER
+*******************/
+#home_tag {
+  font-family: "MyriadProSemibold";
+  position: relative;
+  left:150px;
+  width:1000px;
+    font-weight: bold;
+  text-align: left;
+  margin-left: 45px;
+  font-size: 38px;
+  line-height:34px;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  letter-spacing:1.2px;
+    /*text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+  */
+}
+
+
+.login-form  h1 {
+  font-family: "MyriadProSemibold";
+    font-weight: 100px;
+  text-align: left;
+  margin-left: 42px;
+  font-size: 34px;
+  line-height:34px;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  margin-top: -20px;
+  letter-spacing:1.2px;
+    /*text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+  */
+}
+.login-form  h2 {
+  font-family: "MyriadProSemibold";
+    font-weight: 100px;
+  text-align: left;
+  margin-left: 42px;
+  font-size: 34px;
+  line-height:34px;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  letter-spacing:1.2px;
+    /*text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+  */
+}
+
+
+
+.login-form .content {
+  padding: 0 30px 25px 30px;
+}
+
+/* Input field */
+.login-form .content .input  {
+  width: 115px;
+  height: 10px;
+  padding: 15px 25px;
+  margin-left: 20px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: #9d9e9e;
+  text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+  text-align: left;
+  background: #fff;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+  -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+  -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+}
+
+.login-form .content #name  {
+  width: 140px;
+  height: 30px;
+  
+  margin-left: 11px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+ /*color: #9d9e9e;*/
+  text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+  text-align: left;
+  background: #fff;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  
+  /*box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+  -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+  -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);*/
+}
+
+.login-form .content #home_tutor_signup  {
+  width: 306px;
+  height: 33px;
+  
+  margin-left: 11px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  /*color: #9d9e9e;*/
+  text-shadow: 1px 1px 0 rgba(256,256,256,1.0);
+  text-align: left;
+  background: #fff;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  
+  /*box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+  -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);
+  -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,0.50);*/
+}
+
+
+/* Second input field */
+.login-form .content .password, .login-form .content .pass-icon {
+  margin-top: 25px;
+}
+
+.login-form .content .input:hover {
+  background: #dfe9ec;
+  color: #414848;
+}
+
+.login-form .content .input:focus {
+  background: #dfe9ec;
+  color: #414848;
+  
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+  -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.25);
+}
+
+.user-icon, .pass-icon {
+  width: 46px;
+  height: 47px;
+  display: block;
+  position: absolute;
+  left: 0px;
+  padding-right: 2px;
+  z-index: 3;
+  
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+}
+
+.user-icon {
+  top:147px; /* Positioning fix for slide-in, got lazy to think up of simpler method. */
+  background: rgba(65,72,72,0.75) url(../images/user-icon.png) no-repeat center;  
+}
+
+.pass-icon {
+  top:221px;
+  background: rgba(65,72,72,0.75) url(../images/pass-icon.png) no-repeat center;
+}
+
+.login-form .content .button{
+  position: relative;
+  top:40px;
+}
+
+/* Animation */
+.input, .user-icon, .pass-icon, .button, .register {
+  transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+}
+
+/*******************
+FOOTER
+*******************/
+
+.login-form .footer {
+  padding: 25px 30px 40px 30px;
+  overflow: auto;
+  
+  /*background: #d4dedf;*/
+  background-color:rgba(5,0,0,0.5);
+  /*border-top: 1px solid #fff;*/
+  
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.15);
+  -moz-box-shadow: inset 0 1px 0 rgba(0,0,0,0.15);
+  -webkit-box-shadow: inset 0 1px 0 rgba(0,0,0,0.15);
+}
+
+/* Login button */
+.home_button  #tutor_signup12 {
+  float:left;
+  width: 150px;
+  height: 38px;
+  padding: 11px 25px;
+  margin-left: 30px;
+  font-family: 'Bree Serif', serif;
+  font-weight: 300;
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 0px 1px 0 rgba(0,0,0,0.25);
+  margin-left: 10px;
+  background: #56c2e1;
+  border: 1px solid #46b3d3;
+  border-radius: 5px;
+  cursor: pointer;
+  line-height: 12px;
+  
+  box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
+  -moz-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
+  -webkit-box-shadow: inset 0 0 2px rgba(256,256,256,0.75);
+}
+
+.login-form .footer .button:hover {
+  background: #3f9db8;
+  border: 1px solid rgba(256,256,256,0.75);
+  
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+  -moz-box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+  -webkit-box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.login-form .footer .button:focus {
+  position: relative;
+  bottom: -1px;
+  
+  background: #56c2e1;
+  
+  box-shadow: inset 0 1px 6px rgba(256,256,256,0.75);
+  -moz-box-shadow: inset 0 1px 6px rgba(256,256,256,0.75);
+  -webkit-box-shadow: inset 0 1px 6px rgba(256,256,256,0.75);
+}
+
+/* Register button */
+.login-form .footer .register {
+  display: block;
+  float: right;
+  padding: 10px;
+  margin-right: 20px;
+  
+  background: none;
+  border: none;
+  cursor: pointer;
+  
+  font-family: 'Bree Serif', serif;
+  font-weight: 300;
+  font-size: 18px;
+  color: #414848;
+  text-shadow: 0px 1px 0 rgba(256,256,256,0.5);
+}
+
+.login-form .footer .register:hover {
+  color: #3f9db8;
+}
+
+.login-form .footer .register:focus {
+  position: relative;
+  bottom: -1px;
+} 
+
+
+#tutor_signup_photo{
+  position: relative;
+  right:200px;
+}

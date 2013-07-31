@@ -1,0 +1,101 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+{% load uni_form_tags %}
+{% load account_tags allauth_tags %}
+
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+{% endblock %}
+
+{% block content %}
+  {% include 'account/tutor_signup_header.html' %}
+
+  <section>
+	<div "row"  id="tutor_signup_image1"></div>
+    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
+		
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	{% with wizard.form as form %}
+	
+		{% if wizard.form.password1 and wizard.form.first_name.errors %}
+			<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>
+		{% endif %}
+		{% if wizard.form.password1 and wizard.form.last_name.errors %}
+			<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>
+		{% endif %}
+	<div class="row" name="Name">	
+		<div class="eight columns">
+			<div class="row space">
+				<div class="three columns">
+					<label>Name*</label>
+				</div>
+				<div class="four columns">
+					<input name="first_name" type="text" class="input-text" placeholder="First Name" value="{{form.first_name.value}}">
+				</div>
+				<div class="four columns">
+					<input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{form.last_name.value}}">
+				</div>
+			</div>
+	
+			{% if wizard.form.username.errors %}
+				<div class="formError">{{ wizard.form.username.errors }}</div>
+			{% endif %}
+
+			{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
+			<div class="row space" name="email">
+				<div class="three columns">
+					<label>Email*</label>
+				</div>
+				<div class="nine columns">
+				  <input type="text" id="id_email" name="email" value="{{ wizard.form.email.value }}" class="input-text stretch" />
+				</div>
+			 </div>
+
+		
+			{% if wizard.form.password1.errors %}
+				<div class="formError">{{ form.password1.errors }}</div>
+			{% endif %}
+			{% if wizard.form.password2.errors %}
+				<div class="formError">{{ form.password2.errors }}</div>
+			{% endif %}
+			<div class="row">
+				<div class="three columns">
+					<label>Account Password*</label>
+				</div>
+				<div class="four columns">
+				  <input type="password" id="id_password1" name="password1" placeholder="Password" value="" class="input-text stretch" />
+				</div>
+				<div class="four columns">
+				  <input type="password" id="id_password2" name="password2" placeholder="Confirm Password" value="" class="input-text stretch" />
+				</div>
+			</div>
+		</div>
+        <hr class="inside">
+          
+		{% include 'account/tutor_signup_navigation.html' %}
+		
+    </div>
+	{%endwith%}
+	</form>
+	
+  </section>
+  
+{% endblock %}
+

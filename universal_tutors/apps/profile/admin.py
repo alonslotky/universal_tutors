@@ -144,4 +144,7 @@ admin.site.register(StudentInterest, StudentInterestAdmin)
 #    pass
 #admin.site.register(NewsletterSubscription, NewsletterSubscriptionAdmin)
 
+from mptt.admin import MPTTModelAdmin
+
+admin.site.register(Genre, MPTTModelAdmin)
 

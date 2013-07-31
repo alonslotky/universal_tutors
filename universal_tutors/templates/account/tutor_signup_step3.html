@@ -1,0 +1,106 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+{% endblock %}
+
+{% block content %}
+  {% include 'account/tutor_signup_header.html' %}
+ 
+<style type="text/css">
+      body { font-size: 80%; font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif; }
+      .accordionItem h2 { margin: 0; font-size: 2.5em;  color: #000000;padding:0 ; border-bottom: 0px ;text-align:left }
+      .accordionItem table { margin: 0; font-size: 2.5em;  color: #000000;padding:0 ; border-bottom: 0px ;text-align:left }
+      .accordionItem h2:hover { cursor: pointer; }
+      .accordionItem div { margin: -10px; padding: 0;  border-bottom: 0px;
+        margin-bottom:0px; margin-top:0px;padding-left: 30px;
+  }
+      .accordionItem.hide h2 { color: #000;  }
+      .accordionItem.hide div { display: none; }
+
+    table#sample
+    {
+    background-color:#FFFFFF;
+    border: solid #000 0px;
+    width: 1100px;
+      }
+    table {
+      margin:0;
+    }  
+    table#sample tbody tr td
+    {
+    width:25%;
+    height:0.5px
+    font-size:0.05em;
+    padding:0px;
+    margin:0px;
+    }
+    table#sample tr{
+      /*line-height: 1px;*/
+    }
+    div div{
+   margin-bottom:0px;
+   margin-top:0px;
+}
+div div{
+   margin-bottom:0px;
+}
+div div:last-of-type{
+   margin-bottom:0;
+}
+
+div#checkit
+{
+display: inline-block;
+padding:0;
+margin:0;
+}
+
+    </style> 
+
+
+
+  <section>
+    <div "row"  id="tutor_signup_image3"></div>
+    <form action="" id="tutors-signup-form" method="post" class="nice" enctype="multipart/form-data">
+		{% csrf_token %}
+			
+		{{ wizard.management_form }}
+		{{ wizard.form.management_form }}
+		{% with wizard.form as form %}	
+		
+		{% include 'account/genres_form.html' %}
+	
+		<hr class="inside">
+		
+		{% include 'account/tutor_signup_navigation.html' %}
+		
+		
+		
+        
+		
+
+    {% endwith %}
+	</form>
+
+  </section>
+  
+
+
+{% endblock %}
+

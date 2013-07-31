@@ -1,0 +1,329 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+{% endblock %}
+
+{% block content %}
+ {% include 'account/tutor_signup_header.html' %}
+
+<style>
+
+</style> 
+  <section>
+  	<div "row"  id="tutor_signup_image2"></div>
+    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
+		
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	{% with wizard.form as form %}	
+	<div class="row">	
+		<div class="six columns">
+			<!--<div name="name_errors">
+				{% if form.first_name.errors %}
+					<div class="formError"><ul class="errorlist"><li>First name is required</li></ul></div>
+				{% endif %}
+				{% if form.last_name.errors %}
+					<div class="formError"><ul class="errorlist"><li>Last name is required</li></ul></div>
+				{% endif %}
+			</div>
+			<div class="row space" name="name">
+				
+				<div class="three columns">
+					<label>Name*</label>
+				</div>
+				<div class="four columns">
+					<input name="first_name" type="text" class="input-text" placeholder="First Name" value="{{wizard.form.first_name.value}}">
+				</div>
+				<div class="four columns">
+					<input name="last_name" type="text" class="input-text" placeholder="Last Name" value="{{wizard.form.last_name.value}}">
+				</div>
+			</div> -->
+			<div id="model-signup-under16-container2" class="hidden formError">
+				Under 16? Your parent needs to create a account for you. <br />
+			</div>
+
+			<div class="row space" name="date_of_birth">
+				<div class="three columns">
+				  <label>D.O.B*</label>
+				</div>
+
+				{% if wizard.form.date_of_birth.errors %}<div class="formError">{{ wizard.form.date_of_birth.errors }}</div>{% endif %}
+				<div class="nine columns">
+					<input id="id_date_of_birth" name="date_of_birth" type="text" class="input-text clear hidden" value="{{wizard.form.date_of_birth.value}}">
+					<div class="row">
+						<div class="four columns phone-one">
+							<select id="id_dob_day" class="stretch"></select>
+						</div>
+						<div class="four columns phone-one">
+							<select id="id_dob_month" class="stretch"></select>
+						</div>
+						<div class="four columns phone-two">
+							<select id="id_dob_year" class="stretch">
+							</select>
+						</div>
+					</div>
+				</div>
+          </div>
+			
+			<div class="row space" name="gender">
+				<div class="three columns">
+					<label>Gender*</label>
+				</div>
+				<div class="nine columns">
+					{{wizard.form.gender}}
+				</div>
+			</div>
+
+			<div class="row space" name="gender">
+				<div class="three columns">
+					<label>Country*</label>
+				</div>
+				<div class="nine columns">
+					{{wizard.form.country}}
+				</div>
+			</div>
+			
+			<div class="row space" name="gender">
+				<div class="three columns">
+					<label>Timezone*</label>
+				</div>
+				<div class="nine columns">
+					{{wizard.form.timezone}}
+				</div>
+			</div>
+
+			{% if wizard.form.zipcode.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.zipcode.errors }}</li></ul></div>{% endif %}
+			<div class="row space" name = "zipcode">
+				<div class="three columns">
+					<label>Zipcode*</label>
+				</div>				
+     			<div class="nine columns">
+					<input type="text" id="id_zipcode" name="zipcode" value="{{ form.zipcode.value }}" class="input-text stretch" />
+				</div>
+				
+			</div>
+									
+			<!--{% if wizard.form.email.errors %}<div class="formError">{{ wizard.form.email.errors }}</div>{% endif %}
+			<div class="row space" name="email">
+				<div class="three columns">
+					<label>Email*</label>
+				</div>
+				<div class="six columns">
+				  <input type="text" id="id_email" name="email" value="{{ wizard.form.email.value }}" class="input-text stretch" />
+				</div>
+			 </div>-->
+			
+			<hr class="inside">
+		
+			{% include 'account/tutor_signup_navigation.html' %}
+			<!--<div id="model-signup-under16-container2" class="hidden formError">
+				Under 16? Your parent need to create a account for you. <br />
+			</div>-->
+
+		</div>
+        
+        
+        <div class="four columns photo" id="tutor_signup_photo">
+	    	{% if wizard.form.image_uploaded.errors %}<div class="formError">{{ wizard.form.image_uploaded.errors }}</div>{% endif %}
+			<div class="row">
+		  		<img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
+	    	</div>
+		    <div id="id_profile_image_old" class="row space hidden">
+		  	  <input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40" >
+		    </div>
+	    	<div id="id_profile_image_preview" class="row">
+	  			<a href="javascript:;">Choose image</a>
+	    	</div>
+	    	<div class="row">
+		      	<a id="remove-image" href="javascript:;" class="hidden">Remove Image</a>
+	    	</div>
+	    </div>  
+				
+    </div>
+    {%endwith%}
+	</form>
+
+  </section>
+  
+
+
+
+<script type="text/javascript" name="profile_picutre">
+	function createUploader(){
+        var photoUpload = new qq.FileUploaderBasic({
+            button: document.getElementById('id_profile_image_preview'),
+            action: "{% url preview_profile_image %}",
+            multiple: false,
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif'],
+			onComplete: function( id, fileName, responseJSON ) {
+				$('#id_image_preview').attr('src', responseJSON.url);
+				$('#remove-image').removeClass('hidden');
+	       }
+        });
+
+  	}
+  	window.onload = createUploader;
+
+    $('#remove-image').click(function(){
+		if(!$.browser.msie) {
+	    	$(this).addClass('hidden');
+	    	$('#id_image_preview').attr('src', '{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}');
+	    	$.get('{% url preview_profile_image_delete %}');
+		} else {
+			$('#id_image_preview').attr('src', "{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}");
+			$('#id_profile_image').remove();
+			$('#id_profile_image_old').append('<input id="id_profile_image" class="upload clear" type="file" name="profile_image" size="40">')
+		}
+		$("#remove-image").addClass('hidden');
+    });
+
+	if($.browser.msie) {
+		$('#id_profile_image_old').removeClass('hidden');
+		$('#id_profile_image_preview').addClass('hidden');
+	}
+
+	$('#id_profile_image').live('change', function(){
+        var input = $(this)[0]
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#id_image_preview').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+	});
+</script>
+
+
+
+<script type="text/javascript" name="dob">
+	var today = new Date();
+	var today_year = today.getFullYear();
+
+	var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+	function getQueryVariable(variable) {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return '';
+	}
+
+	var dob_date = getQueryVariable('date');
+	dob_date = dob_date.split('-');
+
+	var dob_year = parseInt(dob_date[0]);
+	var dob_month = parseInt(dob_date[1]);
+	var dob_day = parseInt(dob_date[2]);
+
+	for(i=1; i<=31; i++)
+		$('#id_dob_day').append('<option value="'+ i +'" '+ (i==dob_day?'selected=selected':'') +'>'+ i +'</option>');
+
+	for(i=0; i<months.length; i++)
+		$('#id_dob_month').append('<option value="'+ (i+1) +'" '+ (i==dob_month-1?'selected=selected':'') +'>'+ months[i] +'</option>');
+
+	for(i=today_year; i>today_year-100; i--)
+		$('#id_dob_year').append('<option value="'+ i +'" '+ (i==dob_year?'selected=selected':'') +'>'+ i +'</option>');
+
+	$('.signup_dob2').change(function(e){
+		check_over16_2();
+	});
+
+	$('#student-signup-form').submit(function(){
+		$('#id_date_of_birth').val( $('#id_dob_year').val() +'-'+ $('#id_dob_month').val() +'-'+ $('#id_dob_day').val() );
+	});
+
+	var check_over16_2 = function(){
+		var day = parseInt($('#id_dob_day').val());
+		var month = parseInt($('#id_dob_month').val());
+		var year = parseInt($('#id_dob_year').val());
+		var date = new Date(year, month-1, day);
+		var str_date = date.getFullYear() +'-'+ (date.getMonth()+1) +'-'+ date.getDate();
+		var input_date = year +'-'+ month +'-'+ day;
+
+		if(str_date == input_date) {
+			var age_date = new Date(year+16, month, day);
+			var today = new Date();
+
+			if(today >= age_date) {
+				$('#model-signup-button').removeClass('hidden');
+				$('#model-signup-under16-container2').addClass('hidden');
+				return true;
+			} else {
+				$('#model-signup-button').addClass('hidden');
+				$('#model-signup-under16-container2').removeClass('hidden');
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	$('#student-signup-form').submit(function(e){
+		if(!check_over16_2()){
+			e.preventDefault();
+		}
+	});
+
+	$('#id_referral').change(function(){
+		if( $(this).val() == '20' ) {
+			$('#id_div_referral_other').removeClass('hidden');
+			$('#id_div_referral_other_errors').removeClass('hidden');
+		} else {
+			$('#id_div_referral_other').addClass('hidden');
+			$('#id_div_referral_other_errors').addClass('hidden');
+			$('#id_referral_other').val('');
+		}
+	});
+
+	$('#id_crb').click(function(){
+		if( $(this).attr('checked') == 'checked' ) {
+			$('#id_div_crb_document').removeClass('hidden');
+			$('#id_div_crb_document_errors').removeClass('hidden');
+			$('#id_crb_apply').addClass('hidden');
+		} else {
+			$('#id_div_crb_document').addClass('hidden');
+			$('#id_div_crb_document_errors').addClass('hidden');
+			$('#id_crb_apply').removeClass('hidden');
+		}
+	});
+
+	$('#id_country').live("change", function(){
+		$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
+		$('#id_timezone').load('{% url get_timezones %}'+ $(this).val() +'/');
+	});
+
+	$('#id_timezone').html('<option disabled="disabled">Loading timezones...</option>');
+	$('#id_timezone').load('{% url get_timezones %}'+ $('#id_country').val() +'/');
+
+	if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i)) || (navigator.userAgent.match(/iPad/i))) {
+  		$(".four.columns.photo").hide();
+  	}
+
+
+
+</script>
+
+{% endblock %}

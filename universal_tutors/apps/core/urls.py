@@ -8,10 +8,32 @@ from django.views.generic.simple import direct_to_template
 
 import os
 import views
+from django.conf.urls.defaults import patterns, include, url
+from django.conf import settings
+from django.views.generic.simple import redirect_to
+from django.contrib import admin
 
+#to be used when using different templates for the tutors signupwizard!
+from apps.profile.views.login import TutorSignupWizard, TUTOR_SIGNUP_FORMS
+from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep2, MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
+                       MultiPartSignupFormStep5, MultiPartSignupFormStep6
+
+#to be used when using different templates for the tutors signupwizard!
+from apps.profile.views.login import TutorSignupWizard, TUTOR_SIGNUP_FORMS
+from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep2, MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
+                       MultiPartSignupFormStep5, MultiPartSignupFormStep6
+
+# Registration/Login views
+urlpatterns = patterns('apps.profile.views.login',
+    #url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
+    url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
+    url(r'^$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
+    url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
+)
 # Main
 urlpatterns = patterns('apps.core.views.main',
-    url(r'^$', 'home', name='home'),
+    #url(r'^$', 'home', name='home'),
+    url(r'^$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="home"),
     url(r'^(?i)search/$', 'search', name='search'),
 
     url(r'^(?i)reports/$', 'reports', name='reports'),

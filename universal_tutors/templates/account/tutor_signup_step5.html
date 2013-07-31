@@ -1,0 +1,110 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% load fb_versions common_tags %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+	
+	<script type="text/javascript">
+		var EDIT_WEEK_PERIOD_URL = '{% url edit_week_period_signup %}';
+		var TUTOR_SIGNUP_URL = '{% url tutor_signup2 %}';
+		
+		setInterval(function(){
+			$('#new-schedule-container').css('width', '100%');
+			var width = $('#new-schedule-container').width();
+	  		width = width - (width % 25);
+			$('#new-schedule-container, #new-schedule-container .new-schedule-calendar-day').css('width', width+'px');
+		}, 200);
+	
+		setInterval(function(){
+			$('#new-class-schedule-container').css('width', '100%');
+			var width = $('#new-class-schedule-container').width();
+	  		width = width - (width % 25);
+			$('#new-class-schedule-container, #new-class-schedule-container .new-schedule-calendar-day').css('width', width+'px');
+		}, 200);
+	</script>
+{% endblock %}
+
+{% block content %}
+
+	{% include 'account/tutor_signup_header.html' %}	
+ 
+<style>
+.sign-up-terms-and-conditions{
+	margin-top: 10px;
+}
+#TC{
+	margin-top: 40px;
+}
+
+#TC h3{
+	color: #000000;
+	font-weight: bold;
+}	
+
+</style>  
+  <section>
+  	<div "row"  id="tutor_signup_image5"></div>
+    <form action="" id="tutor-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{{wizard.form.availability}}
+	{% csrf_token %}
+		
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	{% with wizard.form as form %}	
+		
+	<div class="hide-on-phones">
+		{% include 'profile/fragments/_timer.html' %}
+	</div>
+
+	{% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
+    <div class="row space">
+    
+  	{% csrf_token %}
+	{% include "account/_availability.html" %}
+    
+  	
+  	{% include "account/availability/_modal_add_availability.html" %}
+
+  	<div class="row space" id="TC">
+  		<h3>Terms & Conditions</h3>
+		<div class="sign-up-terms-and-conditions">{% flatblock "terms_and_conditions_tutor" %}</div>
+    </div>
+
+	{% if form.agreement.errors %}<div class="formError">{{ form.agreement.errors }}</div>{% endif %}
+    <div class="row space">
+        <div>{{form.agreement}} <span>{{form.agreement.help_text}}</span></div>
+        <div>{{form.newsletter}} <span>{{form.newsletter.help_text}}</span></div>
+         <div>{{form.partners_newsletter}} <span>{{form.partners_newsletter.help_text}}</span></div>
+     </div>
+   		
+	
+	<hr class="inside">
+	
+	<div class="row">
+		{% include 'account/tutor_signup_navigation.html' %}
+	</div>
+	
+	{% endwith %}
+	
+	<script type="text/javascript" src="{{STATIC_URL}}js/signup_availability.js"></script>
+	</form>
+  </section>
+  
+{% endblock %}
+

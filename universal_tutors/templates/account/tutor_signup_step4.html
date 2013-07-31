@@ -1,0 +1,100 @@
+{% extends "ui/layouts/base.html" %}
+
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock %}
+
+{% load fb_versions common_tags flatblock_tags ut_tags %}
+
+{% block title %}Sign Up{% endblock %}
+{% block body_class %}tutors{% endblock %}
+
+{% block extra_head %}
+	<link rel="stylesheet" href="{{STATIC_URL}}css/fileuploader.css">
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{STATIC_URL}}js/lib/fileuploader.js"></script>
+{% endblock %}
+
+{% block content %}
+  {% include 'account/tutor_signup_header.html' %}
+  <section>
+  	<div "row"  id="tutor_signup_image4"></div>
+    <form action="" id="student-signup-form" method="post" class="nice" enctype="multipart/form-data">
+	{% csrf_token %}
+		
+	{{ wizard.management_form }}
+	{{ wizard.form.management_form }}
+	{% with wizard.form as form %}	
+	
+	{% if form.price_per_hour.errors %}
+		<div class="formError"><ul class="errorlist"><li>{{form.price_per_hour.errors}}</li></ul></div>
+	{% endif %}	
+	<div class="row space" name="price">
+		<div class="three columns">
+              <label>Price per tutoring hour:</label>
+        </div>
+		<div class="nine columns">
+			<div class="row" name="price_per_hour">
+				
+				<div class="three columns">					
+					<input id="id_price_per_hour" name="price_per_hour" type="text" class="input-text" placeholder="Price" />					
+				</div>
+								
+				<div class="nine columns">
+					{{wizard.form.currency}}				
+				</div>
+								
+				
+			</div>
+
+		</div>
+				
+			<hr class="inside">
+		
+		
+    </div>
+    
+	{% if wizard.form.tutoring_type.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.tutoring_type.errors }}</li></ul></div>{% endif %}
+	
+	<div class="row space" name="tutoring_type">
+		<div class="three columns">
+			<label>Type of Tutoring* <span id="tooltip-description"><!--[?]--></span><br/></label>
+		</div>
+		<div class="nine columns">
+			{{wizard.form.tutoring_type}}
+		</div>	
+	</div>
+
+	{% if wizard.form.about.errors %}<div class="formError"><ul class="errorlist"><li>{{ wizard.form.about.errors }}</li></ul></div>{% endif %}
+
+	<div class="row space">
+            <div class="three columns">
+	          <label>About me* <span id="tooltip-description"><!--[?]--></span><br/><span>(min 140 characters)</span></label>
+    		</div>
+            <div class="nine columns">
+	          <textarea id="id_about" name="about" class="user">{{form.about.value}}</textarea>
+    		</div>
+
+    {% include 'account/tutor_signup_navigation.html' %}		
+		
+    {% endwith %}
+	</form>
+
+  </section>
+  
+
+<script type="text/javascript" name="append_currency">
+	var currency_size = {{wizard.form.currency.1}}
+	
+	for(i=0; i< 3; i++)
+		$('#id_currency_select').append('<option value="'+ (i+1) +' " ' +'>'+ wizard.form.currency.i +'</option>');
+
+	
+
+</script>
+
+{% endblock %}
