@@ -52,7 +52,8 @@
 			{% if authenticated %}
         		<a href="{% url edit_profile %}" class="link-profile">Profile</a><a href="{% url logout %}">Sign Out</a>
 			{% else %}
-				<a href="javascript:;" id="signup-header-button" data-reveal-id="modal-signup">Student Sign Up</a>			
+				<!--<a href="javascript:;" id="signup-header-button" data-reveal-id="modal-signup">Student Sign Up</a>-->
+				<a href="/ambassador/">Ambassador Program</a>			
 				<a href="javascript:;" class="sign-up-button">Log In</a>
 			{% endif %}
 			<a href="{% url search %}" class="search">Search</a>
