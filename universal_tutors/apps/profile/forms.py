@@ -695,7 +695,7 @@ class TutorSignupForm(SignupForm):
     subcat=[None]*len(cat)
     for x in range(0, len(cat)):
         subcat[x]=cat[x].get_children()
-
+'''
     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
     
     genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple)
@@ -793,7 +793,7 @@ class TutorSignupForm(SignupForm):
     genre_14_13=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_14_14=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_14_15=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple)
-    
+ '''   
 
 
         
