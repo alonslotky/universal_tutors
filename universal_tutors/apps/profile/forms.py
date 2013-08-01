@@ -546,7 +546,7 @@ class MultiPartSignupFormStep3(forms.Form):
         subcat[x]=cat[x].get_children()
         
     genres = forms.ModelMultipleChoiceField(queryset= Genre.objects.all(), widget=forms.CheckboxSelectMultiple, required = False)
-
+'''
     genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
     
     genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
@@ -644,7 +644,7 @@ class MultiPartSignupFormStep3(forms.Form):
     genre_14_13=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
     genre_14_14=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
     genre_14_15=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
-    
+ '''   
     
 
 
