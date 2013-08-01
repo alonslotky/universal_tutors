@@ -1,0 +1,76 @@
+#just checking out the develop branch
+#just checking the master branch updates
+#just checking if the stable branch is working and is in sync with the local and remote
+BeautifulSoup==3.2.1
+Django==1.4
+Markdown==2.1.1
+Minidetector==0.1
+PIL==1.1.7
+PPyGIS==0.2
+South==0.8.1
+Whoosh==2.4.1
+cmsplugin-contact==1.0.0
+django-admin-tools==0.5.1
+-e hg+not trusting file /Users/Sid/PycharmProjects/new/evol/env/src/admintools-bootstrap/.hg/hgrc from untrusted user root, group staff
+not trusting file /Users/Sid/PycharmProjects/new/evol/env/src/admintools-bootstrap/.hg/hgrc from untrusted user root, group staff@not trusting file /Users/Sid/PycharmProjects/new/evol/env/src/admintools-bootstrap/.hg/hgrc from untrusted user root, group staff
+not trusting file /Users/Sid/PycharmProjects/new/evol/env/src/admintools-bootstrap/.hg/hgrc from untrusted user root, group staff
+d16b74a45dd2cca29e414d1d41f0a0f91ae63720#egg=django_admintools_bootstrap-dev
+django-allauth==0.11.1
+django-appconf==0.6
+django-classy-tags==0.4
+django-cms==2.4.2
+django-cms-search==0.6.3
+django-debug-toolbar==0.9.4
+django-email-confirmation==0.2
+django-extensions==1.1.1
+django-fancy-autocomplete==0.1a1
+django-filebrowser==3.3.0
+django-flatblocks==0.7.1
+django-grappelli==2.4.5
+django-haystack==2.0.0
+django-indexer==0.3.0
+django-mailchimp==0.1.30
+django-model-utils==1.4.0
+django-mptt==0.5.5
+-e git://github.com/rawjam/django-pagination.git@0d767e5050104fe03db1fcc46c86bf50dbf1a4a1#egg=django_pagination-dev
+django-paging==0.2.5
+django-reversion==1.7
+django-sekizai==0.7
+django-sentry==1.13.5
+django-shell-plus==1.1.5
+django-smart-selects==1.0.8
+django-static==1.5.5
+django-tagging==0.3.1
+django-tagging-autocomplete==0.3.1
+django-templatetag-sugar==0.1
+django-tinymce==1.5.1
+-e git://github.com/pydanny/django-uni-form.git@159f539e2fb98752b7964d75e955fc62881c28fb#egg=django_uni_form-dev
+docutils==0.10
+eventlet==0.12.1
+-e git+https://github.com/pythonforfacebook/facebook-sdk.git@38bbfa5d3c2d3af634c0d9a69638ab6a0ebc313e#egg=facebook_sdk-dev
+feedparser==5.1.3
+greenlet==0.4.1
+html5lib==1.0b1
+httplib2==0.8
+johnny-cache==1.4
+lockfile==0.9.1
+oauth2==1.5.211
+oauthlib==0.4.2
+ordereddict==1.1
+psycopg2==2.4.1
+pygeoip==0.2.6
+python-daemon==1.6
+python-memcached==1.53
+python-openid==2.2.5
+python-twitter==1.0
+pytz==2013b
+raven==3.3.12
+recaptcha-client==1.0.6
+requests==1.2.3
+requests-oauthlib==0.3.2
+simplejson==3.3.0
+six==1.3.0
+slimmer==0.1.30
+versiontools==1.9.1
+wsgiref==0.1.2
+xlwt==0.7.5
