@@ -496,7 +496,7 @@ class MultiPartSignupFormStep2(forms.Form):
     #email = forms.EmailField(label=_('Email'), max_length = 255, initial='', widget=forms.TextInput(attrs={'readonly':'readonly', 'disabled':True}))
     
     #Adding the zipcode attribute 
-    zipcode = forms.CharField(label=_('zipcode'), min_length = 5, max_length = 10, initial='') 
+    zipcode = forms.CharField(label=_('zipcode'), min_length = 4, max_length = 10, initial='') 
     #online_tutoring = forms.BooleanField(required = True, initial=True)
     #in_person_tutoring = forms.BooleanField(required = True, initial=True)
     
