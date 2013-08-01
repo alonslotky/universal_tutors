@@ -174,7 +174,7 @@ class TutorSignupWizard(SessionWizardView):
         profile.partners_newsletter = form_data[4].get('partners_newsletter', None)
         #profile.timezone = form_data[1].get('timezone', 0)
         
-        #self.save_genres(form_list, user)
+        self.save_genres(form_list, user)
         
         #availability
         for key, val in availability_periods.items():
