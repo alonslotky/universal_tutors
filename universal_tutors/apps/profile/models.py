@@ -32,6 +32,7 @@ import mailchimp
 from mailchimp.chimpy.chimpy import ChimpyException
 from mptt.models import MPTTModel, TreeForeignKey
 
+from easy_thumbnails.fields import ThumbnailerImageField
 
 ### MANAGERS ######################################################
 class StudentManager(models.Manager):
@@ -267,6 +268,8 @@ class UserProfile(BaseModel):
     #online_tutoring = models.BooleanField(default=True)
     #in_person_tutoring = models.BooleanField(default=True)
     #check = models.PositiveIntegerField(default=0)
+    photo = ThumbnailerImageField(upload_to='photos',  null=True,blank=True)
+
 
     @property
     def age(self):

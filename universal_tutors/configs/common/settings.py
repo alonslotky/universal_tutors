@@ -160,6 +160,8 @@ INSTALLED_APPS = (
     # CMS
 #    'cms',
     'mptt',
+    'easy_thumbnails',
+    'avatar',
 #    'menus',
 #    'cms.plugins.text',
 #    'cms.plugins.picture',
