@@ -12,6 +12,7 @@ from django.conf.urls.defaults import patterns, include, url
 from django.conf import settings
 from django.views.generic.simple import redirect_to
 from django.contrib import admin
+from django.conf.urls import url, patterns
 
 #to be used when using different templates for the tutors signupwizard!
 from apps.profile.views.login import TutorSignupWizard, TUTOR_SIGNUP_FORMS
@@ -19,21 +20,44 @@ from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep
                        MultiPartSignupFormStep5, MultiPartSignupFormStep6
 
 #to be used when using different templates for the tutors signupwizard!
-from apps.profile.views.login import TutorSignupWizard, TUTOR_SIGNUP_FORMS
+from apps.profile.views.login import TutorSignupWizard, TUTOR_SIGNUP_FORMS,part11,part12
 from apps.profile.forms import MultiPartSignupFormStep1, MultiPartSignupFormStep2, MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
                        MultiPartSignupFormStep5, MultiPartSignupFormStep6
 
 # Registration/Login views
 urlpatterns = patterns('apps.profile.views.login',
     #url(r"^(?i)account/signup/tutor/$", 'tutor_signup',  name="tutor_signup"),
-    url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
-    url(r'^$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
-    url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
+    #url(r"^(?i)account/signup/tutorsubjects/$", 'tutor_signup1',  name="tutor_signup1"),
+    #url(r'^$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup"),
+    #url(r'^account/signup/tutor2/$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="tutor_signup2"),
 )
+
+step1 = (('step1', MultiPartSignupFormStep1),)
+other_steps = (
+    ('step2', MultiPartSignupFormStep2),
+    ('step3', MultiPartSignupFormStep3),
+    ('step4', MultiPartSignupFormStep4),
+    ('step5', MultiPartSignupFormStep5),
+)
+
+#wizard_step1 = TutorSignupWizard.as_view(step1, url_name='wizard_step1')
+#home= TutorSignupWizard.as_view(step1, url_name='home')
+#wizard_other_steps = TutorSignupWizard.as_view(other_steps, url_name='wizard_other_steps')
+
+urlpatterns = patterns('apps.profile.views.login',
+    #url(r'^$', wizard_step1, name="wizard_step1"),
+    #url(r'^$', wizard_step1, name="home"),
+    #url(r'^$', home, name="home"),
+    #url(r'^account/signup/(?P<step>.+)/$', wizard_other_steps, name="wizard_other_steps"),
+)
+
+
+
 # Main
 urlpatterns = patterns('apps.core.views.main',
     #url(r'^$', 'home', name='home'),
     url(r'^$', TutorSignupWizard.as_view(TUTOR_SIGNUP_FORMS), name="home"),
+    #url(r'^account/tutorsignup/$', TutorSignupWizard.as_view(part12), name="home"),
     url(r'^(?i)search/$', 'search', name='search'),
 
     url(r'^(?i)reports/$', 'reports', name='reports'),
