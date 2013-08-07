@@ -217,7 +217,7 @@ EMAIL_HOST = 'smtp.live.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'info@wizoku.com'
-EMAIL_HOST_PASSWORD = 'wizoku'
+EMAIL_HOST_PASSWORD = 'Wizokuwizoku1'
 
 EMAIL_MANAGER = ['ben@rawjam.co.uk',]
 
