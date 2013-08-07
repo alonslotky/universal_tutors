@@ -509,21 +509,21 @@ class MultiPartSignupFormStep2(forms.Form):
 
 #<<<<<<< HEAD
 #=======
-    image_uploaded = forms.BooleanField(required = False)
+#    image_uploaded = forms.BooleanField(required = False)
     
         
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
-        super(MultiPartSignupFormStep2, self).__init__(*args, **kwargs)
+#    def __init__(self, *args, **kwargs):
+#        self.request = kwargs.pop('request')
+#        super(MultiPartSignupFormStep2, self).__init__(*args, **kwargs)
 
          
-    def clean_image_uploaded(self):
-        session_key = self.request.session.session_key
-        
-        try:
-            image = UploadProfileImage.objects.get(key=session_key).image
-        except UploadProfileImage.DoesNotExist:
-            raise forms.ValidationError(_(u"Please upload a profile picture"))
+#    def clean_image_uploaded(self):
+#        session_key = self.request.session.session_key
+#        
+##        try:
+ #           image = UploadProfileImage.objects.get(key=session_key).image
+ #       except UploadProfileImage.DoesNotExist:
+ #           raise forms.ValidationError(_(u"Please upload a profile picture"))
 
 
     def clean_email(self):
