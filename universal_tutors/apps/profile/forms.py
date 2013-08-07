@@ -291,8 +291,8 @@ class SignupForm(forms.ModelForm):
     newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
     partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
     
-    online_tutoring = forms.BooleanField(required = True, initial=True)
-    in_person_tutoring = forms.BooleanField(required = True, initial=True)
+    #online_tutoring = forms.BooleanField(required = True, initial=True)
+    #in_person_tutoring = forms.BooleanField(required = True, initial=True)
         
     def clean_agreement(self):
         agreement = self.cleaned_data.get('agreement', False)
@@ -644,7 +644,7 @@ class MultiPartSignupFormStep3(forms.Form):
     genre_14_13=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
     genre_14_14=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
     genre_14_15=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
-   
+    
     
 
 
@@ -793,7 +793,7 @@ class TutorSignupForm(SignupForm):
     genre_14_13=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_14_14=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple)
     genre_14_15=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple)
-   
+    
 
 
         
@@ -1138,4 +1138,4 @@ class ParentSocialSignupForm(GenericSocialSignupForm):
 
     #subcat=[None]*len(cat)
     #for x in range(0, len(cat)):
-        #subcat[x]=cat[x].get_children()
+        #subcat[x]=cat[x].get_children()        
