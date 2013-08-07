@@ -165,3 +165,9 @@ $(document).ready(function() {
   }
 
 });
+
+
+
+/*function showModal1() {
+               $('#modal-add-availability').foundation('reveal', 'open'); 
+               $('#modal-add-availability').foundation('reveal', 'close');}*/
