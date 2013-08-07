@@ -268,7 +268,7 @@ class UserProfile(BaseModel):
     #online_tutoring = models.BooleanField(default=True)
     #in_person_tutoring = models.BooleanField(default=True)
     #check = models.PositiveIntegerField(default=0)
-    photo = ThumbnailerImageField(upload_to='photos',  null=True,blank=True)
+    #photo = ThumbnailerImageField(upload_to='photos',  null=True,blank=True)
 
 
     @property
