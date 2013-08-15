@@ -83,10 +83,16 @@
                     {% if wizard.form.password1.errors %}
                       <div class="formError">{{ form.password1.errors }}</div>
                     {% endif %}
+
                     <!--{% if wizard.form.password2.errors %}
                       <div class="formError">{{ form.password2.errors }}</div>
                     {% endif %}-->
                     <input type="password" id="home_tutor_signup" name="password1" placeholder="Password" value="" class="input-text stretch" />  
+                    {% comment %}
+                    {% load avatar_tags %}
+                      {% avatar user %}
+                    {% endcomment %}  
+                    
                     <!--
                     <input type="password" id="home_tutor_signup" name="password2" placeholder="Confirm Password" value="" class="input-text stretch" /> -->   
                     <div class="home_button">           

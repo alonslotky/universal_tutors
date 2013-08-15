@@ -1,4 +1,4 @@
-import os, django, urllib
+import os, django, urllib,allauth
 
 # Base paths
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
@@ -345,7 +345,7 @@ FILEBROWSER_MAX_UPLOAD_SIZE = 10485760 # 10485760 bytes = about 10megs
 TINYMCE_JS_URL = ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/tiny_mce.js"
 TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, 'grappelli/tinymce/jscripts/tiny_mce/')
 
-
+#AVATAR_STORAGE_DIR = MEDIA_ROOT + 'avatars/'
 
 #TINYMCE_JS_URL = MEDIA_URL + 'admin/tinymce/jscripts/tiny_mce/tiny_mce.js'
 # file system path to the files

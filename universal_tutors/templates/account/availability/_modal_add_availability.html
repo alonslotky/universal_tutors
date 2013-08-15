@@ -126,9 +126,9 @@
 <script type="text/javascript">
 	$('#modal-add-availability-loading').hide();
 
-	#alert('just before add_availability');
+	
 	function add_availability () {	  
-		#alert('in add_availability_ajax callx');	
+			
 		var weekday = parseInt($('#add-availability-weekday').val());
 		var from_hour = parseInt($('#add-availability-from-hour').val());
 		var from_minute = parseInt($('#add-availability-from-minute').val());
@@ -185,6 +185,6 @@
 		$('#add-availability-weekday').val((!isNaN(weekday))?weekday:'');
 		$('#add-availability-errors').html('');		
 		$('#add-availability-errors').addClass('hidden');
-		#alert('in add_availability_clear5');
+		
 	}
 </script>

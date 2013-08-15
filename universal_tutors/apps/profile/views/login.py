@@ -30,8 +30,11 @@ from apps.classes.models import ClassSubject
 from apps.profile.forms import *
 from apps.core.models import Currency
 from apps.profile.models import WeekAvailability
+from django.http import HttpResponse
 
 import json
+
+#from avatar import *
 
 def show_genres(request):
     return render_to_response("account/genres.html",
@@ -113,6 +116,23 @@ TUTOR_SIGNUP_TEMPLATES = {"step1": "account/home_tutor_signup.html",
              "step4": "account/tutor_signup_step4.html",
              "step5": "account/tutor_signup_step5.html",
              "step6": "account/tutor_signup_step6.html",}
+
+#def photo1(request):
+#    if request.method == 'POST': # If the form has been submitted...
+#        form = avatar.forms.UploadAvatarForm(request.POST) # A form bound to the POST data
+#        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            # ...
+#            return HttpResponseRedirect('/thanks/') # Redirect after POST
+#    else:
+#        form = ContactForm() # An unbound form
+
+#    return render(request, 'photo.html', {
+#        'form': form,
+#    })
+
+#def photo(request):
+#    return render_to_response('account/photo.html')
 
 class TutorSignupWizard(SessionWizardView):
 #class TutorSignupWizard(NamedUrlWizardView):
