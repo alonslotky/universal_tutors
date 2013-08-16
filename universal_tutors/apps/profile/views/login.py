@@ -201,7 +201,8 @@ class TutorSignupWizard(SessionWizardView):
         profile.newsletter = form_data[4].get('newsletter', None)
         profile.partners_newsletter = form_data[4].get('partners_newsletter', None)
         #profile.timezone = form_data[1].get('timezone', 0)
-        
+        profile.referred_by_friend = form_data[3].get('referred_by_friend', 0) 
+
         self.save_genres(form_list, user)
         
         #availability

@@ -79,6 +79,19 @@
 	          <textarea id="id_about" name="about" class="user">{{form.about.value}}</textarea>
     		</div>
 
+    </div>	
+    
+    <div class="row space">	
+    	<div class="three columns">
+	          <label>Who referred you</label>
+    	</div>	
+
+    	<div class="nine columns">
+            <div class="three columns">
+	          <!--<textarea name="referred_by_name" type="text" class="input-text" placeholder="Friends full name">form.referred_by_friend.value</textarea>-->
+	          <input type="text" id="id_zipcode" name="zipcode" value="{{ form.referred_by_friend.value }}" class="input-text stretch" />
+    		</div>
+ 		
     {% include 'account/tutor_signup_navigation.html' %}		
 		
     {% endwith %}

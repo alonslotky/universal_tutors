@@ -191,6 +191,7 @@ class UserProfile(BaseModel):
     #Adding the zipcode attribute
     zipcode = models.CharField(verbose_name=_('Zipcode'), max_length=10, null=True, blank=True)
     about = models.CharField(verbose_name=_('Description'), max_length=2500, null=True, blank=True)
+    #about1 = models.CharField(verbose_name=_('Description1'), max_length=2500, null=True, blank=True)
     title = models.CharField(verbose_name=_('Title'), max_length=100, null=True, blank=True)
     profile_image = models.ImageField(verbose_name=_('Profile image'), upload_to=get_upload_to, default=settings.DEFAULT_PROFILE_IMAGE)
     address = models.CharField(verbose_name=_('Address'), max_length=150, null=True, blank=True)
@@ -269,7 +270,8 @@ class UserProfile(BaseModel):
     #in_person_tutoring = models.BooleanField(default=True)
     #check = models.PositiveIntegerField(default=0)
     #photo = ThumbnailerImageField(upload_to='photos',  null=True,blank=True)
-
+    referred_by_friend = models.CharField(verbose_name=_('Referred_by'), max_length=50, null=True, blank=True)
+    
 
     @property
     def age(self):
