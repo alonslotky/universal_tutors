@@ -128,16 +128,18 @@ class ProfileForm(forms.ModelForm):
     password  = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password1 = forms.CharField(label=_('New Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
+    currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
 
     class Meta:
         fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'gender', 
-                  'profile_image', 'crb', 'crb_file', 'currency', 'webcam', 'paypal_email',
-                  'notifications_messages', 'notifications_classes', 'notifications_other',)
+                  'profile_image', 'crb', 'crb_file', 'webcam', 'paypal_email',
+                  'notifications_messages', 'notifications_classes', 'notifications_other','zipcode','price_per_hour')
         model = UserProfile
         widgets = {
             'profile_image': forms.FileInput(),
             'country': forms.Select(attrs = {'class': 'stretch'}),
         }
+   
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
@@ -151,6 +153,8 @@ class ProfileForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(id=user_id).count() > 0:
             raise forms.ValidationError(_(u"This email is already registered."))
         return email
+
+        
     
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -655,11 +659,14 @@ class MultiPartSignupFormStep4(forms.Form):
         
     price_per_hour = forms.DecimalField(initial=0)
     about = forms.CharField(label=_('Description'), initial='')
+    #about1 = forms.CharField(label=_('Description1'),required = False, initial='')
+    
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
     
     tutoring_type = forms.MultipleChoiceField(label=_('Type of Tutoring*'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1],
                                               help_text = 'We are in the process of adding in-person tutoring as a feature on wizoku. Please tick as many boxes as apply (you can always edit this later) and we will let you know once this feature is up and running')
-    
+    #referred_by_friend = forms.CharField(label=_('Referred_by'),required = False, initial='')
+    referred_by_friend = forms.CharField(label=_('Referred_by'), initial='')
     
 class MultiPartSignupFormStep5(forms.Form):
     class Meta:

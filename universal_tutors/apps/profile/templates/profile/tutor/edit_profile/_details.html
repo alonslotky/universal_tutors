@@ -106,6 +106,7 @@
               <input id="id_last_name" name="last_name" type="text" class="input-text clear" {% if form.last_name.value %}value{% else %}placeholder{% endif %}="{{form.last_name.value}}">
             </div>
           </div>
+          
 
           {% if form.about.errors %}<div class="formError">{{ form.about.errors }}</div>{% endif %}
           <div class="row space">
@@ -114,6 +115,20 @@
 	          <textarea id="id_about" name="about" class="user stretch">{{form.about.value}}</textarea>
           	</div>
           </div>
+
+          {% if form.price_per_hour.errors %}<div class="formError">{{ form.price_per_hour.errors }}</div>{% endif %}
+          <div class="row space">
+            <div class="three columns">
+              <label>Price per tutoring hour </label>
+            </div>
+            <div class="four columns">
+              <input id="id_price_per_hour" name="price_per_hour" class="input-text clear" value="{{form.price_per_hour.value}}"></input>
+            </div>  
+            <div class="four columns">
+              {{form.currency}}
+            </div>  
+          </div>
+
 
           {% if form.video.errors %}<div class="formError">{{ form.video.errors }}</div>{% endif %}
           <div class="row user space">
@@ -191,6 +206,18 @@
 	                <option value="{{tz}}" {% if profile.timezone == tz %}selected="selected"{% endif %}>{{tz}}</option>
               	{% endfor %}
               </select>
+            </div>
+          </div>
+
+          {% if form.zipcode.errors %}<div class="formError">{{ form.zipcode.errors }}</div>{% endif %}
+          <div class="row space">
+            <div class="three columns">
+              <label>Zipcode </label>
+            </div>
+            <div class="four columns">  
+              <input id="id_zipcode" name="zipcode" class="input-text clear" value="{{form.zipcode.value}}"></input>
+            </div>
+            <div class="four columns">  
             </div>
           </div>
           <!--
