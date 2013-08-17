@@ -6,6 +6,8 @@ Environment "common" is configured with Askbot.
     cd askbot-devel
     source env/bin/activate
     python setup.py develop #allows to keep askbot in its own git repo
+    #django avatar must be from askbot repo, not pypi
+    pip install git+git://github.com/ericflo/django-avatar.git#egg=django_avatar
 
 2)  Comment out 'askbot', line from the INSTALLED_APPS in
     universal_tutors/configs/common/settings.py
