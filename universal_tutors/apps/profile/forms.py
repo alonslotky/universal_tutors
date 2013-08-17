@@ -42,6 +42,10 @@ from django.utils.safestring import mark_safe
 from django.utils.html import escape, conditional_escape
 from apps.profile.fmpttforms import *
 
+###########iamge upload###########
+from imagekit.forms import ProcessedImageField
+from imagekit.processors import ResizeToFill
+
 class MPTTModelChoiceIterator(forms.models.ModelChoiceIterator):
     def choice(self, obj):
         tree_id = getattr(obj, getattr(self.queryset.model._meta, 'tree_id_atrr', 'tree_id'), 0)
@@ -508,7 +512,10 @@ class MultiPartSignupFormStep2(forms.Form):
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}),initial='US')
     timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
-     
+    avatar1 = ProcessedImageField(spec_id='profile:UserProfile:avatar1',
+                                           processors=[ResizeToFill(100, 50)],
+                                           format='JPEG',
+                                           options={'quality': 60}) 
  
 
 #<<<<<<< HEAD

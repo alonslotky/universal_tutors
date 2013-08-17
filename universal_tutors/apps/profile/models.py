@@ -33,6 +33,7 @@ from mailchimp.chimpy.chimpy import ChimpyException
 from mptt.models import MPTTModel, TreeForeignKey
 
 from easy_thumbnails.fields import ThumbnailerImageField
+from imagekit.models import ProcessedImageField
 
 ### MANAGERS ######################################################
 class StudentManager(models.Manager):
@@ -271,6 +272,10 @@ class UserProfile(BaseModel):
     #check = models.PositiveIntegerField(default=0)
     #photo = ThumbnailerImageField(upload_to='photos',  null=True,blank=True)
     referred_by_friend = models.CharField(verbose_name=_('Referred_by'), max_length=50, null=True, blank=True)
+    
+    avatar_path='/Users/Sid/PycharmProjects/new/evol/universal_tutors/universal_tutors/media/new_avatar'
+    avatar = models.ImageField(verbose_name=_("Profile Pic"), upload_to=avatar_path, blank=True, null=True)
+    avatar1 = ProcessedImageField(verbose_name=_("Profile Pic1"), upload_to=avatar_path, blank=True, null=True)
     
 
     @property

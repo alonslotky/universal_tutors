@@ -173,6 +173,7 @@ INSTALLED_APPS = (
 #    'cms_search',
 #    'apps.cmsplugin_contact',
 #    'sekizai'
+     'imagekit',
 )
 
 # MISC PROJECT SETTINGS
