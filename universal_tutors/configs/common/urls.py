@@ -28,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^', include('apps.profile.urls')),
     url(r'^(?i)faq/', include('apps.faq.urls')),
     url(r'^(?i)classes/', include('apps.classes.urls')),
+    url(r'^followit/', include('followit.urls')),
+    url(r'%s' % settings.ASKBOT_URL, include('askbot.urls')),
 )
 
 # Admin patterns
