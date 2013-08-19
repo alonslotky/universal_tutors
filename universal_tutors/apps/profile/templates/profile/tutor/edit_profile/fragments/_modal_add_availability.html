@@ -1,5 +1,66 @@
 {% load classes_tags %}
+<style>
+.button5 {
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: url("../images/shared/button.jpg") repeat-x top #a7dc32;
+    color: #000;
+    font-weight: normal;
+    border: 1px solid #70ac29;
+    padding: 10px;
+  }
+  
+  .button5:hover {
+    color: #000;
+    background-position: 0 -93px;
+  }
+  
+  .button5,
+  .timer .button5 span,
+  .small.button5,
+  .large.button5,
+  .icon {
+    font-size: 23px;
+    font-size: 2.3rem;
+    font-family: "MyriadProCondensed";
+    text-shadow: 0 1px 0 #d0fb82;
+    color: #000;
+    cursor: pointer;
+  }
+  
+  .large.button5 {
+    padding: 10px;
+    background: url("../images/shared/button-large.jpg") top repeat-x;
+  }
+  .large.button5:hover {
+    background-position: 0 -174px;
+  }
+  
+  .button5 .icon {
+    border: none;
+    padding: 0 25px 0 0;
+    margin: 0;
+    background: none;
+  }
 
+  .button5 .rocket { background: url("../images/shared/sprite.png") no-repeat right -39px; }
+  
+  .button5 .rocketdown { background: url("../images/shared/sprite.png") no-repeat right -66px; }
+  
+  .button5 .thumb-up { background: url("../images/shared/sprite.png") no-repeat right -413px; }
+  
+  .button5 .credits { background: url("../images/shared/sprite.png") no-repeat right -501px; }
+  
+  .button5 .history { background: url("../images/shared/sprite.png") no-repeat right -444px; }
+  
+  .button5 .search { background: url("../images/shared/sprite.png") no-repeat right -473px; }
+  
+  .button5 .down { background: url("../images/shared/sprite.png") no-repeat right -91px; }
+  
+  .large.button5 .rocket { background: url("../images/shared/sprite.png") no-repeat right -38px; }
+
+</style>
 <div id="modal-add-availability" class="reveal-modal message">
 	<h4>Availability</h4>
     <div id="modal-add-availability-loading" class="modal-loading"></div>
@@ -117,7 +178,7 @@
 		</div>
 		<div class="row">&nbsp;</div>
 	  	<div class="row">
-		    <input type="submit" class="small button" value="Add availability">
+		    <input type="submit" class="small button5" value="Add availability">
 		</div>
 	  </form>
       	

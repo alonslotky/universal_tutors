@@ -42,6 +42,10 @@ from django.utils.safestring import mark_safe
 from django.utils.html import escape, conditional_escape
 from apps.profile.fmpttforms import *
 
+###########iamge upload###########
+from imagekit.forms import ProcessedImageField
+from imagekit.processors import ResizeToFill
+
 class MPTTModelChoiceIterator(forms.models.ModelChoiceIterator):
     def choice(self, obj):
         tree_id = getattr(obj, getattr(self.queryset.model._meta, 'tree_id_atrr', 'tree_id'), 0)
@@ -128,16 +132,18 @@ class ProfileForm(forms.ModelForm):
     password  = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password1 = forms.CharField(label=_('New Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
+    currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
 
     class Meta:
         fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'gender', 
-                  'profile_image', 'crb', 'crb_file', 'currency', 'webcam', 'paypal_email',
-                  'notifications_messages', 'notifications_classes', 'notifications_other',)
+                  'profile_image', 'crb', 'crb_file', 'webcam', 'paypal_email',
+                  'notifications_messages', 'notifications_classes', 'notifications_other','zipcode','price_per_hour')
         model = UserProfile
         widgets = {
             'profile_image': forms.FileInput(),
             'country': forms.Select(attrs = {'class': 'stretch'}),
         }
+   
 
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
@@ -151,6 +157,8 @@ class ProfileForm(forms.ModelForm):
         if User.objects.filter(email=email).exclude(id=user_id).count() > 0:
             raise forms.ValidationError(_(u"This email is already registered."))
         return email
+
+        
     
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -276,7 +284,7 @@ class SignupForm(forms.ModelForm):
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
     
     #Adding the zipcode attribute 
-    zipcode = forms.CharField(label=_('zipcode'), min_length = 5, max_length = 10, initial='') 
+    zipcode = forms.CharField(label=_('zipcode'), min_length = 4, max_length = 10, initial='') 
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
@@ -291,8 +299,8 @@ class SignupForm(forms.ModelForm):
     newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional newsletters from Universal Tutors with offers and other news.")
     partners_newsletter = forms.BooleanField(required = False, initial=True, help_text="I don't mind receiving occasional emails from carefully selected partners of Universal Tutors")
     
-    online_tutoring = forms.BooleanField(required = True, initial=True)
-    in_person_tutoring = forms.BooleanField(required = True, initial=True)
+    #online_tutoring = forms.BooleanField(required = True, initial=True)
+    #in_person_tutoring = forms.BooleanField(required = True, initial=True)
         
     def clean_agreement(self):
         agreement = self.cleaned_data.get('agreement', False)
@@ -496,7 +504,7 @@ class MultiPartSignupFormStep2(forms.Form):
     #email = forms.EmailField(label=_('Email'), max_length = 255, initial='', widget=forms.TextInput(attrs={'readonly':'readonly', 'disabled':True}))
     
     #Adding the zipcode attribute 
-    zipcode = forms.CharField(label=_('zipcode'), min_length = 5, max_length = 10, initial='') 
+    zipcode = forms.CharField(label=_('zipcode'), min_length = 4, max_length = 10, initial='') 
     #online_tutoring = forms.BooleanField(required = True, initial=True)
     #in_person_tutoring = forms.BooleanField(required = True, initial=True)
     
@@ -504,26 +512,29 @@ class MultiPartSignupFormStep2(forms.Form):
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}),initial='US')
     timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
-     
+    #avatar1 = ProcessedImageField(spec_id='profile:UserProfile:avatar1',
+    #                                       processors=[ResizeToFill(100, 50)],
+    #                                       format='JPEG',
+    #                                       options={'quality': 60}) 
  
 
 #<<<<<<< HEAD
 #=======
-    image_uploaded = forms.BooleanField(required = False)
+#    image_uploaded = forms.BooleanField(required = False)
     
         
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
-        super(MultiPartSignupFormStep2, self).__init__(*args, **kwargs)
+#    def __init__(self, *args, **kwargs):
+#        self.request = kwargs.pop('request')
+#        super(MultiPartSignupFormStep2, self).__init__(*args, **kwargs)
 
          
-    def clean_image_uploaded(self):
-        session_key = self.request.session.session_key
-        
-        try:
-            image = UploadProfileImage.objects.get(key=session_key).image
-        except UploadProfileImage.DoesNotExist:
-            raise forms.ValidationError(_(u"Please upload a profile picture"))
+#    def clean_image_uploaded(self):
+#        session_key = self.request.session.session_key
+#        
+##        try:
+ #           image = UploadProfileImage.objects.get(key=session_key).image
+ #       except UploadProfileImage.DoesNotExist:
+ #           raise forms.ValidationError(_(u"Please upload a profile picture"))
 
 
     def clean_email(self):
@@ -655,11 +666,14 @@ class MultiPartSignupFormStep4(forms.Form):
         
     price_per_hour = forms.DecimalField(initial=0)
     about = forms.CharField(label=_('Description'), initial='')
+    #about1 = forms.CharField(label=_('Description1'),required = False, initial='')
+    
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
     
     tutoring_type = forms.MultipleChoiceField(label=_('Type of Tutoring*'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1],
                                               help_text = 'We are in the process of adding in-person tutoring as a feature on wizoku. Please tick as many boxes as apply (you can always edit this later) and we will let you know once this feature is up and running')
-    
+    #referred_by_friend = forms.CharField(label=_('Referred_by'),required = False, initial='')
+    #referred_by_friend = forms.CharField(label=_('Referred_by'), initial='')
     
 class MultiPartSignupFormStep5(forms.Form):
     class Meta:
@@ -1138,4 +1152,4 @@ class ParentSocialSignupForm(GenericSocialSignupForm):
 
     #subcat=[None]*len(cat)
     #for x in range(0, len(cat)):
-        #subcat[x]=cat[x].get_children()
+        #subcat[x]=cat[x].get_children()        

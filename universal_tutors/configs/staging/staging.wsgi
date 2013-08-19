@@ -1,4 +1,6 @@
-import os, sys
+import os,sys
+import newrelic.agent
+newrelic.agent.initialize('/home/rawjam/sites/universal_tutors/repository/newrelic.ini','staging')
 
 # put the Django project on sys.path
 sys.path.insert(0,'/home/rawjam/sites/universal_tutors/repository')

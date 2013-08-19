@@ -189,7 +189,9 @@ function isPeriodValid(left, width, fullwidth) {
 	return false;
 }
 
-
+ function showModal1() {
+			         $('#modal-add-availability').foundation('reveal', 'open'); 
+			         $('#modal-add-availability').foundation('reveal', 'close');}
 /*
 $('#student-signup-form').on('submit',function(e){
 	e.preventDefault();

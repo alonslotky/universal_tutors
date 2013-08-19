@@ -167,6 +167,10 @@ urlpatterns += patterns('apps.profile.views.topup',
     url(r'^(?i)withdraw/manual/$', 'withdraw', name = "withdraw"),
 )
 
+#urlpatterns += patterns('apps.profile.views.login',
+#    url(r'^(?i)photo/$','photo'),
+#)
+
 
 
 

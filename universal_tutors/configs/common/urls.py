@@ -8,6 +8,10 @@ from django.views.generic.simple import direct_to_template, redirect_to
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 import os
+####Checking out avatar##########
+#import allauth
+#from  avatar import *
+#import avatar
 
 handler500 = 'apps.common.views.server_error'
 admin.autodiscover()
@@ -24,6 +28,8 @@ urlpatterns = patterns('',
     url(r'^', include('apps.profile.urls')),
     url(r'^(?i)faq/', include('apps.faq.urls')),
     url(r'^(?i)classes/', include('apps.classes.urls')),
+    url(r'^followit/', include('followit.urls')),
+    url(r'%s' % settings.ASKBOT_URL, include('askbot.urls')),
 )
 
 # Admin patterns
@@ -76,4 +82,12 @@ urlpatterns += patterns('',
     (r'^topupcredits/paypal/ipn/universaltutors/', include('paypal.standard.ipn.urls')),
 )
 
+#urlpatterns = patterns('',
+    # ...
+#    (r'^avatar/', include('avatar.urls')),
+#)
+
 urlpatterns += staticfiles_urlpatterns()
+
+
+

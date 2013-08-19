@@ -14,7 +14,7 @@ from django.template.context import RequestContext
 from django.shortcuts import render_to_response
 from django.contrib.sites.models import Site
 from django.shortcuts import render_to_response
-from django.contrib.formtools.wizard.views import SessionWizardView
+from django.contrib.formtools.wizard.views import SessionWizardView,NamedUrlWizardView
 #from django.contrib.formtools.wizard import FormWizard
 from django.contrib.auth.models import User
 
@@ -30,8 +30,11 @@ from apps.classes.models import ClassSubject
 from apps.profile.forms import *
 from apps.core.models import Currency
 from apps.profile.models import WeekAvailability
+from django.http import HttpResponse
 
 import json
+
+#from avatar import *
 
 def show_genres(request):
     return render_to_response("account/genres.html",
@@ -96,6 +99,14 @@ TUTOR_SIGNUP_FORMS = [("step1", forms.MultiPartSignupFormStep1),
          #("step6", forms.MultiPartSignupFormStep6),
          ]
 
+part11 = [("step1", forms.MultiPartSignupFormStep1),]
+part12 = [("step2", forms.MultiPartSignupFormStep2),
+         ("step3", forms.MultiPartSignupFormStep3),
+         ("step4", forms.MultiPartSignupFormStep4),
+         ("step5", forms.MultiPartSignupFormStep5),
+         #("step6", forms.MultiPartSignupFormStep6),
+         ]         
+
 #account/home_tutor_singup.html
 #../apps/core/templates/core/home_new_intg.html
 
@@ -106,8 +117,25 @@ TUTOR_SIGNUP_TEMPLATES = {"step1": "account/home_tutor_signup.html",
              "step5": "account/tutor_signup_step5.html",
              "step6": "account/tutor_signup_step6.html",}
 
+#def photo1(request):
+#    if request.method == 'POST': # If the form has been submitted...
+#        form = avatar.forms.UploadAvatarForm(request.POST) # A form bound to the POST data
+#        if form.is_valid(): # All validation rules pass
+            # Process the data in form.cleaned_data
+            # ...
+#            return HttpResponseRedirect('/thanks/') # Redirect after POST
+#    else:
+#        form = ContactForm() # An unbound form
+
+#    return render(request, 'photo.html', {
+#        'form': form,
+#    })
+
+#def photo(request):
+#    return render_to_response('account/photo.html')
+
 class TutorSignupWizard(SessionWizardView):
-#class TutorSignupWizard(FormWizard):
+#class TutorSignupWizard(NamedUrlWizardView):
     
     def get_form_prefix(self, step=None, form=None):
         return ''
@@ -173,7 +201,8 @@ class TutorSignupWizard(SessionWizardView):
         profile.newsletter = form_data[4].get('newsletter', None)
         profile.partners_newsletter = form_data[4].get('partners_newsletter', None)
         #profile.timezone = form_data[1].get('timezone', 0)
-        
+        profile.referred_by_friend = form_data[3].get('referred_by_friend', 0) 
+
         self.save_genres(form_list, user)
         
         #availability
@@ -231,11 +260,11 @@ class TutorSignupWizard(SessionWizardView):
         success_url = reverse('edit_tutor_profile')
         return complete_signup(self.request, user, success_url)
     
-    def get_form_kwargs(self, step):
-        if "step2" == step:
-            return {"request": self.request}
-        else:
-            return {}
+#    def get_form_kwargs(self, step):
+#        if "step2" == step:
+#            return {"request": self.request}
+#        else:
+#           return {}
     def get_form(self, step=None, data=None, files=None):
         form = super(TutorSignupWizard, self).get_form(step, data, files)
         

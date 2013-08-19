@@ -144,7 +144,7 @@
         
         <div class="four columns photo" id="tutor_signup_photo">
         	<!--<span id="pic1">Maximum size of 500kb</span>-->
-	    	{% if wizard.form.image_uploaded.errors %}<div class="formError">{{ wizard.form.image_uploaded.errors }}</div>{% endif %}
+{% comment %}	    	{% if wizard.form.image_uploaded.errors %}<div class="formError">{{ wizard.form.image_uploaded.errors }}</div>{% endif %} {% endcomment %}
 			<div class="row">
 		  		<img id="id_image_preview" src="{{MEDIA_URL}}{{settings.DEFAULT_PROFILE_IMAGE}}" alt="Profile Picture" style="max-width: 175px; max-height: 175px;">
 	    	</div>

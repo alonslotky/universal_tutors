@@ -125,9 +125,9 @@
 
 <script type="text/javascript">
 	$('#modal-add-availability-loading').hide();
+
 	
-	function add_availability () {
-	  
+	function add_availability () {	  
 			
 		var weekday = parseInt($('#add-availability-weekday').val());
 		var from_hour = parseInt($('#add-availability-from-hour').val());
@@ -176,13 +176,15 @@
 				});
 			});
 		});
+		
 		$('#id_credits_errors').removeClass('hidden');
 	
 	}
-	var add_availability_clear = function(weekday){
-		$('select').val('-1');
+	var add_availability_clear = function(weekday){	
+		$('select').val('-1');	
 		$('#add-availability-weekday').val((!isNaN(weekday))?weekday:'');
-		$('#add-availability-errors').html('');
+		$('#add-availability-errors').html('');		
 		$('#add-availability-errors').addClass('hidden');
+		
 	}
 </script>
