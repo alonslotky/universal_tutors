@@ -1,8 +1,13 @@
 import os, django, urllib,allauth
+import askbot
+import site
 
 # Base paths
 DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
+ASKBOT_ROOT = ASKBOT_ROOT = os.path.abspath(os.path.dirname(askbot.__file__))
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+
+site.addsitedir(os.path.join(ASKBOT_ROOT, 'deps'))
 
 # Debugging
 DEBUG = True
@@ -45,6 +50,7 @@ SECRET_KEY = '%e!odn8_$$x_p2hw#su=h!@k!y57kljl)2h%(qn^t#72rqm8&-e'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
+    'askbot.skins.loaders.Loader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
@@ -56,6 +62,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'askbot.user_messages.context_processors.user_messages',
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.media",
     'django.core.context_processors.static',
@@ -69,12 +76,15 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     #'cms.context_processors.media',
     'sekizai.context_processors.sekizai',
     #'admintools_bootstrap.context_processors.site',
+    'django.core.context_processors.csrf',
+    'askbot.context.application_settings',
 )
 
 MIDDLEWARE_CLASSES = (
     #'apps.common.utils.middleware.AJAXSimpleExceptionResponse',
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -85,6 +95,13 @@ MIDDLEWARE_CLASSES = (
     'minidetector.Middleware',
     #'cms.middleware.page.CurrentPageMiddleware',
     #'cms.middleware.user.CurrentUserMiddleware',
+    'askbot.middleware.anon_user.ConnectToSessionMessagesMiddleware',
+    'askbot.middleware.forum_mode.ForumModeMiddleware',
+    'askbot.middleware.cancel.CancelActionMiddleware',
+    'django.middleware.transaction.TransactionMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'askbot.middleware.view_log.ViewLogMiddleware',
+    'askbot.middleware.spaceless.SpacelessMiddleware',
 )
 
 if DEBUG:
@@ -100,6 +117,7 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     # Base Django Apps
+    'longerusername', #needed for askbot to support email addresses as user names
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -115,6 +133,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'django.contrib.comments',
     'django.contrib.markup',
+    'django.contrib.messages',
     'django.contrib.sitemaps',
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
@@ -173,7 +192,15 @@ INSTALLED_APPS = (
 #    'cms_search',
 #    'apps.cmsplugin_contact',
 #    'sekizai'
-     'imagekit',
+    'compressor',# used to compress media in askbot
+    'askbot',
+    'askbot.deps.livesettings',# live settings (forked) used internally in askbot
+    'keyedcache', #needed for the live settings
+    'django_countries', #used to show country flags and names
+    'djcelery', # celery send emails asynchronously
+    'djkombu', # used with celery
+    'followit',#used to follow users
+    'group_messaging',#not used, but necessary by imports
 )
 
 # MISC PROJECT SETTINGS
@@ -343,6 +370,7 @@ FILEBROWSER_ADMIN_THUMBNAIL = 'fb_thumb'
 FILEBROWSER_IMAGE_MAXBLOCK = 1024*1024
 FILEBROWSER_MAX_UPLOAD_SIZE = 10485760 # 10485760 bytes = about 10megs
 
+# TINYMCE
 TINYMCE_JS_URL = ADMIN_MEDIA_PREFIX + "tinymce/jscripts/tiny_mce/tiny_mce.js"
 TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, 'grappelli/tinymce/jscripts/tiny_mce/')
 
@@ -397,6 +425,42 @@ PARENTS_LIST_ID = '2e1436b5d3'
 BITLY_LOGIN = 'universaltutors'
 BITLY_APIKEY = 'R_87a7cd909769b2eb4aa9d82c9979e3b8'
 
+# ASKBOT
+ASKBOT_ALLOWED_UPLOAD_FILE_TYPES = ('.jpg', '.jpeg', '.gif', '.bmp', '.png', '.tiff')
+ASKBOT_MAX_UPLOAD_FILE_SIZE = 20 * 1024 * 1024 #result in bytes
+ASKBOT_TRANSLATE_URL = False
+ASKBOT_URL = 'askbot/'
+ALLOW_UNICODE_SLUGS = False
+ASKBOT_USE_STACKEXCHANGE_URLS = False
+RECAPTCHA_USE_SSL = True
+ENABLE_HAYSTACK_SEARCH = False
+NOTIFICATION_DELAY_TIME = 60 * 15
+COMPRESS_JS_FILTERS = []
+GROUP_MESSAGING = {
+    'BASE_URL_GETTER_FUNCTION': 'askbot.models.user_get_profile_url',
+    'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}
+}
+JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+ASKBOT_SELF_TEST = False
+ASKBOT_CSS_DEVEL = False
+
+# STATICFILES
+STATICFILES_DIRS = (
+    ('default/media', os.path.join(ASKBOT_ROOT, 'media')),
+)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+# CELERY
+BROKER_TRANSPORT = "djkombu.transport.DatabaseTransport"
+CELERY_ALWAYS_EAGER = True
+
+import djcelery
+djcelery.setup_loader()
 
 # Allow for local (per-user) override
 try:
