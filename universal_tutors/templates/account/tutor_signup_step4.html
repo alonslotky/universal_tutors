@@ -81,7 +81,9 @@
 
     </div>	
     
+
     <div class="row space">	
+    {% comment %}
     	<div class="three columns">
 	          <label>Who referred you</label>
     	</div>	
@@ -91,7 +93,7 @@
 	          <!--<textarea name="referred_by_name" type="text" class="input-text" placeholder="Friends full name">form.referred_by_friend.value</textarea>-->
 	          <input type="text" id="id_zipcode" name="zipcode" value="{{ form.referred_by_friend.value }}" class="input-text stretch" />
     		</div>
- 		
+ 	{% endcomment %}	
     {% include 'account/tutor_signup_navigation.html' %}		
 		
     {% endwith %}

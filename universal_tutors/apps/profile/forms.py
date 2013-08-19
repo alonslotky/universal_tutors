@@ -512,10 +512,10 @@ class MultiPartSignupFormStep2(forms.Form):
     gender = forms.ChoiceField(label=_('Gender'), choices=UserProfile.GENDER_TYPES.get_choices(), widget=forms.Select(attrs={'class': 'stretch'}))
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}),initial='US')
     timezone = forms.ChoiceField(label=_('Timezone'), choices=[(tz, tz) for tz in pytz.all_timezones], widget=forms.Select(attrs={'class': 'stretch'}), initial='US/Eastern')
-    avatar1 = ProcessedImageField(spec_id='profile:UserProfile:avatar1',
-                                           processors=[ResizeToFill(100, 50)],
-                                           format='JPEG',
-                                           options={'quality': 60}) 
+    #avatar1 = ProcessedImageField(spec_id='profile:UserProfile:avatar1',
+    #                                       processors=[ResizeToFill(100, 50)],
+    #                                       format='JPEG',
+    #                                       options={'quality': 60}) 
  
 
 #<<<<<<< HEAD
@@ -673,7 +673,7 @@ class MultiPartSignupFormStep4(forms.Form):
     tutoring_type = forms.MultipleChoiceField(label=_('Type of Tutoring*'), choices=UserProfile.TUTORING_TYPES.get_choices(), widget=forms.CheckboxSelectMultiple, initial=[0,1],
                                               help_text = 'We are in the process of adding in-person tutoring as a feature on wizoku. Please tick as many boxes as apply (you can always edit this later) and we will let you know once this feature is up and running')
     #referred_by_friend = forms.CharField(label=_('Referred_by'),required = False, initial='')
-    referred_by_friend = forms.CharField(label=_('Referred_by'), initial='')
+    #referred_by_friend = forms.CharField(label=_('Referred_by'), initial='')
     
 class MultiPartSignupFormStep5(forms.Form):
     class Meta:
