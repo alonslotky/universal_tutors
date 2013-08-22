@@ -21,7 +21,7 @@ PROJECT_SITE_DOMAIN = 'staging.wizoku.com'
 PROJECT_INFO_EMAIL_ADDRESS = 'info@wizoku.com'
 
 # Caching
-CACHE_BACKEND = 'johnny.backends.memcached://127.0.0.1:11211'
+#CACHE_BACKEND = 'johnny.backends.memcached://127.0.0.1:11211'
 
 # If you want to use Django Debug Toolbar, you need to list your IP address here
 INTERNAL_IPS = ('0.0.0.0')
