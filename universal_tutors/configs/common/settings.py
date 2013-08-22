@@ -88,8 +88,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-#    'johnny.middleware.LocalStoreClearMiddleware',
-#    'johnny.middleware.QueryCacheMiddleware',
+    #'django.core.cache.backends.memcached.MemcachedCache',
+    #'johnny.middleware.LocalStoreClearMiddleware',
+    #'johnny.middleware.QueryCacheMiddleware',
     'pagination.middleware.PaginationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'minidetector.Middleware',
@@ -102,6 +103,7 @@ MIDDLEWARE_CLASSES = (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
     'askbot.middleware.view_log.ViewLogMiddleware',
     'askbot.middleware.spaceless.SpacelessMiddleware',
+    
 )
 
 if DEBUG:
@@ -441,7 +443,7 @@ GROUP_MESSAGING = {
     'BASE_URL_PARAMS': {'section': 'messages', 'sort': 'inbox'}
 }
 JINJA2_EXTENSIONS = ('compressor.contrib.jinja2ext.CompressorExtension',)
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+#ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 ASKBOT_SELF_TEST = False
 ASKBOT_CSS_DEVEL = False
 
