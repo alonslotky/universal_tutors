@@ -1837,7 +1837,10 @@ header .row{
 
 
 .main_image {
-  background: url("../images/rebranding/wizoku_homepage_mai2.jpg") no-repeat top;
+  /*background: url("../images/rebranding/wizoku_homepage_mai2.jpg") no-repeat top;
+  */
+  background: url("../images/rebranding/Home_page_1-for-1.png") no-repeat top;
+  
   width: 1600px;  
   height: 570px;
   
@@ -1845,6 +1848,8 @@ header .row{
   padding:0px;
  
   }
+
+
 
 
 .new_home{
