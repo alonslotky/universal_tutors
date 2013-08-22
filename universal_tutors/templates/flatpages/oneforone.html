@@ -1,0 +1,126 @@
+i{% extends "ui/layouts/base.html" %}
+
+{% load fb_versions common_tags ut_tags %}
+
+{% block title %}Home{% endblock %}
+{% block body_class %}marketing ambassador{% endblock %}
+
+{% block content %}
+	{% get_video student %}
+
+<style>
+#ambassador_mainimg{
+  border:0px;
+ 
+  margin-bottom: 50px;
+}
+
+
+#ambassador_img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border: 0px;
+
+    /*box-shadow: 0 1px 1px #dddddd;*/
+    margin-bottom: 20px;
+  }
+
+.marketing img {
+    border: 1px solid #bfbfbf;
+    -moz-box-shadow: 0 0px 0px #dddddd;
+    -webkit-box-shadow: 0 0px 0px #dddddd;
+    box-shadow: 0 0px 0px #dddddd;
+  }  
+
+.four li{
+  line-height:1.2em;
+}  
+</style>  
+      <section class="blue feature-box"><div class="inner">
+        
+        <h1>1-for-1</h1>
+        
+        <div class="feature-black">
+          <div class="feature-text">
+            <h3>Everyone deserves a great education — help us make it happen</h3>
+          </div>
+        
+          
+      </div></section>
+      
+      <section>
+        <div class="row">
+          <div class="eight columns">
+           <h3>Our Mission</h3>
+            <p class="lead">Tutoring, an industry that is expected to reach $100 billion worldwide by 2017, has always existed for those who have. At Wizoku, we believe that tutoring has the potential to make a huge impact in the lives of those who do not have many of the resources and support that we so often take for granted.</p>
+            <p class="lead">
+To achieve our dreams, we are working with <a href="http://www.roomtoread.org/" target="_blank">Room to Read</a>, an award-winning nonprofit, on an exciting program that will provide education to girls in Africa and Asia. For each hour of tutoring on Wizoku.com, we commit to supporting a girl in Africa or Asia with a day of holistic education.</p>
+          </div>
+        
+          <div class="four columns">
+            <img id="ambassador_mainimg" src="{{STATIC_URL}}images/new_marketing/oneforone.jpeg" alt="Search">
+          </div>
+        </div>
+          </div>
+        </div>
+        
+        <div class="row">
+       
+       
+        
+         </div> 
+        <div class="row">
+          <div class="four columns">
+            
+            <h4>The Facts</h4>
+<p>
+Inadequate education and illiteracy are problems worldwide, particularly for young girls. Of nearly 800 million illiterate people in the world, two-thirds are female. In developing countries, 42% of girls are not enrolled in school. We want to change this vicious cycle that keeps individuals and their communities from reaching their full potential. Educated women break this cycle by living longer, earning more, being healthier, and encouraging their children to go to school.
+</p>          
+</div>
+          
+          <div class="four columns">
+            
+            <h4>Holistic Education</h4>
+<p>This holistic education <a href="http://www.roomtoread.org/page.aspx?pid=284" target="_blank">program</a> has the power to change not only these girls’ lives, but also those of their families. Many girls do not simply need traditional academic skills, but often need the most support in social, cultural, and family issues. By providing mentoring and life skills training, our program will give these girls the best opportunity to succeed and change their lives and the futures of their communities.
+</p>         
+ </div>
+          
+          <div class="four columns">
+           
+            <h4>1-for-1</h4><p>
+            We have big dreams, but a simple plan. Here’s how it works: for every hour of tutoring that takes place on our site, one girl in Africa or Asia will receive one day of free, holistic education. The combination of great tutoring and the possibilities of supporting educating these girls is a unique opportunity that we are very excited about. We are making a commitment to using our tutoring platform to help raise literacy rates, grow communities, and change lives.
+
+          </p>
+          </div>
+        </div>
+      </section>
+     {% if not user.is_authenticated %}
+    <section>
+    <div class="row">
+            <div class="seven columns centered text-center">
+              <h2 class="tight"><span>Ready to join our cause?</span></h2>
+              <!--<a class="large button" href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('1'); $('#signup_user_type').change();"><span class="icon rocket">Create Your Tutor Account</span></a>-->
+              <a class="large button" href="/" ><span class="icon rocket">Create Your Tutor Account</span></a>
+              <p class="faded">If you're a student, <a href="javascript:;" data-reveal-id="modal-signup" onclick="$('#signup_user_type').val('2'); $('#signup_user_type').change();">sign up here</a>.</p>
+            </div>
+      </div>
+    </section>
+    {% endif %}
+      <!--
+      <section>
+        <div class="row">
+          <div class="seven columns centered text-center">
+            <h2 class="tight"><span>Join us Today!</span></h2>
+            <a class="large button" href="/ambassador-application/" >Apply Now!</a>
+
+           
+          </div>
+        </div>
+      </section>-->
+      
+      {% if video %}
+  		{% include "core/fragments/_modal_video.html" %}
+	{% endif %}
+{% endblock %}
+
