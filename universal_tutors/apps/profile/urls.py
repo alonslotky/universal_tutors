@@ -28,6 +28,8 @@ urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)accounts/social/signup/$", 'social_signup', name="socialaccount_signup"),
     url(r'^(?i)accounts/genres/$', 'show_genres',name='show_genres'),
     url(r'^(?i)accounts/tutor5/$', 'show_genres',name='show_genres'),
+    url(r"^(?i)account/signup/student1/$", 'student_signup_simple',  name="student_signup_simple"),
+    
     )
 
 # Front-end profile

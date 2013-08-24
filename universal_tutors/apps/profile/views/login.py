@@ -73,7 +73,7 @@ def successfull_signup(request):
 
 
 def student_signup(request, *args, **kwargs):
-    form = StudentSignupForm
+    form = StudentSignupForm_new
     next_url = reverse('edit_student_profile')
     
     if request.user.is_authenticated():
@@ -89,6 +89,24 @@ def student_signup(request, *args, **kwargs):
     })
     
     return allauth_signup(request, *args, **kwargs)
+
+def student_signup_new(request, *args, **kwargs):
+    form = StudentSignupForm_simple
+    next_url = reverse('edit_student_profile')
+    
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/student-signup_new.html',
+        'extra_ctx': {
+            'class_subjects': ClassSubject.objects.all(),
+        }
+    })
+    
+    return allauth_signup(request, *args, **kwargs)    
 
 from apps.profile import forms
 TUTOR_SIGNUP_FORMS = [("step1", forms.MultiPartSignupFormStep1),
@@ -281,7 +299,8 @@ class TutorSignupWizard(SessionWizardView):
                 form.fields['email'].initial = data.get('email')
 
         return form
-    
+
+
 def tutor_signup(request, *args, **kwargs):
     
     form = TutorSignupForm
@@ -331,6 +350,21 @@ def parent_signup(request, *args, **kwargs):
     })
     
     return allauth_signup(request, *args, **kwargs)
+
+def student_signup_simple(request, *args, **kwargs):
+    form = StudentSignupForm_simple
+    next_url = reverse('edit_student_profile')
+    
+    if request.user.is_authenticated():
+        return http.HttpResponseRedirect(next_url)
+    
+    kwargs.update({
+        'form_class': form,
+        'success_url': next_url,
+        'template_name': 'account/student-signup_new.html',
+    })
+    
+    return allauth_signup(request, *args, **kwargs)    
 
 def allauth_signup(request, **kwargs):
     

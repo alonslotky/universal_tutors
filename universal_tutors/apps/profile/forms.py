@@ -284,7 +284,7 @@ class SignupForm(forms.ModelForm):
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
     
     #Adding the zipcode attribute 
-    zipcode = forms.CharField(label=_('zipcode'), min_length = 4, max_length = 10, initial='') 
+    #zipcode = forms.CharField(label=_('zipcode'), min_length = 4, max_length = 10, initial='') 
     country = forms.ChoiceField(label=_('Country'), choices=COUNTRIES, widget=forms.Select(attrs={'class': 'stretch'}))
     date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
 
@@ -432,7 +432,8 @@ class StudentSignupForm(SignupForm):
         
         return user
 
-
+       
+                
 class Under16SignupForm(StudentSignupForm):
     def save(self, *args, **kwargs):
         user = super(Under16SignupForm, self).save(*args, **kwargs)
@@ -455,6 +456,84 @@ class ParentSignupForm(SignupForm):
         profile.save()
         
         return user
+
+class StudentSignupForm1(SignupForm):
+    def __init__(self, *args, **kwargs):
+        super(StudentSignupForm1, self).__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        user = super(StudentSignupForm1, self).save(*args, **kwargs)
+        profile = user.profile
+        profile.type = profile.TYPES.STUDENT
+        profile.save()
+        
+        return user        
+
+class StudentSignupForm_simple(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'email', )
+        
+    username = forms.SlugField(label=_('Username'), min_length=5, max_length=25, initial='')
+    first_name = forms.CharField(label=_('First name'), max_length = 25, initial='')
+    last_name = forms.CharField(label=_('Last name'), max_length = 25, initial='')
+    email = forms.EmailField(label=_('Email'), max_length = 255, initial='')
+    password1 = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
+    password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput)
+    date_of_birth = forms.DateField(label=_('Date of birth'), initial='')
+            
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username__iexact=username).count() > 0:
+            raise forms.ValidationError(_(u"This username is already used."))
+
+        return username
+    
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError(_(u"This email is already registered."))
+
+        return email
+
+    def clean_password2(self):
+        passwd1 = self.cleaned_data['password1']
+        passwd2 = self.cleaned_data['password2']
+        if passwd1 != passwd2:
+            raise forms.ValidationError(_(u'Passwords should match'))
+
+        return passwd1
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        return cleaned_data
+
+    def save(self, commit=True, request=None):
+            
+        user = super(StudentSignupForm_simple, self).save(commit=False)
+
+        password = self.cleaned_data['password1']
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+        
+        user.is_active = True
+        user.save()
+        
+        profile = user.profile        
+        profile.date_of_birth = self.cleaned_data['date_of_birth']
+        profile.type = profile.TYPES.STUDENT
+        
+        profile.save()
+        
+        
+        #send_email_confirmation(user, request=request)
+        
+        return user
+
+    def __init__(self, *args, **kwargs):
+        super(StudentSignupForm_simple, self).__init__(*args, **kwargs)
 
 class MultiPartSignupFormStep1(forms.Form):
     class Meta:
