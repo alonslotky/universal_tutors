@@ -19,7 +19,7 @@ urlpatterns = patterns('apps.profile.views.login',
 #    (r'^account/signup/tutor2/$', TutorSignupWizard.as_view([MultiPartSignupFormStep1, MultiPartSignupFormStep2, \
 #                                                             MultiPartSignupFormStep3, MultiPartSignupFormStep4, \
 #                                                             MultiPartSignupFormStep5, MultiPartSignupFormStep6])),    
-    url(r"^(?i)account/signup/student/$", 'student_signup',  name="student_signup"),
+    url(r"^(?i)account/signup/student_old/$", 'student_signup_old',  name="student_signup_old"),
     url(r"^(?i)account/signup/parent/$", 'parent_signup',  name="parent_signup"),
     url(r"^(?i)account/signup/$", 'signup',  name="signup"),
     url(r"^(?i)account/signin/$", 'signin', name="login"),
@@ -28,7 +28,7 @@ urlpatterns = patterns('apps.profile.views.login',
     url(r"^(?i)accounts/social/signup/$", 'social_signup', name="socialaccount_signup"),
     url(r'^(?i)accounts/genres/$', 'show_genres',name='show_genres'),
     url(r'^(?i)accounts/tutor5/$', 'show_genres',name='show_genres'),
-    url(r"^(?i)account/signup/student1/$", 'student_signup_simple',  name="student_signup_simple"),
+    url(r"^(?i)account/signup/student/$", 'student_signup',  name="student_signup"),
     
     )
 

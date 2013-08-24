@@ -77,7 +77,7 @@
 		for(i=today_year; i>today_year-100; i--)
 			$('#signup_year').append('<option value="'+ i +'">'+ i +'</option>');
 
-
+		/*
 		var check_over16 = function(year, month, day){
 			var age_date = new Date(year+16, month, day);
 			var today = new Date();
@@ -91,7 +91,7 @@
 				$('#model-signup-under16-container').removeClass('hidden');
 				return false;
 			}
-		}
+		}*/
 
 		$('#modal-signup-form').submit(function(e){
 			e.preventDefault();
@@ -112,7 +112,7 @@
 				$('#signup-user-type-errors').removeClass('hidden');
 				is_valid = false;
 			}
-
+			/*
 			if (str_date == signup_dob) {
 				$('#signup-dob-errors').addClass('hidden');
 				if(!check_over16(year, month-1, day)) {
@@ -121,7 +121,7 @@
 			} else {
 				$('#signup-dob-errors').removeClass('hidden');
 				is_valid = false;
-			}
+			}*/
 
 			if(is_valid) {
 				switch(signup_type) {
