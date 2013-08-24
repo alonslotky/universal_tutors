@@ -13,7 +13,7 @@ cache-forever
 build
 src
 src.bk
-askbot-devel
+
 
 universal_tutors/static/admin
 universal_tutors/static/cms
