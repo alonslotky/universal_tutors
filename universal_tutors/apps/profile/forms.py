@@ -124,8 +124,16 @@ class StudentInterestForm(forms.ModelForm):
         models = StudentInterest
         fields = ('subject', 'system', 'level')
 
+class GenreForm(forms.ModelForm):
+    class Meta:
+        model = Genre
+
 
 class ProfileForm(forms.ModelForm):
+    #def __init__(self, categorycreator,*args, **kwargs):
+    #    super(ProfileForm, self).__init__(*args, **kwargs)
+    #   self.creator=categorycreator
+
     first_name = forms.CharField()
     last_name = forms.CharField()
     account_email = forms.EmailField()
@@ -133,7 +141,121 @@ class ProfileForm(forms.ModelForm):
     password1 = forms.CharField(label=_('New Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
+    #genres_selected = forms.ModelMultipleChoiceField(queryset= Genre.objects.filter(creator=self.creator), widget=forms.CheckboxSelectMultiple, required = False)
+    #self.creator=ProfileForm
+    #genres_selected=forms.ModelChoiceField(queryset=Genre.objects.filter(creator=request.user),required=False,label='Genre')
+    #categoryoption = forms.ModelChoiceField(queryset=Category.objects.filter(creator=self.creator),required=False,label='Category')
+    #categoryoption = forms.ModelChoiceField(queryset=Category.objects.filter(creator=self.creator),required=False,label='Category')
 
+    cat=range(0,Genre.tree.filter(level=0).count())
+    for x in range(0, len(cat)):
+        cat[x]=Genre.tree.filter(level=0)[x]
+
+    subcat=[None]*len(cat)
+    for x in range(0, len(cat)):
+        subcat[x]=cat[x].get_children()
+        
+    genres = forms.ModelMultipleChoiceField(queryset= Genre.objects.all(), widget=forms.CheckboxSelectMultiple, required = False)
+
+    genre_0_0=forms.ModelMultipleChoiceField(queryset=cat[0].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_1_0=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_1_1=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_1_2=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_1_3=forms.ModelMultipleChoiceField(queryset=cat[1].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+
+    genre_2_0=forms.ModelMultipleChoiceField(queryset=cat[2].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_2_1=forms.ModelMultipleChoiceField(queryset=cat[2].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_3_0=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_3_1=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_3_2=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_3_3=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_3_4=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_3_5=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_3_6=forms.ModelMultipleChoiceField(queryset=cat[3].get_children()[6].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    
+    genre_4_0=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_4_1=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_4_2=forms.ModelMultipleChoiceField(queryset=cat[4].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_5_0=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_5_1=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_5_2=forms.ModelMultipleChoiceField(queryset=cat[5].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+        
+
+    genre_6_0=forms.ModelMultipleChoiceField(queryset=cat[6].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_6_1=forms.ModelMultipleChoiceField(queryset=cat[6].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_7_0=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_1=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_2=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_3=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_4=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_5=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_6=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[6].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_7=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[7].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_8=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[8].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_9=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[9].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_10=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[10].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_11=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[11].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_12=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[12].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_13=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_14=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_15=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_16=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[16].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_17=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[17].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_18=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[18].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_19=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[19].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_20=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[20].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_21=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[21].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_22=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[22].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_23=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[23].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_7_24=forms.ModelMultipleChoiceField(queryset=cat[7].get_children()[24].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_8_0=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_8_1=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_8_2=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_8_3=forms.ModelMultipleChoiceField(queryset=cat[8].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_9_0=forms.ModelMultipleChoiceField(queryset=cat[9].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_10_0=forms.ModelMultipleChoiceField(queryset=cat[10].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_11_0=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_11_1=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_11_2=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_11_3=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_11_4=forms.ModelMultipleChoiceField(queryset=cat[11].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_12_0=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_12_1=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_12_2=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_12_3=forms.ModelMultipleChoiceField(queryset=cat[12].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    genre_13_0=forms.ModelMultipleChoiceField(queryset=cat[13].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+
+    genre_14_0=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[0].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_1=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[1].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_2=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[2].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_3=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[3].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_4=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[4].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_5=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[5].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_6=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[6].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_7=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[7].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_8=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[8].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_9=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[9].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_10=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[10].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_11=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[11].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_12=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[12].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_13=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[13].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_14=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[14].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    genre_14_15=forms.ModelMultipleChoiceField(queryset=cat[14].get_children()[15].get_children(),widget=forms.CheckboxSelectMultiple, required=False)
+    
+    
     class Meta:
         fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'gender', 
                   'profile_image', 'crb', 'crb_file', 'webcam', 'paypal_email',
@@ -149,7 +271,7 @@ class ProfileForm(forms.ModelForm):
         super(ProfileForm, self).__init__(*args, **kwargs)
         self.fields['country'].required = True
         # self.fields['webcam'].help_text = 'Users will need atleast a 500kbps internet connection in order to use the classroom functionality'
-
+        #self.creator=categorycreator
 
     def clean_account_email(self):
         email = self.cleaned_data['account_email']
@@ -204,6 +326,8 @@ class ProfileForm(forms.ModelForm):
                 user.set_password(passwd1)
 
         return cleaned_data
+
+
     
 TutorSubjectFormSet = inlineformset_factory(User, TutorSubject, form=TutorSubjectForm)
 TutorQualificationFormSet = inlineformset_factory(User, TutorQualification)
