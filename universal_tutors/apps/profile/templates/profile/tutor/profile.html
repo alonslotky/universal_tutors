@@ -10,7 +10,7 @@
   	{% if owner %}
     <h1>This is the public view of your profile</h1>	
 	{% else %}
-    <h1>Tutor Profile <span>Details on a specific tutor.</span></h1>
+    <h1>Tutor Profile <span>Details on a specific tutor1.</span></h1>
 	{% endif %}
   </div></section>
   
@@ -61,6 +61,11 @@
               {% if profile.get_about %}
               <label>Description</label>
               <p>{{profile.get_about}}</p>
+              {% comment %}
+              {{person.get_full_name}}
+                  {{profile.get_gender_display}}
+                  {{profile.get_genre}}
+              {% endcomment %}    
               {% endif %}
               	
               <label>Qualifications</label>
@@ -91,10 +96,30 @@
             <div class="six columns">
               <table class="stretch">
                 <tr>
-                  <th>Subject</th>
-                  <th>Level</th>
-                  <th>Credits</th>
+
+                  <th>Subjects</th>
+
+                  {% comment %}
+                  {{request.user }}
+                  {{profile.get_full_name}}
+                  {{profile.get_completeness}}
+                  {{profile.get_genre}}
+
+                  {% for genre in profile.get_genre %}
+                  {{ genre }}
+                  {% endfor %}{% endcomment %}
+                  
+                  <!--<th>Level</th>
+                  <th>Credits</th>-->
                 </tr>
+                <tr>
+                {% for  genre in profile.get_genres.all %}
+            
+                  <tr> > {{genre}}</br>
+          
+                {% endfor %} 
+                </tr>  
+                {% comment %}
                 {% for item in subjects %}
                 <tr>
                   <td>{{item.subject}}</td>
@@ -106,14 +131,25 @@
                   <td colspan="3">No subjects</td>
                 </tr>
 				{% endfor %}
+        {% endcomment %}
+        {% for item in profile.genres.all %}
+                <tr>
+                  <td>> {{item}}</td>
+                  </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3">No subjects</td>
+                </tr>
+        {% endfor %}
+
               </table>
             </div>
             {% endwith %}
           </div>
           
           <hr class="inside">
-          
-          <!--<div class="row">
+          <!--
+          <div class="row">
             <div class="six columns phone-two">
               <h2>Reviews</h2>
             </div>
