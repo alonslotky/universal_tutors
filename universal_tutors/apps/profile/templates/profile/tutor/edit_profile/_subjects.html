@@ -10,8 +10,27 @@
 </style>
   <li id="subjectsTab">
     <h2 class="clear">Subjects <span id="tooltip-subjects" class="help-on-title"><!--[?]--></span></h2>
-    <h3>Coming Soon!</h3>
-    <!--<label>Maximum of 12 subjects allowed</label>
+    {% comment %}{{ request.user }}</br>
+    {{ Genre.objects.filter(userprofile__in=request.user) }}
+    {{ request.user.get_profile.genres.all }}
+    {{ request.user.genres_set.all }}
+    {% endcomment %}
+
+    
+    <td>
+    {% for  genre in request.user.get_profile.genres.all %}
+            
+            <tr> > {{genre}}</br>
+        	
+    {% endfor %} 
+    </td>      </br> 	</br></br>
+    {% for profile in user.userprofile_set.all %}
+   		{{ profile.zipcode }}
+	{% endfor %}
+    
+    {% include 'account/genres_form.html' %}
+    {% comment %}
+    <label>Maximum of 12 subjects allowed</label>
 	
 	<input id="id_subjects-TOTAL_FORMS" type="hidden" value="{{subjects.count|add:1}}" name="subjects-TOTAL_FORMS">
 	<input id="id_subjects-INITIAL_FORMS" type="hidden" value="{{subjects.count}}" name="subjects-INITIAL_FORMS">
@@ -124,8 +143,10 @@
 	  {% if no_subjects < 11 %}
 		  <a id="add-subject-link" href="javascript:;">+ add subject</a>
 	  {% endif %}
-  </li>
+  </li>{% endcomment %}
+    
   <script type="text/javascript">
+ 
   	var id_subject = {{no_subjects}} + 1;
   	var credit_value = {{currency.credit_value}};
   	var currency_symbol = '{{currency.symbol}}';
@@ -224,7 +245,7 @@
 			content: 'In order for students to find the tutor best suited to their needs we ask you to be, where appropriate, quite specific about the subjects, levels and curriculums you teach'
 		});
 	});
-</script>-->
+</script>
 {% endwith %}
 {% endwith %}
 {% endwith %}
