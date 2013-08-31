@@ -1,7 +1,7 @@
 {% load classes_tags %}
 
 <div id="modal-book-class" class="reveal-modal message">
-	<h4>Book a class</h4>
+	<h4>Book a class2</h4>
     <div id="modal-book-class-loading" class="modal-loading"></div>
     <div id="modal-book-class-container">
 	  <form id="modal-book-class-form" class="nice">
@@ -37,14 +37,15 @@
 		  </div>	  
 		</div>
 		
+		
 		<div class="row">
 		  <div class="four columns phone-one">        
-		    <label>Subject*</label>
+		    <label>Subject*{% comment %}{{person.get_profile.genres}}{{person.get_full_name}}{% endcomment %}</label>
 		  </div>
 		  <div class="eight columns phone-three">
 			<select id="book-class-subject" name="subject" class="stretch">
 				<option value="0">---------</option>
-				{% for subject in person.subjects.all %}
+				{% for subject in person.get_profile.genres.all %}
 					<option value="{{subject.id}}">{{subject}}</option>
 				{% endfor %}
 			</select>
@@ -177,8 +178,8 @@
 		var start_hour = start_str[0];
 		var start_min = start_str[1];
 		var duration = parseInt($('#book-class-duration').val());
-		var subject = parseInt($('#book-class-subject').val());		
-		var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#book-child').val()){% else %}true{% endif %};
+		/*var subject = parseInt($('#book-class-subject').val());		
+		*/var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#book-child').val()){% else %}true{% endif %};
 		
 		if(subject && duration && child) {
 			var book_time = new Date(book_start_date.getTime());

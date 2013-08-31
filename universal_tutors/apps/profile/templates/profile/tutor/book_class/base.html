@@ -44,7 +44,28 @@
             {% with person.subjects.all as subjects %}
             <div class="six columns">
               <table class="stretch">
+                 <tr>
+
+                  <th>Subjects</th>
+
+                  
+                  
+                  <!--<th>Level</th>
+                  <th>Credits</th>-->
+                </tr>
                 <tr>
+                
+        {% for item in profile.genres.all %}
+                <tr>
+                  <td>> {{item}}</td>
+                  </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3">No subjects</td>
+                </tr>
+        {% endfor %}
+
+                <!--<tr>
                   <th>Subject</th>
                   <th>Level</th>
                   <th>Credits</th>
@@ -60,7 +81,7 @@
                   <td>No subjects</td>
                   <td></td>
                   <td></td>
-                </tr>
+                </tr>-->
 				{% endfor %}
               </table>
             </div>
