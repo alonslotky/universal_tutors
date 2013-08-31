@@ -33,15 +33,15 @@ def approve_item(request, tutor_id, type, approve):
         profile.video_approved = bool(approve)
     if type == 'qualifications':
         profile.qualification_documents_approved = bool(approve)
-    if type == 'crb':
-        if approve:
-            date = request.GET.get('crb_date', '').split('-')
-            try:
-                profile.crb_expiry_date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
-            except:
-                return http.HttpResponse('approved' if profile.crb_checked else 'not approved')
-        else:
-            profile.crb_expiry_date = None
+    #if type == 'crb':
+    #    if approve:
+    #        date = request.GET.get('crb_date', '').split('-')
+    #        try:
+    #            profile.crb_expiry_date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+    #        except:
+    #            return http.HttpResponse('approved' if profile.crb_checked else 'not approved')
+    #    else:
+    #        profile.crb_expiry_date = None
     
     profile.save()
     
