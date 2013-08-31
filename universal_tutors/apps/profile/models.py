@@ -818,7 +818,7 @@ class UserProfile(BaseModel):
         no_items = 4.0
         if self.type == self.TYPES.TUTOR:
             no_items += 1 if self.video else 0
-            no_items += 1 if self.crb else 0
+            #no_items += 1 if self.crb else 0
             no_items += 1 if user.subjects.count() else 0
             no_items += 1 if user.qualifications.count() else 0
             no_items += 1 if user.week_availability else 0
@@ -980,6 +980,9 @@ class UserProfile(BaseModel):
         except DiscountUser.DoesNotExist:
             return None
 
+    def get_genre(self):
+        subjects2 = self.user.profile.genres.all()
+        return subjects2        
 
 class TutorProfile(UserProfile):
     objects = TutorProfileManager()
