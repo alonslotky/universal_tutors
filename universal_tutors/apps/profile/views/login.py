@@ -203,7 +203,8 @@ class TutorSignupWizard(SessionWizardView):
         #profile.timezone = form_data[1].get('timezone', 0)
         profile.referred_by_friend = form_data[3].get('referred_by_friend', 0) 
 
-        self.save_genres(form_list, user)
+        user.profile.genres = Genre.objects.filter(id__in = [int(id) for id in form_list[2].data.getlist('genres')])
+        #self.save_genres(form_list, user)
         
         #availability
         for key, val in availability_periods.items():
