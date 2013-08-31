@@ -114,7 +114,17 @@ def edit_tutor_profile(request):
         success = True
         
         if form.is_valid():
+            #user.profile.genres = Genre.objects.filter(id__in = [int(id) for id in form.data.getlist('genres')])
+            obj = Genre.objects.filter(id__in = [int(id) for id in form.data.getlist('genres')])
+            #user.profile.genres.add(obj)
+            for x in obj:
+                user.profile.genres.add(x)
+
+            #user.profile.genres.add(Genre.objects.filter(id__in = [int(id) for id in form.data.getlist('genres')]))
+            #user.profile.genres.add(Genre.objects.filter(id__in = [int(id) for id in form.data.getlist('genres')]))
+            
             form.save()
+
             profile.update_tutor_information(form)
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
 
@@ -312,7 +322,7 @@ def edit_student_profile(request):
             form.save()
             profile.update_tutor_information(form)
             request.session['django_timezone'] = pytz.timezone(profile.timezone)
-
+            
             try:
                 profile.profile_image = UploadProfileImage.objects.get(key=request.session.session_key).image
                 profile.save()
