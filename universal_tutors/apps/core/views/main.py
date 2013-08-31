@@ -76,7 +76,7 @@ def search(request):
     
     results_per_page = request.GET.get('results_per_page', 10)
     
-    tutors = Tutor.objects.select_related()    
+    tutors = TutorList.objects.select_related()    
     
     today = datetime.date.today()
     
@@ -92,7 +92,7 @@ def search(request):
             words = query.split()
             for word in words:
                 tutors = tutors.filter(Q(subjects__subject__subject__icontains=word) | Q(subjects__level__level__icontains=word))
-
+                
     if system:
         tutors = tutors.filter(subjects__system__id = system)
 
