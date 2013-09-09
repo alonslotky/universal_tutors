@@ -1,5 +1,11 @@
 {% extends "ui/layouts/base.html" %}
 
+{% block extrahead %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+    {% include 'autocomplete_light/static.html' %}
+    {% include 'autocomplete_light/widget.html' %}
+{% endblock %}
+
 {% load fb_versions common_tags tutor_tags pagination_tags %}
 
 {% block title %}Search{% endblock %}
@@ -21,6 +27,7 @@
 		
 		      <section class="row clear">
 			    <form method="get" action="{% url search %}" class="nice">
+		        {% csrf_token %}
 		        <div class="twelve columns">
 		          <div class="row">
 		              <div class="four columns">
@@ -30,12 +37,7 @@
 		                    <label>Subject</label>
 		                  </div>
 		                  <div class="nine columns">
-		                    <select id="id_subject" class="stretch" name="subject">
-		                      <option value="">Any subject</option>
-		                      {% for subject in subjects %}
-		                      	 <option value="{{subject.id}}">{{subject}}</option>
-		                      {% endfor %}
-		                    </select>
+		                    {{form.subject}}
 		                  </div>
 		                </div>
 		
@@ -53,48 +55,8 @@
 			                 </div>
 		                  </div>
 		                </div>
-		                
-		              </div>
-		              
-		              <div class="four columns">
-		                
-		                <div class="row space">
-		                  <div class="three columns">
-		                    <label>System</label>
-		                  </div>
-		                  <div class="nine columns">
-		                    <select id="id_system" class="stretch" name="system">
-		                      <option value="">Any educational system</option>
-	                      	  {% for system in systems %}
-		                      <option value="{{system.id}}">{{system}}</option>	                      
-		                      {% endfor %}
-		                    </select>
-		                  </div>
-		                </div>
-		                
-		                <div class="row">
-		                  <div class="three columns">
-		                    <label>Level</label>
-		                  </div>
-		                  <div class="nine columns">
-		                    <select id="id_level" class="stretch" name="level">
-		                      <option value="">Any level</option>
-		                      {% if selected_system %}
-			                      {% for level in selected_system.levels.all %}
-				                      <option value="{{level.id}}">{{level}}</option>
-			                      {% endfor %}
-		                      {% else %}
-			                      <option disabled="disabled">Select educational system first</option>
-			                  {% endif %}
-		                    </select>
-		                  </div>
-		                </div>
-		
-		              </div>
-		              
-		              <div class="four columns">
-		              
-		                <div class="row space">
+		              	
+		              	<div class="row space">
 		                  <div class="three columns">
 		                    <label>Availability</label>
 		                  </div>
@@ -145,34 +107,19 @@
 		                  </div>
 		                </div>
 		
-		                <div class="row">
-		                  <div class="four columns">
-		                    <label>CRB checked</label>
-		                  </div>
-		                  {% if user_profile.type == user_profile.TYPES.STUDENT or user_profile.type == user_profile.TYPES.UNDER16 %}
-			                  <div class="two columns">
-			                    <input id="id_crb" name="crb" type="checkbox" />
-			                  </div>
-			                  <div class="four columns">
-			                    <label>Favorite tutor</label>
-			                  </div>
-			                  <div class="two columns">
-			                    <input id="id_favorite" name="favorite" type="checkbox" />
-			                  </div>
-						  {% else %}
-			                  <div class="eight columns">
-			                    <input id="id_crb" name="crb" type="checkbox" />
-			                  </div>						  
-		                  {% endif %}
-		                </div>
-		                
 		              </div>
+		  
 		              
-		
 		          </div>
-		            <div class="button" style="float: right;"><input type="submit" class="icon search" value="Search"></div>
+		              
+		              
+		          <div class="button" style="float: right;"><input type="submit" class="icon search" value="Search"></div>
 		        </div>
 		      </form>
+		      
+		      <script src="{{ STATIC_URL }}jquery.js" type="text/javascript"></script>
+        		{% include 'autocomplete_light/static.html' %}
+		      
 		      </section>
 		      
 		      <hr class="big">
@@ -337,6 +284,10 @@
 		
 		
 		<script>
+			//$('#id_subject').bind('selectChoice', function(e, choice, autocomplete) {
+  	 		//	 window.location.href = choice.attr('href');
+			//});
+			
 			$(document).ready(function(){
 			  	$('select#id_system').change(function(){
 			  		var value = $(this).val();

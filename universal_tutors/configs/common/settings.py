@@ -203,6 +203,7 @@ INSTALLED_APPS = (
     'djkombu', # used with celery
     'followit',#used to follow users
     'group_messaging',#not used, but necessary by imports
+    'autocomplete_light',
 )
 
 # MISC PROJECT SETTINGS

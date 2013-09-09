@@ -15,6 +15,7 @@ from apps.classes.models import *
 from apps.core.models import Video, Currency
 from apps.core.utils import *
 from apps.core.views.xls import *
+from apps.core.forms import SearchForm
 
 from paypal.standard.forms import PayPalPaymentsForm
 
@@ -48,16 +49,13 @@ def search(request):
     user = request.user
     tutors = None
     
+    form = SearchForm(request.GET)
+    
     subjects = set()
-    levels = set()
     
     query = request.GET.get('text', '')
     what = request.GET.get('what', None)
     
-    system = request.GET.get('system', '')
-    subject = request.GET.get('subject', '')
-    level = request.GET.get('level', '')
-
     try:
         price_from = int(request.GET.get('price-from', 0))
     except ValueError:
@@ -70,41 +68,28 @@ def search(request):
     
     day = int(request.GET.get('day', -1))
     time = int(request.GET.get('time', -1))
-    crb = request.GET.get('crb', False)
     sort = request.GET.get('sort', 'price')
-    favorite = request.GET.get('favorite', False)
     
     results_per_page = request.GET.get('results_per_page', 10)
     
-    tutors = TutorList.objects.select_related()    
+    tutors = Tutor.objects.select_related()    
     
     today = datetime.date.today()
     
-    if crb:
-        tutors = tutors.filter(profile__crb_expiry_date__gte=today)
+
     
-    if query:
-        if what == 'tutor':
-            words = query.split()
-            for word in words:
-                tutors = tutors.filter(Q(first_name__icontains=word) | Q(last_name__icontains=word) | Q(username__icontains=word))
-        elif what == 'subject':
-            words = query.split()
-            for word in words:
-                tutors = tutors.filter(Q(subjects__subject__subject__icontains=word) | Q(subjects__level__level__icontains=word))
-                
-    if system:
-        tutors = tutors.filter(subjects__system__id = system)
-
-    if subject:
-        tutors = tutors.filter(subjects__subject__id = subject)
-
-    if level:
-        tutors = tutors.filter(subjects__level__id = level)
-
-    if favorite and user.is_authenticated():
-        tutors = tutors.filter(profile__favorite = user)
-    
+    if what == 'tutor':
+        words = query.split()
+        for word in words:
+            tutors = tutors.filter(Q(first_name__icontains=word) | Q(last_name__icontains=word) | Q(username__icontains=word))
+    else:
+        if form.is_valid():
+            genres = list(form.cleaned_data['subject'])
+            #get the descendant of all the genres that were searched in a flat list
+            map(genres.extend, [genre.get_descendants() for genre in form.cleaned_data['subject']])
+            tutors = tutors.filter(profile__genres__in = genres)
+                #tutors = tutors.filter(Q(subjects__subject__subject__icontains=word) | Q(subjects__level__level__icontains=word))
+            
     if price_from:
         tutors = tutors.filter(Q(subjects__credits__gte=price_from))
 
@@ -137,19 +122,9 @@ def search(request):
     elif sort == 'classes':
         tutors = tutors.distinct().order_by('-profile__classes_given')
     
-    if system:
-        try:
-            selected_system = EducationalSystem.objects.get(id = system)
-        except EducationalSystem.DoesNotExist:
-            selected_system = None
-    else:
-        selected_system = None
-          
     return { 
-        'systems': EducationalSystem.objects.all(),
+        'form': form,
         'subjects': ClassSubject.objects.all(),
-        'levels': ClassLevel.objects.all(),
-        'selected_system': selected_system,
         'results_per_page': results_per_page,
         'user': user,
         'tutors': tutors.distinct(),

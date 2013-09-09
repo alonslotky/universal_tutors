@@ -30,15 +30,14 @@ urlpatterns = patterns('',
     url(r'^(?i)classes/', include('apps.classes.urls')),
     url(r'^followit/', include('followit.urls')),
     url(r'%s' % settings.ASKBOT_URL, include('askbot.urls')),
-    url(r'^avatar/', include('avatar.urls')),
 )
 
 # Admin patterns
 urlpatterns += patterns('',
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-	url(r'^admin/', include(admin.site.urls)),
-	url(r'^admin_tools/', include('admin_tools.urls')),
-	url(r'^grappelli/', include('grappelli.urls')),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin_tools/', include('admin_tools.urls')),
+    url(r'^grappelli/', include('grappelli.urls')),
 )
 
 try:
@@ -55,9 +54,9 @@ urlpatterns += patterns('',
     (r'^favicon\.ico$', redirect_to, {'url': '/static/img/favicon.ico'}),
     (r'^apple\-touch\-icon\.png$', redirect_to, {'url': '/static/img/apple-touch-icon.png'}),
     (r'^robots\.txt$', redirect_to, {'url': '/static/robots.txt'}),
-	(r'^tinymce/', include('tinymce.urls')),
-	(r'^jsi18n/(?P<packages>\S+?)/$', 'django.views.i18n.javascript_catalog'),
-	(r'^jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages':'django.conf'}),
+    (r'^tinymce/', include('tinymce.urls')),
+    (r'^jsi18n/(?P<packages>\S+?)/$', 'django.views.i18n.javascript_catalog'),
+    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', {'packages':'django.conf'}),
 )
 
 if settings.DEBUG:
@@ -76,6 +75,7 @@ urlpatterns += patterns('',
     url(r'^accounts/social/connections/$', redirect_to, {'url': '/dashboard/edit_profile/'}),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^comments/', include('django.contrib.comments.urls')),
+    url(r'autocomplete/', include('autocomplete_light.urls')),
 )
 
 # PAYPAL
@@ -89,6 +89,5 @@ urlpatterns += patterns('',
 #)
 
 urlpatterns += staticfiles_urlpatterns()
-
 
 
