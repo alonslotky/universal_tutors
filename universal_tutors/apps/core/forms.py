@@ -3,4 +3,4 @@ from autocomplete_light import MultipleChoiceWidget,ChoiceWidget, TextWidget
 from apps.profile.models import Genre
 
 class SearchForm(forms.Form):
-    subject = forms.ModelMultipleChoiceField(Genre.objects.all(), widget=MultipleChoiceWidget('GenreAutocomplete'))
+    subject = forms.ModelMultipleChoiceField(Genre.objects.exclude(level = 0), widget=MultipleChoiceWidget('GenreAutocomplete'))
