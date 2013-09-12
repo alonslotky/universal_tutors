@@ -9,6 +9,8 @@ from django.views.generic.simple import direct_to_template
 import os
 import views
 
+import autocomplete_light
+autocomplete_light.autodiscover()
 admin.autodiscover()
 
 # AJAX Helper patterns
