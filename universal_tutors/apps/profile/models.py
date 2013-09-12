@@ -401,7 +401,12 @@ class UserProfile(BaseModel):
             super(UserProfile, self).save(*args, **kwargs)
             self.send_notification(self.NOTIFICATIONS_TYPES.ACTIVATED, {})
 
-        self.__update_location()
+        try:
+            self.__update_location()
+        except e:
+            #if we had a logger?
+            print e
+            print 'cant update location'
 
     def delete(self):
         try:
