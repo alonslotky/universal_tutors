@@ -216,8 +216,9 @@ class UserProfile(BaseModel):
     type = models.PositiveSmallIntegerField(choices=TYPES.get_choices(), default=TYPES.NONE)
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
-    currency = models.ForeignKey(Currency, null=True, blank=True)
+    currency = models.ForeignKey(Currency, default = 3) #default is USD
     price_per_hour = models.FloatField(default=-1)
+    #price_per_hour_usd = models.FloatField(default=-1)
     
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)
     other_referral = models.CharField(max_length=200, null=True, blank=True)
@@ -983,7 +984,10 @@ class UserProfile(BaseModel):
     def get_genre(self):
         subjects2 = self.user.profile.genres.all()
         return subjects2        
-
+    
+    def get_price_per_hour_usd(self):
+        return '%.2f' %(self.price_per_hour * self.currency.value)
+    
 class TutorProfile(UserProfile):
     objects = TutorProfileManager()
 

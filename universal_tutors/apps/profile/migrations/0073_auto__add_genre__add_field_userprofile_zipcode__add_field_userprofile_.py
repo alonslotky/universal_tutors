@@ -8,32 +8,31 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Removing M2M table for field genres on 'UserProfile'
-        db.delete_table(db.shorten_name('profile_userprofile_genre'))
+        #
 
-        # Adding M2M table for field genre on 'UserProfile'
-        m2m_table_name = db.shorten_name('profile_userprofile_genres')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('userprofile', models.ForeignKey(orm['profile.userprofile'], null=False)),
-            ('genre', models.ForeignKey(orm['profile.genre'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['userprofile_id', 'genre_id'])
+        # Changing field 'UserProfile.currency'
+        db.alter_column('profile_userprofile', 'currency_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Currency']))
 
-
+       
     def backwards(self, orm):
-        # Adding M2M table for field genres on 'UserProfile'
-        m2m_table_name = db.shorten_name('profile_userprofile_genres')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('userprofile', models.ForeignKey(orm['profile.userprofile'], null=False)),
-            ('genre', models.ForeignKey(orm['profile.genre'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['userprofile_id', 'genre_id'])
+        # Deleting model 'Genre'
+        db.delete_table('profile_genre')
 
-        # Removing M2M table for field genre on 'UserProfile'
-        db.delete_table(db.shorten_name('profile_userprofile_genre'))
+        # Deleting field 'UserProfile.zipcode'
+        db.delete_column('profile_userprofile', 'zipcode')
 
+        # Deleting field 'UserProfile.price_per_hour'
+        db.delete_column('profile_userprofile', 'price_per_hour')
+
+        # Removing M2M table for field genres on 'UserProfile'
+        db.delete_table(db.shorten_name('profile_userprofile_genres'))
+
+
+        # Changing field 'UserProfile.currency'
+        db.alter_column('profile_userprofile', 'currency_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Currency'], null=True))
+
+        # Changing field 'UserProfile.about'
+        db.alter_column('profile_userprofile', 'about', self.gf('django.db.models.fields.CharField')(max_length=500, null=True))
 
     models = {
         'auth.group': {
@@ -51,19 +50,52 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
+            'about': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'avatar_type': ('django.db.models.fields.CharField', [], {'default': "'n'", 'max_length': '1'}),
+            'bronze': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'consecutive_days_visit_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'country': ('django_countries.fields.CountryField', [], {'max_length': '2', 'blank': 'True'}),
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'date_of_birth': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
+            'display_tag_filter_strategy': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
+            'email_isvalid': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'email_key': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True'}),
+            'email_signature': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'email_tag_filter_strategy': ('django.db.models.fields.SmallIntegerField', [], {'default': '1'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'gold': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'gravatar': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'ignored_tags': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'interesting_tags': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'is_fake': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'languages': ('django.db.models.fields.CharField', [], {'default': "'en-GB'", 'max_length': '128'}),
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
+            'last_seen': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'location': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'new_response_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'questions_per_page': ('django.db.models.fields.SmallIntegerField', [], {'default': '10'}),
+            'real_name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
+            'reputation': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
+            'seen_response_count': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'show_country': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'show_marked_tags': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
+            'silver': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'social_sharing_mode': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'status': ('django.db.models.fields.CharField', [], {'default': "'w'", 'max_length': '2'}),
+            'subscribed_tags': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'twitter_access_token': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '256'}),
+            'twitter_handle': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '32'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
+            'website': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
         'classes.class': {
             'Meta': {'ordering': "('status', 'date')", 'object_name': 'Class'},
@@ -122,7 +154,8 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '25'}),
             'symbol': ('django.db.models.fields.CharField', [], {'max_length': '3'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'value': ('django.db.models.fields.FloatField', [], {})
+            'value': ('django.db.models.fields.FloatField', [], {}),
+            'value_date': ('django.db.models.fields.DateField', [], {})
         },
         'core.discount': {
             'Meta': {'object_name': 'Discount'},
@@ -304,7 +337,7 @@ class Migration(SchemaMigration):
         },
         'profile.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
-            'about': ('django.db.models.fields.CharField', [], {'max_length': '500', 'null': 'True', 'blank': 'True'}),
+            'about': ('django.db.models.fields.CharField', [], {'max_length': '2500', 'null': 'True', 'blank': 'True'}),
             'about_approved': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'activated': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'activation_date': ('django.db.models.fields.DateTimeField', [], {'default': 'None', 'null': 'True', 'blank': 'True'}),
@@ -320,12 +353,12 @@ class Migration(SchemaMigration):
             'crb_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'credit': ('django.db.models.fields.FloatField', [], {'default': '0'}),
-            'currency': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Currency']", 'null': 'True', 'blank': 'True'}),
+            'currency': ('django.db.models.fields.related.ForeignKey', [], {'default': '3', 'to': "orm['core.Currency']"}),
             'date_of_birth': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'favorite': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'favorites'", 'null': 'True', 'symmetrical': 'False', 'to': "orm['auth.User']"}),
             'featured': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'gender': ('django.db.models.fields.PositiveSmallIntegerField', [], {'default': '0'}),
-            'genre': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['profile.Genre']", 'symmetrical': 'False'}),
+            'genres': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['profile.Genre']", 'symmetrical': 'False'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'income': ('django.db.models.fields.FloatField', [], {'default': '0'}),
             'income_without_commission': ('django.db.models.fields.FloatField', [], {'default': '0'}),
@@ -360,7 +393,7 @@ class Migration(SchemaMigration):
             'video': ('django.db.models.fields.CharField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'video_approved': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'webcam': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'zipcode': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'})
+            'zipcode': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True', 'blank': 'True'})
         },
         'profile.weekavailability': {
             'Meta': {'object_name': 'WeekAvailability'},

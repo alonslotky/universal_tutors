@@ -22,7 +22,8 @@ class Currency(BaseModel):
     acronym = models.CharField(max_length=3, help_text='Example: GBP')
     name = models.CharField(max_length=25, help_text='Example: British pound')
     symbol = models.CharField(max_length=3, help_text='Example: £')
-    value = models.FloatField(help_text='One to GBP')
+    value = models.FloatField(help_text='One to Dollar')
+    #value_date = models.DateField()
     manual = models.BooleanField(default=False)
 
     def __unicode__(self):

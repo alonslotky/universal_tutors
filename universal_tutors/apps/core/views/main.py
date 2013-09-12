@@ -1,7 +1,7 @@
 from django import http
 from django.conf import settings
 from django.http import  HttpResponseServerError
-from django.db.models import Q, Sum, Max
+from django.db.models import Q, Sum, Max, F
 from django.template import RequestContext, Context, loader
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
@@ -57,14 +57,14 @@ def search(request):
     what = request.GET.get('what', None)
     
     try:
-        price_from = int(request.GET.get('price-from', 0))
+        price_from_usd = int(request.GET.get('price-from', 0))
     except ValueError:
-        price_from = 0
+        price_from_usd = 0
         
     try:
-        price_to = int(request.GET.get('price-to', 0))
+        price_to_usd = int(request.GET.get('price-to', 0))
     except ValueError:
-        price_to = 0
+        price_to_usd = 0
     
     day = int(request.GET.get('day', -1))
     time = int(request.GET.get('time', -1))
@@ -75,8 +75,6 @@ def search(request):
     tutors = Tutor.objects.select_related()    
     
     today = datetime.date.today()
-    
-
     
     if what == 'tutor':
         words = query.split()
@@ -90,11 +88,15 @@ def search(request):
             tutors = tutors.filter(profile__genres__in = genres)
                 #tutors = tutors.filter(Q(subjects__subject__subject__icontains=word) | Q(subjects__level__level__icontains=word))
             
-    if price_from:
-        tutors = tutors.filter(Q(subjects__credits__gte=price_from))
-
-    if price_to:
-        tutors = tutors.filter(Q(subjects__credits__lte=price_to))
+    #TODO: update currency value according to TODAY
+    
+    if price_from_usd:
+        #price_per_hour >== price_from_usd / currency__value
+        tutors = tutors.filter(profile__price_per_hour__gte = price_from_usd / F('profile__currency__value'))
+        
+    if price_to_usd:
+        #0 < price_per_hour <= price_to_usd / currency__value
+        tutors = tutors.filter(profile__price_per_hour__lte = price_to_usd / F('profile__currency__value')).filter(profile__price_per_hour__gte = 0.0)
     
     if tutors and (day>=0 or time>=0):
         date = datetime.datetime.combine(first_day_of_week(datetime.datetime.now()).date(), datetime.time(time if time>0 else 0, 0))
@@ -114,9 +116,17 @@ def search(request):
         
 
         tutors = tutors.filter(reduce(operator.or_, filtered_tutors))
-
+    
+    
     if sort == 'price':
-        tutors = tutors.annotate(price = Max('subjects__credits')).order_by('price')
+        #These lines dont work cause django sucks?
+        #select = 'profile_userprofile.price_per_hour * core_currency.value'
+        #tutors = tutors.extra(select={'_price_per_hour_usd': select}, tables = ['core_currency']).distinct()
+        
+        #so instead, sort in python?
+        tutors.order_by('_price_per_hour_usd')
+        tutors = list(tutors)
+        tutors.sort(key=lambda tutor: tutor.profile.get_price_per_hour_usd())
     elif sort == 'rating':
         tutors = tutors.distinct().order_by('-profile__avg_rate')
     elif sort == 'classes':
@@ -127,7 +137,7 @@ def search(request):
         'subjects': ClassSubject.objects.all(),
         'results_per_page': results_per_page,
         'user': user,
-        'tutors': tutors.distinct(),
+        'tutors': tutors,
         'currencies': Currency.objects.all(),
     }
 

@@ -165,7 +165,7 @@
 			          <div class="three columns">
 			            <h3 class="title"><a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a></h3>
 			            <p>
-			            	<span class="credits">{% if tutor_profile.min_credits != tutor_profile.max_credits %}{{tutor_profile.min_credits}}-{{tutor_profile.max_credits}}{% else %}{{tutor_profile.max_credits}}{% endif %}</span><br/>
+			            	<span class="credits">${{tutor_profile.get_price_per_hour_usd}}</span><br/>
 			            	{% if tutor_profile.webcam %}
 				            	<span class="tutor-information">
 				            		<a title="Webcam" class="no-hover"><i class="icon-videocam"></i></a>
@@ -384,13 +384,7 @@
 			$(window).ready(function(){
 				$('#tooltip-price').{% if request.mobile %}clickover{% else %}popover{% endif %}({
 					title: 'Price',
-					content: 'prices throughout the site are based on a credit system. 1 credit is equal to 1 pound Sterling. '+
-					         'If you have a EUR or USD account then a credit’s value will change over time, 1 credit is currently equivalent to: <br/>' +
-							 {% for currency in currencies %}
-							 {% if currency.acronym != 'GBP' %}
-							 '- {{currency.acronym}}: {{currency.symbol}}{{currency.credit_value|floatformat:2}}{% if not forloop.last %}<br/>'+{% else %}'{% endif %}
-							 {% endif %}
-							 {% endfor %}
+					content: 'in USD Dollars'
 				});
 			});
 		</script>

@@ -42,6 +42,7 @@
     <div class="ten columns">
       <h2>{{person.get_full_name}}</h2>
       <h4>{{profile.date_of_birth|age}}, {{profile.get_gender_display}}</h4>
+    	<h5><span class="credits">${{profile.get_price_per_hour_usd}}</span><br/></h5>
     	{% if profile.webcam %}
         	<span class="tutor-information">
         		<a title="Webcam" class="no-hover"><i class="icon-videocam"></i></a>
