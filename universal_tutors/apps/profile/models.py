@@ -403,7 +403,7 @@ class UserProfile(BaseModel):
 
         try:
             self.__update_location()
-        except e:
+        except Exception, e:
             #if we had a logger?
             print e
             print 'cant update location'
