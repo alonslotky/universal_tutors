@@ -85,8 +85,10 @@ def search(request):
             genres = list(form.cleaned_data['subject'])
             #get the descendant of all the genres that were searched in a flat list
             map(genres.extend, [genre.get_descendants() for genre in form.cleaned_data['subject']])
-            tutors = tutors.filter(profile__genres__in = genres)
-                #tutors = tutors.filter(Q(subjects__subject__subject__icontains=word) | Q(subjects__level__level__icontains=word))
+            profiles = set()
+            for genre in genres: #TODO: is there a more efficient way to do this?
+                profiles.update(genre.userprofile_set.all())
+            tutors = tutors.filter(profile__in = profiles)
             
     #TODO: update currency value according to TODAY
     
@@ -138,6 +140,7 @@ def search(request):
         'results_per_page': results_per_page,
         'user': user,
         'tutors': tutors,
+        'tutors_count': len(tutors),
         'currencies': Currency.objects.all(),
     }
 
