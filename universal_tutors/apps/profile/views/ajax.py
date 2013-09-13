@@ -555,7 +555,7 @@ def book_class(request, tutor_id):
     if request.method != 'POST' or profile.type == profile.TYPES.TUTOR:
         raise http.Http404()
     
-    subject_id = request.POST.get('subject', 0)
+    #subject_id = request.POST.get('subject', 0)
     date = request.POST.get('date', '')
     start = request.POST.get('start', '')
     duration = int(request.POST.get('duration', 0))
@@ -582,10 +582,10 @@ def book_class(request, tutor_id):
     except User.DoesNotExist:
         raise http.Http404()
 
-    try:
-        subject = tutor.subjects.get(id=subject_id)
-    except TutorSubject.DoesNotExist:
-        raise http.Http404()
+    #try:
+    #    subject = tutor.subjects.get(id=subject_id)
+    #except TutorSubject.DoesNotExist:
+    #    raise http.Http404()
 
     try:
         date_str = date.split('-')
@@ -604,11 +604,11 @@ def book_class(request, tutor_id):
     class_ = Class(
         tutor = tutor,
         student = user,
-        subject = '%s' % subject,
-        only_subject = '%s' % subject.subject,
-        level = '%s' % subject.level,
-        system = '%s' % subject.system,
-        subject_credits_per_hour = subject.credits,
+        #subject = '%s' % subject,
+        #only_subject = '%s' % subject.subject,
+        #level = '%s' % subject.level,
+        #system = '%s' % subject.system,
+        #subject_credits_per_hour = subject.credits,
         date = date,
         duration = duration,
         cover = cover,
