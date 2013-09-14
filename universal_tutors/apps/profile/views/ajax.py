@@ -608,7 +608,7 @@ def book_class(request, tutor_id):
         #only_subject = '%s' % subject.subject,
         #level = '%s' % subject.level,
         #system = '%s' % subject.system,
-        subject_credits_per_hour = tutor.profile.get_price_per_hour_usd(),
+        subject_credits_per_hour = float(tutor.profile.get_price_per_hour_usd()),
         date = date,
         duration = duration,
         cover = cover,
