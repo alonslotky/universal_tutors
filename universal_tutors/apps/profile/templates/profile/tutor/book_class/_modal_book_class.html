@@ -178,11 +178,12 @@
 		var start_hour = start_str[0];
 		var start_min = start_str[1];
 		var duration = parseInt($('#book-class-duration').val());
-		/*var subject = parseInt($('#book-class-subject').val());		
-		*/var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#book-child').val()){% else %}true{% endif %};
+		var subject = parseInt($('#book-class-subject').val());		
+		var child = {% if user_profile.type == user_profile.TYPES.PARENT %}parseInt($('#book-child').val()){% else %}true{% endif %};
 		
 		/*if(subject && duration && child) {*/
-		if(duration && child) {	
+		/*if(duration && child) {*/	
+		if(subject && duration && child) {	
 			var book_time = new Date(book_start_date.getTime());
 			book_time.setHours(start_hour);
 			book_time.setMinutes(start_min);

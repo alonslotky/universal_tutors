@@ -555,7 +555,10 @@ def book_class(request, tutor_id):
     if request.method != 'POST' or profile.type == profile.TYPES.TUTOR:
         raise http.Http404()
     
-    #subject_id = request.POST.get('subject', 0)
+    subject_id = request.POST.get('subject', 0)
+   
+    #subject = subject_id
+    subject = Genre.objects.filter(id__in=float(subject_id))
     date = request.POST.get('date', '')
     start = request.POST.get('start', '')
     duration = int(request.POST.get('duration', 0))
@@ -583,7 +586,8 @@ def book_class(request, tutor_id):
         raise http.Http404()
 
     #try:
-    #    subject = tutor.subjects.get(id=subject_id)
+        #subject = tutor.genres.get(id=subject_id)
+    #    subject = Genre.objects.filter(id__in =[int(id) for id in subject_id])
     #except TutorSubject.DoesNotExist:
     #    raise http.Http404()
 
@@ -605,6 +609,7 @@ def book_class(request, tutor_id):
         tutor = tutor,
         student = user,
         #subject = '%s' % subject,
+        subject = subject,
         #only_subject = '%s' % subject.subject,
         #level = '%s' % subject.level,
         #system = '%s' % subject.system,
