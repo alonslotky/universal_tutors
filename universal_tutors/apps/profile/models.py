@@ -217,7 +217,7 @@ class UserProfile(BaseModel):
     credit = models.FloatField(default=0)
     income = models.FloatField(default=0)
     currency = models.ForeignKey(Currency, default = 3) #default is USD
-    price_per_hour = models.FloatField(default=-1)
+    price_per_hour = models.FloatField(default=-1, null = True)
     #price_per_hour_usd = models.FloatField(default=-1)
     
     referral = models.PositiveSmallIntegerField(choices=REFERRAL_TYPES.get_choices(), default=TYPES.NONE)

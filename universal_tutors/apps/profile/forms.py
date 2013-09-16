@@ -140,13 +140,15 @@ class ProfileForm(forms.ModelForm):
     password  = forms.CharField(label=_('Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password1 = forms.CharField(label=_('New Password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
     password2 = forms.CharField(label=_('Repeat password'), min_length = 5, max_length = 30, widget=forms.PasswordInput, required=False)
-    currency = forms.ChoiceField(choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
+    #currency = forms.ModelChoiceField(label=_('Currency'), choices=[(currency.id, '%s - %s' % (currency.acronym, currency.name)) for currency in Currency.objects.all()])
+    currency = forms.ModelChoiceField(label=_('Currency'), queryset = Currency.objects.all() )
     #genres_selected = forms.ModelMultipleChoiceField(queryset= Genre.objects.filter(creator=self.creator), widget=forms.CheckboxSelectMultiple, required = False)
     #self.creator=ProfileForm
     #genres_selected=forms.ModelChoiceField(queryset=Genre.objects.filter(creator=request.user),required=False,label='Genre')
     #categoryoption = forms.ModelChoiceField(queryset=Category.objects.filter(creator=self.creator),required=False,label='Category')
     #categoryoption = forms.ModelChoiceField(queryset=Category.objects.filter(creator=self.creator),required=False,label='Category')
-
+    price_per_hour = forms.DecimalField(initial=0, required = False)
+    
     cat=range(0,Genre.tree.filter(level=0).count())
     for x in range(0, len(cat)):
         cat[x]=Genre.tree.filter(level=0)[x]
@@ -259,7 +261,7 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         fields = ('about', 'video', 'date_of_birth', 'country', 'timezone', 'gender', 
                   'profile_image', 'crb', 'crb_file', 'webcam', 'paypal_email',
-                  'notifications_messages', 'notifications_classes', 'notifications_other','zipcode','price_per_hour')
+                  'notifications_messages', 'notifications_classes', 'notifications_other','zipcode','price_per_hour', 'currency')
         model = UserProfile
         widgets = {
             'profile_image': forms.FileInput(),

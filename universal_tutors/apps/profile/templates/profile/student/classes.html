@@ -50,8 +50,13 @@
 	          </div>
 	          
 	          <div class="three columns">
+
 	            <a href="{% url class_detail class.id %}"><h3>{{class.subject}}{% comment %}{{ Genre.objects.filter.class.subject}} {% endcomment %}</h3></a>
 	            <p class="subheader">with <a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a> <span class="push credits">{{class.credit_fee|floatformat}}</span>
+	            <!--	
+	            <a href="{% url class_detail class.id %}"><h3>{{class.subject}}</h3></a>
+	            <p class="subheader">with <a href="{% url profile tutor.username %}">{{tutor.get_full_name}}</a> <span class="push credits">${{class.credit_fee|floatformat}}  </span>
+				-->
 	          	{% if class.status != class.STATUS_TYPES.BOOKED %}<br/>({{class.get_status_display}}){% endif %}
 	            </p>
 	          </div>
